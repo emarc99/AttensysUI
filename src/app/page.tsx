@@ -16,6 +16,7 @@ import { useAtom } from "jotai"
 import { connect, disconnect } from "starknetkit-latest"
 import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants"
 import { AccountSection } from "@/components/AccountSection"
+import { useSendTransaction } from '@starknet-react/core';
 
 
 
@@ -26,6 +27,9 @@ export default function Home() {
   const setConnector = useSetAtom(connectorAtom)
 
   const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
+
+
+
 
 
   useEffect(() => {
