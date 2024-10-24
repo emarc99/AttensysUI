@@ -22,9 +22,7 @@ export default function RootLayout({
     <html lang="en" > 
       <body>
         <Providers>
-          <StarknetProvider>
           {children}
-          </StarknetProvider>
         </Providers>
       </body>
     </html>
