@@ -13,6 +13,7 @@ export function Providers({ children }: { children: ReactNode }) {
     includeRecommended:"onlyIfNoConnectors",
     order: "random"
   })
+  console.log(connectors)
 
   useEffect(() => {
     setMounted(true)

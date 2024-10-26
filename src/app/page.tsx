@@ -16,7 +16,12 @@ import { useAtom } from "jotai"
 import { connect, disconnect } from "starknetkit-latest"
 import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants"
 import { AccountSection } from "@/components/AccountSection"
-import { useAccount, useReadContract, useContract } from "@starknet-react/core"
+import {
+  useAccount,
+  useReadContract,
+  useContract,
+  useSendTransaction,
+} from "@starknet-react/core"
 import { attensysOrgAddress } from "./../deployments/contracts"
 import { attensysOrgAbi } from "./../deployments/abi"
 import { RpcProvider, Contract, Account, ec, json } from "starknet"
@@ -29,6 +34,9 @@ export default function Home() {
 
   const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
   const [inputValue, setInputValue] = useState("")
+
+  const { address } = useAccount()
+  console.log("The address is", address)
 
   // get address
   const readOrgInfo = () => {
@@ -43,7 +51,7 @@ export default function Home() {
     abi: attensysOrgAbi,
     functionName: "get_org_info",
     address: attensysOrgAddress,
-    args: [readOrgInfo() as string],
+    args: [inputValue],
     watch: true,
   })
   // console.log(readOrgData)
@@ -54,8 +62,22 @@ export default function Home() {
   })
   // const calls = useMemo(() => {
   //   if (!wallet?.selectedAddress || !attensysOrgAddress) return [];
-  //   return contract.populateTransaction["create_org_profile"](wallet?.selectedAddress, {low: 1, high: 0})
+  //   return contract.populateTransaction["create_org_profile"]("Web3Bridge", "W3BNFT", "WeB","http://w3bnft.com", {low: 1, high: 0})
   // }, [attensysOrgAddress, wallet?.selectedAddress])
+
+  // const { send, sendAsync, error } = useSendTransaction({
+  //   calls:
+  //     contract && wallet?.selectedAddress
+  //       ? [
+  //           contract.populate("create_org_profile", [
+  //             "Web3Bridge",
+  //             "W3BNFT",
+  //             "WeB",
+  //             "http://w3bnft.com",
+  //           ]),
+  //         ]
+  //       : undefined,
+  // })
 
   const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -76,37 +98,48 @@ export default function Home() {
 
   //initialize provider with a Sepolia Testnet node
 
-  const registerOrg = async () => {
+  const registerOrg = async (event: React.FormEvent<HTMLFormElement>) => {
     try {
-      const provider = new RpcProvider({ nodeUrl: "http://127.0.0.1:5050/rpc" })
-      // Connect the deployed Test contract in devnet Testnet
-      // read abi of Test contract
-      const { abi: testAbi } = await provider.getClassAt(attensysOrgAddress)
-      if (testAbi === undefined) {
-        throw new Error("no abi.")
-      }
-      const myOrgContract = new Contract(testAbi, attensysOrgAddress, provider)
-
-      // Interaction with the contract with call
-      const bal1 = await myOrgContract.get_org_info(attensysOrgAddress)
-      console.log("Initial balance =", bal1)
-
-      // myOrgContract.connect(wallet)
-
-      let org_name = "web3"
-      let token_uri = "https://dummy_uri.com"
-      let nft_name = "cairo"
-      let nft_symb = "CAO"
-
-      await myOrgContract.create_org_profile(
-        org_name,
-        token_uri,
-        nft_name,
-        nft_symb,
+      event.preventDefault()
+      console.log(contract)
+      await contract.create_org_profile(
+        "Web3Bridge",
+        "W3BNFT",
+        "WeB",
+        "http://w3bnft.com",
       )
-      // Interaction with the contract with call
-      const profile = await myOrgContract.get_org_info(wallet)
-      console.log("Caller profile =", profile)
+      // console.log(sendAsync)
+      // sendAsync();
+
+      // const provider = new RpcProvider({ nodeUrl: "http://127.0.0.1:5050/rpc" })
+      // // Connect the deployed Test contract in devnet Testnet
+      // // read abi of Test contract
+      // const { abi: testAbi } = await provider.getClassAt(attensysOrgAddress)
+      // if (testAbi === undefined) {
+      //   throw new Error("no abi.")
+      // }
+      // const myOrgContract = new Contract(testAbi, attensysOrgAddress, provider)
+
+      // // Interaction with the contract with call
+      // const bal1 = await myOrgContract.get_org_info(attensysOrgAddress)
+      // console.log("Initial balance =", bal1)
+
+      // // myOrgContract.connect(wallet)
+
+      // let org_name = "web3"
+      // let token_uri = "https://dummy_uri.com"
+      // let nft_name = "cairo"
+      // let nft_symb = "CAO"
+
+      // await myOrgContract.create_org_profile(
+      //   org_name,
+      //   token_uri,
+      //   nft_name,
+      //   nft_symb,
+      // )
+      // // Interaction with the contract with call
+      // const profile = await myOrgContract.get_org_info(wallet)
+      // console.log("Caller profile =", profile)
     } catch (error) {
       console.log(error)
     }
@@ -136,7 +169,7 @@ export default function Home() {
     if (!wallet) {
       autoConnect()
     }
-  }, [wallet])
+  }, [wallet, inputValue])
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -173,14 +206,59 @@ export default function Home() {
         <div className="px-4 py-3x border-4 m-7">
           <h1 className="my-5 font-bold">Register organization</h1>
           <div className="flex flex-row mb-4">
-            <input className="px-4 py-3x border-4 my-5" type="input" />
-            <br />
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-5"
-              onClick={registerOrg}
-            >
-              Register
-            </button>
+            <form>
+              <div className=" mb-4">
+                <div className="flow flow-row">
+                  <label>
+                    Organization Name:
+                    <input
+                      className="px-4 py-3x border-4 my-5"
+                      type="input"
+                      value={inputValue}
+                      onChange={handleOnChange}
+                    />
+                  </label>
+                  <label>
+                    NFT Name:
+                    <input
+                      className="px-4 py-3x border-4 my-5"
+                      type="input"
+                      value={inputValue}
+                      onChange={handleOnChange}
+                    />
+                  </label>
+                  <label>
+                    NFT Symbol:
+                    <input
+                      className="px-4 py-3x border-4 my-5"
+                      type="input"
+                      value={inputValue}
+                      onChange={handleOnChange}
+                    />
+                  </label>
+                  <label>
+                    NFT URL:
+                    <input
+                      className="px-4 py-3x border-4 my-5"
+                      type="input"
+                      value={inputValue}
+                      onChange={handleOnChange}
+                    />
+                  </label>
+                </div>
+
+                <hr />
+                <div className="block">
+                  <button
+                    className={`${wallet?.selectedAddress ? "bg-blue-500 hover:bg-blue-700" : "bg-red-500"}  text-white font-bold py-2 px-4 rounded my-5`}
+                    onClick={registerOrg}
+                    disabled={!wallet?.selectedAddress}
+                  >
+                    Register
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
         <div className="px-4 py-3x border-4 m-7">
