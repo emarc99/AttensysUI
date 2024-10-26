@@ -4,7 +4,7 @@ import { Button,Flex,Box } from "@chakra-ui/react"
 import { useSetAtom } from "jotai"
 import { useRouter } from "next/navigation"
 import { FC } from "react"
-import { connect } from "starknetkit-latest"
+import { connect } from "starknetkit"
 
 const ConnectButton: FC = () => {
   const setWallet = useSetAtom(walletStarknetkitLatestAtom)

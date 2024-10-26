@@ -7,13 +7,12 @@ import {
   connectorDataAtom,
   walletStarknetkitNextAtom,
 } from "@/state/connectedWalletStarknetkitNext"
-import { Button, Flex, Heading } from "@chakra-ui/react"
 import { useSetAtom } from "jotai"
 import { RESET } from "jotai/utils"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { DisconnectButton } from "@/components/DisconnectButton"
 import { useAtom } from "jotai"
-import { connect, disconnect } from "starknetkit-latest"
+import { connect, disconnect } from "starknetkit"
 import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants"
 import { AccountSection } from "@/components/AccountSection"
 import { useSendTransaction } from '@starknet-react/core';
@@ -21,6 +20,7 @@ import { useAccount, useReadContract, useContract } from "@starknet-react/core"
 import { attensysOrgAddress } from "./../deployments/contracts"
 import { attensysOrgAbi } from "./../deployments/abi"
 import { RpcProvider, Contract, Account, ec, json } from "starknet"
+import Mockevent from "@/components/Mockevent"
 
 export default function Home() {
   const setWalletLatest = useSetAtom(walletStarknetkitLatestAtom)
@@ -50,6 +50,7 @@ export default function Home() {
   // console.log(readOrgData)
 
   const { contract } = useContract({
+    //@ts-ignore
     abi: attensysOrgAbi,
     address: attensysOrgAddress,
   })
@@ -218,6 +219,8 @@ export default function Home() {
           )}
         </div>
       </div>
+
+      <Mockevent />
     </div>
   )
 }

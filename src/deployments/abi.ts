@@ -644,24 +644,6 @@ export const attensysOrgAbi = [
   },
   {
     type: "struct",
-    name: "core::byte_array::ByteArray",
-    members: [
-      {
-        name: "data",
-        type: "core::array::Array::<core::bytes_31::bytes31>",
-      },
-      {
-        name: "pending_word",
-        type: "core::felt252",
-      },
-      {
-        name: "pending_word_len",
-        type: "core::integer::u32",
-      },
-    ],
-  },
-  {
-    type: "struct",
     name: "core::integer::u256",
     members: [
       {
@@ -734,7 +716,7 @@ export const attensysOrgAbi = [
       },
       {
         name: "org_name",
-        type: "core::byte_array::ByteArray",
+        type: "core::felt252",
       },
       {
         name: "number_of_instructors",
@@ -747,10 +729,6 @@ export const attensysOrgAbi = [
       {
         name: "number_of_all_classes",
         type: "core::integer::u256",
-      },
-      {
-        name: "nft_address",
-        type: "core::starknet::contract_address::ContractAddress",
       },
     ],
   },
@@ -774,19 +752,7 @@ export const attensysOrgAbi = [
     inputs: [
       {
         name: "org_name",
-        type: "core::byte_array::ByteArray",
-      },
-      {
-        name: "nft_name",
-        type: "core::byte_array::ByteArray",
-      },
-      {
-        name: "nft_symbol",
-        type: "core::byte_array::ByteArray",
-      },
-      {
-        name: "nft_uri",
-        type: "core::byte_array::ByteArray",
+        type: "core::felt252",
       },
     ],
     outputs: [],
@@ -1014,10 +980,6 @@ export const attensysOrgAbi = [
       {
         name: "owner",
         type: "core::starknet::contract_address::ContractAddress",
-      },
-      {
-        name: "class_hash",
-        type: "core::starknet::class_hash::ClassHash",
       },
     ],
   },
