@@ -7,17 +7,27 @@ import {
   connectorDataAtom,
   walletStarknetkitNextAtom,
 } from "@/state/connectedWalletStarknetkitNext"
-import { Button, Flex, Heading } from "@chakra-ui/react"
 import { useSetAtom } from "jotai"
 import { RESET } from "jotai/utils"
-import { useEffect } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { DisconnectButton } from "@/components/DisconnectButton"
 import { useAtom } from "jotai"
-import { connect, disconnect } from "starknetkit-latest"
+import { connect, disconnect } from "starknetkit"
 import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants"
 import { AccountSection } from "@/components/AccountSection"
+import {
+  useAccount,
+  useReadContract,
+  useContract,
+  useSendTransaction,
+} from "@starknet-react/core"
+import { attensysOrgAddress } from "./../deployments/contracts"
+import { attensysOrgAbi } from "./../deployments/abi"
+import { RpcProvider, Contract, Account, ec, json } from "starknet"
+import Mockevent from "@/components/Mockevent"
+import MockOrganization from "@/components/MockOrganization"
 
-
+import Mockcourse from "@/components/Mockcourse"
 
 export default function Home() {
   const setWalletLatest = useSetAtom(walletStarknetkitLatestAtom)
@@ -26,8 +36,9 @@ export default function Home() {
   const setConnector = useSetAtom(connectorAtom)
 
   const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
+ 
 
-
+ 
   useEffect(() => {
     setWalletLatest(RESET)
     setWalletNext(RESET)
@@ -71,26 +82,10 @@ export default function Home() {
 
   return (
     <div>
-      <div>
-      {wallet ? (
-          <>
-            <DisconnectButton
-              disconnectFn={disconnect}
-              resetFn={() => {
-                setWallet(RESET);
-              }}
-            />
-          </>
-        ) : (
-          <ConnectButton />
-        )}
-    <AccountSection
-      address={wallet?.account?.address}
-      chainId={wallet?.chainId}
-    />
-      <h1 className="text-3xl font-bold underline text-red-700" >Style test</h1>
+     <MockOrganization />
+
+      <Mockevent />
+      <Mockcourse />
     </div>
-    </div>
- 
   )
 }

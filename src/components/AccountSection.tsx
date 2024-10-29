@@ -3,7 +3,6 @@ import {
   lastTxHashAtom,
   lastTxStatusAtom,
 } from "@/state/transactionState"
-import { Box, Flex, Heading, useToast } from "@chakra-ui/react"
 import { useAtomValue } from "jotai"
 import { FC } from "react"
 import { constants, num } from "starknet"
@@ -20,7 +19,6 @@ const AccountSection: FC<AccountSectionProps> = ({ address, chainId }) => {
   const lastTxHash = useAtomValue(lastTxHashAtom)
   const lastTxStatus = useAtomValue(lastTxStatusAtom)
   const lastTxError = useAtomValue(lastTxErrorAtom)
-  const toast = useToast()
 
   const hexChainId =
     typeof chainId === "bigint" ? num.toHex(chainId ?? 0) : null
@@ -31,12 +29,6 @@ const AccountSection: FC<AccountSectionProps> = ({ address, chainId }) => {
           onClick={() => {
             if (address) {
               navigator.clipboard.writeText(address || "")
-              toast({
-                title: "Address copied",
-                duration: 1000,
-                containerStyle: { minWidth: "50px" },
-                status: "success",
-              })
             }
           }}
         >

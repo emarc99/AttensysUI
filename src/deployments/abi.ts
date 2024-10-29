@@ -122,15 +122,15 @@ export const attensysCourseAbi = [
         type: "core::bool",
       },
       {
-        name: "nft_name",
+        name: "base_uri",
         type: "core::byte_array::ByteArray",
       },
       {
-        name: "nft_symbol",
+        name: "name_",
         type: "core::byte_array::ByteArray",
       },
       {
-        name: "nft_uri",
+        name: "symbol",
         type: "core::byte_array::ByteArray",
       },
     ],
@@ -286,7 +286,7 @@ export const attensysCourseAbi = [
         type: "core::starknet::contract_address::ContractAddress",
       },
     ],
-    state_mutability: "external",
+    state_mutability: "view",
   },
   {
     type: "constructor",
@@ -436,11 +436,15 @@ export const attensysEventAbi = [
         type: "core::byte_array::ByteArray",
       },
       {
-        name: "nft_name",
+        name: "base_uri",
         type: "core::byte_array::ByteArray",
       },
       {
-        name: "nft_symbol",
+        name: "name_",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "symbol",
         type: "core::byte_array::ByteArray",
       },
       {
@@ -454,10 +458,6 @@ export const attensysEventAbi = [
       {
         name: "reg_status",
         type: "core::bool",
-      },
-      {
-        name: "nft_uri",
-        type: "core::byte_array::ByteArray",
       },
     ],
     outputs: [
@@ -533,7 +533,7 @@ export const attensysEventAbi = [
         type: "core::bool",
       },
     ],
-    state_mutability: "external",
+    state_mutability: "view",
   },
   {
     type: "function",
@@ -549,7 +549,7 @@ export const attensysEventAbi = [
         type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::UserAttendedEventStruct>",
       },
     ],
-    state_mutability: "external",
+    state_mutability: "view",
   },
   {
     type: "function",
@@ -565,7 +565,7 @@ export const attensysEventAbi = [
         type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::UserAttendedEventStruct>",
       },
     ],
-    state_mutability: "external",
+    state_mutability: "view",
   },
   {
     type: "function",
@@ -597,7 +597,7 @@ export const attensysEventAbi = [
         type: "attendsys::contracts::AttenSysEvent::AttenSysEvent::EventStruct",
       },
     ],
-    state_mutability: "external",
+    state_mutability: "view",
   },
   {
     type: "function",
@@ -613,7 +613,18 @@ export const attensysEventAbi = [
         type: "core::starknet::contract_address::ContractAddress",
       },
     ],
-    state_mutability: "external",
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_events",
+    inputs: [],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::EventStruct>",
+      },
+    ],
+    state_mutability: "view",
   },
   {
     type: "constructor",
@@ -641,6 +652,24 @@ export const attensysOrgAbi = [
     type: "impl",
     name: "IAttenSysOrgImpl",
     interface_name: "attendsys::contracts::AttenSysOrg::IAttenSysOrg",
+  },
+  {
+    type: "struct",
+    name: "core::byte_array::ByteArray",
+    members: [
+      {
+        name: "data",
+        type: "core::array::Array::<core::bytes_31::bytes31>",
+      },
+      {
+        name: "pending_word",
+        type: "core::felt252",
+      },
+      {
+        name: "pending_word_len",
+        type: "core::integer::u32",
+      },
+    ],
   },
   {
     type: "struct",
@@ -716,7 +745,7 @@ export const attensysOrgAbi = [
       },
       {
         name: "org_name",
-        type: "core::felt252",
+        type: "core::byte_array::ByteArray",
       },
       {
         name: "number_of_instructors",
@@ -729,6 +758,10 @@ export const attensysOrgAbi = [
       {
         name: "number_of_all_classes",
         type: "core::integer::u256",
+      },
+      {
+        name: "nft_address",
+        type: "core::starknet::contract_address::ContractAddress",
       },
     ],
   },
@@ -752,7 +785,19 @@ export const attensysOrgAbi = [
     inputs: [
       {
         name: "org_name",
-        type: "core::felt252",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "nft_name",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "nft_symbol",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "nft_uri",
+        type: "core::byte_array::ByteArray",
       },
     ],
     outputs: [],
@@ -974,12 +1019,32 @@ export const attensysOrgAbi = [
     state_mutability: "view",
   },
   {
+    type: "function",
+    name: "get_instructor_part_of_org",
+    inputs: [
+      {
+        name: "instructor",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
     type: "constructor",
     name: "constructor",
     inputs: [
       {
         name: "owner",
         type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "class_hash",
+        type: "core::starknet::class_hash::ClassHash",
       },
     ],
   },
