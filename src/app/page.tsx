@@ -21,6 +21,7 @@ import { attensysOrgAddress } from "./../deployments/contracts"
 import { attensysOrgAbi } from "./../deployments/abi"
 import { RpcProvider, Contract, Account, ec, json } from "starknet"
 import Mockevent from "@/components/Mockevent"
+import Mockcourse from "@/components/Mockcourse"
 
 export default function Home() {
   const setWalletLatest = useSetAtom(walletStarknetkitLatestAtom)
@@ -221,6 +222,7 @@ export default function Home() {
       </div>
 
       <Mockevent />
+      <Mockcourse />
     </div>
   )
 }
