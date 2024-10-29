@@ -1,5 +1,5 @@
 import { StarknetWindowObject as StarknetWindowObjectNext } from "starknetkit-next"
-import { StarknetWindowObject as StarknetWindowObjectLatest } from "starknetkit-latest"
+import { StarknetWindowObject as StarknetWindowObjectLatest } from "starknetkit"
 
 export const addNetworkNext = async (
   wallet: StarknetWindowObjectNext | undefined | null,

@@ -1,6 +1,6 @@
-import { InjectedConnector } from "starknetkit-latest/injected"
-import { ArgentMobileConnector } from "starknetkit-latest/argentMobile"
-import { WebWalletConnector } from "starknetkit-latest/webwallet"
+import { InjectedConnector } from "starknetkit/injected"
+import { ArgentMobileConnector } from "starknetkit/argentMobile"
+import { WebWalletConnector } from "starknetkit/webwallet"
 import { ARGENT_WEBWALLET_URL, CHAIN_ID } from "@/constants"
 
 export const availableConnectors = [

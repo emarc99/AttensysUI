@@ -286,7 +286,7 @@ export const attensysCourseAbi = [
         type: "core::starknet::contract_address::ContractAddress",
       },
     ],
-    state_mutability: "external",
+    state_mutability: "view",
   },
   {
     type: "constructor",
@@ -436,11 +436,15 @@ export const attensysEventAbi = [
         type: "core::byte_array::ByteArray",
       },
       {
-        name: "nft_name",
+        name: "base_uri",
         type: "core::byte_array::ByteArray",
       },
       {
-        name: "nft_symbol",
+        name: "name_",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "symbol",
         type: "core::byte_array::ByteArray",
       },
       {
@@ -454,10 +458,6 @@ export const attensysEventAbi = [
       {
         name: "reg_status",
         type: "core::bool",
-      },
-      {
-        name: "nft_uri",
-        type: "core::byte_array::ByteArray",
       },
     ],
     outputs: [
@@ -533,7 +533,7 @@ export const attensysEventAbi = [
         type: "core::bool",
       },
     ],
-    state_mutability: "external",
+    state_mutability: "view",
   },
   {
     type: "function",
@@ -549,7 +549,7 @@ export const attensysEventAbi = [
         type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::UserAttendedEventStruct>",
       },
     ],
-    state_mutability: "external",
+    state_mutability: "view",
   },
   {
     type: "function",
@@ -565,7 +565,7 @@ export const attensysEventAbi = [
         type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::UserAttendedEventStruct>",
       },
     ],
-    state_mutability: "external",
+    state_mutability: "view",
   },
   {
     type: "function",
@@ -597,7 +597,7 @@ export const attensysEventAbi = [
         type: "attendsys::contracts::AttenSysEvent::AttenSysEvent::EventStruct",
       },
     ],
-    state_mutability: "external",
+    state_mutability: "view",
   },
   {
     type: "function",
@@ -613,7 +613,7 @@ export const attensysEventAbi = [
         type: "core::starknet::contract_address::ContractAddress",
       },
     ],
-    state_mutability: "external",
+    state_mutability: "view",
   },
   {
     type: "constructor",
@@ -1003,6 +1003,22 @@ export const attensysOrgAbi = [
     outputs: [
       {
         type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Class>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_instructor_part_of_org",
+    inputs: [
+      {
+        name: "instructor",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
       },
     ],
     state_mutability: "view",
