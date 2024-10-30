@@ -26,8 +26,9 @@ import { attensysOrgAbi } from "./../deployments/abi"
 import { RpcProvider, Contract, Account, ec, json } from "starknet"
 import Mockevent from "@/components/Mockevent"
 import MockOrganization from "@/components/MockOrganization"
-
 import Mockcourse from "@/components/Mockcourse"
+import Animation from "@/components/Animation"
+
 
 export default function Home() {
   const setWalletLatest = useSetAtom(walletStarknetkitLatestAtom)
@@ -36,9 +37,7 @@ export default function Home() {
   const setConnector = useSetAtom(connectorAtom)
 
   const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
- 
 
- 
   useEffect(() => {
     setWalletLatest(RESET)
     setWalletNext(RESET)
@@ -81,8 +80,10 @@ export default function Home() {
   }, [])
 
   return (
-    <div>
-     <MockOrganization />
+    <div >
+     <Animation />
+
+      <MockOrganization />
 
       <Mockevent />
       <Mockcourse />
