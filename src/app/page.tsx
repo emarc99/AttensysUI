@@ -27,7 +27,8 @@ import { RpcProvider, Contract, Account, ec, json } from "starknet"
 import Mockevent from "@/components/Mockevent"
 import MockOrganization from "@/components/MockOrganization"
 import Mockcourse from "@/components/Mockcourse"
-import Animation from "@/components/Animation"
+import MockAboutus from "@/components/MockAboutus"
+
 
 export default function Home() {
   const setWalletLatest = useSetAtom(walletStarknetkitLatestAtom)
@@ -36,6 +37,7 @@ export default function Home() {
   const setConnector = useSetAtom(connectorAtom)
 
   const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
+ 
 
   useEffect(() => {
     setWalletLatest(RESET)
@@ -79,13 +81,8 @@ export default function Home() {
   }, [])
 
   return (
-    <div className="flex" >
-
-     <Animation />
-     <div className="bg-black w-[60%] h-auto">
-      <h1>About us</h1>
-     </div>
-
+    <div>
+      <MockAboutus />
     </div>
   )
 }
