@@ -35,7 +35,7 @@ const MockAboutus = () => {
     <div>  <h1 className="text-4xl text-[#2D3A4B] font-bold text absolute mx-10 my-10">Atten<span className="text-[#9B51E0]">Sys</span></h1>
     <div className="lg:flex sm:inline-block">
       <Animation />
-      <div className="bg-black lg:w-[60%] h-auto flex flex-col justify-center text-white p-8">
+      <div className="bg-[#9B51E0] lg:w-[60%] h-auto flex flex-col justify-center text-white p-8">
         <h1 className="border border-white p-4 inline-block text-center text-2xl mb-6">
           About us - AttenSys
         </h1>
@@ -56,10 +56,10 @@ const MockAboutus = () => {
                 <p className='text-[12px] text-justify'>
                   Are you a course creator ready to share your expertise? With
                   AttenSys, you can turn your knowledge into income, teaching
-                  what you love. Whether you're a seasoned professional or a
+                  what you love. Whether you are a seasoned professional or a
                   passionate enthusiast, AttenSys helps you reach learners
                   worldwide, offering a platform to grow your influence and
-                  generate revenue. Join us and let your skills shape others’
+                  generate revenue. Join us and let your skills shape others
                   futures!
                 </p>
               </div>
@@ -69,7 +69,7 @@ const MockAboutus = () => {
                 </h2>
                 <p className='text-[12px] text-justify'>
                   For those looking to learn, AttenSys offers a pathway to new
-                  career horizons. Whether you're aiming to switch fields or
+                  career horizons. Whether you are aiming to switch fields or
                   advance in your current role, our courses offer globally
                   recognized, blockchain-backed credentials that set you apart.
                   Dive into learning, get certified, and open doors in

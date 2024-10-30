@@ -50,6 +50,7 @@ export default function Home() {
     const autoConnect = async () => {
       try {
         const { wallet: connectedWallet } = await connect({
+          //@ts-ignore
           provider,
           modalMode: "neverAsk",
           webWalletUrl: ARGENT_WEBWALLET_URL,

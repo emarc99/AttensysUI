@@ -7,7 +7,6 @@ import {
   starknetReactVersionAtom,
   starknetkitVersionAtom,
 } from "@/state/versionState"
-import { Box, Button, Flex } from "@chakra-ui/react"
 import { useSetAtom } from "jotai"
 import { RESET } from "jotai/utils"
 import { useRouter } from "next/navigation"

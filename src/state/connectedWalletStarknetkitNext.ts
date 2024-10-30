@@ -7,7 +7,7 @@ import { useAtomValue, useSetAtom } from "jotai"
 import { atomWithReset } from "jotai/utils"
 import { useEffect } from "react"
 import { ConnectorData, StarknetWindowObject } from "starknetkit-next"
-import { Connector } from "starknetkit-next"
+import { Connector } from "starknetkit"
 
 export const walletStarknetkitNextAtom = atomWithReset<
   StarknetWindowObject | null | undefined

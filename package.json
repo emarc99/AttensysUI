@@ -29,6 +29,7 @@
     "react-dom": "^18.3.1",
     "starknet": "^6.15.0",
     "starknetkit": "^1.1.9",
+    "starknetkit-next": "npm:starknetkit@^2.3.3",
     "ua-parser-js": "^1.0.39"
   },
   "devDependencies": {
