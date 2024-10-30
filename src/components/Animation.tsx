@@ -16,7 +16,7 @@ export default function Animation() {
           }}
         />
 
-        <div className="text-center space-y-4 bg-gradient-to-r from-blue-400 min-w-full min-h-48 absolute top-72">
+        <div className="text-center space-y-4 bg-gradient-to-r from-purple-400 min-w-full min-h-48 absolute top-72">
           {/* <h1 className="text-2xl font-bond">AttenSys</h1> */}
         </div>
       </div>
