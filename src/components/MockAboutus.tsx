@@ -45,7 +45,7 @@ const MockAboutus = () => {
             className="font-semibold text-[20px] cursor-pointer"
             onClick={toggleCourse}
           >
-            About AttenSys Course  <span>{isCourseOpen ? '▲' : '▼'}</span>
+           AttenSys Course  <span>{isCourseOpen ? '▲' : '▼'}</span>
           </h1>
           {isCourseOpen && (
             <div>
@@ -86,7 +86,7 @@ const MockAboutus = () => {
             className="font-semibold text-[20px] cursor-pointer"
             onClick={toggleEvent}
           >
-            About AttenSys Events  <span>{isEventOpen ? '▲' : '▼'}</span>
+            AttenSys Events  <span>{isEventOpen ? '▲' : '▼'}</span>
           </h1>
           {isEventOpen && (
             <div>
@@ -116,7 +116,7 @@ const MockAboutus = () => {
             className=" font-semibold text-[20px] cursor-pointer"
             onClick={toggleOrg}
           >
-            About AttenSys Organizations <span>{isorgOpen ? '▲' : '▼'}</span>
+            AttenSys Organizations <span>{isorgOpen ? '▲' : '▼'}</span>
           </h1>
           {isorgOpen && (
             <div>
@@ -146,7 +146,7 @@ const MockAboutus = () => {
             className="font-semibold text-[20px] cursor-pointer"
             onClick={toggleExplorer}
           >
-            About AttenSys Explorer <span>{isexplorerOpen ? '▲' : '▼'}</span>
+             AttenSys Explorer <span>{isexplorerOpen ? '▲' : '▼'}</span>
           </h1>
           {isexplorerOpen && (
             <div>
