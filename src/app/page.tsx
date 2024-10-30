@@ -29,7 +29,6 @@ import MockOrganization from "@/components/MockOrganization"
 import Mockcourse from "@/components/Mockcourse"
 import Animation from "@/components/Animation"
 
-
 export default function Home() {
   const setWalletLatest = useSetAtom(walletStarknetkitLatestAtom)
   const setWalletNext = useSetAtom(walletStarknetkitNextAtom)
@@ -80,13 +79,13 @@ export default function Home() {
   }, [])
 
   return (
-    <div >
-     <Animation />
+    <div>
+      <Animation />
 
-      <MockOrganization />
+      {/* <MockOrganization />
 
       <Mockevent />
-      <Mockcourse />
+      <Mockcourse /> */}
     </div>
   )
 }
