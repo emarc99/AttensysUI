@@ -80,13 +80,13 @@ export default function Home() {
   }, [])
 
   return (
-    <div >
+    <div className="flex" >
+
      <Animation />
+     <div className="bg-black w-[60%] h-auto">
+      <h1>About us</h1>
+     </div>
 
-      <MockOrganization />
-
-      <Mockevent />
-      <Mockcourse />
     </div>
   )
 }
