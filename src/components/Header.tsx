@@ -1,10 +1,23 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems, Input, } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Logo from "@/assets/Logo.svg"
 import Image from "next/image"
 import { ConnectButton } from './connect/ConnectButton'
+import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest"
+import {
+  connectorAtom,
+  connectorDataAtom,
+  walletStarknetkitNextAtom,
+} from "@/state/connectedWalletStarknetkitNext"
+import { useAtom, useSetAtom } from "jotai"
+import { RESET } from "jotai/utils"
+import { DisconnectButton } from './DisconnectButton'
+import { connect, disconnect } from "starknetkit"
+
+
+
 
 
 const navigation = [
@@ -19,12 +32,24 @@ const navigation = [
 
 
 const Header = () => {
+    const setWalletLatest = useSetAtom(walletStarknetkitLatestAtom)
+    const setWalletNext = useSetAtom(walletStarknetkitNextAtom)
+    const setConnectorData = useSetAtom(connectorDataAtom)
+    const setConnector = useSetAtom(connectorAtom)
+    const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
     const [searchValue, setSearchValue] = useState('');
 
     const handleChange = (event: { target: { value: any } }) => {
       setSearchValue(event.target.value);
     };
     
+    useEffect(() => {
+        setWalletLatest(RESET)
+        setWalletNext(RESET)
+        setConnectorData(RESET)
+        setConnector(RESET)
+      }, [])
+
   return (
     <Disclosure as="nav" className="bg-[#FFFFFF] pt-1">
     <div className="mx-6 px-2 sm:px-6 lg:px-8 lg:h-[85px] lg:my-auto">
@@ -94,7 +119,18 @@ const Header = () => {
           </div>
         </div>
         <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-          <ConnectButton />
+                {wallet ? (
+                <>
+                <DisconnectButton
+                    disconnectFn={disconnect}
+                    resetFn={() => {
+                    setWallet(RESET)
+                    }}
+                />
+                </>
+            ) : (
+                <ConnectButton />
+            )}
         </div>
       </div>
     </div>
