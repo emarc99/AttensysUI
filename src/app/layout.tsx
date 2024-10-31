@@ -4,6 +4,8 @@ import type { Metadata } from "next"
 // import { Inter } from "next/font/google"
 import { Providers } from "./providers"
 import { StarknetConfig, argent, braavos, publicProvider, useInjectedConnectors, voyager } from "@starknet-react/core"
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 
 // const inter = Inter({ subsets: ['latin'] });
@@ -23,7 +25,9 @@ export default function RootLayout({
     <html lang="en" > 
       <body>
         <Providers>
+          <Header />
           {children}
+          <Footer />
         </Providers>
       </body>
     </html>

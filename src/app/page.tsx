@@ -28,6 +28,7 @@ import Mockevent from "@/components/Mockevent"
 import MockOrganization from "@/components/MockOrganization"
 import Mockcourse from "@/components/Mockcourse"
 import MockAboutus from "@/components/MockAboutus"
+import Landing from "@/components/Landing"
 
 
 export default function Home() {
@@ -83,7 +84,9 @@ export default function Home() {
 
   return (
     <div>
-      <MockAboutus />
+      {/* <MockAboutus /> */}
+      <Landing />
+
     </div>
   )
 }
