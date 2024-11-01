@@ -1,5 +1,5 @@
 import React from 'react'
-import Coursedropdown from './Coursedropdown'
+import Coursedropdown from '../Coursedropdown'
 import { coursestatusAtom } from '@/state/connectedWalletStarknetkitNext'
 import { useAtom, useSetAtom } from "jotai"
 
