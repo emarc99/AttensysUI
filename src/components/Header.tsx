@@ -11,10 +11,12 @@ import {
   connectorDataAtom,
   walletStarknetkitNextAtom,
 } from "@/state/connectedWalletStarknetkitNext"
-import { useAtom, useSetAtom } from "jotai"
 import { RESET } from "jotai/utils"
 import { DisconnectButton } from './DisconnectButton'
 import { connect, disconnect } from "starknetkit"
+import Coursedropdown from './Coursedropdown'
+import { coursestatusAtom } from '@/state/connectedWalletStarknetkitNext'
+import { useAtom, useSetAtom } from "jotai"
 
 
 
@@ -38,11 +40,25 @@ const Header = () => {
     const setConnector = useSetAtom(connectorAtom)
     const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
     const [searchValue, setSearchValue] = useState('');
+    const [coursestatus, setcourseStatus] = useAtom(coursestatusAtom);
+    const [status] = useAtom(coursestatusAtom); 
+
 
     const handleChange = (event: { target: { value: any } }) => {
       setSearchValue(event.target.value);
     };
     
+    const handleTabClick = (arg : string) => {
+        if (arg == 'Courses') {
+            setcourseStatus(!coursestatus)
+            console.log("course cliked",coursestatus )
+        } else if (arg == 'Events'){
+            console.log("event clicked")
+        }else if (arg == 'Organization') {
+            console.log("organization clicked")
+        }
+    }
+
     useEffect(() => {
         setWalletLatest(RESET)
         setWalletNext(RESET)
@@ -51,7 +67,8 @@ const Header = () => {
       }, [])
 
   return (
-    <Disclosure as="nav" className="bg-[#FFFFFF] pt-1">
+    <>
+    <Disclosure as="nav" className={`${status ? "bg-[#FFFFFF] opacity-80 backdrop-blur-sm" : "bg-[#FFFFFF]"} pt-1 relative z-20`}>
     <div className="mx-6 px-2 sm:px-6 lg:px-8 lg:h-[85px] lg:my-auto">
       <div className="relative flex h-20 items-center justify-between">
         <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -108,9 +125,10 @@ const Header = () => {
                   href={item.href}
                   aria-current={item.current ? 'page' : undefined}
                   className={classNames(
-                    item.current ? 'bg-white text-[#333333]' : 'text-[#333333] hover:bg-gray-700 hover:text-white',
+                    item.current ? 'bg-white text-[#333333]' : 'text-[#333333] hover:bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] hover:text-white',
                     'rounded-md px-3 py-2 font-medium'
                   )}
+                  onClick={() => handleTabClick(item.name)}
                 >
                         {item.name} {index !== 1 &&<span className='text-[10px] mx-3'>{item.current ? '▲' : '▼'}</span>}
                 </a>
@@ -154,6 +172,7 @@ const Header = () => {
       </div>
     </DisclosurePanel> */}
   </Disclosure>
+    </>
   )
 }
 
