@@ -29,7 +29,7 @@ import MockOrganization from "@/components/MockOrganization"
 import Mockcourse from "@/components/Mockcourse"
 import MockAboutus from "@/components/MockAboutus"
 import Landing from "@/components/Landing"
-
+import Explore from "@/components/courses/Explore"
 
 export default function Home() {
   const setWalletLatest = useSetAtom(walletStarknetkitLatestAtom)
@@ -38,7 +38,6 @@ export default function Home() {
   const setConnector = useSetAtom(connectorAtom)
 
   const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
- 
 
   useEffect(() => {
     setWalletLatest(RESET)
@@ -85,8 +84,8 @@ export default function Home() {
   return (
     <div>
       {/* <MockAboutus /> */}
-      <Landing />
-
+      {/* <Landing /> */}
+      <Explore />
     </div>
   )
 }
