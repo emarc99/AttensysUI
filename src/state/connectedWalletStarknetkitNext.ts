@@ -3,7 +3,7 @@ import {
   ChainId,
   NetworkChangeEventHandler,
 } from "@starknet-io/types-js"
-import { useAtomValue, useSetAtom } from "jotai"
+import { useAtomValue, useSetAtom, atom} from "jotai"
 import { atomWithReset } from "jotai/utils"
 import { useEffect } from "react"
 import { ConnectorData, StarknetWindowObject } from "starknetkit-next"
@@ -16,6 +16,8 @@ export const walletStarknetkitNextAtom = atomWithReset<
 export const connectorDataAtom = atomWithReset<ConnectorData | null>(null)
 
 export const connectorAtom = atomWithReset<Connector | null>(null)
+
+export const coursestatusAtom = atom(false);
 
 export const useWalletAccountChange = () => {
   const wallet = useAtomValue(walletStarknetkitNextAtom)

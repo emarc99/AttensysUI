@@ -84,8 +84,8 @@ export default function Home() {
   return (
     <div>
       {/* <MockAboutus /> */}
-      {/* <Landing /> */}
-      <Explore />
+      <Landing />
+      {/* <Explore /> */}
     </div>
   )
 }
