@@ -29,6 +29,7 @@ const MockOrganization = () => {
   const setConnectorData = useSetAtom(connectorDataAtom)
   const setConnector = useSetAtom(connectorAtom)
   const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
+  
   const [inputValue, setInputValue] = useState("")
   const [orgInputValue, setOrgInputValue] = useState("")
   const [classOrgValue, setClassOrgValue] = useState("")

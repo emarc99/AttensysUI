@@ -28,7 +28,7 @@ import Mockevent from "@/components/Mockevent"
 import MockOrganization from "@/components/MockOrganization"
 import Mockcourse from "@/components/Mockcourse"
 import MockAboutus from "@/components/MockAboutus"
-import Landing from "@/components/Landing"
+import Landing from "@/components/homepage/Landing"
 import Explore from "@/components/courses/Explore"
 
 export default function Home() {

@@ -52,7 +52,7 @@ const Explore = () => {
       {/* Hero component */}
       <div>
         <div
-          className={`bg-[url('/hero_asset.png')] text-white h-24 px-28 py-20 bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 h-64 min-h-full sm:min-h-0 md:min-h-full lg:min-h-0 xl:min-h-full `}
+          className={`bg-[url('/hero_asset.png')] text-white h-24 px-28 py-20 from-orange-400 via-red-500 to-pink-500 h-64 min-h-full sm:min-h-0 md:min-h-full lg:min-h-0 xl:min-h-full `}
         >
           {/* Hero lettering */}
           <h1 className="w-5/12 font-bold text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl">

@@ -6,9 +6,9 @@ import Logo from "@/assets/Logo.svg"
 
 const Footer = () => {
   return (
-    <div className='flex space-x-4 justify-between mx-4 py-10  w-[98%]'>
+    <div className='flex space-x-4 justify-between mx-4 py-7  w-[98%]'>
             <div className='bg-[#161313] rounded-lg w-[40%] h-[380px] hidden lg:flex text-white justify-center pt-20'>
-                   <div className='h-[384px] space-y-2 '>
+                   <div className='h-[300px] space-y-2 '>
                    <h1 className='font-semibold text-[34px] leading-[40px] flex text-left w-[320px]'>Built by Geniuses, for Geniuses.</h1>
                     <p className='font-normal text-[16px] leading-[23px] flex text-left w-[480px] pb-10'>Join 1000+ designers, innovators, and creators who have embraced excellence, innovation, and creativity.</p>
                     <Button className="hidden lg:flex rounded-lg bg-gradient-to-r from-[#9B51E0] to-[#4A90E2] py-2 px-4 lg:h-[56px] items-center lg:w-[154px] text-sm text-white data-[hover]:bg-sky-500 data-[active]:bg-sky-700">
@@ -16,8 +16,8 @@ const Footer = () => {
                         <div>
                         Get Started             
                         </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
                                 </svg>
                        </div>
 

@@ -17,6 +17,7 @@ import { connect, disconnect } from "starknetkit"
 import Coursedropdown from './Coursedropdown'
 import { coursestatusAtom } from '@/state/connectedWalletStarknetkitNext'
 import { useAtom, useSetAtom } from "jotai"
+import Link from 'next/link'
 
 
 
@@ -81,11 +82,14 @@ const Header = () => {
           </DisclosureButton>
         </div>
         <div className="lg:flex flex-shrink-0 items-center justify-between space-x-10 hidden">
+            <Link href="/" className='cursor-pointer'>
             <Image
               alt="Your Company"
               src={Logo}
               className="h-8 w-auto"
             />
+            
+            </Link>
             <a href='' className='w-[30%] flex justify-center text-[#9B51E0] text-sm'>
                 Use our explorer
             </a>
@@ -118,7 +122,7 @@ const Header = () => {
 
         <div className="flex items-center justify-center sm:items-stretch sm:justify-end">
           <div className="hidden lg:flex">
-            <div className="flex space-x-12 text-sm">
+            <div className="flex space-x-10 text-sm">
               {navigation.map((item, index) => (
                 <a
                   key={item.name}
@@ -126,11 +130,11 @@ const Header = () => {
                   aria-current={item.current ? 'page' : undefined}
                   className={classNames(
                     item.current ? 'bg-white text-[#333333]' : 'text-[#333333] hover:bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] hover:text-white',
-                    'rounded-md px-3 py-2 font-medium'
+                    'rounded-md px-3 py-2 font-medium cursor-pointer'
                   )}
                   onClick={() => handleTabClick(item.name)}
                 >
-                        {item.name} {index !== 1 &&<span className='text-[10px] mx-3'>{item.current ? '▲' : '▼'}</span>}
+                        {item.name} {index !== 1 &&<span className='text-[10px] mx-1'>{item.current ? '▲' : '▼'}</span>}
                 </a>
               ))}
             </div>
