@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import Coursedropdown from '@/components/Coursedropdown'
+import Coursedropdown from '@/components/courses/Coursedropdown'
 import { useAtom, useSetAtom } from "jotai"
 import { coursestatusAtom } from '@/state/connectedWalletStarknetkitNext'
 import Explore from '@/components/courses/Explore'

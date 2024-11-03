@@ -15,6 +15,9 @@ module.exports = withMT({
       backgroundImage: (theme) => ({
         "hero-pattern": "url('/src/assets/hero_asset.png')",
       }),
+      boxShadow: {
+        'custom-blue': '0px 4px 100px 0px rgba(74, 144, 226, 0.5)',
+      },
     },
   },
   plugins: [],

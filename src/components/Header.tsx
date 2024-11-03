@@ -14,7 +14,7 @@ import {
 import { RESET } from "jotai/utils"
 import { DisconnectButton } from './DisconnectButton'
 import { connect, disconnect } from "starknetkit"
-import Coursedropdown from './Coursedropdown'
+import Coursedropdown from './courses/Coursedropdown'
 import { coursestatusAtom } from '@/state/connectedWalletStarknetkitNext'
 import { useAtom, useSetAtom } from "jotai"
 import Link from 'next/link'
