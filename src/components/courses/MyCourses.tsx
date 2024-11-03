@@ -56,7 +56,7 @@ const MyCourses = () => {
                 <p>Courses</p>
               </div>
 
-              <div>
+              <div className="text-purple-400">
                 <p>4 Course(s)</p>
               </div>
             </div>
@@ -67,7 +67,7 @@ const MyCourses = () => {
                 <p>Completed Course</p>
               </div>
 
-              <div>
+              <div className="text-purple-400">
                 <p>2 Completed Course(s)</p>
               </div>
             </div>
@@ -78,7 +78,7 @@ const MyCourses = () => {
                 <p>Ongoing</p>
               </div>
 
-              <div>
+              <div className="text-purple-400">
                 <p>2 Ongoing Course(s)</p>
               </div>
             </div>
@@ -89,7 +89,7 @@ const MyCourses = () => {
                 <p>Created</p>
               </div>
 
-              <div>
+              <div className="text-purple-400">
                 <p>1 Course(s)</p>
               </div>
             </div>
@@ -280,14 +280,16 @@ const MyCourses = () => {
                       </h4>
 
                       {/* video prop */}
-                      <div className="flex ">
+                      <div className="flex mt-7">
                         <div className="flex ">
                           <FaPlay />
                           <p>Total play time: 2 hrs 35 mins</p>
                         </div>
                         <div className="flex ml-5 ">
-                          <GrDiamond color="#2D3A4B" />
-                          <p>Difficulty level: Elementary</p>
+                          <p>|</p>
+                          <p className="underline ml-3">
+                            Created by Akinbola Kehinde
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -313,26 +315,28 @@ const MyCourses = () => {
                   <div className="mr-6">
                     <Image src={videoHero} alt="video" />
                   </div>
-                  <div className="mt-10">
+                  <div className="mt-10 mb-5">
                     <div>
                       <h4 className="font-bold text-2xl">
                         Elementary Crypto Trading
                       </h4>
 
                       {/* video prop */}
-                      <div className="flex ">
+                      <div className="flex mt-7">
                         <div className="flex ">
                           <FaPlay />
                           <p>Total play time: 2 hrs 35 mins</p>
                         </div>
                         <div className="flex ml-5 ">
-                          <GrDiamond color="#2D3A4B" />
-                          <p>Difficulty level: Elementary</p>
+                          <p>|</p>
+                          <p className="underline ml-3">
+                            Created by Akinbola Kehinde
+                          </p>
                         </div>
                       </div>
                     </div>
 
-                    <div>
+                    <div className="my-3">
                       <ProgressBar completed={60} />
                     </div>
 
@@ -360,14 +364,16 @@ const MyCourses = () => {
                       </h4>
 
                       {/* video prop */}
-                      <div className="flex ">
+                      <div className="flex mt-7">
                         <div className="flex ">
                           <FaPlay />
                           <p>Total play time: 2 hrs 35 mins</p>
                         </div>
                         <div className="flex ml-5 ">
-                          <GrDiamond color="#2D3A4B" />
-                          <p>Difficulty level: Elementary</p>
+                          <p>|</p>
+                          <p className="underline ml-3">
+                            Created by Akinbola Kehinde
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -400,14 +406,16 @@ const MyCourses = () => {
                       </h4>
 
                       {/* video prop */}
-                      <div className="flex ">
+                      <div className="flex mt-7">
                         <div className="flex ">
                           <FaPlay />
                           <p>Total play time: 2 hrs 35 mins</p>
                         </div>
                         <div className="flex ml-5 ">
-                          <GrDiamond color="#2D3A4B" />
-                          <p>Difficulty level: Elementary</p>
+                          <p>|</p>
+                          <p className="underline ml-3">
+                            Created by Akinbola Kehinde
+                          </p>
                         </div>
                       </div>
                     </div>
