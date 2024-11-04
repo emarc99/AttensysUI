@@ -26,7 +26,7 @@ import Link from 'next/link'
 const navigation = [
     { name: 'Courses', href: '#', current: false },
     { name: 'Events', href: '#', current: false },
-    { name: 'Organization', href: '#', current: false },
+    { name: 'Bootcamps', href: '#', current: false },
   ]
   
   function classNames(...classes: any[]) {
@@ -72,7 +72,7 @@ const Header = () => {
     <Disclosure as="nav" className={`${status ? "bg-[#FFFFFF] opacity-80 backdrop-blur-sm" : "bg-[#FFFFFF]"} pt-1 relative z-20 overflow-hidden w-[100%] clg:overflow-hidden clg:w-[98%] lclg:w-[100%] lclg:overflow-hidden ipad:w-[100%] ipad:overflow-hidden mx-auto`}>
     <div className=" flex justify-center items-center sm:px-6 lg:px-8 lg:h-[85px] lg:my-auto clg:w-[100%] w-full">
       <div className="relative flex h-20 items-center justify-between w-[98%]">
-        <div className="lg:flex flex-shrink-0 items-center flex justify-between clg:w-[55%] lclg:w-[46%] ipad:w-[45%]  lclg:mx-auto clg:mx-auto space-x-10 clg:space-x-6 lclg:space-x-6  md:hidden sm:hidden">
+        <div className="lg:flex flex-shrink-0 items-center flex justify-between clg:w-[55%] lclg:w-[46%] lclg:mx-auto clg:mx-auto space-x-6 clg:space-x-6 lclg:space-x-6  md:hidden sm:hidden">
             <Link href="/" className='cursor-pointer'>
             <Image
               alt="Your Company"
@@ -81,17 +81,17 @@ const Header = () => {
             />
             
             </Link>
-            <a href='' className='w-[30%] flex justify-center text-[#9B51E0]'>
+            <a href='' className='w-[28%] flex justify-center text-[#9B51E0]'>
                 Use our explorer
             </a>
-            <div className="relative w-[600px] lclg:w-[380px]">
+            <div className="relative w-[550px] lclg:w-[380px]">
             <Input
                 name="search by address"
                 type="text"
                 placeholder="       Search by address"
                 value={searchValue}
                  onChange={handleChange}
-                className="w-[80%] clg:w-[70%] w lclg:w-[90%] ipad:w-[90%] p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
+                className="w-[80%] clg:w-[70%] lclg:w-[90%] p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
             />
                   {!searchValue &&(  <svg
                     xmlns="http://www.w3.org/2000/svg"
