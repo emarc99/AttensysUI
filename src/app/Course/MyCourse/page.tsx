@@ -1,12 +1,12 @@
 "use client"
 import React from "react"
-import Coursedropdown from "@/components/Coursedropdown"
+import Coursedropdown from "@/components/courses/Coursedropdown"
 import { useAtom, useSetAtom } from "jotai"
 import { coursestatusAtom } from "@/state/connectedWalletStarknetkitNext"
 import Explore from "@/components/courses/Explore"
 import MyCourses from "@/components/courses/MyCourses"
 
-const index = () => {
+const Index = () => {
   const [status] = useAtom(coursestatusAtom)
   return (
     <div className=" ">
@@ -20,4 +20,4 @@ const index = () => {
   )
 }
 
-export default index
+export default Index

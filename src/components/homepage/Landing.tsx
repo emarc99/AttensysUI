@@ -9,6 +9,8 @@ import Guide from './Guide'
 import World from './World'
 import Eventsection from './Eventsection'
 import Experience from './Experience'
+import Testimonial from './Testimonial'
+import Faq from './Faq'
 const Landing = () => {
     const [status] = useAtom(coursestatusAtom); 
   return (
@@ -22,6 +24,8 @@ const Landing = () => {
         <World />
         <Eventsection />
         <Experience />
+        <Testimonial />
+        <Faq />
     </div>
   )
 }

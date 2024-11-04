@@ -7,7 +7,7 @@ import Explore from '@/components/courses/Explore'
 
 
 
-const index = () => {
+const Index = () => {
   const [status] = useAtom(coursestatusAtom); 
   return (
     <div>
@@ -18,4 +18,4 @@ const index = () => {
   )
 }
 
-export default index
+export default Index

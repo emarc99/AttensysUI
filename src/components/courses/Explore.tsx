@@ -67,8 +67,8 @@ const Explore = () => {
 
       {/* skills  */}
       <div className="mx-12 my-16 flex flex-row justify-center">
-        {skills.map((item) => (
-          <p className="bg-[#2D3A4B] p-6 text-white">{item}</p>
+        {skills.map((item, index) => (
+          <p className="bg-[#2D3A4B] p-6 text-white" key={index}>{item}</p>
         ))}
       </div>
 

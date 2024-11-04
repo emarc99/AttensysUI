@@ -18,7 +18,7 @@ const Guide = () => {
                         <div className='space-y-2'>
                         <h1 className='text-[18px] text-[#FFFFFF] font-bold leading-[21px]'>Sign Up</h1>
                         <p className='text-[14.63px] text-[#FFFFFF] font-light text-justify'>Create an account and get instant access 
-                          to our dashboard. Whether you're a school, 
+                          to our dashboard. Whether you are a school, 
                           organization, or event manager, we have 
                           the tools for you.</p>
                         </div>

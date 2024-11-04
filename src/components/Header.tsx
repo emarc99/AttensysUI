@@ -69,38 +69,29 @@ const Header = () => {
 
   return (
     <>
-    <Disclosure as="nav" className={`${status ? "bg-[#FFFFFF] opacity-80 backdrop-blur-sm" : "bg-[#FFFFFF]"} pt-1 relative z-20`}>
-    <div className="mx-6 px-2 sm:px-6 lg:px-8 lg:h-[85px] lg:my-auto">
-      <div className="relative flex h-20 items-center justify-between">
-        <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-          {/* Mobile menu button*/}
-          <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-            <span className="absolute -inset-0.5" />
-            <span className="sr-only">Open main menu</span>
-            <Bars3Icon aria-hidden="true" className="block h-6 w-6 group-data-[open]:hidden" />
-            <XMarkIcon aria-hidden="true" className="hidden h-6 w-6 group-data-[open]:block" />
-          </DisclosureButton>
-        </div>
-        <div className="lg:flex flex-shrink-0 items-center justify-between space-x-10 hidden">
+    <Disclosure as="nav" className={`${status ? "bg-[#FFFFFF] opacity-80 backdrop-blur-sm" : "bg-[#FFFFFF]"} pt-1 relative z-20 overflow-hidden w-[100%] clg:overflow-hidden clg:w-[98%] lclg:w-[100%] lclg:overflow-hidden ipad:w-[100%] ipad:overflow-hidden mx-auto`}>
+    <div className=" flex justify-center items-center sm:px-6 lg:px-8 lg:h-[85px] lg:my-auto clg:w-[100%] w-full">
+      <div className="relative flex h-20 items-center justify-between w-[98%]">
+        <div className="lg:flex flex-shrink-0 items-center flex justify-between clg:w-[55%] lclg:w-[46%] ipad:w-[45%]  lclg:mx-auto clg:mx-auto space-x-10 clg:space-x-6 lclg:space-x-6  md:hidden sm:hidden">
             <Link href="/" className='cursor-pointer'>
             <Image
               alt="Your Company"
               src={Logo}
-              className="h-8 w-auto"
+              className="h-8 w-full"
             />
             
             </Link>
-            <a href='' className='w-[30%] flex justify-center text-[#9B51E0] text-sm'>
+            <a href='' className='w-[30%] flex justify-center text-[#9B51E0]'>
                 Use our explorer
             </a>
-            <div className="relative w-[600px]">
+            <div className="relative w-[600px] lclg:w-[380px]">
             <Input
                 name="search by address"
                 type="text"
                 placeholder="       Search by address"
                 value={searchValue}
                  onChange={handleChange}
-                className="w-[80%] p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
+                className="w-[80%] clg:w-[70%] w lclg:w-[90%] ipad:w-[90%] p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
             />
                   {!searchValue &&(  <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -122,7 +113,7 @@ const Header = () => {
 
         <div className="flex items-center justify-center sm:items-stretch sm:justify-end">
           <div className="hidden lg:flex">
-            <div className="flex space-x-10 text-sm">
+            <div className="flex xlg:space-x-24 text-sm">
               {navigation.map((item, index) => (
                 <a
                   key={item.name}
@@ -140,7 +131,7 @@ const Header = () => {
             </div>
           </div>
         </div>
-        <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+        <div className="absolute inset-y-0 right-0 flex items-center sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 {wallet ? (
                 <>
                 <DisconnectButton
@@ -156,6 +147,17 @@ const Header = () => {
         </div>
       </div>
     </div>
+
+
+{/* mobile  */}
+    {/* <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+          <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+            <span className="absolute -inset-0.5" />
+            <span className="sr-only">Open main menu</span>
+            <Bars3Icon aria-hidden="true" className="block h-6 w-6 group-data-[open]:hidden" />
+            <XMarkIcon aria-hidden="true" className="hidden h-6 w-6 group-data-[open]:block" />
+          </DisclosureButton>
+        </div> */}
 
     {/* <DisclosurePanel className="sm:hidden">
       <div className="space-y-1 px-2 pb-3 pt-2">

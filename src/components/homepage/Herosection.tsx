@@ -16,13 +16,20 @@ import line from "@/assets/line.svg"
 const Herosection = () => {
   return (
     <div className="hidden lg:flex h-[460px] w-[80%] mx-auto pt-6">
+      <Image alt="model" src={bluesplit} className="absolute left-[8%] mt-[2rem] lg:mt-[3rem]" />
+      <Image alt="model" src={ship} className="absolute z-[10] right-[25%] lg:right-[42%] w-[160px] lg:w-[160px]" />
+      <Image alt="model" src={leftrectangle} className="absolute mt-[2rem] lg:mt-[3rem] z-[5] right-[20%] lg:right-[32%] clg:right-[35%]" />
+      <Image alt="model" src={circle} className="absolute mt-[10rem] lg:mt-[15rem] z-[10] right-[28%] lg:right-[33.56%] lclg:right-[36.8%] clg:right-[37.5%] w-[32px] lg:w-[42px]" />
+      <Image alt="model" src={line} className="absolute left-[20%] lg:left-[28%]  mt-[10rem] lg:mt-[15rem]" />
+      <Image alt="model" src={kite} className="absolute z-[10] mt-[20rem] lg:mt-[22rem] right-[30%] lg:right-[46%] w-[40px] lg:w-[54px]" />
+
       <div className="flex h-[100%] justify-between">
         <div className="w-[100%] space-y-8 h-[55%] my-auto px-12">
-          <h1 className="w-[76%] items-center text-[36px] leading-[45px] font-bold text-[#2D3A4B]">
+          <h1 className="w-[70%] items-center text-[36px] clg:text-[30px] lclg:text-[28px] leading-[45px] font-bold text-[#2D3A4B]">
             One <span className="text-[#9B51E0]">Platform</span>, Infinite
             Possibilities—Track, Stream, and Secure Your Certifications
           </h1>
-          <p className="text-[#2D3A4B] font-light text-[17px] leading-[22px] w-[85%] ">
+          <p className="text-[#2D3A4B] font-light text-[17px] leading-[22px] w-[82%] ">
             Simplifying certificate issuance, attendance tracking, and online
             course management for schools, organizations, and event managers.
           </p>
@@ -35,64 +42,14 @@ const Herosection = () => {
             </Button>
           </div>
         </div>
-        <div className="h-[100%] w-[55%] flex justify-end">
-          <Image
-            alt="model"
-            src={kite}
-            className="absolute z-[10] mt-[23rem] right-[46%] w-[54px]"
-          />
-          <Image
-            alt="model"
-            src={ship}
-            className="absolute z-[10] right-[36%] w-[206px]"
-          />
-          <Image
-            alt="model"
-            src={circle}
-            className="absolute mt-[15rem] z-[10] right-[33.56%] w-[42px]"
-          />
-          <Image
-            alt="model"
-            src={leftrectangle}
-            className="absolute mt-[3rem] z-[5] right-[29%]"
-          />
-          <Image
-            alt="model"
-            src={star}
-            className="absolute mt-[3rem] w-[25px]"
-          />
-          <Image alt="model" src={model} className="h-[100%] w-[100%] z-10" />
-          <Image
-            alt="model"
-            src={rectangle}
-            className="absolute mt-[10.5rem] mx-14"
-          />
-          <Image
-            alt="model"
-            src={bg}
-            className="absolute mt-[8rem] mr-3 w-[100px]"
-          />
-          <Image
-            alt="model"
-            src={splitline}
-            className="absolute mt-[27.3rem] mr-5 w-[50px]"
-          />
-          <Image
-            alt="model"
-            src={bluesplit}
-            className="absolute left-[8%] mt-[3rem]"
-          />
-          <Image
-            alt="model"
-            src={line}
-            className="absolute left-[28%] mt-[15rem]"
-          />
-          <Image
-            alt="model"
-            src={circle}
-            className="absolute mt-[9.5rem] mr-9 w-[60px]"
-          />
-        </div>
+    <div className="h-full w-full lg:w-[45%] clg:w-[50%] flex justify-end relative">
+      <Image alt="model" src={star} className="absolute mt-[2rem] lg:mt-[3rem] w-[20px] lg:w-[25px]" />
+      <Image alt="model" src={model} className="h-full w-full z-10 clg:mr-[70px] lg:mr-[20px]" />
+      <Image alt="model" src={rectangle} className="absolute mt-[8rem] lg:mt-[10.5rem] mx-10 lg:mx-14" />
+      <Image alt="model" src={bg} className="absolute mt-[6rem] lg:mt-[8rem] mr-3 w-[80px] lg:w-[100px]" />
+      <Image alt="model" src={splitline} className="absolute mt-[23rem] lg:mt-[27.3rem] mr-5 w-[40px] lg:w-[50px]" />
+      <Image alt="model" src={circle} className="absolute mt-[8rem] lg:mt-[9.5rem] mr-6 lg:mr-9 w-[50px] lg:w-[60px]" />
+    </div>
       </div>
     </div>
   )

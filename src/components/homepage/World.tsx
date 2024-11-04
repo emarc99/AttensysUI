@@ -26,7 +26,7 @@ const World = () => {
                    <Image
                     alt="icon"
                     src={plane}
-                    className="absolute w-[350px] h-[350px] ml-64 mt-28"
+                    className="absolute w-[350px] clg:w-[320px] lclg:w-[210px] h-[350px] ml-64 mt-28"
                 />
             </div>
     </div>

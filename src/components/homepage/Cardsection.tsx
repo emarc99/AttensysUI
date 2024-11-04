@@ -25,7 +25,7 @@ const Cardsection = () => {
   return (
     <div className='mt-20 h-[260px] w-[90%] mx-auto hidden lg:flex justify-center space-x-6'>     
        {data.map((item, index) => (            
-       <div className='w-[424px] h-[190px] bg-[#FFFFFF] rounded-xl shadow-lg flex justify-center items-center space-x-4'>
+       <div key={index} className='w-[424px] h-[190px] bg-[#FFFFFF] rounded-xl shadow-lg flex justify-center items-center space-x-4'>
         <Image
             alt="icon"
             src={item?.icon}
