@@ -19,6 +19,12 @@ export const connectorAtom = atomWithReset<Connector | null>(null)
 
 export const coursestatusAtom = atom(false);
 
+export const eventcreatedAtom = atom(true);
+export const eventregistedAtom = atom(false);
+export const existingeventCreationAtom = atom(false);
+export const createEventClickAtom = atom(false);
+export const createorexplore = atom(false);
+
 export const useWalletAccountChange = () => {
   const wallet = useAtomValue(walletStarknetkitNextAtom)
   const setConnectorData = useSetAtom(connectorDataAtom)

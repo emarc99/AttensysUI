@@ -18,6 +18,7 @@ import Coursedropdown from './courses/Coursedropdown'
 import { coursestatusAtom } from '@/state/connectedWalletStarknetkitNext'
 import { useAtom, useSetAtom } from "jotai"
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 
 
@@ -35,6 +36,7 @@ const navigation = [
 
 
 const Header = () => {
+    const router = useRouter();
     const setWalletLatest = useSetAtom(walletStarknetkitLatestAtom)
     const setWalletNext = useSetAtom(walletStarknetkitNextAtom)
     const setConnectorData = useSetAtom(connectorDataAtom)
@@ -44,17 +46,17 @@ const Header = () => {
     const [coursestatus, setcourseStatus] = useAtom(coursestatusAtom);
     const [status] = useAtom(coursestatusAtom); 
 
-
     const handleChange = (event: { target: { value: any } }) => {
       setSearchValue(event.target.value);
     };
+
     
     const handleTabClick = (arg : string) => {
         if (arg == 'Courses') {
             setcourseStatus(!coursestatus)
             console.log("course cliked",coursestatus )
         } else if (arg == 'Events'){
-            console.log("event clicked")
+          router.push('/Events/events')
         }else if (arg == 'Organization') {
             console.log("organization clicked")
         }
@@ -81,7 +83,7 @@ const Header = () => {
             />
             
             </Link>
-            <a href='' className='w-[28%] flex justify-center text-[#9B51E0]'>
+            <a href='' className='w-[28%] lclg:w-[40%] flex justify-center text-[#9B51E0]'>
                 Use our explorer
             </a>
             <div className="relative w-[550px] lclg:w-[380px]">

@@ -21,6 +21,7 @@ module.exports = withMT({
       backgroundImage: (theme) => ({
         "hero-pattern": "url('/src/assets/hero_asset.png')",
         'testimonial-gradient': 'linear-gradient(90deg, rgba(155, 81, 224, 0.2) 0%, rgba(74, 144, 226, 0.2) 100%)',
+        'event-gradient': 'linear-gradient(174.77deg, #2D3A4B 4.2%, #9B51E0 180.81%)',
       }),
       boxShadow: {
         'custom-blue': '0px 4px 100px 0px rgba(74, 144, 226, 0.5)',
