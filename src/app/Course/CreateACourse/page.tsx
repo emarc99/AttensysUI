@@ -21,17 +21,10 @@ const CreateACourse = () => {
       <Coursedropdown />
 
       <div className="min-w-full w-[100%] min-h-full bg-[#F5FAF7]">
-        {/* <CourseForm /> */}
-        {/* <CourseForm2 /> */}
-
         {
           // Only render this on home page
           path === "/Course/CreateACourse" && <CourseForm />
         }
-        { // Only render this on home page
-      path === "/Course/CreateACourse" && <CourseForm2 />
-    }
-        {/* <CourseForm3 /> */}
       </div>
     </div>
   )
