@@ -3,10 +3,15 @@ import React from "react"
 import Coursedropdown from "@/components/courses/Coursedropdown"
 import { useAtom, useSetAtom } from "jotai"
 import { coursestatusAtom } from "@/state/connectedWalletStarknetkitNext"
-import MyCourses from "@/components/courses/MyCourses"
 
-const Index = () => {
+import CourseForm3 from "@/components/courses/course-form/CourseForm3"
+
+import { usePathname } from "next/navigation"
+
+const CreateACourse2 = () => {
   const [status] = useAtom(coursestatusAtom)
+  const path = usePathname()
+
   return (
     <div className=" ">
       {status && (
@@ -14,9 +19,11 @@ const Index = () => {
       )}
       <Coursedropdown />
 
-      <MyCourses />
+      <div className="min-w-full w-[100%] min-h-full bg-[#F5FAF7]">
+        {path === "/Course/create-a-course-2" && <CourseForm3 />}
+      </div>
     </div>
   )
 }
 
-export default Index
+export default CreateACourse2

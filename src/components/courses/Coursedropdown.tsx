@@ -75,8 +75,8 @@ const Coursedropdown = () => {
             <div className="space-y-2 w-[350px]">
               <div className="flex space-x-3">
                 <VscNewFile className="size-6 text-[#9747FF] w-[20px] h-[20px] my-auto" />
-                <h1 className="text-[16px] font-bold cursor-pointer">
-                  Create a course
+                <h1  className="text-[16px] font-bold cursor-pointer">
+               <a href="/Course/CreateACourse">Create a course</a>   
                 </h1>
               </div>
               <p className="text-[13px]">
