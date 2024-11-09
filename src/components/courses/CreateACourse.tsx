@@ -20,7 +20,7 @@ const CreateACourse = () => {
         <div className="bg-white p-10 rounded border-[#bcbcbc] border">
           <div className="flex items-center justify-between text-sm">
             <div className="">
-              <p className="font-bold">Let's get started</p>
+              <p className="font-bold">{`Let's get started`}</p>
               <p>Setup your course in a few easy steps</p>
             </div>
             <div>
