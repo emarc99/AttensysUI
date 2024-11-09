@@ -4,7 +4,6 @@ import Coursedropdown from "@/components/courses/Coursedropdown"
 import { useAtom, useSetAtom } from "jotai"
 import { coursestatusAtom } from "@/state/connectedWalletStarknetkitNext"
 
-
 import { usePathname } from "next/navigation"
 import LeftSideBar from "@/components/courses/LeftSideBar"
 import MainFormView from "@/components/courses/MainFormView"
@@ -30,9 +29,7 @@ const CourseCert = () => {
           </div>
         </div>
 
-        <div className="bg-[#F5FAF7] flex-1">
-          
-        </div>
+        <div className="bg-[#F5F7FA] flex-1"></div>
       </div>
     </div>
   )

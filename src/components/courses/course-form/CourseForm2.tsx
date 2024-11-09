@@ -2,7 +2,7 @@ import React from "react"
 
 const CourseForm2 = () => {
   return (
-    <div className="mx-auto  w-5/12">
+    <div className="mx-auto  w-5/12 pt-16">
       <div>
         <h1 className="mb-12 font-bold text-2xl">
           Who is your course for, and what should they know before starting?

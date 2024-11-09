@@ -28,7 +28,7 @@ const CreateSetup = () => {
           </div>
         </div>
 
-        <div className="bg-[#F5FAF7] flex-1">
+        <div className="bg-[#F5F7FA] flex-1">
           <MainFormView />
         </div>
       </div>

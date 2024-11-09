@@ -5,7 +5,7 @@ const CourseForm = () => {
     event.preventDefault()
   }
   return (
-    <div className="mx-auto  w-5/12">
+    <div className="mx-auto  w-5/12 pt-16">
       <div>
         <h1 className="mb-12 font-bold text-2xl">
           What is the primary goal of your course?

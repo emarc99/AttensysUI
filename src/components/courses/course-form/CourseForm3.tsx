@@ -2,11 +2,10 @@ import React from "react"
 
 const CourseForm3 = () => {
   return (
-    <div className="mx-auto  w-5/12">
+    <div className="mx-auto  w-5/12 pt-16">
       <div>
         <h1 className="mb-12 font-bold text-2xl">
-        Do you already have a plan for what your 
-        course will cover?
+          Do you already have a plan for what your course will cover?
         </h1>
       </div>
       <form action="CourseSetup">
@@ -22,7 +21,7 @@ const CourseForm3 = () => {
               value="Bike"
             />
             <label className="block my-5 ml-3">
-            Yes, I have a complete course plan
+              Yes, I have a complete course plan
             </label>
           </div>
           <div className="flex">
@@ -36,7 +35,7 @@ const CourseForm3 = () => {
               value="Bike"
             />
             <label className="block my-5 ml-3">
-            I have a rough plan, but it needs work
+              I have a rough plan, but it needs work
             </label>
           </div>
           <div className="flex">
@@ -50,7 +49,7 @@ const CourseForm3 = () => {
               value="Bike"
             />
             <label className="block my-5 ml-3">
-            I have some ideas but no clear plan yet
+              I have some ideas but no clear plan yet
             </label>
           </div>
 
@@ -65,14 +64,14 @@ const CourseForm3 = () => {
               value="Bike"
             />
             <label className="block my-5 ml-3">
-            I need help organizing the course
+              I need help organizing the course
             </label>
           </div>
         </div>
 
         <div className="text-center">
           <button className="rounded bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] px-48 py-3 mt-12 mb-44 text-white">
-           Setup my course
+            Setup my course
           </button>
         </div>
       </form>

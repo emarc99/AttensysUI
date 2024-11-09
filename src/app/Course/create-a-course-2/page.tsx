@@ -19,7 +19,7 @@ const CreateACourse2 = () => {
       )}
       <Coursedropdown />
 
-      <div className="min-w-full w-[100%] min-h-full bg-[#F5FAF7]">
+      <div className="min-w-full w-[100%] min-h-full bg-[#F5F7FA]">
         {path === "/Course/create-a-course-2" && <CourseForm3 />}
       </div>
     </div>

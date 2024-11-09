@@ -14,13 +14,13 @@ const CreateACourse = () => {
   const path = usePathname()
 
   return (
-    <div className=" ">
+    <div className="">
       {status && (
         <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
       )}
       <Coursedropdown />
 
-      <div className="min-w-full w-[100%] min-h-full bg-[#F5FAF7]">
+      <div className="min-w-full w-[100%] min-h-full bg-[#F5F7FA]">
         {
           // Only render this on home page
           path === "/Course/CreateACourse" && <CourseForm />
