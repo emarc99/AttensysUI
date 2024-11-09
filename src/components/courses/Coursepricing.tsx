@@ -35,8 +35,8 @@ const Coursepricing = () => {
                 Course Name
               </label>
               <p className="text-sm">
-                If you're unsure of the perfect title now, don't worry—you can
-                always update it later.
+                {`If you're unsure of the perfect title now, don't worry—you can
+                always update it later.`}
               </p>
               <div className="flex items-start my-4">
                 <input

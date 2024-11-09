@@ -23,6 +23,8 @@ import { HiBadgeCheck } from "@react-icons/all-files/hi/HiBadgeCheck"
 import { FaPlay } from "@react-icons/all-files/fa/FaPlay"
 import { GrDiamond } from "@react-icons/all-files/gr/GrDiamond"
 import { IoMdArrowDropdown } from "@react-icons/all-files/io/IoMdArrowDropdown"
+import { FaCheck } from "@react-icons/all-files/fa/FaCheck"
+import { FaTimes } from "@react-icons/all-files/fa/FaTimes"
 import ProgressBar from "@ramonak/react-progress-bar"
 import { BsFillExclamationCircleFill } from "@react-icons/all-files/bs/BsFillExclamationCircleFill"
 import Notification from "./Notification"
@@ -110,8 +112,17 @@ const MyCourses = () => {
     <div className="flex flex-row mx-20 my-8">
       <div className="pt-12">
         {/* User info */}
-        <Card className="w-96 border-2">
-          <CardBody>
+        <Card
+          className="w-96 border-2"
+          placeholder={undefined}
+          onPointerEnterCapture={undefined}
+          onPointerLeaveCapture={undefined}
+        >
+          <CardBody
+            placeholder={undefined}
+            onPointerEnterCapture={undefined}
+            onPointerLeaveCapture={undefined}
+          >
             {/* <Image className="object-cover " alt="robot" src={robotImg} /> */}
             <div className="flex justify-between items-start mt-4">
               <div className="flex justify-around">
@@ -128,7 +139,12 @@ const MyCourses = () => {
               </div>
             </div>
           </CardBody>
-          <CardFooter className="pt-0">
+          <CardFooter
+            className="pt-0"
+            placeholder={undefined}
+            onPointerEnterCapture={undefined}
+            onPointerLeaveCapture={undefined}
+          >
             {coursesProgress.map((item, i) => (
               <div
                 key={i}
@@ -153,8 +169,15 @@ const MyCourses = () => {
           <Card
             className={`w-96 border-2 my-3 cursor-pointer hover:bg-violet-600 active:bg-violet-700 ${selected == item.title ? "focus:outline-none focus:ring focus:ring-violet-300" : ""} `}
             key={i}
+            placeholder={undefined}
+            onPointerEnterCapture={undefined}
+            onPointerLeaveCapture={undefined}
           >
-            <CardBody>
+            <CardBody
+              placeholder={undefined}
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+            >
               <div
                 className="flex justify-between text-sm items-start "
                 onClick={() => {
@@ -183,8 +206,17 @@ const MyCourses = () => {
           item && item.tag == selected ? (
             <div className="block py-12 " key={i}>
               {/* courses created */}
-              <Card className="border-2">
-                <CardBody>
+              <Card
+                className="border-2"
+                placeholder={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+              >
+                <CardBody
+                  placeholder={undefined}
+                  onPointerEnterCapture={undefined}
+                  onPointerLeaveCapture={undefined}
+                >
                   <div className="flex justify-between border-b-4 my-3">
                     {/* activate */}
                     <div className="flex text-gradient-to-r from-purple-400 via-purple-30 mx-8 my-5">
@@ -198,8 +230,8 @@ const MyCourses = () => {
                         checked={isActivated}
                         onColor="#9B51E0"
                         offColor="#4A90E2"
-                        uncheckedHandleIcon={false}
-                        checkedHandleIcon={false}
+                        uncheckedHandleIcon={<FaTimes />}
+                        checkedHandleIcon={<FaCheck />}
                       />
                       <p>Activate</p>
                     </div>
@@ -252,7 +284,14 @@ const MyCourses = () => {
                     </div>
                   </div>
                 </CardBody>
-                <CardFooter className="pt-0"></CardFooter>
+                <CardFooter
+                  className="pt-0"
+                  placeholder={undefined}
+                  onPointerEnterCapture={undefined}
+                  onPointerLeaveCapture={undefined}
+                >
+                  {undefined}
+                </CardFooter>
               </Card>
             </div>
           ) : null,
@@ -263,8 +302,18 @@ const MyCourses = () => {
           {learningDetails.map((item, i) =>
             item && item.tag == selected ? (
               <div className="py-12" key={i}>
-                <Card className="border-2 " key={i}>
-                  <CardBody>
+                <Card
+                  className="border-2 "
+                  key={i}
+                  placeholder={undefined}
+                  onPointerEnterCapture={undefined}
+                  onPointerLeaveCapture={undefined}
+                >
+                  <CardBody
+                    placeholder={undefined}
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                  >
                     {item.no == 1 ? (
                       <div className="flex justify-between border-b-4 my-3">
                         {/* activate */}
@@ -330,7 +379,14 @@ const MyCourses = () => {
                       </div>
                     </div>
                   </CardBody>
-                  <CardFooter className="pt-0"></CardFooter>
+                  <CardFooter
+                    className="pt-0"
+                    placeholder={undefined}
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                  >
+                    {undefined}
+                  </CardFooter>
                 </Card>
               </div>
             ) : null,

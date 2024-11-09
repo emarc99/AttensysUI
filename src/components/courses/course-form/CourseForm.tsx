@@ -1,7 +1,7 @@
 import React from "react"
 
 const CourseForm = () => {
-  const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleNext = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
   }
   return (
