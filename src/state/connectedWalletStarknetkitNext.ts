@@ -25,6 +25,12 @@ export const existingeventCreationAtom = atom(false);
 export const createEventClickAtom = atom(false);
 export const createorexplore = atom(false);
 
+export const insightClick = atom(true);
+export const guestlistclick = atom(false);
+export const attendanceclick = atom(false);
+export const sponsorshipclick = atom(false);
+
+
 export const useWalletAccountChange = () => {
   const wallet = useAtomValue(walletStarknetkitNextAtom)
   const setConnectorData = useSetAtom(connectorDataAtom)

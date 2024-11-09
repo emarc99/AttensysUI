@@ -27,7 +27,7 @@ const OverviewDiscover = (props : any) => {
             <h1>My Events</h1>
             </div>
             <div className="w-[1px] h-[24px] bg-[#9B51E0]"></div>
-            <div className='flex space-x-3 items-center cursor-pointer'onClick={handlerouting}>
+            <div className='flex space-x-3 items-center cursor-pointer'>
             <h1>{props.eventsname}</h1>
             </div>
         </div>

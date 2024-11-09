@@ -10,7 +10,7 @@ import {
   eventregistedAtom,
   existingeventCreationAtom,
   createEventClickAtom,
-  createorexplore
+  createorexplore,
 } from "@/state/connectedWalletStarknetkitNext"
 import { useAtom, useSetAtom } from "jotai"
 import { useRouter } from 'next/navigation'
@@ -64,7 +64,8 @@ const Myevents = (props: any) => {
   }
 
   const handleCreateEventButton = () => {
-    router.push('/Overview/sample-event')
+    //@todo replace sample event with event name
+    router.push('/Overview/sample-event/insight')
 
   }
 
