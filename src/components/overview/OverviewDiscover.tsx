@@ -14,6 +14,9 @@ const OverviewDiscover = (props : any) => {
     const handlerouting = () => {
       router.push('/Events/events')
     }
+    const handleEventPage = () =>{
+      router.push(`/Eventpage/${props.eventsname}`)
+    }
   return (
     <div className='h-[100px] clg:h-[80px] lg:[70px] lclg:[60px] flex justify-between w-[90%] mx-auto items-center'>
         <div className='flex w-[600px] clg:w-[700px] lclg:w-[700px] space-x-8 items-center'>
@@ -38,7 +41,7 @@ const OverviewDiscover = (props : any) => {
                     </div>
                     <div>Edit Event</div>
                 </Button>
-                <Button className="hidden justify-center lg:flex rounded-lg bg-[#2D3A4B] py-2 px-4 lg:h-[50px] items-center lg:w-[147px] text-sm text-[#FFFFFF] data-[hover]:bg-sky-500 data-[active]:bg-sky-700">
+                <Button onClick={handleEventPage} className="hidden justify-center lg:flex rounded-lg bg-[#2D3A4B] py-2 px-4 lg:h-[50px] items-center lg:w-[147px] text-sm text-[#FFFFFF] data-[hover]:bg-sky-500 data-[active]:bg-sky-700">
                     <div>Event Page</div>
                     <div className="flex space-x-4 items-center font-semibold text-[16px]">
                     <Image src={goto} alt="ticket" className="" />

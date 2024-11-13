@@ -311,7 +311,7 @@ const boiler = () => {
       )}
             </>
       default:
-        return <p>Welcome to our site! Please choose a section.</p>;
+        return <p>Error 404</p>;
     }
   };
 

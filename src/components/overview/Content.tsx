@@ -3,6 +3,9 @@ import { useRouter } from 'next/navigation'
 import {insightClick,guestlistclick,attendanceclick,sponsorshipclick } from '@/state/connectedWalletStarknetkitNext'
 import { useAtom } from 'jotai'
 import Insight from './Insight'
+import Guestlist from './Guestlist'
+import Attendance from './Attendance'
+import Sponsorship from './Sponsorship'
 
 const Content = (props: any) => {
     const router = useRouter();
@@ -10,6 +13,7 @@ const Content = (props: any) => {
     const [guestlistclickstat, setguestlistclickstat] = useAtom(guestlistclick)
     const [attendanceclickstat, setattendanceclickstat] = useAtom(attendanceclick)
     const [sponsorshipclickstat, setsponsorshipclickstat] = useAtom(sponsorshipclick)
+
 
     const renderInnerContent = () => {
         switch (props.tabsection) {
@@ -24,19 +28,19 @@ const Content = (props: any) => {
                 setguestlistclickstat(true);
                 setattendanceclickstat(false)
                 setsponsorshipclickstat(false)
-                return <><h1>guest</h1></>
+                return <><Guestlist /></>
             case 'attendance' :
                 setinsightClickstat(false);
                 setguestlistclickstat(false);
                 setattendanceclickstat(true)
                 setsponsorshipclickstat(false)
-                return <><h1>attendance</h1></>
+                return <><Attendance /></>
             case 'sponsorship' :
                 setinsightClickstat(false);
                 setguestlistclickstat(false);
                 setattendanceclickstat(false)
                 setsponsorshipclickstat(true)
-                    return <><h1>sponsorship</h1></>
+                    return <><Sponsorship /></>
         }
     }
   
