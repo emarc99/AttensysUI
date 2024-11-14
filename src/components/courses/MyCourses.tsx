@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   Card,
   CardBody,
@@ -8,13 +8,6 @@ import {
 } from "@material-tailwind/react"
 import { useRouter } from "next/navigation"
 import videoHero from "../../assets/video.png"
-import course_img from "../../assets/course_img.png"
-import createIcon from "../../assets/create.svg"
-import Ellipse from "../../assets/Ellipse.svg"
-import filled from "../../assets/filled.svg"
-import free_books from "../../assets/free_books.svg"
-import notifications from "../../assets/notifications.svg"
-import profilePic from "../../assets/profile_pic.png"
 import Image from "next/image"
 import { FaUserGraduate } from "@react-icons/all-files/fa/FaUserGraduate"
 import Switch from "react-switch"
@@ -22,60 +15,18 @@ import { IoIosStar } from "@react-icons/all-files/io/IoIosStar"
 import { HiBadgeCheck } from "@react-icons/all-files/hi/HiBadgeCheck"
 import { FaPlay } from "@react-icons/all-files/fa/FaPlay"
 import { GrDiamond } from "@react-icons/all-files/gr/GrDiamond"
-import { IoMdArrowDropdown } from "@react-icons/all-files/io/IoMdArrowDropdown"
 import { FaCheck } from "@react-icons/all-files/fa/FaCheck"
 import { FaTimes } from "@react-icons/all-files/fa/FaTimes"
 import ProgressBar from "@ramonak/react-progress-bar"
-import { BsFillExclamationCircleFill } from "@react-icons/all-files/bs/BsFillExclamationCircleFill"
 import Notification from "./Notification"
 import CreateACourse from "./CreateACourse"
+import UserSideBar from "./UserSideBar"
 
 const MyCourses = () => {
   const [isActivated, setIsActivated] = useState(false)
   const [selected, setSelected] = useState("")
+  const [page, setPage] = useState("")
   const router = useRouter()
-
-  const sideProperties = [
-    {
-      no: 1,
-      title: "Courses created",
-      url: filled,
-    },
-    {
-      no: 4,
-      title: "My Learning Journey",
-      url: free_books,
-    },
-    {
-      no: 0,
-      title: "Create a course",
-      url: createIcon,
-    },
-    {
-      no: 14,
-      title: "Notification",
-      url: notifications,
-    },
-  ]
-
-  const coursesProgress = [
-    {
-      no: 1,
-      title: "Courses",
-    },
-    {
-      no: 4,
-      title: "Completed courses",
-    },
-    {
-      no: 1,
-      title: "Ongoing",
-    },
-    {
-      no: 14,
-      title: "Created",
-    },
-  ]
 
   const coursesDetails = [
     {
@@ -108,98 +59,14 @@ const MyCourses = () => {
     console.log(isActivated)
   }
 
+  useEffect(() => {
+    setPage("myCourse")
+    console.log(page)
+  }, [page])
+
   return (
     <div className="flex flex-row mx-20 my-8">
-      <div className="pt-12">
-        {/* User info */}
-        <Card
-          className="w-96 border-2"
-          placeholder={undefined}
-          onPointerEnterCapture={undefined}
-          onPointerLeaveCapture={undefined}
-        >
-          <CardBody
-            placeholder={undefined}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
-          >
-            {/* <Image className="object-cover " alt="robot" src={robotImg} /> */}
-            <div className="flex justify-between items-start mt-4">
-              <div className="flex justify-around">
-                <Image src={profilePic} alt="profilePic" className="w-1/2" />
-
-                <div className="ml-3">
-                  <p>Akinbola Kehinde</p>
-                  <p>0xbc293...190bce</p>
-                </div>
-              </div>
-
-              <div>
-                <IoMdArrowDropdown />
-              </div>
-            </div>
-          </CardBody>
-          <CardFooter
-            className="pt-0"
-            placeholder={undefined}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
-          >
-            {coursesProgress.map((item, i) => (
-              <div
-                key={i}
-                className="flex text-sm items-center justify-between my-2"
-              >
-                <div className="flex items-center">
-                  <BsFillExclamationCircleFill />
-                  <p className="ml-3">{item.title}</p>
-                </div>
-
-                <div className="text-purple-400">
-                  <p>
-                    {item.no} Completed course{item.no > 1 ? "(s)" : ""}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </CardFooter>
-        </Card>
-
-        {sideProperties.map((item, i) => (
-          <Card
-            className={`w-96 border-2 my-3 cursor-pointer hover:bg-violet-600 active:bg-violet-700 ${selected == item.title ? "focus:outline-none focus:ring focus:ring-violet-300" : ""} `}
-            key={i}
-            placeholder={undefined}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
-          >
-            <CardBody
-              placeholder={undefined}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
-            >
-              <div
-                className="flex justify-between text-sm items-start "
-                onClick={() => {
-                  setSelected(item.title)
-                }}
-              >
-                <div className="flex items-center">
-                  <Image src={item.url} alt={item.title} />
-                  <p className="ml-3">
-                    {item.title}{" "}
-                    {item.no == 0 ? null : <span>({item.no})</span>}
-                  </p>
-                </div>
-
-                <div>
-                  <IoMdArrowDropdown />
-                </div>
-              </div>
-            </CardBody>
-          </Card>
-        ))}
-      </div>
+      <UserSideBar  page={page} selected={selected} setSelected={setSelected} />
 
       <div className="flex-auto ml-5">
         {coursesDetails.map((item, i) =>
@@ -393,13 +260,13 @@ const MyCourses = () => {
           )}
         </div>
 
+        <div>{selected == "Create a course" ? <CreateACourse /> : null}</div>
+
         <div>
           {selected == "" || selected == "Notification" ? (
             <Notification />
           ) : null}
         </div>
-
-        <div>{selected == "Create a course" ? <CreateACourse /> : null}</div>
       </div>
     </div>
   )
