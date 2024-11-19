@@ -5,6 +5,7 @@ import topNotch from "@/assets/topnotch.svg"
 import digital from "@/assets/digital.svg"
 import liveNft from "@/assets/livenft.svg"
 import Swisstaler from "@/assets/Swisstaler.svg"
+import red_love from "@/assets/red_love.svg"
 import love from "@/assets/love.svg"
 
 const MyCertifications = () => {
@@ -75,27 +76,27 @@ const MyCertifications = () => {
 
   if (selected == "" || selected == "All NFTs") {
     return (
-      <div className="flex flex-row mx-20 my-8">
+      <div className="block sm:flex sm:flex-row mx-10 sm:mx-20 my-8">
         <UserSideBar
           page={page}
           selected={selected}
           setSelected={setSelected}
         />
 
-        <div className="mx-20 my-12">
+        <div className="mx-auto sm:mx-20 my-12">
           {certContent.map((item, i) => (
             <div key={i}>
               <h1 className="text-[#A01B9B] font-bold text-2xl">
                 {item.heading} ({item.no})
               </h1>
 
-              <div className="grid grid-cols-4 gap-4 my-12">
+              <div className="grid md:grid-cols-4 lclg:grid-cols-2 gap-4 my-12">
                 {item.certificates.map((cert, j) => (
                   <div key={j} className="bg-[#FFFFFF] rounded-xl shadow-lg">
                     <div className="relative">
                       <Image src={cert.img} alt={cert.cert_name} />
                       <div className="bg-white absolute right-3 top-3 flex p-1 rounded">
-                        <Image src={love} alt="love" color="red" />
+                        <Image src={red_love} alt="love" color="red" />
                         <p className="text-xs ml-3">18k</p>
                       </div>
                     </div>
@@ -140,10 +141,10 @@ const MyCertifications = () => {
                 {item.heading} ({item.no})
               </h1>
 
-              <div className="grid grid-cols-4 gap-4 my-12">
+              <div className="grid md:grid-cols-4 lclg:grid-cols-2 gap-4 my-12">
                 {item.certificates.map((cert, j) => (
                   <div key={j} className="bg-[#FFFFFF] rounded-xl shadow-lg">
-                     <div className="relative">
+                    <div className="relative">
                       <Image src={cert.img} alt={cert.cert_name} />
                       <div className="bg-white absolute right-3 top-3 flex p-1 rounded">
                         <Image src={love} alt="love" color="red" />

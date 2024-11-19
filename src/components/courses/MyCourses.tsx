@@ -54,10 +54,7 @@ const MyCourses = () => {
     },
   ]
 
-  const handleSwitch = () => {
-    setIsActivated(!isActivated)
-    console.log(isActivated)
-  }
+
 
   useEffect(() => {
     setPage("myCourse")

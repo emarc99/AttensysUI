@@ -1,8 +1,11 @@
 import React from "react"
 import { IoMdArrowBack } from "@react-icons/all-files/io/IoMdArrowBack"
-import Dropdown from "./Dropdown"
+import Dropdown from "../Dropdown"
 
 const MainFormView = () => {
+  const handleNext = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+  }
   return (
     <div>
       <div className="bg-gradient-to-r from-[#4A90E2] to-[#9B51E0]">
@@ -26,11 +29,10 @@ const MainFormView = () => {
           <button className="bg-[#C5D322] px-7 py-3 rounded text-white">
             Save progress
           </button>
-          {/* background: #C5D322; */}
         </div>
 
         <div className="ml-24 mt-12">
-          <form action="">
+          <form action="CourseSetup2">
             <div className="my-12">
               <label htmlFor="" className="font-bold">
                 Course Name
@@ -57,7 +59,7 @@ const MainFormView = () => {
               <div className="flex items-start my-4">
                 <textarea
                   id="message"
-                  className="block p-2.5 w-3/5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="block px-2.5 pb-64 py-3 w-[80%] text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="a little bit about your course......"
                 ></textarea>
                 <input type="checkbox" className="ml-5" />
@@ -92,7 +94,6 @@ const MainFormView = () => {
                   Next
                 </button>
               </div>
-              {/* <div className="mt-12 mb-24">hel</div> */}
             </div>
           </form>
         </div>

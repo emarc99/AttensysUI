@@ -109,7 +109,6 @@ const UserSideBar = ({ page, selected, setSelected }) => {
           onPointerEnterCapture={undefined}
           onPointerLeaveCapture={undefined}
         >
-          {/* <Image className="object-cover " alt="robot" src={robotImg} /> */}
           <div className="flex justify-between items-start mt-4">
             <div className="flex justify-around">
               <Image src={profilePic} alt="profilePic" className="w-1/2" />
@@ -120,9 +119,7 @@ const UserSideBar = ({ page, selected, setSelected }) => {
               </div>
             </div>
 
-            <div>
-              <IoMdArrowDropdown />
-            </div>
+            <div>{page != "myCertificate" ? <IoMdArrowDropdown /> : null}</div>
           </div>
         </CardBody>
         <CardFooter
@@ -207,8 +204,35 @@ const UserSideBar = ({ page, selected, setSelected }) => {
           </Card>
         ))}
 
+      {/* Mobile */}
+      <div className="flex sm:hidden justify-between mt-10 border-b-2 p-3">
+        <div>
+          <p>All</p>
+        </div>
+
+        <div className="flex">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="size-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 13.5V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 9.75V10.5"
+            />
+          </svg>
+
+          <h4 className="underline font-bold">Filter</h4>
+        </div>
+      </div>
+
+      {/* Desktop display */}
       {page == "myCertificate" && (
-        <div className="my-4">
+        <div className="hidden sm:block my-4">
           <div className="flex">
             <svg
               xmlns="http://www.w3.org/2000/svg"
