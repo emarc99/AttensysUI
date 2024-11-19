@@ -21,7 +21,13 @@ import { IoMdArrowDropdown } from "@react-icons/all-files/io/IoMdArrowDropdown"
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark"
 import { BsFillExclamationCircleFill } from "@react-icons/all-files/bs/BsFillExclamationCircleFill"
 
-const UserSideBar = ({ page, selected, setSelected }) => {
+interface UserSideBarProps {
+  page: string // or another type like `number` or a union type
+  selected: string // Replace with appropriate type
+  setSelected: (value: string) => void // Function that sets a value
+}
+
+const UserSideBar = ({ page, selected, setSelected }: UserSideBarProps) => {
   const sideProperties = [
     {
       no: 1,

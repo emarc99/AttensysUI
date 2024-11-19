@@ -28,6 +28,10 @@ const MyCourses = () => {
   const [page, setPage] = useState("")
   const router = useRouter()
 
+  const handleSwitch = () => {
+    setIsActivated(!isActivated)
+  }
+
   const coursesDetails = [
     {
       no: 1,
@@ -54,8 +58,6 @@ const MyCourses = () => {
     },
   ]
 
-
-
   useEffect(() => {
     setPage("myCourse")
     console.log(page)
@@ -63,7 +65,7 @@ const MyCourses = () => {
 
   return (
     <div className="flex flex-row mx-20 my-8">
-      <UserSideBar  page={page} selected={selected} setSelected={setSelected} />
+      <UserSideBar page={page} selected={selected} setSelected={setSelected} />
 
       <div className="flex-auto ml-5">
         {coursesDetails.map((item, i) =>

@@ -82,10 +82,10 @@ const MainFormView5 = () => {
                 Introduction to Web Development
               </h4>
               <p className="my-3 text-[#333333]">
-                This course provides a foundational understanding of web
+                {`This course provides a foundational understanding of web
                 development. You'll learn essential skills in HTML and CSS,
                 enabling you to create and style your own web pages. No prior
-                experience is necessary!
+                experience is necessary!`}
               </p>
 
               <div className="bg-[#5801A9] py-2 text-white px-12 my-5 w-[50%] rounded-xl">

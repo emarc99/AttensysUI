@@ -40,7 +40,8 @@ const LandingPage = () => {
       >
         <div className="grid grid-cols-2 gap-4 mx-20">
           {/* Course Image */}
-          <div className="col-2">
+          <div className="col-2 text-sm">
+            <p className="font-bold mb-2">Technology | Web development</p>
             <Image src={video} alt="hero" />
           </div>
 
@@ -53,14 +54,14 @@ const LandingPage = () => {
               </button>
             </div>
 
-            <h4 className="text-3xl font-bold mb-2 mt-3">
+            <h4 className="text-2xl font-bold mb-2 mt-2">
               Introduction to Web Development
             </h4>
             <p className="my-2 text-white">
-              This course provides a foundational understanding of web
+              {`This course provides a foundational understanding of web
               development. You'll learn essential skills in HTML and CSS,
               enabling you to create and style your own web pages. No prior
-              experience is necessary!
+              experience is necessary!`}
             </p>
 
             <div className="bg-[#5801A9] py-2 text-white px-12 my- w-[40%] rounded-xl">

@@ -1,7 +1,18 @@
 import React from "react"
 import Image from "next/image"
 
-const Lectures = ({ lectures }) => {
+interface Lecture {
+  img: string
+  title: string
+  desc: string
+  timing: number
+}
+
+interface LectureData {
+  lectures: Lecture[]
+}
+
+const Lectures = ({ lectures }: LectureData) => {
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="py-12">
@@ -14,7 +25,7 @@ const Lectures = ({ lectures }) => {
                 {item.title}
                 <span className="text-[#5801A9] ml-12">
                   ({item.timing} mins)
-                </span>{" "}
+                </span>
               </h4>
 
               <p>{item.desc}</p>
@@ -26,10 +37,10 @@ const Lectures = ({ lectures }) => {
       <div className="py-12">
         <div className="py-3">
           <p>
-            This course provides a foundational understanding of web
+            {`  This course provides a foundational understanding of web
             development. You'll learn essential skills in HTML and CSS, enabling
             you to create and style your own web pages. No prior experience is
-            necessary!
+            necessary!`}
           </p>
         </div>
 
