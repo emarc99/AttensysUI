@@ -10,12 +10,15 @@ import { useRouter } from 'next/navigation'
 const Eventdetailsdiscover = (props: any) => {
   const router = useRouter();
   
+  const handleDiscover = () => {
+    router.push('/Discoverevent')
 
+  }
   
   return (
     <div className='h-[100px] clg:h-[80px] lg:[70px] lclg:[60px] flex justify-between w-[90%] mx-auto items-center'>
         <div className='flex w-[400px] clg:w-[380px] lclg:w-[400px] space-x-8 items-center'>
-            <div className='flex space-x-3 items-center cursor-pointer'>
+            <div onClick={handleDiscover} className='flex space-x-3 items-center cursor-pointer'>
             <Image src={moon} alt='moon' />
             <h1>Discover</h1>
             </div>
