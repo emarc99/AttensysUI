@@ -16,6 +16,8 @@ const Createevents = () => {
     event.preventDefault()
     if(!CreateorExplorestat) {
         router.push('/Events/createevent')
+    }else {
+      router.push('/Discoverevent')
     }
   }
 

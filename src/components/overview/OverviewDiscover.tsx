@@ -17,10 +17,16 @@ const OverviewDiscover = (props : any) => {
     const handleEventPage = () =>{
       router.push(`/Eventpage/${props.eventsname}`)
     }
+
+    const handleDiscover = () => {
+      router.push('/Discoverevent')
+  
+    }
+
   return (
     <div className='h-[100px] clg:h-[80px] lg:[70px] lclg:[60px] flex justify-between w-[90%] mx-auto items-center'>
         <div className='flex w-[600px] clg:w-[700px] lclg:w-[700px] space-x-8 items-center'>
-            <div className='flex space-x-3 items-center cursor-pointer'>
+            <div onClick={handleDiscover} className='flex space-x-3 items-center cursor-pointer'>
             <Image src={moon} alt='moon' />
             <h1>Discover</h1>
             </div>
