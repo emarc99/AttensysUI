@@ -3,26 +3,28 @@ import React from "react"
 import Coursedropdown from "@/components/courses/Coursedropdown"
 import { useAtom, useSetAtom } from "jotai"
 import { coursestatusAtom } from "@/state/connectedWalletStarknetkitNext"
-import CourseForm2 from "@/components/courses/course-form/CourseForm2"
 
 import { usePathname } from "next/navigation"
+import LandingPage from "@/components/courses/LandingPage"
 
-const CreateACourse = () => {
+const CourseCert = () => {
   const [status] = useAtom(coursestatusAtom)
   const path = usePathname()
 
   return (
-    <div className=" ">
+    <div className="">
       {status && (
         <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
       )}
       <Coursedropdown />
 
-      <div className="min-w-full w-[100%] min-h-full bg-[#F5F7FA]">
-        {path === "/Course/create-a-course" && <CourseForm2 />}
-      </div>
+      {path === "/Course/course-landing-page" && (
+        <div className="w-full">
+          <LandingPage />
+        </div>
+      )}
     </div>
   )
 }
 
-export default CreateACourse
+export default CourseCert

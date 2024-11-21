@@ -6,9 +6,9 @@ import { coursestatusAtom } from "@/state/connectedWalletStarknetkitNext"
 
 import { usePathname } from "next/navigation"
 import LeftSideBar from "@/components/courses/LeftSideBar"
-import MainFormView from "@/components/courses/MainFormView"
+import MainFormView5 from "@/components/courses/course-form/MainFormView5"
 
-const CourseCert = () => {
+const CreateSetup = () => {
   const [status] = useAtom(coursestatusAtom)
   const path = usePathname()
 
@@ -19,20 +19,24 @@ const CourseCert = () => {
       )}
       <Coursedropdown />
 
-      <div className="w-full flex">
-        <div className=" flex-[0.3] sticky top-0  bg-gradient-to-b from-[#f4e8ff]  to-blue-100  ">
-          <div className="grid  place-content-evenly">
-            <LeftSideBar />
+      {path === "/Course/CourseSetup5" && (
+        <div className="w-full flex">
+          <div className=" flex-[0.3] sticky top-0  bg-gradient-to-b from-[#f4e8ff]  to-blue-100  ">
+            <div className="grid  place-content-evenly">
+              <LeftSideBar />
 
-            <div></div>
-            <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+
+          <div className="bg-[#F5F7FA] flex-1">
+            <MainFormView5 />
           </div>
         </div>
-
-        <div className="bg-[#F5F7FA] flex-1"></div>
-      </div>
+      )}
     </div>
   )
 }
 
-export default CourseCert
+export default CreateSetup
