@@ -20,7 +20,6 @@ const Sponsorlist : React.FC<SponsorProp> = (props) => {
       <td className="px-4 py-2 text-[14px] font-normal text-[#2D3A4 leading-[19.79px] border-r-[2px] border-[#E9EBEC]">{props.amount}</td>
       <td className="px-4 py-2 text-[14px] font-normal text-[#2D3A4 leading-[19.79px] text-[#5801A9] underline border-r-[2px] border-[#E9EBEC]"><h1>{props.address}</h1></td>
       <td className="px-4 py-2 text-[14px] font-normal text-[#2D3A4 leading-[19.79px] border-r-[2px] border-[#E9EBEC]">{props.time}</td>
-      <td className="px-4 py-2 text-[14px] font-normal text-[#2D3A4 leading-[19.79px]"></td>
     </tr>
   )
 }

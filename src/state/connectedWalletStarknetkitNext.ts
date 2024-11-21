@@ -29,7 +29,14 @@ export const insightClick = atom(true);
 export const guestlistclick = atom(false);
 export const attendanceclick = atom(false);
 export const sponsorshipclick = atom(false);
+export const modalstatus = atom(false);
 
+export const orguploadstatus = atom(true);
+export const confirmationstatus = atom(false);
+
+
+export const sendingstatus = atom(false);
+export const successstatus = atom(false);
 
 export const useWalletAccountChange = () => {
   const wallet = useAtomValue(walletStarknetkitNextAtom)

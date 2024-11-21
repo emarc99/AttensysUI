@@ -38,7 +38,6 @@ const Sponsorship = () => {
                     <th className=" text-center font-light text-[#DC1D16]">Amount</th>
                     <th className=" text-center font-light text-[#DC1D16]">Wallet address</th>
                     <th className=" text-center font-light text-[#DC1D16]">Time stamp</th>
-                    <th className="text-center font-light">Contact</th>
                 </tr>
                 </thead>
                 <tbody>

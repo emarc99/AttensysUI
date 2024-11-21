@@ -20,13 +20,24 @@ module.exports = withMT({
       },
       backgroundImage: (theme) => ({
         "hero-pattern": "url('/src/assets/hero_asset.png')",
+        "event-pattern": "url('/src/assets/AttensysEventssection.png')",
         'testimonial-gradient': 'linear-gradient(90deg, rgba(155, 81, 224, 0.2) 0%, rgba(74, 144, 226, 0.2) 100%)',
         'event-gradient': 'linear-gradient(174.77deg, #2D3A4B 4.2%, #9B51E0 180.81%)',
+        'details-gradient': 'linear-gradient(90deg, #9B51E0 0%, #4A90E2 100%)',
+        'oneclick-gradient' : 'linear-gradient(90deg, rgba(155, 81, 224, 0.4) 0%, rgba(74, 144, 226, 0.4) 100%)',
+        'amount-gradient' : 'linear-gradient(90deg, rgba(155, 81, 224, 0.4) 0%, rgba(74, 144, 226, 0.4) 100%)',
+        'eventcard-gradient' : 'linear-gradient(90deg, rgba(155, 81, 224, 0.4) 0%, rgba(74, 144, 226, 0.4) 100%)',
       }),
       boxShadow: {
         'custom-blue': '0px 4px 100px 0px rgba(74, 144, 226, 0.5)',
       },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)'
+    },
+    colors: {}
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate"), require('tailwind-scrollbar-hide')],
 })

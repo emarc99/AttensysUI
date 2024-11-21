@@ -154,7 +154,7 @@ const handleChange = (event: { target: { value: any } }) => {
             <table className="w-full border-separate border-spacing-y-3 ">
                 <thead>
                 <tr className="h-[56px] text-[14px] bg-[#9B51E052] font-normal text-[#5801A9] leading-[19.79px]">
-                    <th className="w-[50px] px-4">
+                    <th className="w-[50px] px-4 rounded-tl-xl rounded-bl-xl">
                     <Image src={check} alt="ticket" />
                     </th>
                     <th className=" text-center font-light">Name</th>
@@ -162,7 +162,7 @@ const handleChange = (event: { target: { value: any } }) => {
                     <th className=" text-center font-light">Status</th>
                     <th className=" text-center font-light">Role</th>
                     <th className="text-center font-light">Reg date</th>
-                    <th className="text-center font-light">Actions</th>
+                    <th className="text-center font-light rounded-tr-xl rounded-br-xl">Actions</th>
                 </tr>
                 </thead>
                 {currentItems.map((data, index)=>{

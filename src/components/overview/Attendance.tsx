@@ -143,12 +143,12 @@ const Attendance = () => {
             <table className="w-full border-separate border-spacing-y-3">
                 <thead>
                 <tr className="h-[56px] w-full text-[14px] bg-[#9B51E052] text-[#5801A9] leading-[19.79px]">
-                    <th className="w-[50px] px-4"><Image src={check} alt="ticket" /></th>
+                    <th className="w-[50px] px-4 rounded-tl-xl rounded-bl-xl"><Image src={check} alt="ticket"  /></th>
                     <th className=" text-center font-light">Name</th>
                     <th className=" text-center font-light ">Address</th>
                     <th className=" text-center font-light">Scan Status</th>
                     <th className=" text-center font-light">Role</th>
-                    <th className="text-center font-light">Reg date</th>
+                    <th className="text-center font-light rounded-tr-xl rounded-br-xl">Reg date</th>
                 </tr>
                 </thead>
                 {currentItems.map((data, index)=>{
