@@ -16,7 +16,7 @@ const Locator = () => {
     //             maxZoom: 17,
     //             mapId: "",
     //         },
-    //         mapsApiKey: "AIzaSyDifT1pVUE6ugICtrGX9bzJD1MCTzVJqNg", // Replace with your actual API key
+    //         mapsApiKey: "", // Replace with your actual API key
     //         capabilities: {
     //             input: false,
     //             autocomplete: false,
