@@ -127,10 +127,10 @@ const LecturePage = () => {
             <div className="pb-4">
               <p className="font-bold py-3">About this course</p>
               <p className="text-sm">
-                This course provides a foundational understanding of web
+                {`This course provides a foundational understanding of web
                 development. You'll learn essential skills in HTML and CSS,
                 enabling you to create and style your own web pages. No prior
-                experience is necessary!
+                experience is necessary!`}
               </p>
             </div>
             <div className="py-4">
