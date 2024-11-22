@@ -68,7 +68,9 @@ const Explore = () => {
       {/* skills  */}
       <div className="mx-12 my-16 flex flex-row justify-center">
         {skills.map((item, index) => (
-          <p className="bg-[#2D3A4B] p-6 text-white" key={index}>{item}</p>
+          <p className="bg-[#2D3A4B] p-6 text-white" key={index}>
+            {item}
+          </p>
         ))}
       </div>
 
@@ -96,70 +98,74 @@ const Explore = () => {
           {/* left */}
           <div className="flex justify-top">
             <div className="mr-6">
-              <Image src={videoHero} alt="video" />
+              <a href="/Course/course-lecture-page">
+                <Image src={videoHero} alt="video" />
+              </a>
             </div>
             <div>
-              <div>
-                <button className="bg-gray-900 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded">
-                  Get this course
-                </button>
-                <h2 className="font-bold text-4xl text-[#2D3A4B] w-4/6 tracking-wide my-4">
-                  Introduction to Web Development
-                </h2>
-                <p className="text-white items-center inline gap-2 text-sm bg-[#5801A9] rounded p-1">
-                  Tech Innovators Academy
-                </p>
-                {/* rating and num of students */}
-                <div className="flex  items-center my-3">
-                  <div className="flex items-center">
-                    <IoIosStar color="#F6A61C" />
-                    <IoIosStar color="#F6A61C" />
-                    <IoIosStar color="#F6A61C" />
-                    <IoIosStar color="#F6A61C" />
-                    <IoIosStar />
-                    <p className="font-bold">(281)</p>
+              <a href="/Course/course-lecture-page">
+                <div>
+                  <button className="bg-gray-900 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded">
+                    Get this course
+                  </button>
+                  <h2 className="font-bold text-4xl text-[#2D3A4B] w-4/6 tracking-wide my-4">
+                    Introduction to Web Development
+                  </h2>
+                  <p className="text-white items-center inline gap-2 text-sm bg-[#5801A9] rounded p-1">
+                    Tech Innovators Academy
+                  </p>
+                  {/* rating and num of students */}
+                  <div className="flex  items-center my-3">
+                    <div className="flex items-center">
+                      <IoIosStar color="#F6A61C" />
+                      <IoIosStar color="#F6A61C" />
+                      <IoIosStar color="#F6A61C" />
+                      <IoIosStar color="#F6A61C" />
+                      <IoIosStar />
+                      <p className="font-bold">(281)</p>
+                    </div>
+
+                    <div className="flex items-center mx-8">
+                      <HiBadgeCheck color="#2D3A4B" />
+                      <p className="ml-5 font-bold">291 certification</p>
+                    </div>
                   </div>
 
-                  <div className="flex items-center mx-8">
-                    <HiBadgeCheck color="#2D3A4B" />
-                    <p className="ml-5 font-bold">291 certification</p>
-                  </div>
-                </div>
+                  {/* creator and last update */}
+                  <div className="flex text-center">
+                    <div>
+                      <p className="mb-2">
+                        Created by{" "}
+                        <span className="underline">Akinbola Kehinde</span>
+                      </p>
+                    </div>
 
-                {/* creator and last update */}
-                <div className="flex text-center">
-                  <div>
-                    <p className="mb-2">
-                      Created by{" "}
-                      <span className="underline">Akinbola Kehinde</span>
-                    </p>
+                    <div className="flex ml-5 text-center justify-center">
+                      <GiBackwardTime />
+                      <p className="ml-3">Last updated 10|10|24</p>
+                    </div>
                   </div>
 
-                  <div className="flex ml-5 text-center justify-center">
-                    <GiBackwardTime />
-                    <p className="ml-3">Last updated 10|10|24</p>
-                  </div>
-                </div>
-
-                {/* video prop */}
-                <div className="flex ">
+                  {/* video prop */}
                   <div className="flex ">
-                    <FaPlay />
-                    <p>Total play time: 2 hrs 35 mins</p>
+                    <div className="flex ">
+                      <FaPlay />
+                      <p>Total play time: 2 hrs 35 mins</p>
+                    </div>
+                    <div className="flex ml-5 ">
+                      <GrDiamond color="#2D3A4B" />
+                      <p>Difficulty level: Elementary</p>
+                    </div>
                   </div>
-                  <div className="flex ml-5 ">
-                    <GrDiamond color="#2D3A4B" />
-                    <p>Difficulty level: Elementary</p>
-                  </div>
-                </div>
 
-                <div className="flex text-center">
-                  <div>
-                    <HiBadgeCheck color="#2D3A4B" />
+                  <div className="flex text-center">
+                    <div>
+                      <HiBadgeCheck color="#2D3A4B" />
+                    </div>
+                    <p>Certificate of Completion</p>
                   </div>
-                  <p>Certificate of Completion</p>
                 </div>
-              </div>
+              </a>
             </div>
           </div>
 

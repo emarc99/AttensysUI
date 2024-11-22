@@ -5,9 +5,9 @@ import { useAtom, useSetAtom } from "jotai"
 import { coursestatusAtom } from "@/state/connectedWalletStarknetkitNext"
 
 import { usePathname } from "next/navigation"
-import LandingPage from "@/components/courses/LandingPage"
+import LecturePage from "@/components/courses/LecturePage"
 
-const CourseCert = () => {
+const CourseLecture = () => {
   const [status] = useAtom(coursestatusAtom)
   const path = usePathname()
 
@@ -18,13 +18,13 @@ const CourseCert = () => {
       )}
       <Coursedropdown />
 
-      {path === "/Course/course-landing-page" && (
+      {path === "/Course/course-lecture-page" && (
         <div className="w-full bg-[#F5F7FA]">
-          <LandingPage />
+          <LecturePage />
         </div>
       )}
     </div>
   )
 }
 
-export default CourseCert
+export default CourseLecture
