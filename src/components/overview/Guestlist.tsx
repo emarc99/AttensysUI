@@ -3,65 +3,67 @@ import React, { useState } from "react"
 import Image from "next/image"
 import downlaod from "@/assets/download.svg"
 import filter from "@/assets/filter.png"
-import check from '@/assets/check.svg'
+import check from "@/assets/check.svg"
 import List from "./List"
 import { guestdata } from "@/constants/data"
 
-
 const Guestlist = () => {
   const [searchValue, setSearchValue] = useState("")
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
 
- // Calculate total pages
- const totalPages = Math.ceil(guestdata.length / itemsPerPage);
+  // Calculate total pages
+  const totalPages = Math.ceil(guestdata.length / itemsPerPage)
 
- // Get current page items
- const currentItems = guestdata.slice(
-   (currentPage - 1) * itemsPerPage,
-   currentPage * itemsPerPage
- );
+  // Get current page items
+  const currentItems = guestdata.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  )
 
- const goToPage = (page: any) => {
-  setCurrentPage(page);
-};
+  const goToPage = (page: any) => {
+    setCurrentPage(page)
+  }
 
-   const generatePageNumbers = () => {
-    const pageNumbers = [];
-    const maxVisiblePages = 10;
+  const generatePageNumbers = () => {
+    const pageNumbers = []
+    const maxVisiblePages = 10
 
     // Always show the first page
-    if (currentPage > 2) pageNumbers.push(1);
+    if (currentPage > 2) pageNumbers.push(1)
 
     // Show ellipsis if there are pages between the first page and current page range
-    if (currentPage > 3) pageNumbers.push("...");
+    if (currentPage > 3) pageNumbers.push("...")
 
     // Show the range of pages around the current page
-    for (let i = Math.max(1, currentPage - 1); i <= Math.min(currentPage + 1, totalPages); i++) {
-      pageNumbers.push(i);
+    for (
+      let i = Math.max(1, currentPage - 1);
+      i <= Math.min(currentPage + 1, totalPages);
+      i++
+    ) {
+      pageNumbers.push(i)
     }
 
     // Show ellipsis if there are pages between the current range and the last page
-    if (currentPage < totalPages - 2) pageNumbers.push("...");
+    if (currentPage < totalPages - 2) pageNumbers.push("...")
 
     // Always show the last page
-    if (currentPage < totalPages - 1) pageNumbers.push(totalPages);
+    if (currentPage < totalPages - 1) pageNumbers.push(totalPages)
 
-    return pageNumbers;
-  };
+    return pageNumbers
+  }
 
- // Handle pagination controls
- const goToNextPage = () => {
-   setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
- };
+  // Handle pagination controls
+  const goToNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages))
+  }
 
- const goToPreviousPage = () => {
-   setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
- };
-const handleChange = (event: { target: { value: any } }) => {
- setSearchValue(event.target.value)
-}
-
+  const goToPreviousPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))
+  }
+  const handleChange = (event: { target: { value: any } }) => {
+    setSearchValue(event.target.value)
+  }
 
   return (
     <div className="h-auto w-full pb-10">
@@ -151,63 +153,70 @@ const handleChange = (event: { target: { value: any } }) => {
           </div>
         </div>
         <div className="w-[92%] mx-auto mt-6 h-[750px]">
-            <table className="w-full border-separate border-spacing-y-3 ">
-                <thead>
-                <tr className="h-[56px] text-[14px] bg-[#9B51E052] font-normal text-[#5801A9] leading-[19.79px]">
-                    <th className="w-[50px] px-4 rounded-tl-xl rounded-bl-xl">
-                    <Image src={check} alt="ticket" />
-                    </th>
-                    <th className=" text-center font-light">Name</th>
-                    <th className=" text-center font-light">Address</th>
-                    <th className=" text-center font-light">Status</th>
-                    <th className=" text-center font-light">Role</th>
-                    <th className="text-center font-light">Reg date</th>
-                    <th className="text-center font-light rounded-tr-xl rounded-br-xl">Actions</th>
-                </tr>
-                </thead>
-                {currentItems.map((data, index)=>{
-            return <List key={index} name={data.name} address={data.address} status={data.status} role={data.role} regdate={data.date} />
-        })}
-          
-            </table>
+          <table className="w-full border-separate border-spacing-y-3 ">
+            <thead>
+              <tr className="h-[56px] text-[14px] bg-[#9B51E052] font-normal text-[#5801A9] leading-[19.79px]">
+                <th className="w-[50px] px-4 rounded-tl-xl rounded-bl-xl">
+                  <Image src={check} alt="ticket" />
+                </th>
+                <th className=" text-center font-light">Name</th>
+                <th className=" text-center font-light">Address</th>
+                <th className=" text-center font-light">Status</th>
+                <th className=" text-center font-light">Role</th>
+                <th className="text-center font-light">Reg date</th>
+                <th className="text-center font-light rounded-tr-xl rounded-br-xl">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            {currentItems.map((data, index) => {
+              return (
+                <List
+                  key={index}
+                  name={data.name}
+                  address={data.address}
+                  status={data.status}
+                  role={data.role}
+                  regdate={data.date}
+                />
+              )
+            })}
+          </table>
+        </div>
 
-            </div>
-       
-{/* Pagination Controls */}
-<div className="flex justify-center space-x-2 mt-4">
-        <button
-          onClick={goToPreviousPage}
-          disabled={currentPage === 1}
-          className="px-4 py-2 border-[#D0D5DD] border-[1px] rounded disabled:opacity-50"
-        >
-          {"<"}
-        </button>
-        {generatePageNumbers().map((page, index) =>
-          page == "..." ? (
-            <span key={index} className="px-2 text-base mt-2">...</span>
-          ) : (
-            <button
-              key={index}
-              onClick={() => goToPage(page)}
-              className={`px-4 py-2 rounded text-[14px] ${currentPage == page ? "bg-none text-[#000000] border-[#F56630] border-[1px]" : "bg-none text-[#000000]"}`}
-            >
-              {page}
-            </button>
-          )
-        )}
-        
-        <button
-          onClick={goToNextPage}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 border-[#D0D5DD] border-[1px] text-[20px] rounded disabled:opacity-50"
-        >
-          {">"}
-        </button>
-      </div>
+        {/* Pagination Controls */}
+        <div className="flex justify-center space-x-2 mt-4">
+          <button
+            onClick={goToPreviousPage}
+            disabled={currentPage === 1}
+            className="px-4 py-2 border-[#D0D5DD] border-[1px] rounded disabled:opacity-50"
+          >
+            {"<"}
+          </button>
+          {generatePageNumbers().map((page, index) =>
+            page == "..." ? (
+              <span key={index} className="px-2 text-base mt-2">
+                ...
+              </span>
+            ) : (
+              <button
+                key={index}
+                onClick={() => goToPage(page)}
+                className={`px-4 py-2 rounded text-[14px] ${currentPage == page ? "bg-none text-[#000000] border-[#F56630] border-[1px]" : "bg-none text-[#000000]"}`}
+              >
+                {page}
+              </button>
+            ),
+          )}
 
-
-
-
+          <button
+            onClick={goToNextPage}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 border-[#D0D5DD] border-[1px] text-[20px] rounded disabled:opacity-50"
+          >
+            {">"}
+          </button>
+        </div>
       </div>
     </div>
   )
