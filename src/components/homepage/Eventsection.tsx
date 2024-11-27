@@ -2,8 +2,21 @@ import { Button } from '@headlessui/react'
 import React from 'react'
 import Image from 'next/image'
 import ticket from '@/assets/ticket.svg'
+import { useRouter } from 'next/navigation'
+import { useAtom } from 'jotai'
+import { createEventClickAtom } from '@/state/connectedWalletStarknetkitNext'
 
 const Eventsection = () => {
+  const [CreateeventClickStat, setCreateeventClickStat] = useAtom(createEventClickAtom)
+  const router = useRouter();
+  
+  
+  const handleCreateEventClick = () =>{
+    setCreateeventClickStat(true)
+    router.push('/Events/createevent')
+  }
+
+  
   return (
     <div className='h-[350px] hidden lg:flex'>
             <div className='h-[280px] bg-[#FFFFFF] flex items-center justify-center rounded-lg shadow-custom-blue w-[1370px] mx-auto space-x-32'>
@@ -18,7 +31,7 @@ const Eventsection = () => {
                                 className='mr-2'
                             />
                        </div>
-                        <div>
+                        <div onClick={handleCreateEventClick}>
                         Create an Event           
                         </div>
 

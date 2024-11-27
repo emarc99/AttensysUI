@@ -11,11 +11,12 @@ interface alleventCardprops {
     time : string,
     fee : string,
     image : any,
+    onClick?: () => void; 
 }
 
 const AlleventCard : React.FC<alleventCardprops> = (props) => {
   return (
-    <div className='w-[48%] flex justify-between items-center px-16 h-[242px] rounded-2xl border-[#A3A3A3] border-[0.81px] shadow-xl bg-eventcard-gradient'>
+    <div onClick={props.onClick}  className='cursor-pointer w-[48%] flex justify-between items-center px-16 h-[242px] rounded-2xl border-[#A3A3A3] border-[0.81px] shadow-xl bg-eventcard-gradient'>
             <div className='space-y-3'>
             <h1 className='text-[21px] text-[#5801A9] font-bold leading-[35px]'>{props.name}</h1>
                 <div className='flex space-x-4'>

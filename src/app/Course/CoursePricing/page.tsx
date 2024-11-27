@@ -2,19 +2,32 @@
 import React from "react"
 import Coursedropdown from "@/components/courses/Coursedropdown"
 import { useAtom, useSetAtom } from "jotai"
-import { coursestatusAtom } from "@/state/connectedWalletStarknetkitNext"
+import { coursestatusAtom,bootcampdropdownstatus } from "@/state/connectedWalletStarknetkitNext"
+import Bootcampdropdown from "@/components/bootcamp/Bootcampdropdown"
 import LeftSideBar from "@/components/courses/LeftSideBar"
 import Coursepricing from "@/components/courses/Coursepricing"
 
 const CoursePricing = () => {
-  const [status] = useAtom(coursestatusAtom)
+  const [status, setstatus] = useAtom(coursestatusAtom); 
+  const [bootcampdropstat, setbootcampdropstat] = useAtom(bootcampdropdownstatus)
+
+  const handlePageClick = () => {
+    setbootcampdropstat(false);
+    setstatus(false);
+};
 
   return (
-    <div className=" ">
+    <div className=" " onClick={handlePageClick}>
       {status && (
         <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
       )}
-      <Coursedropdown />
+       {bootcampdropstat && (<div className='fixed inset-0 bg-black opacity-5 backdrop-blur-sm'></div>)}
+       <div onClick={(e) => e.stopPropagation()} >
+        <Coursedropdown />
+        </div>
+        <div onClick={(e) => e.stopPropagation()} > 
+        <Bootcampdropdown />
+        </div>
 
       <div className="w-full flex">
         <div className=" flex-[0.3] sticky top-0  bg-gradient-to-b from-[#f4e8ff]  to-blue-100  ">

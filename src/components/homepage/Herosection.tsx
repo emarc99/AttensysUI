@@ -15,12 +15,12 @@ import line from "@/assets/line.svg"
 
 const Herosection = () => {
   return (
-    <div className="hidden lg:flex h-[460px] w-[80%] mx-auto pt-6">
-      <Image alt="model" src={bluesplit} className="absolute left-[8%] mt-[2rem] lg:mt-[3rem]" />
-      <Image alt="model" src={ship} className="absolute z-[10] right-[25%] lg:right-[42%] w-[160px] lg:w-[160px]" />
-      <Image alt="model" src={leftrectangle} className="absolute mt-[2rem] lg:mt-[3rem] z-[5] right-[20%] lg:right-[32%] clg:right-[35%]" />
-      <Image alt="model" src={circle} className="absolute mt-[10rem] lg:mt-[15rem] z-[10] right-[28%] lg:right-[33.56%] lclg:right-[36.8%] clg:right-[37.5%] w-[32px] lg:w-[42px]" />
-      <Image alt="model" src={line} className="absolute left-[20%] lg:left-[28%]  mt-[10rem] lg:mt-[15rem]" />
+    <div className="hidden lg:flex h-[460px] w-[80%] mx-auto pt-6 items-center justify-center relative">
+      <Image alt="model" src={bluesplit} className="absolute left-[-2%] top-[10%] mt-[2rem] lg:mt-[3rem]" />
+      <Image alt="model" src={ship} className="absolute z-[10] right-[20%] lg:right-[42%] w-[160px] lg:w-[160px] top-[10%]" />
+      <Image alt="model" src={leftrectangle} className="absolute mt-[2rem] lg:mt-[3rem] z-[5] right-[27%] clg:right-[32%]" />
+      <Image alt="model" src={circle} className="absolute mt-[10rem] lg:mt-[15rem] z-[10] right-[29.5%] bottom-[15%] lclg:right-[33.8%] clg:right-[34.5%] w-[32px] lg:w-[42px]" />
+      <Image alt="model" src={line} className="absolute left-[20%] lg:left-[28%]  mt-[13rem] lclg:mt-[13rem] " />
       <Image alt="model" src={kite} className="absolute z-[10] mt-[20rem] lg:mt-[22rem] right-[30%] lg:right-[46%] w-[40px] lg:w-[54px]" />
 
       <div className="flex h-[100%] justify-between">
@@ -29,9 +29,9 @@ const Herosection = () => {
             One <span className="text-[#9B51E0]">Platform</span>, Infinite
             Possibilities—Track, Stream, and Secure Your Certifications
           </h1>
-          <p className="text-[#2D3A4B] font-light text-[17px] leading-[22px] w-[82%] ">
+          <p className="text-[#2D3A4B] font-light text-[17px] leading-[22px] w-[82%] lclg:w-[100%] ">
             Simplifying certificate issuance, attendance tracking, and online
-            course management for schools, organizations, and event managers.
+            <br/> course management for schools, organizations, and event managers.
           </p>
           <div className="flex space-x-3 w-[60%]">
             <Button className="hidden lg:flex rounded-lg bg-[#2D3A4B] py-2 px-4 lg:h-[47px] items-center lg:w-[154px] text-sm text-white data-[hover]:bg-sky-500 data-[active]:bg-sky-700">

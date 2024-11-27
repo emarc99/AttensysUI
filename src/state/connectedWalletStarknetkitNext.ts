@@ -38,6 +38,8 @@ export const confirmationstatus = atom(false);
 export const sendingstatus = atom(false);
 export const successstatus = atom(false);
 
+export const bootcampdropdownstatus = atom(false);
+
 export const useWalletAccountChange = () => {
   const wallet = useAtomValue(walletStarknetkitNextAtom)
   const setConnectorData = useSetAtom(connectorDataAtom)

@@ -15,7 +15,7 @@ import { RESET } from "jotai/utils"
 import { DisconnectButton } from './DisconnectButton'
 import { connect, disconnect } from "starknetkit"
 import Coursedropdown from './courses/Coursedropdown'
-import { coursestatusAtom } from '@/state/connectedWalletStarknetkitNext'
+import { coursestatusAtom,bootcampdropdownstatus } from '@/state/connectedWalletStarknetkitNext'
 import { useAtom, useSetAtom } from "jotai"
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -45,6 +45,8 @@ const Header = () => {
     const [searchValue, setSearchValue] = useState('');
     const [coursestatus, setcourseStatus] = useAtom(coursestatusAtom);
     const [status] = useAtom(coursestatusAtom); 
+  const [bootcampdropstat, setbootcampdropstat] = useAtom(bootcampdropdownstatus)
+
 
     const handleChange = (event: { target: { value: any } }) => {
       setSearchValue(event.target.value);
@@ -54,11 +56,15 @@ const Header = () => {
     const handleTabClick = (arg : string) => {
         if (arg == 'Courses') {
             setcourseStatus(!coursestatus)
-            console.log("course cliked",coursestatus )
+         
         } else if (arg == 'Events'){
+          setcourseStatus(false)
+          setbootcampdropstat(false)
           router.push('/Events/events')
-        }else if (arg == 'Organization') {
-            console.log("organization clicked")
+        }else if (arg == 'Bootcamps') {
+          // e.stopPropagation();
+          setbootcampdropstat(!bootcampdropstat)
+          
         }
     }
 
@@ -125,7 +131,7 @@ const Header = () => {
                     item.current ? 'bg-white text-[#333333]' : 'text-[#333333] hover:bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] hover:text-white',
                     'rounded-md px-3 py-2 font-medium cursor-pointer'
                   )}
-                  onClick={() => handleTabClick(item.name)}
+                  onClick={(e) => handleTabClick(item.name)}
                 >
                         {item.name} {index !== 1 &&<span className='text-[10px] mx-1'>{item.current ? '▲' : '▼'}</span>}
                 </a>
