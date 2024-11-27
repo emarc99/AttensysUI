@@ -47,9 +47,9 @@ about their courses.</p>
                 </div>
               </a>
               <p className="text-[13px] text-[#2D3A4B] ">
-              Create & Manage your organization's profile, add or edit 
+              Create & Manage your organization profile, add or edit 
 instructors, create new courses, and track your 
-organization’s performance. 
+organizations performance. 
               </p>
             </div>
         
