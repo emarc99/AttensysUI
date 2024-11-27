@@ -54,9 +54,11 @@ const LandingPage = () => {
               </button>
             </div>
 
-            <h4 className="text-2xl font-bold mb-2 mt-2">
-              Introduction to Web Development
-            </h4>
+            <a href="/Course/course-lecture-page">
+              <h4 className="text-2xl font-bold mb-2 mt-2">
+                Introduction to Web Development
+              </h4>
+            </a>
             <p className="my-2 text-white">
               {`This course provides a foundational understanding of web
               development. You'll learn essential skills in HTML and CSS,

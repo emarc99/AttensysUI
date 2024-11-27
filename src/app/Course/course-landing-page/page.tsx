@@ -30,7 +30,7 @@ const CourseCert = () => {
         </div>
 
       {path === "/Course/course-landing-page" && (
-        <div className="w-full">
+        <div className="w-full bg-[#F5F7FA]">
           <LandingPage />
         </div>
       )}

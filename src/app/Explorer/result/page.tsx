@@ -3,7 +3,7 @@ import React from "react"
 import Coursedropdown from "@/components/courses/Coursedropdown"
 import { useAtom, useSetAtom } from "jotai"
 import { coursestatusAtom } from "@/state/connectedWalletStarknetkitNext"
-import ExplorePage from "@/components/explorer/ExplorePage"
+import ExploreResult from "@/components/explorer/result/ExploreResult"
 
 const Index = () => {
   const [status] = useAtom(coursestatusAtom)
@@ -16,7 +16,7 @@ const Index = () => {
       <Coursedropdown />
 
       <div className="bg-[#F5F7FA]">
-        <ExplorePage />
+        <ExploreResult />
       </div>
     </div>
   )
