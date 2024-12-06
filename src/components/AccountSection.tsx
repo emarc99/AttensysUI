@@ -37,7 +37,7 @@ const AccountSection: FC<AccountSectionProps> = ({ address, chainId }) => {
         <div>
           Chain:{" "}
           {!hexChainId
-            ? chainId
+            ? String(chainId ?? "Unknown")
             : hexChainId === constants.StarknetChainId.SN_SEPOLIA
               ? constants.NetworkName.SN_SEPOLIA
               : constants.NetworkName.SN_MAIN}
