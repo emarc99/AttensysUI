@@ -18,6 +18,7 @@ module.exports = withMT({
         lclg: { min: '1280px', max: '1439px' },
         
       },
+
       backgroundImage: (theme) => ({
         "hero-pattern": "url('/src/assets/hero_asset.png')",
         "event-pattern": "url('/src/assets/AttensysEventssection.png')",
@@ -28,7 +29,8 @@ module.exports = withMT({
         'oneclick-gradient' : 'linear-gradient(90deg, rgba(155, 81, 224, 0.4) 0%, rgba(74, 144, 226, 0.4) 100%)',
         'amount-gradient' : 'linear-gradient(90deg, rgba(155, 81, 224, 0.4) 0%, rgba(74, 144, 226, 0.4) 100%)',
         'eventcard-gradient' : 'linear-gradient(90deg, rgba(155, 81, 224, 0.4) 0%, rgba(74, 144, 226, 0.4) 100%)',
-        'carousell-gradient' : 'linear-gradient(182.29deg, rgba(4, 4, 4, 0) 1.76%, #000000 97.93%)'
+        'carousell-gradient' : 'linear-gradient(182.29deg, rgba(4, 4, 4, 0) 1.76%, #000000 97.93%)',
+        'create-gradient' : 'linear-gradient(180deg, rgba(155, 81, 224, 0.32) 0%, rgba(74, 144, 226, 0.32) 100%)'
       }),
       boxShadow: {
         'custom-blue': '0px 4px 100px 0px rgba(74, 144, 226, 0.5)',

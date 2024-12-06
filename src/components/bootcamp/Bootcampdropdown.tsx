@@ -35,22 +35,21 @@ const Bootcampdropdown = () => {
 been established on attensys; and learn more 
 about their courses.</p>
               </a>
-
             </div>
             <div className="space-y-2 w-[337px]">
-              <a href="" className="cursor-pointer">
+              <a href="/Createorganization" className="cursor-pointer">
                 <div className="flex space-x-3">
                 <Image src={bootcreate} alt='search' />
                   <h1 className="text-[16px] font-bold cursor-pointer">
                     Create Organization
                   </h1>
                 </div>
-              </a>
               <p className="text-[13px] text-[#2D3A4B] ">
               Create & Manage your organization profile, add or edit 
 instructors, create new courses, and track your 
 organizations performance. 
               </p>
+            </a>
             </div>
         
             <div className="space-y-2 w-[350px]">

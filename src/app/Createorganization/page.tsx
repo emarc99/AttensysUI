@@ -6,7 +6,8 @@ import { useParams } from 'next/navigation';
 import { coursestatusAtom,bootcampdropdownstatus } from "@/state/connectedWalletStarknetkitNext"
 import Bootcampdropdown from "@/components/bootcamp/Bootcampdropdown"
 import { useAtom, useSetAtom } from "jotai"
-import BootcampLanding from '@/components/bootcamp/BootcampLanding';
+import CreateLanding from '@/components/createorganization/CreateLanding';
+
 
 const Index = () => {
     const [status, setstatus] = useAtom(coursestatusAtom); 
@@ -27,7 +28,8 @@ const Index = () => {
         <div onClick={(e) => e.stopPropagation()} > 
         <Bootcampdropdown />
         </div>
-        <BootcampLanding />
+      
+        <CreateLanding />
     </div>
   )
 }
