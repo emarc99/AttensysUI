@@ -36,7 +36,7 @@ const Emailinput: React.FC<EmailInputProps> = ({ onEmailsChange }) => {
       {emails.map((email, index) => (
         <div
           key={index}
-          className="flex items-center bg-gray-200 text-gray-800 p-1 mr-2 mb-2 rounded"
+          className="flex items-center  text-gray-800 p-1 mr-2 mb-2 rounded"
         >
           <span className="text-sm">{email}</span>
           <button
@@ -50,7 +50,7 @@ const Emailinput: React.FC<EmailInputProps> = ({ onEmailsChange }) => {
       ))}
       <input
         type="text"
-        className="flex-grow p-2 border-none focus:outline-none"
+        className="flex-grow p-2 border-none focus:outline-none bg-transparent"
         placeholder="Enter email and press Enter or comma"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}

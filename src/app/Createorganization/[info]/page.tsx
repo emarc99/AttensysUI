@@ -6,6 +6,10 @@ import { coursestatusAtom,bootcampdropdownstatus } from "@/state/connectedWallet
 import Bootcampdropdown from "@/components/bootcamp/Bootcampdropdown"
 import { useAtom, useSetAtom } from "jotai"
 import Basicinfo from '@/components/createorganization/Basicinfo';
+import Walletinfo from '@/components/createorganization/Walletinfo';
+import Admininfo from '@/components/createorganization/Admininfo';
+import Addinstructor from '@/components/createorganization/Addinstructor';
+import Congratulations from '@/components/createorganization/Congratulations';
 
 
 
@@ -32,16 +36,16 @@ const renderContent = () =>{
             return <><Basicinfo /></>
         
         case "wallet-info":
-            return <> wallet info</>
+            return <><Walletinfo /></>
         
         case "admin-info":
-            return <> admin info</>
+            return <><Admininfo /></>
 
         case "add-instructors":
-            return <>add instructors</>
+            return <><Addinstructor /></>
             
         case "create-a-bootcamp":
-            return <>create bootcamp</>
+            return <><Congratulations/></>
 
         default:
             return <p>Error 404</p>;
@@ -119,7 +123,7 @@ const renderHeader = () =>{
             
         case "create-a-bootcamp":
             return <>
-            <h1 className='text-[18px] font-bold text-[#4A90E2] leading-[22px] text-center h-[64px] flex justify-center items-center'>Congratulations your <br/>Organization is all setup!!</h1>
+            <h1 className='text-[20px] font-bold text-[#4A90E2] leading-[22px] text-center flex justify-center items-center'>Congratulations your Organization is all setup!!</h1>
             </>
 
         default:
@@ -140,7 +144,7 @@ const renderHeader = () =>{
         </div>
 
         <div className='flex w-full'>
-            <div className='w-[20%] h-[1360px] bg-create-gradient flex justify-end'>
+            <div className='w-[20%] bg-create-gradient flex justify-end'>
                 <div className='mt-20 space-y-5'>
                         <div className={`cursor-pointer h-[67px] w-[278px] text-[16px]  rounded-tl-xl rounded-bl-xl py-5 pl-10 ${section == "basic-info" ? "bg-[#F5F8FA] text-[#5801A9]" : "bg-none text-[#FFFFFF]"} leading-[22px] font-bold`}  onClick={()=>{handlerouting("basic-info")}}>Basic Info</div> 
                         {/* @todo all these items on the panel should be clickable if and only if the details has already been filled, the idea if for it to be more like a way to go back to previously filled items */}
@@ -151,8 +155,8 @@ const renderHeader = () =>{
                 </div>
             </div>
 
-            <div className='w-[80%] h-[1360px] bg-[#f5f8fa] px-16'>
-                <div className='h-[250px] w-full flex flex-col justify-center items-center space-y-5'>
+            <div className='w-[80%] bg-[#f5f8fa] px-16 pb-32'>
+                <div className='h-auto pt-24 pb-8 w-full flex flex-col justify-center items-center space-y-5'>
                     {renderHeader()}
                 </div>
                     {renderContent()}
