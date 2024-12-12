@@ -13,11 +13,8 @@ import youtube from "@/assets/youtube.svg"
 import podcast from "@/assets/Podcast.svg"
 import rich from "@/assets/Richin2024.svg"
 import attensys_logo from "@/assets/attensys_logo.svg"
-import Lectures from "./Lectures"
 
-// import profile_pic from "@/assets/.png"
-
-const LecturePage = () => {
+const LecturePage = (props: any) => {
   const lectures = [
     {
       img: rich,

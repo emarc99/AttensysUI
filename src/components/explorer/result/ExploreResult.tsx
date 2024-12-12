@@ -7,11 +7,15 @@ import { BsFillExclamationCircleFill } from "@react-icons/all-files/bs/BsFillExc
 import TableList from "../TableList"
 import { eventsData, gridsData } from "@/constants/data"
 import ResultGrid from "./ResultGrid"
+import { handleSubmit } from "@/utils/helpers"
+import { useRouter } from "next/navigation"
 
-const ExploreResult = () => {
+const ExploreResult = ({ params }) => {
   const [searchValue, setSearchValue] = useState("")
 
   const [currentPage, setCurrentPage] = useState(1)
+  const router = useRouter()
+  const { address } = params
   const itemsPerPage = 10
 
   // Calculate total pages
@@ -80,55 +84,56 @@ const ExploreResult = () => {
           <div>
             <h1>Explorer Result</h1>
             <p>
-              Key : Address{" "}
-              <span className="text-[#9b51e0]">(0x5c956e61...de5232dc11)</span>
+              Key : Address <span className="text-[#9b51e0]">({address})</span>
             </p>
           </div>
 
           <div className="w-[45%] relative my-5">
-            <Input
-              name="search by address"
-              type="text"
-              placeholder="           Search an address | organization | Course"
-              // value={searchValue}
-              // onChange={handleChange}
-              className="w-[100%] font-bold  p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
-            />
+            <form onSubmit={(e) => handleSubmit(e, searchValue, router)}>
+              <Input
+                name="search by address"
+                type="text"
+                placeholder="           Search an address | organization | Course"
+                value={searchValue}
+                onChange={handleChange}
+                className="w-[100%] font-bold  p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
+              />
 
-            {!searchValue && (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                />
-              </svg>
-            )}
+              {!searchValue && (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                  />
+                </svg>
+              )}
 
-            {!searchValue && (
-              // <Dropdown />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="absolute right-5 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                />
-              </svg>
-            )}
+              {!searchValue && (
+                // <Dropdown />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="absolute right-5 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                  />
+                </svg>
+              )}
+            </form>
           </div>
         </div>
 
@@ -160,7 +165,7 @@ const ExploreResult = () => {
       </div>
 
       {gridsData.map((item, i) => (
-        <div className="mx-36 text-xs"  key={i}>
+        <div className="mx-36 text-xs" key={i}>
           {/* bottom */}
           <ResultGrid
             item={item}

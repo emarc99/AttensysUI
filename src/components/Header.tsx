@@ -23,11 +23,15 @@ import {
 import { RESET } from "jotai/utils"
 import { DisconnectButton } from "./DisconnectButton"
 import { connect, disconnect } from "starknetkit"
-import Coursedropdown from './courses/Coursedropdown'
-import { coursestatusAtom,bootcampdropdownstatus } from '@/state/connectedWalletStarknetkitNext'
+import Coursedropdown from "./courses/Coursedropdown"
+import {
+  coursestatusAtom,
+  bootcampdropdownstatus,
+} from "@/state/connectedWalletStarknetkitNext"
 import { useAtom, useSetAtom } from "jotai"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { handleSubmit } from "@/utils/helpers"
 
 const navigation = [
   { name: "Courses", href: "#", current: false },
@@ -40,37 +44,35 @@ function classNames(...classes: any[]) {
 }
 
 const Header = () => {
-    const router = useRouter();
-    const setWalletLatest = useSetAtom(walletStarknetkitLatestAtom)
-    const setWalletNext = useSetAtom(walletStarknetkitNextAtom)
-    const setConnectorData = useSetAtom(connectorDataAtom)
-    const setConnector = useSetAtom(connectorAtom)
-    const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
-    const [searchValue, setSearchValue] = useState('');
-    const [coursestatus, setcourseStatus] = useAtom(coursestatusAtom);
-    const [status] = useAtom(coursestatusAtom); 
-  const [bootcampdropstat, setbootcampdropstat] = useAtom(bootcampdropdownstatus)
+  const router = useRouter()
+  const setWalletLatest = useSetAtom(walletStarknetkitLatestAtom)
+  const setWalletNext = useSetAtom(walletStarknetkitNextAtom)
+  const setConnectorData = useSetAtom(connectorDataAtom)
+  const setConnector = useSetAtom(connectorAtom)
+  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
+  const [searchValue, setSearchValue] = useState("")
+  const [coursestatus, setcourseStatus] = useAtom(coursestatusAtom)
+  const [status] = useAtom(coursestatusAtom)
+  const [bootcampdropstat, setbootcampdropstat] = useAtom(
+    bootcampdropdownstatus,
+  )
 
+  const handleChange = (event: { target: { value: any } }) => {
+    setSearchValue(event.target.value)
+  }
 
-    const handleChange = (event: { target: { value: any } }) => {
-      setSearchValue(event.target.value);
-    };
-
-    
-    const handleTabClick = (arg : string) => {
-        if (arg == 'Courses') {
-            setcourseStatus(!coursestatus)
-         
-        } else if (arg == 'Events'){
-          setcourseStatus(false)
-          setbootcampdropstat(false)
-          router.push('/Events/events')
-        }else if (arg == 'Bootcamps') {
-          // e.stopPropagation();
-          setbootcampdropstat(!bootcampdropstat)
-          
-        }
+  const handleTabClick = (arg: string) => {
+    if (arg == "Courses") {
+      setcourseStatus(!coursestatus)
+    } else if (arg == "Events") {
+      setcourseStatus(false)
+      setbootcampdropstat(false)
+      router.push("/Events/events")
+    } else if (arg == "Bootcamps") {
+      // e.stopPropagation();
+      setbootcampdropstat(!bootcampdropstat)
     }
+  }
 
   useEffect(() => {
     setWalletLatest(RESET)
@@ -92,61 +94,70 @@ const Header = () => {
                 <Image alt="Your Company" src={Logo} className="h-8 w-full" />
               </Link>
               <a
-                href="/Explorer"
+                href="/explorer"
                 className="w-[28%] lclg:w-[40%] flex justify-center text-[#9B51E0]"
               >
                 Use our explorer
               </a>
               <div className="relative w-[550px] lclg:w-[380px]">
-                <Input
-                  name="search by address"
-                  type="text"
-                  placeholder="       Search by address"
-                  value={searchValue}
-                  onChange={handleChange}
-                  className="w-[80%] clg:w-[70%] lclg:w-[90%] p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
-                />
-                {!searchValue && (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                    />
-                  </svg>
-                )}
+                <form onSubmit={(e) => handleSubmit(e, searchValue, router)}>
+                  <Input
+                    name="search by address"
+                    type="text"
+                    placeholder="       Search by address"
+                    value={searchValue}
+                    onChange={handleChange}
+                    className="w-[80%] clg:w-[70%] lclg:w-[90%] p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
+                  />
+                  {!searchValue && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                      />
+                    </svg>
+                  )}
+                </form>
               </div>
             </div>
 
-        <div className="flex items-center justify-center sm:items-stretch sm:justify-end">
-          <div className="hidden lg:flex">
-            <div className="flex xlg:space-x-24 text-sm">
-              {navigation.map((item, index) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  aria-current={item.current ? 'page' : undefined}
-                  className={classNames(
-                    item.current ? 'bg-white text-[#333333]' : 'text-[#333333] hover:bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] hover:text-white',
-                    'rounded-md px-3 py-2 font-medium cursor-pointer'
-                  )}
-                  onClick={(e) => handleTabClick(item.name)}
-                >
-                        {item.name} {index !== 1 &&<span className='text-[10px] mx-1'>{item.current ? '▲' : '▼'}</span>}
-                </a>
-              ))}
+            <div className="flex items-center justify-center sm:items-stretch sm:justify-end">
+              <div className="hidden lg:flex">
+                <div className="flex xlg:space-x-24 text-sm">
+                  {navigation.map((item, index) => (
+                    <a
+                      key={item.name}
+                      href={item.href}
+                      aria-current={item.current ? "page" : undefined}
+                      className={classNames(
+                        item.current
+                          ? "bg-white text-[#333333]"
+                          : "text-[#333333] hover:bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] hover:text-white",
+                        "rounded-md px-3 py-2 font-medium cursor-pointer",
+                      )}
+                      onClick={(e) => handleTabClick(item.name)}
+                    >
+                      {item.name}{" "}
+                      {index !== 1 && (
+                        <span className="text-[10px] mx-1">
+                          {item.current ? "▲" : "▼"}
+                        </span>
+                      )}
+                    </a>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="absolute inset-y-0 right-0 flex items-center sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                {wallet ? (
+            <div className="absolute inset-y-0 right-0 flex items-center sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              {wallet ? (
                 <>
                   <DisconnectButton
                     disconnectFn={disconnect}

@@ -1,25 +1,26 @@
 import React, { useState } from "react"
 import { Button, Input } from "@headlessui/react"
-import videoHero from "../../assets/video.png"
-import courseImg from "../../assets/course_img.png"
-import CarouselComp from "../courses/Carousel"
 import Image from "next/image"
-import { IoIosStar } from "@react-icons/all-files/io/IoIosStar"
-import { HiBadgeCheck } from "@react-icons/all-files/hi/HiBadgeCheck"
-import { GiBackwardTime } from "@react-icons/all-files/gi/GiBackwardTime"
-import { FaPlay } from "@react-icons/all-files/fa/FaPlay"
-import { GrDiamond } from "@react-icons/all-files/gr/GrDiamond"
-import { IoMdArrowDropdown } from "@react-icons/all-files/io/IoMdArrowDropdown"
 import filter from "@/assets/filter.png"
 import { explorerData } from "@/constants/data"
-import List from "../overview/List"
 import TableList from "./TableList"
-import Dropdown from "../courses/Dropdown"
+import { useRouter } from "next/navigation"
+import { handleSubmit } from "@/utils/helpers"
 
 const ExplorePage = () => {
   const [searchValue, setSearchValue] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
+
+  const router = useRouter()
+
+  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault()
+  //   if (searchValue.trim()) {
+  //     // Redirect to the dynamic page with the user's input
+  //     router.push(`/explorer/${searchValue}`)
+  //   }
+  // }
 
   // Calculate total pages
   const totalPages = Math.ceil(explorerData.length / itemsPerPage)
@@ -83,48 +84,58 @@ const ExplorePage = () => {
         >
           <h1 className="text-2xl font-bold">The Attensys Explorer</h1>
           <div className="relative w-[80%] my-5">
-            <Input
-              name="search by address"
-              type="text"
-              placeholder="           Search an address | organization | Course"
-              value={searchValue}
-              onChange={handleChange}
-              className="w-[80%] font-bold clg:w-[70%] lclg:w-[90%] p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
-            />
-            {!searchValue && (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                />
-              </svg>
-            )}
+            <form onSubmit={(e) => handleSubmit(e, searchValue, router)}>
+              {/* <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="Enter address or value"
+                /> */}
 
-            {!searchValue && (
-              // <Dropdown />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="absolute right-64 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                />
-              </svg>
-            )}
+              <Input
+                name="search by address"
+                type="text"
+                placeholder="           Search an address | organization | Course"
+                value={searchValue}
+                onChange={handleChange}
+                className="w-[60%] font-bold clg:w-[50%] lclg:w-[90%] p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
+              />
+              {!searchValue && (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                  />
+                </svg>
+              )}
+
+              {!searchValue && (
+                // <Dropdown />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="absolute right-64 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                  />
+                </svg>
+              )}
+              {/* <button type="submit">Search</button> */}
+            </form>
           </div>
           <p className="text-sm">Ox6G568*** just marked an attendance</p>
         </div>
@@ -149,7 +160,7 @@ const ExplorePage = () => {
           <table className="w-full border-separate border-spacing-y-3 ">
             <thead>
               <tr className="h-[56px] text-[14px] bg-[#9B51E052] font-normal text-[#5801A9] leading-[19.79px] rounded">
-                <th className=" text-center font-light">Timestamp</th>
+                <th className="text-center font-light">Timestamp</th>
                 <th className=" text-center font-light">Wallet Address</th>
                 <th className=" text-center font-light">Activity Status</th>
                 <th className=" text-center font-light">

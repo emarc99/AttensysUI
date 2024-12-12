@@ -14,7 +14,6 @@ const MyCertifications = () => {
 
   useEffect(() => {
     setPage("myCertificate")
-    console.log(page)
   }, [page])
 
   const certContent = [

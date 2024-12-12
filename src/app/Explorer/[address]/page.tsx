@@ -6,19 +6,25 @@ import {
   coursestatusAtom,
   bootcampdropdownstatus,
 } from "@/state/connectedWalletStarknetkitNext"
+import ExplorePage from "@/components/explorer/ExplorePage"
+import { useParams } from "next/navigation"
+import ExplorerLanding from "@/components/explorer/ExplorerLanding"
 import Bootcampdropdown from "@/components/bootcamp/Bootcampdropdown"
-import DiscoverLanding from "@/components/discoverevents/DiscoverLanding"
+import ExploreResult from "@/components/explorer/result/ExploreResult"
 
 const Index = () => {
-  const [status, setstatus] = useAtom(coursestatusAtom)
+  const [status, setStatus] = useAtom(coursestatusAtom)
   const [bootcampdropstat, setbootcampdropstat] = useAtom(
     bootcampdropdownstatus,
   )
 
+  const params = useParams()
+
   const handlePageClick = () => {
     setbootcampdropstat(false)
-    setstatus(false)
+    setStatus(false)
   }
+
   return (
     <div onClick={handlePageClick}>
       {status && (
@@ -33,7 +39,8 @@ const Index = () => {
       <div onClick={(e) => e.stopPropagation()}>
         <Bootcampdropdown />
       </div>
-      <DiscoverLanding />
+
+      <ExploreResult params={params} />
     </div>
   )
 }
