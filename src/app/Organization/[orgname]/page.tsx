@@ -5,6 +5,7 @@ import Bootcampdropdown from "@/components/bootcamp/Bootcampdropdown"
 import { useAtom, useSetAtom } from "jotai"
 import Coursedropdown from '@/components/courses/Coursedropdown'
 import { useParams } from 'next/navigation'
+import Organizationlanding from '@/components/organization/Organizationlanding'
 
 const Index = () => {
   const [status, setstatus] = useAtom(coursestatusAtom); 
@@ -27,8 +28,7 @@ const Index = () => {
         <div onClick={(e) => e.stopPropagation()} > 
         <Bootcampdropdown />
         </div>
-       
-        <h1>{details}</h1>
+       <Organizationlanding name={details}/>
         </div>
   )
 }
