@@ -1,7 +1,6 @@
 import React from "react"
 
-import videoHero from "../../assets/video.png"
-import courseImg from "../../assets/course_img.png"
+import videoHero from "../../assets/video.svg"
 import CarouselComp from "./Carousel"
 import Image from "next/image"
 import { IoIosStar } from "@react-icons/all-files/io/IoIosStar"
@@ -10,42 +9,12 @@ import { GiBackwardTime } from "@react-icons/all-files/gi/GiBackwardTime"
 import { FaPlay } from "@react-icons/all-files/fa/FaPlay"
 import { GrDiamond } from "@react-icons/all-files/gr/GrDiamond"
 import { IoMdArrowDropdown } from "@react-icons/all-files/io/IoMdArrowDropdown"
-
-const skills = [
-  "Design",
-  "Development",
-  "Marketing",
-  "Health & Fitness",
-  "Business",
-  "IT & Software",
-  "Crypto",
-  "Artificial Intelligence",
-  "Product Management",
-]
+import { useRouter } from "next/navigation"
+import { handleCourse } from "@/utils/helpers"
+import { skills, subLectures } from "@/constants/data"
 
 const Explore = () => {
-  const responsiveOptions = [
-    {
-      breakpoint: "1400px",
-      numVisible: 2,
-      numScroll: 1,
-    },
-    {
-      breakpoint: "1199px",
-      numVisible: 3,
-      numScroll: 1,
-    },
-    {
-      breakpoint: "767px",
-      numVisible: 2,
-      numScroll: 1,
-    },
-    {
-      breakpoint: "575px",
-      numVisible: 1,
-      numScroll: 1,
-    },
-  ]
+  const router = useRouter()
 
   return (
     <div>
@@ -94,121 +63,115 @@ const Explore = () => {
         </div>
 
         {/* below */}
-        <div className="flex justify-start my-16">
+        <div className="flex justify-start my-24">
           {/* left */}
           <div className="flex justify-top">
-            <div className="mr-6">
-              <a href="/Course/course-lecture-page">
-                <Image src={videoHero} alt="video" />
-              </a>
+            <div className="mr-10">
+              <Image src={videoHero} alt="video" className="object-cover" />
             </div>
             <div>
-              <a href="/Course/course-lecture-page">
-                <div>
-                  <button className="bg-gray-900 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded">
+              <div>
+                <div
+                  onClick={(e) =>
+                    handleCourse(e, e.currentTarget.textContent, router)
+                  }
+                >
+                  <button className="bg-gray-900 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded cursor-pointer">
                     Get this course
                   </button>
-                  <h2 className="font-bold text-4xl text-[#2D3A4B] w-4/6 tracking-wide my-4">
+                  <h2 className="font-bold text-4xl text-[#2D3A4B] w-4/6 tracking-wide my-4 cursor-pointer">
                     Introduction to Web Development
                   </h2>
-                  <p className="text-white items-center inline gap-2 text-sm bg-[#5801A9] rounded p-1">
-                    Tech Innovators Academy
-                  </p>
-                  {/* rating and num of students */}
-                  <div className="flex  items-center my-3">
-                    <div className="flex items-center">
-                      <IoIosStar color="#F6A61C" />
-                      <IoIosStar color="#F6A61C" />
-                      <IoIosStar color="#F6A61C" />
-                      <IoIosStar color="#F6A61C" />
-                      <IoIosStar />
-                      <p className="font-bold">(281)</p>
-                    </div>
-
-                    <div className="flex items-center mx-8">
-                      <HiBadgeCheck color="#2D3A4B" />
-                      <p className="ml-5 font-bold">291 certification</p>
-                    </div>
+                </div>
+                <p className="text-white items-center inline gap-2 text-sm bg-[#5801A9] rounded p-1">
+                  Tech Innovators Academy
+                </p>
+                {/* rating and num of students */}
+                <div className="flex  items-center my-2">
+                  <div className="flex items-center">
+                    <IoIosStar color="#F6A61C" />
+                    <IoIosStar color="#F6A61C" />
+                    <IoIosStar color="#F6A61C" />
+                    <IoIosStar color="#F6A61C" />
+                    <IoIosStar />
+                    <p className="font-bold">(281)</p>
                   </div>
 
-                  {/* creator and last update */}
-                  <div className="flex text-center">
-                    <div>
-                      <p className="mb-2">
-                        Created by{" "}
-                        <span className="underline">Akinbola Kehinde</span>
-                      </p>
-                    </div>
-
-                    <div className="flex ml-5 text-center justify-center">
-                      <GiBackwardTime />
-                      <p className="ml-3">Last updated 10|10|24</p>
-                    </div>
-                  </div>
-
-                  {/* video prop */}
-                  <div className="flex ">
-                    <div className="flex ">
-                      <FaPlay />
-                      <p>Total play time: 2 hrs 35 mins</p>
-                    </div>
-                    <div className="flex ml-5 ">
-                      <GrDiamond color="#2D3A4B" />
-                      <p>Difficulty level: Elementary</p>
-                    </div>
-                  </div>
-
-                  <div className="flex text-center">
-                    <div>
-                      <HiBadgeCheck color="#2D3A4B" />
-                    </div>
-                    <p>Certificate of Completion</p>
+                  <div className="flex items-center mx-8">
+                    <HiBadgeCheck color="#2D3A4B" />
+                    <p className="ml-5 font-bold">291 certification</p>
                   </div>
                 </div>
-              </a>
+
+                {/* creator and last update */}
+                <div className="flex text-center my-3">
+                  <div>
+                    <p className="">
+                      Created by{" "}
+                      <span className="underline">Akinbola Kehinde</span>
+                    </p>
+                  </div>
+
+                  <div className="flex ml-5 items-center ">
+                    <GiBackwardTime />
+                    <p className="ml-3">Last updated 10|10|24</p>
+                  </div>
+                </div>
+
+                {/* video prop */}
+                <div className="flex ">
+                  <div className="flex my-1 items-center">
+                    <FaPlay />
+                    <p>Total play time: 2 hrs 35 mins</p>
+                  </div>
+                  <div className="flex ml-5  items-center">
+                    <GrDiamond color="#2D3A4B" />
+                    <p>Difficulty level: Elementary</p>
+                  </div>
+                </div>
+
+                <div className="flex  items-center">
+                  <div>
+                    <HiBadgeCheck color="#2D3A4B" />
+                  </div>
+                  <p>Certificate of Completion</p>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* right */}
           <div className="flex-1">
-            <div className="underline flex justify-between">
+            <div className="flex justify-between border-b-2 pb-3">
               <h4>Lectures (4)</h4>
               <IoMdArrowDropdown />
             </div>
 
             <div>
-              <div className="flex text-center justify-center my-3">
-                <Image src={courseImg} alt="another course" />
-                <div>
-                  <h6 className="font-bold">What is web development?</h6>
-                  <p>
-                    An introduction to the world of web development, covering
-                    the basics of how websites...
-                  </p>
+              {subLectures.map((item, i) => (
+                <div
+                  key={i}
+                  className="flex justify-center content-center text-sm my-3 cursor-pointer"
+                  onClick={(e) =>
+                    handleCourse(e, e.currentTarget.textContent, router)
+                  }
+                >
+                  <div>
+                    <Image
+                      src={item.img}
+                      alt="another course"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="ml-4">
+                    <h6 className="font-bold">
+                      {item.title}
+                      <span className="text-[#5801A9]">({item.time})</span>
+                    </h6>
+                    <p className="font-light mt-2">{item.desc}</p>
+                  </div>
                 </div>
-              </div>
-              {/* partition */}
-              <div className="flex text-center justify-center my-3">
-                <Image src={courseImg} alt="another course" />
-                <div>
-                  <h6 className="font-bold">What is web development?</h6>
-                  <p>
-                    An introduction to the world of web development, covering
-                    the basics of how websites...
-                  </p>
-                </div>
-              </div>
-              {/* partition */}
-              <div className="flex text-center justify-center my-3">
-                <Image src={courseImg} alt="another course" />
-                <div>
-                  <h6 className="font-bold">What is web development?</h6>
-                  <p>
-                    An introduction to the world of web development, covering
-                    the basics of how websites...
-                  </p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>

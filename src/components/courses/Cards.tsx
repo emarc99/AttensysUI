@@ -10,19 +10,24 @@ import {
 import robotImg from "../../assets/roboy.png"
 import Image from "next/image"
 import { IoIosStar } from "@react-icons/all-files/io/IoIosStar"
+import { handleCourse } from "@/utils/helpers"
+import { useRouter } from "next/navigation"
 
 export function CardWithLink() {
+  const router = useRouter()
   return (
     <Card
       className="mt-6 w-96 border-2"
       placeholder={undefined}
       onPointerEnterCapture={() => {}}
       onPointerLeaveCapture={() => {}}
+      onClick={(e) => handleCourse(e, e.currentTarget.textContent, router)}
     >
       <CardBody
         placeholder={undefined}
         onPointerEnterCapture={undefined}
         onPointerLeaveCapture={undefined}
+        className="cursor-pointer"
       >
         <Image className="object-cover " alt="robot" src={robotImg} />
         <div className="flex justify-between items-start mt-4">
