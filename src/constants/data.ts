@@ -25,7 +25,7 @@ import lolli from "@/assets/lolli.svg"
 import domino from "@/assets/domino.svg"
 import robotimg from "@/assets/roboy.png"
 import courseImg from "@/assets/videoImg.svg"
-import podcast from "@/assets/podcast.svg"
+import podcast from "@/assets/Podcast.svg"
 import youtube from "@/assets/youtube.svg"
 
 export const skills = [
