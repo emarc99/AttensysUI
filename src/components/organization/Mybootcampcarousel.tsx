@@ -18,7 +18,7 @@ const Mybootcampcarousel : React.FC<CarousellCardProp> = (props) => {
   return (
     <>
     <div className={`relative ${`h-[${props.height}] w-[${props.width}]`} rounded-2xl mx-auto`}>
-        <div className='h-full w-full'>
+        <div className='h-[200px] w-full'>
     <Image src={props.flier} alt='eventimage' className='h-full w-full object-cover rounded-2xl' />
         </div>
     <Button className="hidden absolute top-3 right-6 justify-center lg:flex rounded-lg bg-[#9B51E0] text-[#FFFCFC] py-2 px-4 lg:h-[23px] items-center lg:w-[50px] text-sm data-[hover]:bg-sky-500 data-[active]:bg-sky-700">
