@@ -1598,3 +1598,46 @@ export const favoriteCourseData = [
     stars: 4,
   },
 ]
+
+
+export const permisiondata = [
+  {
+    email : "vladamirocks@gmail.com",
+    address : "0x5c956e61...de5232dc11",
+    access : ["Owner", "Instructor"]
+  },
+  {
+    email : "kenzman@gmail.com",
+    address : "0x5c956e61...de5232dc11",
+    access : ["Instructor"]
+  },
+  {
+    email : "ephraim@gmail.com",
+    address : "0x5c956e61...de5232dc11",
+    access : ["Instructor"]
+  },
+]
+
+export const registereddata = [
+  {
+    email : "vladamirocks@gmail.com",
+    address : "0x5c956e61...de5232dc11",
+   registeredbootcamp : 3,
+   certifications : 3,
+   joined: 3,
+  },
+  {
+    email : "kenzman@gmail.com",
+    address : "0x5c956e61...de5232dc11",
+   registeredbootcamp : 2,
+   certifications : 6,
+   joined: 1,
+  },
+  {
+    email : "ephraim@gmail.com",
+    address : "0x5c956e61...de5232dc11",
+   registeredbootcamp : 3,
+   certifications : 3,
+   joined: 3,
+  },
+]

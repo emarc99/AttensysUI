@@ -28,6 +28,7 @@ const Organizationcard : React.FC<OrganizationCardProp> = (props) => {
             <Image src={props.logo} alt='logo' />
             </div>
         </div>
+        
         <div className='px-4 mt-10 space-y-4'>
             <h1 className='text-[15px] text-[#333333] leading-[18px] font-bold'>{props.name}</h1>
             <p className='w-[300px] text-[12px] text-[#2D3A4B] leading-[17px] font-light'>{props.about}</p>

@@ -1,10 +1,10 @@
 import React from 'react'
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import Carosellcard from './Carosellcard';
+import Mybootcampcarousel from './Mybootcampcarousel';
 import {caroselldata} from '@/constants/data'
 
-const BootcampCarousell = () => {
+const Mybootcamp = () => {
     const responsive = {
         superLargeDesktop: {
           // the naming can be any, depends on you.
@@ -30,10 +30,9 @@ const BootcampCarousell = () => {
       };
  
     return (
-    <div className='h-[450px] w-full flex flex-col items-center justify-center'>
-        <h1 className='w-[90%] mx-auto text-[20px] text-[#333333] font-semibold leading-[22px]'>Ongoing Bootcamps</h1>
-        <div className='w-[90%] mx-auto flex flex-col justify-center items-center'>
-        <Carousel responsive={responsive} centerMode={false} containerClass="container" className='mt-6'  renderArrowsWhenDisabled={false}
+    <div className='h-auto w-full flex flex-col items-center bg-[#FFFFFF] border-[1px] border-[#D9D9D9] rounded-b-xl py-8'>
+        <div className='w-[100%] mx-auto flex flex-col items-center'>
+        <Carousel responsive={responsive} centerMode={false} containerClass="container"  renderArrowsWhenDisabled={false}
    additionalTransfrom={0}
    arrows
    dotListClass=""
@@ -43,19 +42,19 @@ const BootcampCarousell = () => {
    itemClass=""
    keyBoardControl
    minimumTouchDrag={80}
-   autoPlay={true} // Enables auto-scrolling
+   autoPlay={false} // Enables auto-scrolling
    autoPlaySpeed={3000}
    >
            {caroselldata.map((data, index) => (
-                    <Carosellcard
+                    <Mybootcampcarousel
                     key={index}
                         name={data.name} 
                         time={data.time}
                         flier={data.flier}
                         logo={data.logo}
-                        action="Register"
-                        height='300px'
-                        width='300px'
+                        action="Ongoing"
+                        height="200px"
+                        width='200px'
                     />
                 ))}
                     </Carousel>
@@ -65,4 +64,4 @@ const BootcampCarousell = () => {
   )
 }
 
-export default BootcampCarousell
+export default Mybootcamp
