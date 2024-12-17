@@ -10,7 +10,7 @@ import ResultGrid from "./ResultGrid"
 import { handleSubmit } from "@/utils/helpers"
 import { useRouter } from "next/navigation"
 
-const ExploreResult = ({ params }) => {
+const ExploreResult = ({ params} : any) => {
   const [searchValue, setSearchValue] = useState("")
 
   const [currentPage, setCurrentPage] = useState(1)
