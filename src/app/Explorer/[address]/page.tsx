@@ -8,7 +8,7 @@ import {
 } from "@/state/connectedWalletStarknetkitNext"
 import ExplorePage from "@/components/explorer/ExplorePage"
 import { useParams } from "next/navigation"
-import ExplorerLanding from "@/components/explorer/ExplorerLanding"
+// import ExplorerLanding from "@/components/explorer/ExplorerLanding"
 import Bootcampdropdown from "@/components/bootcamp/Bootcampdropdown"
 import ExploreResult from "@/components/explorer/result/ExploreResult"
 
