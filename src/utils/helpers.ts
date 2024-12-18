@@ -6,7 +6,7 @@ export const handleSubmit = (
   event.preventDefault()
   if (searchValue.trim()) {
     // Redirect to the dynamic page with the user's input
-    router.push(`/explorer/${searchValue}`)
+    router.push(`/Explorer/${searchValue}`)
   }
 }
 
