@@ -40,6 +40,9 @@ export const successstatus = atom(false);
 
 export const bootcampdropdownstatus = atom(false);
 
+export const createbootcampoverlay = atom(false);
+
+
 export const useWalletAccountChange = () => {
   const wallet = useAtomValue(walletStarknetkitNextAtom)
   const setConnectorData = useSetAtom(connectorDataAtom)
