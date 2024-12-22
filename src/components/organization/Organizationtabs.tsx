@@ -40,6 +40,8 @@ const Organizationtabs = () => {
     }
     const handleCreateOverlay = () => {
         setCreateOverlayStat(true);
+        setRegisteredStat(false)
+        setPermissionscampStat(false);
     }
 
   return (
