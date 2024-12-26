@@ -17,6 +17,7 @@ const Index = () => {
   const [bootcampdropstat, setbootcampdropstat] = useAtom(bootcampdropdownstatus)
   const params = useParams();
   const bootcamp = params.bootcampname;
+  const tab = params.tab
 
   const handlePageClick = () => {
     setbootcampdropstat(false);
@@ -33,7 +34,7 @@ const Index = () => {
         <div onClick={(e) => e.stopPropagation()} > 
         <Bootcampdropdown />
         </div>
-        <DashboardLanding bootcampname={bootcamp} />
+        <DashboardLanding bootcampname={bootcamp} tab={tab} />
     </div>
   )
 }

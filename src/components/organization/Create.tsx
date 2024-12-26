@@ -45,7 +45,7 @@ const Create = ({ height }: { height: number | null }) => {
     const router = useRouter();
   
     const handlePublishButton = () => {
-      router.push('/Bootcamp/sample-bootcamp-dashboard')
+      router.push('/Bootcamp/sample-bootcamp-dashboard/Outline')
   
     }
 
