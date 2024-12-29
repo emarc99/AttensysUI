@@ -15,17 +15,17 @@ const DashboardContent = (prop : any) => {
     const renderContent = () => {
         switch (prop.tabsection) {
             case 'Outline' : 
-            return <><Outline /></>
+            return <div className='pt-8'><Outline /></div>
 
             case 'Students' : 
-            return <><Students /></>
+            return <div className='pt-8'><Students /></div>
 
             case 'Certifications' : 
-            return <><Certifications /></>
+            return <div className='pt-2'><Certifications /></div>
         }
     }
     return (
-    <div className='h-auto w-full pt-8'>
+    <div className='h-auto w-full'>
         {renderContent()}
     </div>
   )
