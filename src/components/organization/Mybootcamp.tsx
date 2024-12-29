@@ -31,7 +31,7 @@ const Mybootcamp = () => {
  
     return (
     <div className='h-auto w-full flex flex-col items-center bg-[#FFFFFF] border-[1px] border-[#D9D9D9] rounded-b-xl py-8'>
-        <div className='w-[100%] mx-auto flex flex-col items-center'>
+        <div className='w-[100%] mx-auto flex flex-col items-center -z-0'>
         <Carousel responsive={responsive} centerMode={false} containerClass="container"  renderArrowsWhenDisabled={false}
    additionalTransfrom={0}
    arrows

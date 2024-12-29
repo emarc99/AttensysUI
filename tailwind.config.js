@@ -30,7 +30,8 @@ module.exports = withMT({
         'amount-gradient' : 'linear-gradient(90deg, rgba(155, 81, 224, 0.4) 0%, rgba(74, 144, 226, 0.4) 100%)',
         'eventcard-gradient' : 'linear-gradient(90deg, rgba(155, 81, 224, 0.4) 0%, rgba(74, 144, 226, 0.4) 100%)',
         'carousell-gradient' : 'linear-gradient(182.29deg, rgba(4, 4, 4, 0) 1.76%, #000000 97.93%)',
-        'create-gradient' : 'linear-gradient(180deg, rgba(155, 81, 224, 0.32) 0%, rgba(74, 144, 226, 0.32) 100%)'
+        'create-gradient' : 'linear-gradient(180deg, rgba(155, 81, 224, 0.32) 0%, rgba(74, 144, 226, 0.32) 100%)',
+        'bootcreate-gradient' : 'linear-gradient(90deg, #4A90E2 0%, #9B51E0 100%)'
       }),
       boxShadow: {
         'custom-blue': '0px 4px 100px 0px rgba(74, 144, 226, 0.5)',

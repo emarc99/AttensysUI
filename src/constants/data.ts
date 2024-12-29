@@ -27,6 +27,9 @@ import robotimg from "@/assets/roboy.png"
 import courseImg from "@/assets/videoImg.svg"
 import podcast from "@/assets/Podcast.svg"
 import youtube from "@/assets/youtube.svg"
+import classvid from '@/assets/classtsest.svg'
+import noupload from '@/assets/noupload.svg'
+
 
 export const skills = [
   "Design",
@@ -1640,4 +1643,26 @@ export const registereddata = [
    certifications : 3,
    joined: 3,
   },
+]
+
+export const outlineData = [
+  {
+    day : 1,
+    views : 301,
+    assignment : 1,
+    resources : 1,
+    attendee : 201,
+    totalreg : 210,
+    boiler : classvid
+  },
+  {
+    day : 1,
+    views : 0,
+    assignment : 1,
+    resources : 1,
+    attendee : 0,
+    totalreg : 210,
+    boiler : noupload
+  },
+
 ]
