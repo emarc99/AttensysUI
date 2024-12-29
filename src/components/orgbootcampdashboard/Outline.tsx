@@ -2,13 +2,6 @@ import React from 'react'
 import OutlineCard from './OutlineCard'
 import { FaPlus } from "react-icons/fa6";
 
-
-
-
-
-
-
-
 const Outline = () => {
   return (
     <div className='w-[90%] h-[721px] bg-[#FFFFFF] mx-auto rounded-xl border-[#D2D2D2] border-[1px] px-7 overflow-y-scroll'>
