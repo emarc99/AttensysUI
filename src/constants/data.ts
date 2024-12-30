@@ -1458,7 +1458,7 @@ export const caroselldata = [
 
 export const organizationData = [
   {
-    name: "Orangutan Edu Academy",
+    name: "Web3 Edu Academy",
     about:
       "Orangutan Edu Academy offers in-depth blockchain courses and certifications",
     bootcampnumber: "3",
@@ -1482,7 +1482,7 @@ export const organizationData = [
     flier: world,
   },
   {
-    name: "Orangutan Edu Academy",
+    name: "Ekolance Edu Academy",
     about:
       "Orangutan Edu Academy offers in-depth blockchain courses and certifications",
     bootcampnumber: "3",
@@ -1494,7 +1494,7 @@ export const organizationData = [
     flier: skip,
   },
   {
-    name: "Orangutan Edu Academy",
+    name: "Block Edu Academy",
     about:
       "Orangutan Edu Academy offers in-depth blockchain courses and certifications",
     bootcampnumber: "3",
@@ -1506,7 +1506,7 @@ export const organizationData = [
     flier: pattern,
   },
   {
-    name: "Orangutan Edu Academy",
+    name: "Plus Edu Academy",
     about:
       "Orangutan Edu Academy offers in-depth blockchain courses and certifications",
     bootcampnumber: "3",
@@ -1518,7 +1518,7 @@ export const organizationData = [
     flier: lolli,
   },
   {
-    name: "Orangutan Edu Academy",
+    name: "Web2 Edu Academy",
     about:
       "Orangutan Edu Academy offers in-depth blockchain courses and certifications",
     bootcampnumber: "3",
@@ -1530,7 +1530,7 @@ export const organizationData = [
     flier: domino,
   },
   {
-    name: "Orangutan Edu Academy",
+    name: "Jouous Edu Academy",
     about:
       "Orangutan Edu Academy offers in-depth blockchain courses and certifications",
     bootcampnumber: "3",
@@ -1665,4 +1665,13 @@ export const outlineData = [
     boiler : noupload
   },
 
+]
+
+export const regcaroselldata = [
+  {
+    name: "Web3 Afrika bootcamp",
+    time: "From 12th Nov - 15th Nov 2024",
+    logo: companylogo,
+    flier: bootcamp1,
+  },
 ]

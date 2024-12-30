@@ -4,6 +4,7 @@ import Image from 'next/image'
 import testlogo from '@/assets/testlogo.svg'
 import StarRating from './StarRating'
 import { Button } from '@headlessui/react'
+import { useRouter } from 'next/navigation'
 
 interface OrganizationCardProp {
     name : string,
@@ -20,6 +21,12 @@ interface OrganizationCardProp {
 
 
 const Organizationcard : React.FC<OrganizationCardProp> = (props) => {
+  const router = useRouter();
+
+    const handleDetailsRoute = () => {
+        router.push(`/Bootcamps/${props.name}`)
+    }
+
   return (
     <div className='h-[355px] w-[361px] rounded-xl border-[1px] border-[#C8C8C8] bg-[#FFFFFF]'>
         <div className='h-[106px] w-full rounded-t-xl relative'>
@@ -41,7 +48,7 @@ const Organizationcard : React.FC<OrganizationCardProp> = (props) => {
                     <StarRating totalStars={5} starnumber={props.stars} />
                     <p className='text-[12px] text-[#2D3A4B] leading-[14px] font-medium'>{props.totalreviews} reviews</p>
                 </div>
-                <Button className=" border-[2px] border-[#A01B9B] w-[87px] h-[38px] text-[#A01B9B] text-[10px] leading-[12px] flex items-center justify-center rounded-xl">
+                <Button onClick={handleDetailsRoute} className=" border-[2px] border-[#A01B9B] w-[87px] h-[38px] text-[#A01B9B] text-[10px] leading-[12px] flex items-center justify-center rounded-xl">
                           <div>View details</div>
                 </Button>
             </div>
