@@ -1,11 +1,12 @@
 import React from "react"
+import { courseQuestions } from "@/constants/data"
 
-const CourseForm = () => {
+const CourseForm = (props: any) => {
   const handleNext = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
   }
   return (
-    <div className="mx-auto  w-5/12 pt-16">
+    <div className="mx-10 md:mx-auto w-auto md:w-5/12 pt-16">
       <div>
         <h1 className="mb-12 font-bold text-2xl">
           What is the primary goal of your course?
@@ -75,7 +76,7 @@ const CourseForm = () => {
         <div className="text-center">
           <button
             onSubmit={handleNext}
-            className="rounded bg-[#4A90E2] px-60 py-3 mt-12 mb-44 text-white"
+            className="rounded bg-[#4A90E2] px-40 md:px-60 py-3 mt-12 mb-44 text-white"
             type="submit"
           >
             Next

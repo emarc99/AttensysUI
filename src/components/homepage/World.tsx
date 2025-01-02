@@ -6,8 +6,8 @@ import Image from "next/image"
 
 const World = () => {
   return (
-    <div className='h-[500px] w-[90%] mx-auto hidden lg:flex my-4'>
-            <div className='w-[60%] items-center flex'>
+    <div className='sm:h-[500px] w-[90%] mx-auto lg:flex my-4'>
+            <div className='sm:w-[60%] items-center flex'>
                 <div className='w-[80%] mx-auto'>
                 <h1 className='text-[30.19px] font-bold text-[#2D3A4B] mb-5'>Atten<span className='text-[#A666E3]'>sys</span> Courses</h1>
                 <p className='text-[17px] font-light text-[#2D3A4B] leading-[22px] mb-10'>Simplifying certificate issuance, attendance tracking, and online course 
@@ -17,7 +17,7 @@ const World = () => {
                 </div>
               
             </div>
-            <div className='w-[40%]'>
+            <div className='w-[60%] sm:w-[40%]'>
                 <Image
                     alt="icon"
                     src={thoughts}
@@ -26,7 +26,7 @@ const World = () => {
                    <Image
                     alt="icon"
                     src={plane}
-                    className="absolute w-[350px] clg:w-[320px] lclg:w-[210px] h-[350px] ml-64 mt-28"
+                    className="absolute w-[350px] clg:w-[320px] lclg:w-[210px] h-[350px] ml-20 sm:ml-64 mt-28"
                 />
             </div>
     </div>

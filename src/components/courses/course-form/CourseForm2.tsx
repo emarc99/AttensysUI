@@ -2,7 +2,7 @@ import React from "react"
 
 const CourseForm2 = () => {
   return (
-    <div className="mx-auto  w-5/12 pt-16">
+    <div className="mx-10 md:mx-auto w-auto md:w-5/12 pt-16">
       <div>
         <h1 className="mb-12 font-bold text-2xl">
           Who is your course for, and what should they know before starting?
@@ -70,7 +70,7 @@ const CourseForm2 = () => {
         </div>
 
         <div className="text-center">
-          <button className="rounded bg-[#4A90E2] px-60 py-3 mt-12 mb-44 text-white">
+          <button className="rounded bg-[#4A90E2] px-40 md:px-60 py-3 mt-12 mb-44 text-white">
             Next
           </button>
         </div>

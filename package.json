@@ -48,7 +48,7 @@
     "react-paginate": "^8.2.0",
     "react-player": "^2.16.0",
     "react-spinners": "^0.14.1",
-    "react-switch": "^7.0.0",
+    "react-switch": "^7.1.0",
     "sharp": "^0.33.5",
     "starknet": "^6.15.0",
     "starknetkit": "^1.1.9",

@@ -1,13 +1,15 @@
 import React from "react"
 import { IoMdArrowBack } from "@react-icons/all-files/io/IoMdArrowBack"
 import Dropdown from "../Dropdown"
+import { skills, levelOptions } from "@/constants/data"
 
 const MainFormView = () => {
   const handleNext = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
   }
+
   return (
-    <div>
+    <div className="mb-10">
       <div className="bg-gradient-to-r from-[#4A90E2] to-[#9B51E0]">
         <p className="text-sm text-white text-center py-2">
           Your course creation progress saves automatically, but feel free to
@@ -19,7 +21,7 @@ const MainFormView = () => {
         <div className="flex justify-between py-2 my-5 border-t border-b border-[#d1d1d1] px-5 items-center">
           <div className="flex items-center">
             <div className="px-8 border-r border-blue-100">
-              <IoMdArrowBack />
+              <IoMdArrowBack onClick={() => history.back()} className="cursor-pointer"/>
             </div>
             <p className="text-[#4A90E2] text-xl font-bold">
               Course Setup (Basic info)
@@ -71,7 +73,7 @@ const MainFormView = () => {
                 Course category
               </label>
               <div className="my-4 flex items-start">
-                <Dropdown />
+                <Dropdown options={skills} />
                 <input type="checkbox" className="flex-1" />
               </div>
             </div>
@@ -82,7 +84,7 @@ const MainFormView = () => {
                 All levels)
               </label>
               <div className="my-4 flex items-start">
-                <Dropdown />
+                <Dropdown options={levelOptions} />
                 <input type="checkbox" className="flex-1" />
               </div>
 

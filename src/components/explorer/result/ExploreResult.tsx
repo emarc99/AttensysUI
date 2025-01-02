@@ -10,7 +10,11 @@ import ResultGrid from "./ResultGrid"
 import { handleSubmit } from "@/utils/helpers"
 import { useRouter } from "next/navigation"
 
-const ExploreResult = ({ params }) => {
+type Params = {
+  address?: string; // Replace 'searchTerm' with the actual key(s) in params
+};
+
+const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
   const [searchValue, setSearchValue] = useState("")
 
   const [currentPage, setCurrentPage] = useState(1)
