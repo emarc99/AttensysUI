@@ -46,6 +46,14 @@ export const outlineclick = atom(true);
 export const allstudentclick = atom(false);
 export const certificationsclick = atom(false);
 
+export const registerModal = atom(false);
+
+export const detailsEntryStat = atom(true);
+
+export const detailsEntryLoading = atom(false);
+
+export const registrationsuccess = atom(false);
+
 export const useWalletAccountChange = () => {
   const wallet = useAtomValue(walletStarknetkitNextAtom)
   const setConnectorData = useSetAtom(connectorDataAtom)
