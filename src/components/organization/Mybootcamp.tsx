@@ -3,8 +3,15 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import Mybootcampcarousel from './Mybootcampcarousel';
 import {caroselldata} from '@/constants/data'
+import { useRouter } from 'next/navigation';
 
 const Mybootcamp = () => {
+  const router = useRouter();
+
+  const handlebootcamproute = (props : string) => {
+    router.push(`/Bootcamp/${props}/Outline`)
+
+  }
     const responsive = {
         superLargeDesktop: {
           // the naming can be any, depends on you.
@@ -55,6 +62,7 @@ const Mybootcamp = () => {
                         action="Ongoing"
                         height="200px"
                         width='200px'
+                        onClick={() => handlebootcamproute(data.name)}
                     />
                 ))}
                     </Carousel>

@@ -12,12 +12,13 @@ interface CarousellCardProp {
   action : string,
   height : string,
   width: string,
+  onClick?: () => void;
 }
 
 const Mybootcampcarousel : React.FC<CarousellCardProp> = (props) => {
   return (
     <>
-    <div className={`relative ${`h-[${props.height}] w-[${props.width}]`} rounded-2xl mx-auto`}>
+    <div className={`relative ${`h-[${props.height}] w-[${props.width}]`} rounded-2xl mx-auto cursor-pointer`} onClick={props.onClick}>
         <div className='h-[200px] w-full'>
     <Image src={props.flier} alt='eventimage' className='h-full w-full object-cover rounded-2xl' />
         </div>

@@ -53,10 +53,11 @@ organizations performance.
             </div>
         
             <div className="space-y-2 w-[350px]">
+              <a href='/Mybootcamps' className='cursor-pointer'>
               <div className="flex space-x-3">
                <Image src={people} alt='people' />
                 <h1 className="text-[16px] font-bold cursor-pointer">
-                  <a href="">My Bootcamps</a>
+                  <a >My Bootcamps</a>
                 </h1>
               </div>
               <p className="text-[13px] text-[#2D3A4B]">
@@ -64,7 +65,13 @@ organizations performance.
 bootcamps—designed to equip you with hands-on 
 skills in record time.
               </p>
+              </a>
             </div>
+
+
+
+
+
           </div>
         </div>
       )}

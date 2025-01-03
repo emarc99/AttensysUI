@@ -22,12 +22,14 @@ const Carosellcard : React.FC<CarousellCardProp> = (props) => {
     router.push(`/Register/${props.name}`)
     }else if (arg == "Finished") {
     router.push(`/Register/${props.name}`)
+    }else if (arg == "Manage") {
+    router.push(`/Mybootcamps/${props.name}`)
     }
   }
   
   return (
-    <div
-  className={`relative ${`h-[${props.height}] w-[${props.width}]`} rounded-2xl mx-auto overflow-hidden`}
+    <div onClick={() => handleActionClick(props.action)}
+  className={`relative ${`h-[${props.height}] w-[${props.width}]`} rounded-2xl mx-auto overflow-hidden cursor-pointer`}
 >
   {/* Background Image */}
   <Image

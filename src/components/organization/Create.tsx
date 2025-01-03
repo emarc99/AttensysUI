@@ -46,6 +46,7 @@ const Create = ({ height }: { height: number | null }) => {
   
     const handlePublishButton = () => {
       router.push('/Bootcamp/sample-bootcamp-dashboard/Outline')
+      setCreateOverlayStat(false);
   
     }
 
