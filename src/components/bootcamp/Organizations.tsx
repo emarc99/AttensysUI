@@ -56,8 +56,8 @@ const goToPage = (page: any) => {
   
   return (
     <div className='h-auto w-full flex flex-col justify-center items-center space-y-4'>
-        <h1 className='w-[1257px] text-[20px] text-[#333333] font-bold'>Top rated Organization</h1>
-        <div className='h-[926px] w-[1257px] bg-[#FFFFFF] border-[1px] border-[#C8C8C8] rounded-lg px-12 py-12 flex flex-wrap gap-6'>         
+        <h1 className='w-[90%] mx-auto text-[20px] text-[#333333] font-bold'>Top rated Organization</h1>
+        <div className='h-[926px] w-[85%] mx-auto bg-[#FFFFFF] border-[1px] border-[#C8C8C8] rounded-lg px-12 py-12 flex flex-wrap gap-6 justify-center'>         
            {currentItems.map((data, index)=>{
                 return <div key={index} className='w-[30%]'>
                 <Organizationcard key={index} name={data.name} about={data.about} numberofbootcamps={data.bootcampnumber} 

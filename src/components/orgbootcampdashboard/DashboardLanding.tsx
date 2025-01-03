@@ -7,7 +7,7 @@ const DashboardLanding = (props: any) => {
   return (
     <div className='bg-[#f4f7f9] w-full h-auto py-10'>
         <Tophero />
-        <DashboardTab />
+        <DashboardTab bootcampname={props.bootcampname} />
         <DashboardContent tabsection={props.tab} />
     </div>
   )

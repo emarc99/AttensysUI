@@ -4,7 +4,7 @@ import {outlineclick,allstudentclick,certificationsclick } from '@/state/connect
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/navigation'
 
-const DashboardTab = () => {
+const DashboardTab = (props : any) => {
     
     const [outlineClickstat, setOutlineClickstat] = useAtom(outlineclick)
     const [allstudentclickstat, setallstudentclickstat] = useAtom(allstudentclick)
@@ -18,7 +18,7 @@ const DashboardTab = () => {
     setcertificationclickstat(false)
 
     //@todo replace sample dashboard with org name
-    router.push('/Bootcamp/sample-bootcamp-dashboard/Outline')
+    router.push(`/Bootcamp/${props.bootcampname}/Outline`)
   }
   
   const handlegueslistclick = () =>{
@@ -26,14 +26,14 @@ const DashboardTab = () => {
     setallstudentclickstat(true);
     setcertificationclickstat(false)
          //@todo replace sample dashboard with org name
-         router.push('/Bootcamp/sample-bootcamp-dashboard/Students')
+         router.push(`/Bootcamp/${props.bootcampname}/Students`)
   }
   const handleAttendanceclick = () =>{
     setOutlineClickstat(false);
     setallstudentclickstat(false);
     setcertificationclickstat(true)
       //@todo replace sample dashboard with org name
-      router.push('/Bootcamp/sample-bootcamp-dashboard/Certifications')
+      router.push(`/Bootcamp/${props.bootcampname}/Certifications`)
   }
   
     return (
