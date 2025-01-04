@@ -1817,3 +1817,77 @@ export const favoriteCourseData = [
     stars: 4,
   },
 ]
+
+export const mockkdata = [
+  {
+    data : "Ox6G568*** marked an attendance"
+  }, {
+    data : "Ox343G568*** created an event"
+  }, {
+    data : "Ox57568*** got certified by web3 clubs"
+  }, {
+    data : "Ox44368*** just marked an attendance"
+  }, {
+    data : "Ox11168*** web3bridge just created a bootcamp"
+  }, {
+    data : "Ox00968*** marked an event attendance"
+  }, {
+    data : "Oxfdf568*** just created an organization"
+  },{
+    data : "Ox6G568*** marked an attendance"
+  }, {
+    data : "Ox343G568*** created an event"
+  }, {
+    data : "Ox57568*** got certified by web3 clubs"
+  }, {
+    data : "Ox44368*** just marked an attendance"
+  }, {
+    data : "Ox11168*** web3bridge just created a bootcamp"
+  }, {
+    data : "Ox00968*** marked an event attendance"
+  }, {
+    data : "Oxfdf568*** just created an organization"
+  },{
+    data : "Ox6G568*** marked an attendance"
+  }, {
+    data : "Ox343G568*** created an event"
+  }, {
+    data : "Ox57568*** got certified by web3 clubs"
+  }, {
+    data : "Ox44368*** just marked an attendance"
+  }, {
+    data : "Ox11168*** web3bridge just created a bootcamp"
+  }, {
+    data : "Ox00968*** marked an event attendance"
+  }, {
+    data : "Oxfdf568*** just created an organization"
+  },{
+    data : "Ox6G568*** marked an attendance"
+  }, {
+    data : "Ox343G568*** created an event"
+  }, {
+    data : "Ox57568*** got certified by web3 clubs"
+  }, {
+    data : "Ox44368*** just marked an attendance"
+  }, {
+    data : "Ox11168*** web3bridge just created a bootcamp"
+  }, {
+    data : "Ox00968*** marked an event attendance"
+  }, {
+    data : "Oxfdf568*** just created an organization"
+  },{
+    data : "Ox6G568*** marked an attendance"
+  }, {
+    data : "Ox343G568*** created an event"
+  }, {
+    data : "Ox57568*** got certified by web3 clubs"
+  }, {
+    data : "Ox44368*** just marked an attendance"
+  }, {
+    data : "Ox11168*** web3bridge just created a bootcamp"
+  }, {
+    data : "Ox00968*** marked an event attendance"
+  }, {
+    data : "Oxfdf568*** just created an organization"
+  },
+]

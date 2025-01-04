@@ -94,7 +94,7 @@ const Header = () => {
                 <Image alt="Your Company" src={Logo} className="h-8 w-full" />
               </Link>
               <a
-                href="/explorer"
+                href="/Explorer"
                 className="w-[28%] lclg:w-[40%] flex justify-center text-[#9B51E0]"
               >
                 Use our explorer

@@ -21,7 +21,7 @@ const TableList: React.FC<TableListProp> = (props) => {
   return (
     <tbody>
       <tr className="h-[56px] text-[14px] font-normal text-[#5801A9] bg-[#F2F1F1] leading-[19.79px] text-center px-4 my-10 rounded-2xl border overflow-hidden">
-        <td className="px-4 py-2">{props.timestamp}</td>
+        <td className="px-4 py-2 rounded-tl-xl rounded-bl-xl">{props.timestamp}</td>
         <td className="px-4 py-2 text-[14px] font-normal text-[#5801A9] leading-[19.79px]">
           <div className="flex items-center justify-around">
             {props.address}
@@ -38,7 +38,7 @@ const TableList: React.FC<TableListProp> = (props) => {
             {props.status}
           </h1>
         </td>
-        <td className="px-4 py-2 text-[14px] font-normal text-[#5801A9] leading-[19.79px]">
+        <td className="px-4 py-2 text-[14px] font-normal text-[#5801A9] leading-[19.79px] rounded-tr-xl rounded-br-xl">
           {props.category}
         </td>
       </tr>
