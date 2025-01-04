@@ -8,6 +8,7 @@ import MainFormView3 from "./MainFormView3"
 import MainFormView4 from "./MainFormView4"
 import MainFormView5 from "./MainFormView5"
 import { courseQuestions } from "@/constants/data"
+import LandingPage from "../LandingPage"
 
 const CourseFormLanding = (prop: any) => {
   switch (prop.section) {
@@ -38,19 +39,41 @@ const CourseFormLanding = (prop: any) => {
         </div>
       )
 
-    case "CourseSetup2?cars=volvo&cars=volvo":
+    case "courseSetup2":
       return (
         <div className="h-auto w-full bg-[#F5F7FA]">
           <MainFormView2 />
         </div>
       )
 
+    case "courseSetup3":
+      return (
+        <div className="h-auto w-full bg-[#F5F7FA]">
+          <MainFormView3 />
+        </div>
+      )
+    case "courseSetup4":
+      return (
+        <div className="h-auto w-full bg-[#F5F7FA]">
+          <MainFormView4 />
+        </div>
+      )
+    case "courseSetup5":
+      return (
+        <div className="h-auto w-full bg-[#F5F7FA]">
+          <MainFormView5 />
+        </div>
+      )
+    case "course-landing-page":
+      return (
+        <div className="h-auto w-full bg-[#F5F7FA]">
+          <LandingPage />
+        </div>
+      )
+
     default:
       return <>hey</>
   }
-  //   return (
-
-  //   )
 }
 
 export default CourseFormLanding

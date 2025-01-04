@@ -42,7 +42,6 @@ export const handleMyCourseSubComp = (
 ) => {
   event.preventDefault()
   sessionStorage.setItem('scrollPosition', `${window.scrollY}`);
-  // router.push('/Events/createevent')
     // Redirect to the dynamic page with the user's input
     router.push(`/mycoursepage/${section}/`)
   

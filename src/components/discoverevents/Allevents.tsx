@@ -19,7 +19,7 @@ const Allevents = () => {
         router.push(`/Eventpage/${prop.name}`)
     }
   return (
-    <div className='h-[1300px] bg-[#f5f8fa] w-full flex items-center'>
+    <div className='h-[1300px] sm:bg-[#f5f8fa] w-full flex items-center'>
         <div className='w-[80%] h-[90%] mx-auto space-y-6 overflow-y-scroll scrollbar-hide'>
             <div className='flex space-x-4'>
                         <div className='border-[0.81px] border-[#2D3A4B] w-[140px] h-[48px] rounded-2xl flex items-center justify-center'>

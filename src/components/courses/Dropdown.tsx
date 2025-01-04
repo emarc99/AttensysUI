@@ -6,7 +6,7 @@ const Dropdown = (props: any) => {
       <select
         name="cars"
         id="cars"
-        className="w-[80%]  clg:w-[70%] lclg:w-[90%] p-2 border border-gray-300 rounded-xl"
+        className="w-[100%] sm:w-[80%] p-2 border border-gray-300 rounded-xl"
       >
         {
           props.options.map((item:any, i:any) => (

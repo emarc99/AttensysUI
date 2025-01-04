@@ -43,7 +43,7 @@ const Timesection = () => {
         <Image src={dot3} alt='group' />
         <Image src={dot4} alt='group' />
         </div>
-        <div className='h-[59px] w-[215px] rounded-xl mt-12 border-[#FFFFFF] border-[3px] flex items-center justify-center'>
+        <div className='sm:h-[59px] w-[215px] rounded-xl mt-12 border-[#FFFFFF] border-[3px] flex items-center justify-center'>
             <h1 className='text-[20px] font-bold text-[#FFFFFF] leading-[39px]'>Highlighted Event</h1>
         </div>
     </div>

@@ -1,12 +1,15 @@
 import React from "react"
-import { courseQuestions } from "@/constants/data"
+import Previous from "./previous"
 
 const CourseForm = (props: any) => {
   const handleNext = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
   }
   return (
-    <div className="mx-10 md:mx-auto w-auto md:w-5/12 pt-16">
+    <div className="relative mx-10 md:mx-auto w-auto md:w-5/12 pt-16">
+      <div className="hidden sm:block">
+        <Previous />
+      </div>
       <div>
         <h1 className="mb-12 font-bold text-2xl">
           What is the primary goal of your course?
@@ -83,6 +86,10 @@ const CourseForm = (props: any) => {
           </button>
         </div>
       </form>
+
+      <div className="block absolute left-[35%] bottom-36 sm:hidden">
+        <Previous />
+      </div>
     </div>
   )
 }
