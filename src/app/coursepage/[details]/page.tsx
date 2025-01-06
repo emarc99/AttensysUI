@@ -9,6 +9,7 @@ import { useAtom, useSetAtom } from "jotai"
 import Coursedropdown from "@/components/courses/Coursedropdown"
 import { useParams } from "next/navigation"
 import CourseLanding from "@/components/courses/CourseLanding"
+import CourseNews from "@/components/courses/CourseNews"
 
 const Index = () => {
   const [status, setstatus] = useAtom(coursestatusAtom)
@@ -37,7 +38,6 @@ const Index = () => {
       <div onClick={(e) => e.stopPropagation()}>
         <Bootcampdropdown />
       </div>
-
 
       <CourseLanding course={details} />
     </div>

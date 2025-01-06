@@ -1,26 +1,27 @@
 "use client"
 import React from "react"
-import Coursedropdown from "@/components/courses/Coursedropdown"
-import { useAtom, useSetAtom } from "jotai"
 import {
   coursestatusAtom,
   bootcampdropdownstatus,
 } from "@/state/connectedWalletStarknetkitNext"
-import { useParams } from "next/navigation"
 import Bootcampdropdown from "@/components/bootcamp/Bootcampdropdown"
-import ExploreResult from "@/components/explorer/result/ExploreResult"
+import { useAtom, useSetAtom } from "jotai"
+import Coursedropdown from "@/components/courses/Coursedropdown"
+import { useParams } from "next/navigation"
+import CourseLanding from "@/components/courses/CourseLanding"
+import MyCoursePage from "@/components/courses/mycourse/MyCoursePage"
 
 const Index = () => {
-  const [status, setStatus] = useAtom(coursestatusAtom)
+  const [status, setstatus] = useAtom(coursestatusAtom)
   const [bootcampdropstat, setbootcampdropstat] = useAtom(
     bootcampdropdownstatus,
   )
-
   const params = useParams()
+  const section = params.section
 
   const handlePageClick = () => {
     setbootcampdropstat(false)
-    setStatus(false)
+    setstatus(false)
   }
 
   return (
@@ -38,7 +39,7 @@ const Index = () => {
         <Bootcampdropdown />
       </div>
 
-      <ExploreResult params={params} />
+      <MyCoursePage section={section} />
     </div>
   )
 }

@@ -18,7 +18,7 @@ const Eventsection = () => {
 
   
   return (
-    <div className='h-[350px] hidden lg:flex'>
+    <div className='sm:h-[350px] lg:flex'>
             <div className='h-[280px] bg-[#FFFFFF] flex items-center justify-center rounded-lg shadow-custom-blue w-[1370px] mx-auto space-x-32'>
                     <h1 className='w-[450px] text-[30.19px] text-[#2D3A4B] leading-[39px] font-bold'>Atten<span className='text-[#4A90E2]'>sys Events</span> - Create your events and track attendance inreal-time. </h1>
                     <div className='space-y-5 w-[400px]'>

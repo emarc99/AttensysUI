@@ -2,9 +2,13 @@ import React from "react"
 import { coursestatusAtom } from "@/state/connectedWalletStarknetkitNext"
 import { useAtom, useSetAtom } from "jotai"
 import { VscNewFile } from "react-icons/vsc"
+import { handleMyCourse } from "@/utils/helpers"
+import { courseQuestions } from "@/constants/data"
+import { useRouter } from "next/navigation"
 
 const Coursedropdown = () => {
   const [status] = useAtom(coursestatusAtom)
+  const router = useRouter()
   return (
     <>
       {status && (
@@ -33,7 +37,11 @@ const Coursedropdown = () => {
                   </h1>
                 </div>
               </a>
-              <a href="/Course/MyCourse" className=" cursor-pointer">
+              <a
+                //@todo replace sample profile with user profile id
+                href={`/mycoursepage/${"sample-profile"}`}
+                className=" cursor-pointer"
+              >
                 <div className="flex space-x-3">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +62,10 @@ const Coursedropdown = () => {
             </div>
             <div className="w-[1px] h-[80%] bg-[#B8B9BA]"></div>
             <div className="space-y-2 w-[337px]">
-              <a href="/Certifications" className="cursor-pointer">
+              <a
+                href={`/Certifications/${"sample-profile"}`}
+                className="cursor-pointer"
+              >
                 <div className="flex space-x-3">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -81,16 +92,19 @@ const Coursedropdown = () => {
             <div className="w-[1px] h-[80%] bg-[#B8B9BA]"></div>
 
             <div className="space-y-2 w-[350px]">
-              <div className="flex space-x-3">
-                <VscNewFile className="size-6 text-[#9747FF] w-[20px] h-[20px] my-auto" />
-                <h1 className="text-[16px] font-bold cursor-pointer">
-                  <a href="/Course/CreateACourse">Create a course</a>
-                </h1>
-              </div>
-              <p className="text-[13px]">
-                Start building your course by organizing your content into
-                structured sections and engaging video lessons.
-              </p>
+              <a href={`/Course/CreateACourse/${courseQuestions[0]}`}>
+                <div className="flex space-x-3">
+                  <VscNewFile className="size-6 text-[#9747FF] w-[20px] h-[20px] my-auto" />
+
+                  <h1 className="text-[16px] font-bold cursor-pointer">
+                    Create a course
+                  </h1>
+                </div>
+                <p className="text-[13px]">
+                  Start building your course by organizing your content into
+                  structured sections and engaging video lessons.
+                </p>
+              </a>
             </div>
           </div>
         </div>

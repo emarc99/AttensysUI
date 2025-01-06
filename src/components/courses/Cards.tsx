@@ -7,7 +7,7 @@ import {
   CardProps,
 } from "@material-tailwind/react"
 
-import robotImg from "../../assets/roboy.png"
+import robotImg from "../../assets/robot.svg"
 import Image from "next/image"
 import { IoIosStar } from "@react-icons/all-files/io/IoIosStar"
 import { handleCourse } from "@/utils/helpers"
@@ -16,65 +16,32 @@ import { useRouter } from "next/navigation"
 export function CardWithLink() {
   const router = useRouter()
   return (
-    <Card
-      className="mt-6 w-96 border-2"
-      placeholder={undefined}
-      onPointerEnterCapture={() => {}}
-      onPointerLeaveCapture={() => {}}
+    <div
+      className="mt-6 w-[100%] sm:w-[65%] border-2 rounded-xl shadow-lg pb-8"
       onClick={(e) => handleCourse(e, e.currentTarget.textContent, router)}
     >
-      <CardBody
-        placeholder={undefined}
-        onPointerEnterCapture={undefined}
-        onPointerLeaveCapture={undefined}
-        className="cursor-pointer"
-      >
-        <Image className="object-cover " alt="robot" src={robotImg} />
-        <div className="flex justify-between items-start mt-4">
+      <div className="cursor-pointer">
+        <Image className="object-cover" alt="robot" src={robotImg} />
+        <div className="flex justify-between mt-4 px-2 ">
           {/* course prop  */}
           <div className="">
-            <Typography
-              variant="h5"
-              color="blue-gray"
-              className="mb-2"
-              placeholder={undefined}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
-            >
-              Elementary UI
-            </Typography>
-            <Typography
-              className="text-white items-center gap-2 text-sm bg-[#5801A9] rounded p-1"
-              placeholder={undefined}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
-            >
+            <p className="mb-2">Elementary UI</p>
+            <p className="text-white items-center gap-2 text-sm bg-[#5801A9] my-3 rounded p-1">
               Tech Innovators Academy
-            </Typography>
+            </p>
           </div>
 
           <div>
             {/* go to course */}
-            <Button
-              size="md"
-              variant="text"
-              className="items-center gap-2 bg-blue-400 ml-5 text-white"
-              placeholder={undefined}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
-            >
+            <button className="rounded-lg text-xs px-2 py-2 items-center bg-blue-400 text-white">
               Go to course
-            </Button>
+            </button>
           </div>
         </div>
-      </CardBody>
-      <CardFooter
-        className="pt-0"
-        placeholder={undefined}
-        onPointerEnterCapture={undefined}
-        onPointerLeaveCapture={undefined}
-      >
-        <div className="flex items-center">
+      </div>
+
+      <div className="px-2">
+        <div className="flex items-center ">
           {/* rating */}
           <div className="flex">
             <IoIosStar color="#F6A61C" />
@@ -84,21 +51,14 @@ export function CardWithLink() {
             <IoIosStar color="#F6A61C" />
             <IoIosStar />
           </div>
-          <p className="ml-8">1220 students</p>
+          <p className="ml-8"> <span className="text-[#5801A9]">1220</span> students</p>
         </div>
-        <div>
-          <Typography
-            variant="h4"
-            color="blue-gray"
-            className="mb-2 text-sm"
-            placeholder={undefined}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
-          >
-            Created by <span className="underline">Akinbola Kehinde</span>
-          </Typography>
-        </div>
-      </CardFooter>
-    </Card>
+        <div></div>
+        <p className="mt-2 text-sm">
+          Created by <span className="underline">Akinbola Kehinde</span>
+        </p>
+      </div>
+      <div />
+    </div>
   )
 }

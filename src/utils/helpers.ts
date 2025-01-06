@@ -21,3 +21,40 @@ export const handleCourse = (
     router.push(`/coursepage/${courseName}`)
   }
 }
+
+export const handleMyCourse = (
+  event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>,
+  section: any,
+  router: any,
+) => {
+  event.preventDefault()
+  if (section.trim()) {
+    // Redirect to the dynamic page with the user's input
+    router.push(`/mycoursepage/${section}`)
+  }
+}
+
+export const handleMyCourseSubComp = (
+  event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>,
+  section: any,
+  router: any,
+  sub: any,
+) => {
+  event.preventDefault()
+  sessionStorage.setItem('scrollPosition', `${window.scrollY}`);
+    // Redirect to the dynamic page with the user's input
+    router.push(`/mycoursepage/${section}/`)
+  
+}
+
+export const handleCreateCourse = (
+  event: React.MouseEvent<HTMLButtonElement | HTMLDivElement | HTMLFormElement>,
+  section: any,
+  router: any,
+) => {
+  event.preventDefault()
+  if (section.trim()) {
+    // Redirect to the dynamic page with the user's input
+    router.push(`/Course/CreateACourse/${section}`)
+  }
+}

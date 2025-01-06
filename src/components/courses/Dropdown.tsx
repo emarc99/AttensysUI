@@ -1,17 +1,18 @@
 import React from "react"
 
-const Dropdown = () => {
+const Dropdown = (props: any) => {
   return (
     <div className="flex-auto">
       <select
         name="cars"
         id="cars"
-        className="w-[80%]  clg:w-[70%] lclg:w-[90%] p-2 border border-gray-300 rounded-xl"
+        className="w-[100%] sm:w-[80%] p-2 border border-gray-300 rounded-xl"
       >
-        <option value="volvo">Volvo</option>
-        <option value="saab">Saab</option>
-        <option value="mercedes">Mercedes</option>
-        <option value="audi">Audi</option>
+        {
+          props.options.map((item:any, i:any) => (
+            <option  value={item} key={i}>{item}</option>
+          ))
+        }
       </select>
     </div>
   )

@@ -16,7 +16,7 @@ interface alleventCardprops {
 
 const AlleventCard : React.FC<alleventCardprops> = (props) => {
   return (
-    <div onClick={props.onClick}  className='cursor-pointer w-[48%] flex justify-between items-center px-16 h-[242px] rounded-2xl border-[#A3A3A3] border-[0.81px] shadow-xl bg-eventcard-gradient'>
+    <div onClick={props.onClick}  className='cursor-pointer w-[100%] sm:w-[48%] flex justify-between items-center px-4 sm:px-16 py-8 sm:py-0  my-8 sm:my-0 sm:h-[242px] rounded-2xl border-[#A3A3A3] border-[0.81px] shadow-xl bg-eventcard-gradient'>
             <div className='space-y-3'>
             <h1 className='text-[21px] text-[#5801A9] font-bold leading-[35px]'>{props.name}</h1>
                 <div className='flex space-x-4'>
@@ -24,7 +24,7 @@ const AlleventCard : React.FC<alleventCardprops> = (props) => {
                 <div>
                     <h1 className='text-[#2D3A4B] text-[16px] font-semibold leading-[22px]'>{props.hall}</h1>
                     <h1 className='text-[#2D3A4B] text-[16px] font-light leading-[22px]'>{props.city}</h1>
-                </div>
+                </div>    
                 </div>
 
                 <div className='flex space-x-4'>

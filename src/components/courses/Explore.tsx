@@ -12,22 +12,44 @@ import { IoMdArrowDropdown } from "@react-icons/all-files/io/IoMdArrowDropdown"
 import { useRouter } from "next/navigation"
 import { handleCourse } from "@/utils/helpers"
 import { skills, subLectures } from "@/constants/data"
+import Carousel from "react-multi-carousel"
+import "react-multi-carousel/lib/styles.css"
 
 const Explore = () => {
   const router = useRouter()
+
+  const responsive = {
+    superLargeDesktop: {
+      // the naming can be any, depends on you.
+      breakpoint: { max: 4000, min: 3000 },
+      items: 5,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 3,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 820 },
+      items: 2,
+    },
+    mobile: {
+      breakpoint: { max: 820, min: 0 },
+      items: 1,
+    },
+  }
 
   return (
     <div>
       {/* Hero component */}
       <div>
         <div
-          className={`bg-[url('/hero_asset.png')] text-white h-24 px-28 py-20 from-orange-400 via-red-500 to-pink-500 h-64 min-h-full sm:min-h-0 md:min-h-full lg:min-h-0 xl:min-h-full `}
+          className={`bg-[url('/hero_asset.png')] text-white px-12 sm:px-28 py-10 sm:py-20 from-orange-400 via-red-500 to-pink-500 h-64`}
         >
           {/* Hero lettering */}
-          <h1 className="w-5/12 font-bold text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl">
+          <h1 className="w-[90%] sm:w-5/12 font-bold text-2xl sm:text-4xl">
             Continuous learning is the key to success - upskill with us
           </h1>
-          <p className="w-1/2">
+          <p className="w-[90%] sm:w-1/2">
             With Attensys, all you need is your address to prove your
             certification. Welcome to the future{" "}
           </p>
@@ -35,7 +57,7 @@ const Explore = () => {
       </div>
 
       {/* skills  */}
-      <div className="mx-12 my-16 flex flex-row justify-center">
+      <div className="mx-12 my-16 hidden sm:flex flex-row justify-center">
         {skills.map((item, index) => (
           <p className="bg-[#2D3A4B] p-6 text-white" key={index}>
             {item}
@@ -43,8 +65,18 @@ const Explore = () => {
         ))}
       </div>
 
+      <div className="block sm:hidden text-center mx-12 relative bottom-4">
+        <Carousel responsive={responsive}>
+          {skills.map((item, index) => (
+            <p className="bg-[#2D3A4B] p-6 text-white" key={index}>
+              {item}
+            </p>
+          ))}
+        </Carousel>
+      </div>
+
       {/* what to learn next */}
-      <div className="mx-28">
+      <div className="mx-12 sm:mx-28">
         <div className="">
           {/* upper */}
           <div className="my-4">
@@ -59,17 +91,19 @@ const Explore = () => {
           </div>
 
           {/* cards  */}
+          {/* <div className="mx-12 sm:mx-0"> */}
           <CarouselComp />
+          {/* </div> */}
         </div>
 
         {/* below */}
-        <div className="flex justify-start my-24">
+        <div className="block sm:flex justify-start my-24">
           {/* left */}
-          <div className="flex justify-top">
+          <div className="block sm:flex sm:mx-0 justify-top">
             <div className="mr-10">
               <Image src={videoHero} alt="video" className="object-cover" />
             </div>
-            <div>
+            <div className="my-4 sm:my-0">
               <div>
                 <div
                   onClick={(e) =>
@@ -79,7 +113,7 @@ const Explore = () => {
                   <button className="bg-gray-900 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded cursor-pointer">
                     Get this course
                   </button>
-                  <h2 className="font-bold text-4xl text-[#2D3A4B] w-4/6 tracking-wide my-4 cursor-pointer">
+                  <h2 className="font-bold text-2xl sm:text-4xl text-[#2D3A4B] sm:w-4/6 tracking-wide my-4 cursor-pointer">
                     Introduction to Web Development
                   </h2>
                 </div>
@@ -87,7 +121,7 @@ const Explore = () => {
                   Tech Innovators Academy
                 </p>
                 {/* rating and num of students */}
-                <div className="flex  items-center my-2">
+                <div className="block sm:flex  items-center my-2">
                   <div className="flex items-center">
                     <IoIosStar color="#F6A61C" />
                     <IoIosStar color="#F6A61C" />
@@ -97,14 +131,14 @@ const Explore = () => {
                     <p className="font-bold">(281)</p>
                   </div>
 
-                  <div className="flex items-center mx-8">
+                  <div className="flex items-center mx-0 sm:mx-8">
                     <HiBadgeCheck color="#2D3A4B" />
                     <p className="ml-5 font-bold">291 certification</p>
                   </div>
                 </div>
 
                 {/* creator and last update */}
-                <div className="flex text-center my-3">
+                <div className="block sm:flex sm:text-center my-3">
                   <div>
                     <p className="">
                       Created by{" "}
@@ -112,19 +146,19 @@ const Explore = () => {
                     </p>
                   </div>
 
-                  <div className="flex ml-5 items-center ">
+                  <div className="flex ml-0 sm:ml-5 items-center ">
                     <GiBackwardTime />
                     <p className="ml-3">Last updated 10|10|24</p>
                   </div>
                 </div>
 
                 {/* video prop */}
-                <div className="flex ">
+                <div className="block sm:flex ">
                   <div className="flex my-1 items-center">
                     <FaPlay />
                     <p>Total play time: 2 hrs 35 mins</p>
                   </div>
-                  <div className="flex ml-5  items-center">
+                  <div className="flex sm:ml-5  items-center">
                     <GrDiamond color="#2D3A4B" />
                     <p>Difficulty level: Elementary</p>
                   </div>
@@ -141,7 +175,7 @@ const Explore = () => {
           </div>
 
           {/* right */}
-          <div className="flex-1">
+          <div className="hidden sm:block flex-1">
             <div className="flex justify-between border-b-2 pb-3">
               <h4>Lectures (4)</h4>
               <IoMdArrowDropdown />
@@ -179,13 +213,13 @@ const Explore = () => {
 
       {/* recommended for you based on rating */}
       <div>
-        <div className="bg-gradient-to-r from-purple-400 via-purple-300 to-blue-400 p-8 my-4">
-          <p className="text-white font-bold ml-24">
+        <div className="bg-gradient-to-r from-purple-400 via-purple-300 to-blue-400 p-4 sm:p-8 my-4">
+          <p className="text-white font-light text-sm sm:text-base sm:font-bold ml-24">
             Recommended to you based on rating
           </p>
           {/* background: linear-gradient(90deg, #9B51E0 0%, #4A90E2 100%); */}
         </div>
-        <div className="mx-28">
+        <div className="mx-12 sm:mx-28">
           <CarouselComp />
 
           <div className="mt-24">

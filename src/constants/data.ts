@@ -30,6 +30,217 @@ import youtube from "@/assets/youtube.svg"
 import classvid from '@/assets/classtsest.svg'
 import noupload from '@/assets/noupload.svg'
 
+import topNotch from "@/assets/topnotch.svg"
+import digital from "@/assets/digital.svg"
+import liveNft from "@/assets/livenft.svg"
+import Swisstaler from "@/assets/Swisstaler.svg"
+import createIcon from "@/assets/create.svg"
+import filled from "@/assets/filled.svg"
+import free_books from "@/assets/free_books.svg"
+import notifications from "@/assets/notifications.svg"
+import f7_tickets from "@/assets/f7_tickets.svg"
+import token from "@/assets/token-branded_nftb.svg"
+import videoHero from "@/assets/video.svg"
+import videoClip from "@/assets/video_clip.svg"
+import certIcon from "@/assets/certificate-outline.svg"
+
+export const notifCategory = [
+  {
+    read: "Most recent",
+    msgs: [
+      {
+        icon: free_books,
+        msg: "You earned a certificate for [UI/UX Beginners Intro]. Download it now and showcase your skills!",
+      },
+      {
+        icon: certIcon,
+        msg: "Your Certification for the completion of the  “Web Development on APTOS” course is ready.",
+      },
+      {
+        icon: free_books,
+        msg: "Your Certification for the completion of the  “Web Development on APTOS” course is ready.",
+      },
+    ],
+  },
+  {
+    read: "Earlier",
+    msgs: [
+      {
+        icon: certIcon,
+        msg: "📅 Live Q&A in [Course Title] starts in 30 minutes! Join to get your questions answered in real time and connect with other learners.",
+      },
+      {
+        icon: free_books,
+        msg: "Your Certification for the completion of the  “Web Development on APTOS” course is ready.",
+      },
+      {
+        icon: certIcon,
+        msg: "📅 Live Q&A in [Course Title] starts in 30 minutes! Join to get your questions answered in real time and connect with other learners.",
+      },
+    ],
+  },
+]
+
+export const coursesDetails = [
+  {
+    no: 1,
+    title: "Elementary Crypto Trading",
+    tag: "Courses created",
+    playTime: "2 hrs 35 mins",
+    level: "Elementary",
+    stars: 281,
+    url: videoClip,
+    certificate: 291,
+  },
+]
+
+export const learningDetails = [
+  {
+    no: 1,
+    title: "Elementary Crypto Trading",
+    tag: "My Learning Journey",
+    playTime: "2 hrs 35 mins",
+    level: "Elementary",
+    stars: 281,
+    url: videoClip,
+    certificate: 291,
+  },
+]
+
+export const sideProperties = [
+  {
+    no: 1,
+    title: "Courses created",
+    url: filled,
+  },
+  {
+    no: 4,
+    title: "My Learning Journey",
+    url: free_books,
+  },
+  {
+    no: 0,
+    title: "Create a course",
+    url: createIcon,
+  },
+  {
+    no: 14,
+    title: "Notification",
+    url: notifications,
+  },
+]
+
+export const coursesProgress = [
+  {
+    no: 1,
+    title: "Courses",
+  },
+  {
+    no: 4,
+    title: "Completed courses",
+  },
+  {
+    no: 1,
+    title: "Ongoing",
+  },
+  {
+    no: 14,
+    title: "Created",
+  },
+]
+
+export const certificateEarned = [
+  {
+    no: 2,
+    title: "Course Certification",
+    type: "certified",
+  },
+  {
+    no: 3,
+    title: "Event Certification",
+    type: "events",
+  },
+]
+
+export const certSideProperties = [
+  {
+    no: 1,
+    title: "All NFTs",
+    url: f7_tickets,
+  },
+  {
+    no: 4,
+    title: "Course NFTs",
+    url: token,
+  },
+  {
+    no: 0,
+    title: "Event NFTs",
+    url: f7_tickets,
+  },
+]
+
+export const certContent = [
+  {
+    heading: "My Certification",
+    no: 2,
+    type: "Course NFTs",
+    certificates: [
+      {
+        img: digital,
+        cert_name: "Blockchain Africa ‘24",
+        recipient: "0x3C4kB...J29",
+        author: "Blockchain Africa ‘24",
+        nft_description:
+          "This NFT certifies that 0x3C4B...D12 has successfully completed the ‘Blockchain Fundamentals’ course provided by Blockchain Academy Pro.",
+      },
+      {
+        img: digital,
+        cert_name: "Blockchain Africa ‘24",
+        recipient: "0x3C4kB...J29",
+        author: "Blockchain Africa ‘24",
+        nft_description:
+          "This NFT certifies that 0x3C4B...D12 has successfully completed the ‘Blockchain Fundamentals’ course provided by Blockchain Academy Pro.",
+      },
+    ],
+  },
+  {
+    heading: "My Events",
+    no: 3,
+    type: "Event NFTs",
+    certificates: [
+      {
+        img: Swisstaler,
+        cert_name: "Blockchain Africa ‘24",
+        recipient: "0x3C4kB...J29",
+        author: "Blockchain Africa ‘24",
+        nft_description:
+          "This NFT certifies that 0x3C4B...D12 has successfully completed the ‘Blockchain Fundamentals’ course provided by Blockchain Academy Pro.",
+      },
+      {
+        img: topNotch,
+        cert_name: "Blockchain Africa ‘24",
+        recipient: "0x3C4kB...J29",
+        author: "Blockchain Africa ‘24",
+        nft_description:
+          "This NFT certifies that 0x3C4B...D12 has successfully completed the ‘Blockchain Fundamentals’ course provided by Blockchain Academy Pro.",
+      },
+      {
+        img: liveNft,
+        cert_name: "Blockchain Africa ‘24",
+        recipient: "0x3C4kB...J29",
+        author: "Blockchain Africa ‘24",
+        nft_description:
+          "This NFT certifies that 0x3C4B...D12 has successfully completed the ‘Blockchain Fundamentals’ course provided by Blockchain Academy Pro.",
+      },
+    ],
+  },
+]
+
+export const courseQuestions = [
+  "What is the primary goal of your course?",
+  "Who is your course for, and what should they know before starting?",
+]
 
 export const skills = [
   "Design",
@@ -42,6 +253,14 @@ export const skills = [
   "Artificial Intelligence",
   "Product Management",
 ]
+
+export const levelOptions = [
+  "Beginner",
+  "Intermediate",
+  "Advanced",
+  "All levels",
+]
+
 export const subLectures = [
   {
     img: courseImg,
@@ -1602,6 +1821,79 @@ export const favoriteCourseData = [
   },
 ]
 
+export const mockkdata = [
+  {
+    data : "Ox6G568*** marked an attendance"
+  }, {
+    data : "Ox343G568*** created an event"
+  }, {
+    data : "Ox57568*** got certified by web3 clubs"
+  }, {
+    data : "Ox44368*** just marked an attendance"
+  }, {
+    data : "Ox11168*** web3bridge just created a bootcamp"
+  }, {
+    data : "Ox00968*** marked an event attendance"
+  }, {
+    data : "Oxfdf568*** just created an organization"
+  },{
+    data : "Ox6G568*** marked an attendance"
+  }, {
+    data : "Ox343G568*** created an event"
+  }, {
+    data : "Ox57568*** got certified by web3 clubs"
+  }, {
+    data : "Ox44368*** just marked an attendance"
+  }, {
+    data : "Ox11168*** web3bridge just created a bootcamp"
+  }, {
+    data : "Ox00968*** marked an event attendance"
+  }, {
+    data : "Oxfdf568*** just created an organization"
+  },{
+    data : "Ox6G568*** marked an attendance"
+  }, {
+    data : "Ox343G568*** created an event"
+  }, {
+    data : "Ox57568*** got certified by web3 clubs"
+  }, {
+    data : "Ox44368*** just marked an attendance"
+  }, {
+    data : "Ox11168*** web3bridge just created a bootcamp"
+  }, {
+    data : "Ox00968*** marked an event attendance"
+  }, {
+    data : "Oxfdf568*** just created an organization"
+  },{
+    data : "Ox6G568*** marked an attendance"
+  }, {
+    data : "Ox343G568*** created an event"
+  }, {
+    data : "Ox57568*** got certified by web3 clubs"
+  }, {
+    data : "Ox44368*** just marked an attendance"
+  }, {
+    data : "Ox11168*** web3bridge just created a bootcamp"
+  }, {
+    data : "Ox00968*** marked an event attendance"
+  }, {
+    data : "Oxfdf568*** just created an organization"
+  },{
+    data : "Ox6G568*** marked an attendance"
+  }, {
+    data : "Ox343G568*** created an event"
+  }, {
+    data : "Ox57568*** got certified by web3 clubs"
+  }, {
+    data : "Ox44368*** just marked an attendance"
+  }, {
+    data : "Ox11168*** web3bridge just created a bootcamp"
+  }, {
+    data : "Ox00968*** marked an event attendance"
+  }, {
+    data : "Oxfdf568*** just created an organization"
+  },
+]
 
 export const permisiondata = [
   {
