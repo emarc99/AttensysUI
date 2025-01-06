@@ -7,7 +7,7 @@ import Allevents from "./Allevents"
 
 const DiscoverLanding = () => {
   return (
-    <div className="h-auto w-full bg-event-gradient">
+    <div className=" w-full bg-event-gradient">
       <TopdiscoverSection />
       <Backgroundsection />
       <Timesection />

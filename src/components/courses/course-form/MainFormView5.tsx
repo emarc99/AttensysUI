@@ -8,6 +8,7 @@ import rich from "@/assets/Richin2024.svg"
 import Image from "next/image"
 import Switch from "react-switch"
 import Lectures from "../Lectures"
+import CourseSideBar from "./SideBar"
 
 const MainFormView5 = () => {
   const [isActivated, setIsActivated] = useState(false)
@@ -38,93 +39,110 @@ const MainFormView5 = () => {
   ]
 
   return (
-    <div>
-      <div className="bg-gradient-to-r from-[#4A90E2] to-[#9B51E0]">
-        <p className="text-sm text-white text-center py-2">
-          Your course creation progress saves automatically, but feel free to
-          also save your progress manually
-        </p>
+    <div className="sm:flex">
+      <div className="hidden sm:block">
+        <CourseSideBar />
       </div>
 
-      <div className="min-w-full w-[100%] ">
-        <div className="flex justify-between py-2 my-5 border-t border-b border-[#d1d1d1] px-5 items-center">
-          <div className="flex items-center">
-            <div className="px-8 border-r border-blue-100">
-              <IoMdArrowBack />
-            </div>
-            <p className="text-[#4A90E2] text-xl font-bold">
-              Preview & Publish
-            </p>
-          </div>
-
-          <form action="course-landing-page" method="post">
-            <button className="bg-[#C5D322] px-7 py-3 rounded text-white">
-              Publish
-            </button>
-          </form>
+      <div className="flex-1">
+        <div className="bg-gradient-to-r from-[#4A90E2] to-[#9B51E0]">
+          <p className="text-sm text-white text-center py-2">
+            Your course creation progress saves automatically, but feel free to
+            also save your progress manually
+          </p>
         </div>
 
-        <div className="mx-24 mt-12">
-          <div className="grid grid-cols-2 gap-4">
-            {/* Course Image */}
-            <div className="col-2">
-              <Image src={video} alt="hero" />
+        <div className=" ">
+          <div className="block sm:flex justify-between py-2 my-5 border-t border-b border-[#d1d1d1] px-5 items-center">
+            <div className="flex items-center">
+              <div className="px-8 border-r border-blue-100">
+                 <IoMdArrowBack
+                                  onClick={() => history.back()}
+                                  className="cursor-pointer"
+                                />
+              </div>
+              <p className="text-[#4A90E2] text-xl font-bold">
+                Preview & Publish
+              </p>
             </div>
 
-            {/* Course information */}
-            <div>
-              {/* field */}
+            <form action="course-landing-page" method="post">
+              <button className="hidden sm:block bg-[#C5D322] px-7 py-3 rounded text-white">
+                Publish
+              </button>
+            </form>
+          </div>
+
+          <div className="mx-12 sm:mx-24 mt-12">
+            <div className="block sm:grid grid-cols-2 gap-4">
+              {/* Course Image */}
               <div className="">
-                <p className="text-[#5801A9]">Technology | Web Development</p>
+                <Image src={video} alt="hero" className=" sm:w-[70%]" />
               </div>
 
-              <h4 className="text-2xl font-bold mb-5 mt-3">
-                Introduction to Web Development
-              </h4>
-              <p className="my-3 text-[#333333]">
-                {`This course provides a foundational understanding of web
+              {/* Course information */}
+              <div>
+                {/* field */}
+                <div className="mb-12 order-first">
+                  <p className="text-[#5801A9]">Technology | Web Development</p>
+                </div>
+
+                <h4 className="text-2xl font-bold my-8 ">
+                  Introduction to Web Development
+                </h4>
+                <div className="my-8">
+                  <p className="  text-[#333333]">
+                    {`This course provides a foundational understanding of web
                 development. You'll learn essential skills in HTML and CSS,
                 enabling you to create and style your own web pages. No prior
                 experience is necessary!`}
-              </p>
+                  </p>
+                </div>
 
-              <div className="bg-[#5801A9] py-2 text-white px-12 my-5 w-[50%] rounded-xl">
-                <p className="">Tech Innovators Academy</p>
-              </div>
+                <div className="bg-[#5801A9] py-2 text-white px-12  my-8 Sm:w-[50%] rounded-xl">
+                  <p className="">Tech Innovators Academy</p>
+                </div>
 
-              <div>
-                <p>Difficulty level : Elementary</p>
+                <div>
+                  <p>Difficulty level : Elementary</p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="">
-            {/* lectures in course */}
-            <Lectures lectures={lectures} />
-            {/* course desc & student req */}
+            <div className="">
+              {/* lectures in course */}
+              <Lectures lectures={lectures} />
+              {/* course desc & student req */}
 
-            <div className="my-12">
-              <div>
-                <div className="flex justify-between w-[30%] my-5">
-                  <h4 className="font-bold">Certification for this course</h4>
-                  <Switch
-                    onChange={handleSwitch}
-                    checked={isActivated}
-                    onColor="#9B51E0"
-                    offColor="#4A90E2"
-                  />
+              <div className="my-12">
+                <div>
+                  <div className="flex justify-between sm:w-[30%] my-5">
+                    <h4 className="font-bold">Certification for this course</h4>
+
+                    <Switch
+                      onChange={handleSwitch}
+                      checked={isActivated}
+                      onColor="#9B51E0"
+                      offColor="#4A90E2"
+                      uncheckedHandleIcon={<div />}
+                      checkedHandleIcon={<div />}
+                      checkedIcon={<div />}
+                      uncheckedIcon={<div />}
+                      className="mx-2"
+                    />
+                  </div>
+                  <p>After completion students will be issued certification</p>
                 </div>
-                <p>After completion students will be issued certification</p>
-              </div>
-              <div className="mt-12 mb-24">
-                <form action="course-landing-page" method="post">
-                  <button
-                    className="rounded bg-[#4A90E2] px-24 py-3 text-white"
-                    type="submit"
-                  >
-                    Save and Publish Course
-                  </button>
-                </form>
+                <div className="mt-12 mb-24">
+                  <form action="course-landing-page" method="post">
+                    <button
+                      className="rounded bg-[#4A90E2] px-24 py-3 text-white"
+                      type="submit"
+                    >
+                      Save and Publish Course
+                    </button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>

@@ -14,13 +14,14 @@ interface LectureData {
 
 const Lectures = ({ lectures }: LectureData) => {
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <div className="py-12">
+    <div className="block sm:grid grid-cols-2 gap-4">
+      <div className="py-6 sm:py-12  order-last sm:order-first">
+        <h2 className="block sm:hidden">Lectures in this course (2)</h2>
         {lectures.map((item, id) => (
-          <div key={id} className="flex py-3">
+          <div key={id} className="block sm:flex py-3">
             <Image src={item.img} alt="hero" />
 
-            <div className="mx-10 mb-5-">
+            <div className="sm:mx-10 mb-5-">
               <h4 className="font-bold my-5">
                 {item.title}
                 <span className="text-[#5801A9] ml-12">
@@ -34,7 +35,7 @@ const Lectures = ({ lectures }: LectureData) => {
         ))}
       </div>
 
-      <div className="py-12">
+      <div className="py-6 sm:py-12 ">
         <div className="py-3">
           <p>
             {`  This course provides a foundational understanding of web
@@ -47,7 +48,7 @@ const Lectures = ({ lectures }: LectureData) => {
         <div className="py-5">
           <h4 className="font-bold">Student Requirements</h4>
 
-          <ul className="list-disc">
+          <ul className="list-disc mx-6 mt-4">
             <li>A computer with internet access</li>
             <li>Basic computer skills</li>
             <li>Willingness to learn and experiment</li>
@@ -55,9 +56,9 @@ const Lectures = ({ lectures }: LectureData) => {
         </div>
 
         <div className="py-5">
-          <h4 className="font-bold"> Target Audience</h4>
+          <h4 className="font-bold "> Target Audience</h4>
 
-          <ul className="list-disc">
+          <ul className="list-disc mx-6 mt-4">
             <li>Beginners interested in web development</li>
             <li>Aspiring web developers looking to start their journey</li>
             <li>Anyone wanting to create their own websites</li>

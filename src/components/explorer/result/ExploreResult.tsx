@@ -9,8 +9,14 @@ import { eventsData, gridsData } from "@/constants/data"
 import ResultGrid from "./ResultGrid"
 import { handleSubmit } from "@/utils/helpers"
 import { useRouter } from "next/navigation"
+import { RiArrowDropDownLine } from "react-icons/ri";
 
-const ExploreResult = ({ params} : any) => {
+
+type Params = {
+  address?: string; // Replace 'searchTerm' with the actual key(s) in params
+};
+
+const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
   const [searchValue, setSearchValue] = useState("")
 
   const [currentPage, setCurrentPage] = useState(1)
@@ -71,34 +77,37 @@ const ExploreResult = ({ params} : any) => {
     setSearchValue(event.target.value)
   }
 
+  const shortenAddress = (address : any) => {
+    return address.slice(0, 10) + '...' + address.slice(-10);
+  }
   useEffect(() => {}, [])
 
   return (
-    <div>
+    <div className="bg-[#F5F7FA] w-full h-auto">
       {/* top */}
       <div className="mx-36  py-5">
         <div
           className="flex justify-between items-center border-b-2 border-[#e0e0e0]
       "
         >
-          <div>
-            <h1>Explorer Result</h1>
-            <p>
-              Key : Address <span className="text-[#9b51e0]">({address})</span>
+          <div className="space-y-2">
+            <h1 className="text-[18px] font-medium leading-[22px] text-[#333333]">Explorer Result</h1>
+            <p className="text-[15px] font-medium leading-[18px] text-[#817676]">
+              Key : Address <span className="text-[#9b51e0]">({shortenAddress(address)})</span>
             </p>
           </div>
 
-          <div className="w-[45%] relative my-5">
+          <div className="w-[50%] relative my-5">
             <form onSubmit={(e) => handleSubmit(e, searchValue, router)}>
-              <Input
+            <div className="w-full h-[50px] rounded-xl bg-[#FFFFFF] px-6 flex items-center justify-between">
+                  <div className="w-[70%]">       <Input
                 name="search by address"
                 type="text"
                 placeholder="           Search an address | organization | Course"
                 value={searchValue}
                 onChange={handleChange}
-                className="w-[100%] font-bold  p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
+                className="w-full h-[50px] clg:w-full lclg:w-[90%] p-2 bg-none  rounded-xl text-[15px] focus:outline-none font-medium text-[#817676] placeholder-[#817676]"
               />
-
               {!searchValue && (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -106,7 +115,7 @@ const ExploreResult = ({ params} : any) => {
                   viewBox="0 0 24 24"
                   strokeWidth="1.5"
                   stroke="currentColor"
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+                  className="absolute left-10 top-1/2 transform -translate-y-1/2 h-[25px] w-[25px] text-gray-400"
                 >
                   <path
                     strokeLinecap="round"
@@ -114,25 +123,13 @@ const ExploreResult = ({ params} : any) => {
                     d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
                   />
                 </svg>
-              )}
+              )}</div>
 
-              {!searchValue && (
-                // <Dropdown />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="absolute right-5 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                  />
-                </svg>
-              )}
+                  <div className="h-[42px] w-[20%] rounded-xl flex items-center justify-center bg-[#4A90E21F]  border-[1px] border-[#6B6D6E] space-x-1 ">
+                        <h1 className="text-[#2D3A4B] text-[14px] leading-[21px] font-medium ">All Filters</h1>
+                        <RiArrowDropDownLine className="h-[20px] w-[20px] text-[#2D3A4B]" />
+                  </div>
+              </div>
             </form>
           </div>
         </div>

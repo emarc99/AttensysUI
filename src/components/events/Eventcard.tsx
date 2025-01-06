@@ -23,7 +23,7 @@ const Eventcard : React.FC<MyeventCardProp> = (props)  => {
     // let [focusedDate, setFocusedDate] = useState<DateValue>(defaultDate);
 
   return (
-    <div className='w-[80%] mx-auto h-[250px] flex space-x-16 mt-16  justify-center '>
+    <div className='w-[80%] mx-auto h-[250px] flex sm:space-x-16 mt-16  justify-center '>
                         <div className='flex flex-col items-center space-y-1'>
                             <Image src={blucecirle} alt='circle' />
                             <div className='h-[312px] w-[1px] bg-[#4e556b]'></div>
@@ -31,7 +31,7 @@ const Eventcard : React.FC<MyeventCardProp> = (props)  => {
 
                         <div className='space-y-8'>
                             <h1 className='text-[16px] text-[#FFFFFF] font-medium leading-[22px]'>{props.todaydate}</h1>
-                            <div className='h-[205px] w-[747px] rounded-xl border border-[#FFFFFF9E] bg-[#3F3F3F52] shadow-2xl flex justify-between px-14 py-7'>
+                            <div className='sm:h-[205px] sm:w-[747px] rounded-xl border border-[#FFFFFF9E] bg-[#3F3F3F52] shadow-2xl flex justify-between px-14 py-7'>
                                     <div className='space-y-2'>
                                         <p className='font-medium text-[16px] leading-[22px] text-[#FFFFFF]'>{props.time}</p>
                                         <h1 className='text-[#FFFFFF] text-[20px] font-bold leading-[39px]'>{props.eventname}</h1>

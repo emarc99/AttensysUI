@@ -1,8 +1,12 @@
 import React from "react"
+import Previous from "./previous"
 
 const CourseForm3 = () => {
   return (
-    <div className="mx-auto  w-5/12 pt-16">
+    <div className="relative mx-10 md:mx-auto w-auto md:w-5/12 pt-16">
+      <div className="hidden sm:block">
+        <Previous />
+      </div>
       <div>
         <h1 className="mb-12 font-bold text-2xl">
           Do you already have a plan for what your course will cover?
@@ -70,11 +74,15 @@ const CourseForm3 = () => {
         </div>
 
         <div className="text-center">
-          <button className="rounded bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] px-48 py-3 mt-12 mb-44 text-white">
+          <button className="rounded bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] px-40 md:px-60 py-3 text-xs md:text-base mt-12 mb-44 text-white">
             Setup my course
           </button>
         </div>
       </form>
+
+      <div className="block absolute left-[35%] bottom-36 sm:hidden">
+        <Previous />
+      </div>
     </div>
   )
 }

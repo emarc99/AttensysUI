@@ -1,7 +1,7 @@
 import React from "react"
 import Image from "next/image"
 import event_icon from "@/assets/event_icon.svg"
-import { BsFillExclamationCircleFill } from "@react-icons/all-files/bs/BsFillExclamationCircleFill"
+import { SlExclamation } from "react-icons/sl";
 import up from "@/assets/up.svg"
 import down from "@/assets/down.svg"
 import show_arrow from "@/assets/show_arrow.svg"
@@ -43,12 +43,67 @@ const ResultGrid = ({
   goToPage,
   currentPage,
 }: ResultGridProps) => {
+
+  const renderContent = (arg : string) => {
+      if(arg == "Key"){
+          return <>
+            <p className="text-[12px] font-medium leading-[16px] text-[#817676]">
+                Address{" "}
+                <span className="text-[#5801A9]">
+                  (0x5c956e61...de5232dc11)
+                </span>{" "}
+              </p>
+          </>
+      }else if (arg == "Status"){
+          return <>
+          <div className="h-[30px] w-[64px] bg-[#C4FFA2] rounded-xl flex items-center justify-center">
+            <h1 className="text-[#115E2C] font-light text-[12px] leading-[19px]">Verified</h1>
+          </div>
+          </>
+      }else if (arg == "Registered events"){
+        return <>
+        <h1 className="text-[12px] font-medium leading-[16px] text-[#817676]"><span className="text-[#9B51E0]">15</span> events</h1>
+        </>
+    }else if (arg == "Marked attendance"){
+      return <>
+      <div className="flex space-x-3">
+          <h1 className="text-[12px] font-medium leading-[16px] text-[#817676]"><span className="text-[#9B51E0]">14</span> marked</h1>
+          <h1 className="text-[12px] font-medium leading-[16px] text-[#817676]"><span className="text-[#9B51E0]">1</span>unmarked</h1>
+      </div>
+      </>
+  }else if (arg == "Certifications"){
+    return <>
+      <h1 className="text-[12px] font-medium leading-[16px] text-[#817676]"><span className="text-[#9B51E0]">14</span> Certifications</h1>
+    </>
+}else if (arg == "Courses"){
+  return <>
+    <h1 className="text-[12px] font-medium leading-[16px] text-[#817676]"><span className="text-[#9B51E0]">5</span> Courses</h1>
+  </>
+}else if (arg == "Completed courses"){
+  return <>
+    <h1 className="text-[12px] font-medium leading-[16px] text-[#817676]"><span className="text-[#9B51E0]">2</span> Completed courses</h1>
+  </>
+}else if (arg == "Course Certification"){
+  return <>
+    <h1 className="text-[12px] font-medium leading-[16px] text-[#817676]"><span className="text-[#9B51E0]">2</span> Certified</h1>
+  </>
+}else if (arg == "Event Certification"){
+  return <>
+    <h1 className="text-[12px] font-medium leading-[16px] text-[#817676]"><span className="text-[#9B51E0]">14</span> events</h1>
+  </>
+}else if (arg == "Total"){
+  return <>
+    <h1 className="text-[12px] font-medium leading-[16px] text-[#817676]"><span className="text-[#9B51E0]">16</span> Certifications</h1>
+  </>
+}
+  }
+
   return (
     <div className="grid grid-cols-2 gap-10">
       <div className="row-span-2 bg-[#FFFFFF] rounded-lg mb-6 py-5 border border-[#b9b9ba]">
         {/* Event overview */}
         <div className="border-b-2 border-[#b9b9ba]">
-          <div className="flex gap-2 w-60 rounded-xl mx-12  items-center border-2 border-black p-3 mb-3">
+          <div className="flex gap-2 w-60 rounded-xl mx-12  items-center border-[1px] border-[#6B6D6E] p-3 mb-3">
             <Image src={event_icon} alt="event_icon" />
             <h1>{item.name} Overview</h1>
           </div>
@@ -56,16 +111,13 @@ const ResultGrid = ({
 
         <div className="mx-12 mt-3">
           {item.subProp.map((item, i) => (
-            <div key={i} className="flex gap-48 items-center py-2">
-              <div className="flex justify-between items-center gap-1 my-2">
-                <BsFillExclamationCircleFill />
-                <p>{item}:</p>
+            <div key={i} className="flex space-x-4 items-center py-2">
+              <div className="flex items-center space-x-3 my-2 w-[250px]">
+                <SlExclamation className="text-[#2D3A4B] h-[12px] w-[12px]"/>
+                <p className="text-[14px] font-medium text-[#333333] leading-[22px]">{item}:</p>
               </div>
               <p>
-                Address{" "}
-                <span className="text-[#5801A9]">
-                  (0x5c956e61...de5232dc11)
-                </span>{" "}
+                {renderContent(item)}
               </p>
             </div>
           ))}
@@ -132,10 +184,10 @@ const ResultGrid = ({
       <div className="row-span-3 text-xs">
         {/* All Event */}
 
-        <div className="mx-auto bg-[#FFFFFF] rounded-lg mb-24 border border-[#b9b9ba]">
+        <div className="mx-auto h-auto bg-[#FFFFFF] rounded-lg mb-24 border border-[#b9b9ba]">
           <div className="border-b-2 border-[#b9b9ba]">
             <div className="flex justify-between items-center px-8 pt-5">
-              <div className="border-2 border-black p-3 mb-3 rounded-xl">
+              <div className="border-[1px] border-[#6B6D6E] p-3 mb-3 rounded-xl">
                 <h1 className="text-xs">{item.viewPartName}</h1>
               </div>
 
@@ -147,7 +199,7 @@ const ResultGrid = ({
             </div>
           </div>
 
-          <div className={`${item.eventsData.length > 0 ? "" : "h-[275px]"} `}>
+          <div className={`${item.eventsData.length > 0 ? "" : "h-[308px]"} `}>
             <table className="w-full border-separate border-spacing-y-3">
               <thead>
                 <tr className="h-[42px] border-b-2 border-black  font-normal text-[#2d3a4b] leading-[19.79px] rounded">
@@ -161,7 +213,7 @@ const ResultGrid = ({
                   ))}
                 </tr>
               </thead>
-              {item.eventsData.length > 0 ? (
+              {item.eventsData.length > 0 && (
                 item.eventsData.map((data, index) => {
                   return (
                     <tbody key={index}>
@@ -186,10 +238,14 @@ const ResultGrid = ({
                     </tbody>
                   )
                 })
-              ) : (
-                <tr className="w-[100] bg-black">hello</tr>
               )}
             </table>
+            {item.eventsData.length == 0 && (
+              <div className="h-[70%] w-full flex items-center justify-center">
+              <h1 className="text-[15px] text-[#817676] font-medium leading-[18px]">This address has no event data</h1>
+      </div>
+            ) }
+            
           </div>
 
           {/* Pagination Controls */}

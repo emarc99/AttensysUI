@@ -11,8 +11,11 @@ import { GiBackwardTime } from "@react-icons/all-files/gi/GiBackwardTime"
 import { FaPlay } from "@react-icons/all-files/fa/FaPlay"
 import { GrDiamond } from "@react-icons/all-files/gr/GrDiamond"
 import CarouselComp from "./Carousel"
+import { handleCourse } from "@/utils/helpers"
+import { useRouter } from "next/navigation"
 
 const LandingPage = () => {
+  const router = useRouter()
   const lectures = [
     {
       img: rich,
@@ -36,9 +39,9 @@ const LandingPage = () => {
   return (
     <div>
       <div
-        className={`bg-[url('/hero_asset.png')] text-white  px-28 py-16 from-orange-400 via-red-500 to-pink-500 h-64 min-h-full sm:min-h-0 md:min-h-full lg:min-h-0 xl:min-h-full `}
+        className={`bg-[url('/hero_asset.png')] text-white  px-12 sm:px-28 py-16 from-orange-400 via-red-500 to-pink-500 h-96 sm:h-64  `}
       >
-        <div className="grid grid-cols-2 gap-4 mx-20">
+        <div className="block sm:grid grid-cols-2 gap-4 sm:mx-20">
           {/* Course Image */}
           <div className="col-2 text-sm">
             <p className="font-bold mb-2">Technology | Web development</p>
@@ -49,25 +52,37 @@ const LandingPage = () => {
           <div className="text-sm">
             {/* field */}
             <div className="">
-              <button className="bg-[#fff] px-7 py-2 rounded text-[#333333] font-bold">
+              <button className="hidden sm:block bg-[#fff] px-7 py-2 rounded text-[#333333] font-bold">
                 Get course
               </button>
             </div>
 
-            <a href="/Course/course-lecture-page">
-              <h4 className="text-2xl font-bold mb-2 mt-2">
-                Introduction to Web Development
-              </h4>
-            </a>
-            <p className="my-2 text-white">
+            <h4
+              className="text-2xl font-bold mb-2 mt-2 text-black sm:text-white cursor-pointer"
+              onClick={(e) =>
+                handleCourse(e, e.currentTarget.textContent, router)
+              }
+            >
+              Introduction to Web Development
+            </h4>
+
+            <p className="my-2 text-black sm:text-white">
               {`This course provides a foundational understanding of web
               development. You'll learn essential skills in HTML and CSS,
               enabling you to create and style your own web pages. No prior
               experience is necessary!`}
             </p>
 
-            <div className="bg-[#5801A9] py-2 text-white px-12 my- w-[40%] rounded-xl">
-              <p className="">Tech Innovators Academy</p>
+            <div className="flex">
+              <div className="bg-[#5801A9] py-2 text-white px-12 my- w-[40%] rounded-xl">
+                <p className="">Tech Innovators Academy</p>
+              </div>
+
+              <div className="">
+                <button className="sm:hidden block bg-[#9b51e0] px-7 py-2 rounded text-[#333333] font-bold">
+                  Get course
+                </button>
+              </div>
             </div>
 
             {/* rating and num of students */}
@@ -78,10 +93,10 @@ const LandingPage = () => {
                 <IoIosStar color="#F6A61C" />
                 <IoIosStar color="#F6A61C" />
                 <IoIosStar />
-                <p className="font-bold">(281)</p>
+                <p className="font-bold text-black sm:text-white">(281)</p>
               </div>
 
-              <div className="flex items-center mx-8">
+              <div className="flex items-center mx-8 text-black sm:text-white">
                 <HiBadgeCheck color="#fff" />
                 <p className="ml-5 font-bold">291 certification</p>
               </div>
@@ -123,20 +138,20 @@ const LandingPage = () => {
         </div>
       </div>
 
-      <div className="mx-48 mt-32 mb-10">
+      <div className="mx-12 sm:mx-48 sm:mt-32 mt-96 mb-10">
         <Lectures lectures={lectures} />
       </div>
 
       {/* rating */}
       <div>
-        <div className="border-b-2 mx-48 flex pb-4">
+        <div className="border-b-2 mx-24 sm:mx-48 items-center flex pb-4">
           <IoIosStar color="#F6A61C" />
           <p>4.9 Rating | (281 reviews)</p>
         </div>
 
         {/* comments */}
-        <div className="flex py-12 mx-48 items-center content-center justify-around text-sm">
-          <div className="w-[30%]">
+        <div className="block sm:flex py-12 mx-12 sm:mx-48 items-center content-center justify-around text-sm">
+          <div className="w-[100%] sm:w-[30%]">
             <div className="flex">
               <p className="p-5 bg-[#9b51e01a] font-bold rounded-full">OM</p>
               <div className="ml-10">
@@ -158,9 +173,9 @@ const LandingPage = () => {
             </p>
           </div>
 
-          <div className="border-2 h-28"></div>
+          <div className="border-2 h-28 hidden sm:block"></div>
 
-          <div className="w-[30%]">
+          <div className="w-[100%] sm:w-[30%] my-8 sm:my-0">
             <div className="flex">
               <p className="p-5 bg-[#9b51e01a] font-bold rounded-full">OM</p>
               <div className="ml-10">
@@ -189,7 +204,7 @@ const LandingPage = () => {
           <p className="text-sm text-white py-2 px-48">Students also bought</p>
         </div>
 
-        <div className="mx-48 my-6">
+        <div className="mx-24 sm:mx-48 my-6">
           <CarouselComp />
         </div>
       </div>
