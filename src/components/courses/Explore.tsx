@@ -14,6 +14,8 @@ import { handleCourse } from "@/utils/helpers"
 import { skills, subLectures } from "@/constants/data"
 import Carousel from "react-multi-carousel"
 import "react-multi-carousel/lib/styles.css"
+import StarRating from "../bootcamp/StarRating"
+import { LuBadgeCheck } from "react-icons/lu";
 
 const Explore = () => {
   const router = useRouter()
@@ -43,7 +45,7 @@ const Explore = () => {
       {/* Hero component */}
       <div>
         <div
-          className={`bg-[url('/hero_asset.png')] text-white px-12 sm:px-28 py-10 sm:py-20 from-orange-400 via-red-500 to-pink-500 h-64`}
+          className={`bg-[url('/hero_asset.png')] space-y-4 text-white px-12 sm:px-28 py-10 sm:py-20 from-orange-400 via-red-500 to-pink-500 h-64`}
         >
           {/* Hero lettering */}
           <h1 className="w-[90%] sm:w-5/12 font-bold text-2xl sm:text-4xl">
@@ -81,10 +83,10 @@ const Explore = () => {
           {/* upper */}
           <div className="my-4">
             {/* wording */}
-            <h3 className="text-2xl font-bold">What to learn next</h3>
-            <p className="font-thin text-xl">
+            <h3 className="text-[25px] font-bold text-[#2D3A4B]">What to learn next</h3>
+            <p className="font-light text-xl text-[#2D3A4B]">
               Because you viewed{" "}
-              <span className="text-[#5801A9] font-bold">
+              <span className="text-[#5801A9] font-bold underline">
                 “Introduction to Web Dev Starknet”
               </span>
             </p>
@@ -97,11 +99,11 @@ const Explore = () => {
         </div>
 
         {/* below */}
-        <div className="block sm:flex justify-start my-24">
+        <div className="flex sm:flex justify-start my-24 h-[307px]">
           {/* left */}
-          <div className="block sm:flex sm:mx-0 justify-top">
-            <div className="mr-10">
-              <Image src={videoHero} alt="video" className="object-cover" />
+          <div className="flex space-x-10 sm:flex sm:mx-0 justify-top">
+            <div className="h-full w-[600px] rounded-xl">
+              <Image src={videoHero} alt="video" className="object-cover h-full w-full rounded-xl" />
             </div>
             <div className="my-4 sm:my-0">
               <div>
@@ -110,72 +112,68 @@ const Explore = () => {
                     handleCourse(e, e.currentTarget.textContent, router)
                   }
                 >
-                  <button className="bg-gray-900 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded cursor-pointer">
+                  <button className="bg-[#2D3A4B] hover:bg-gray-500 text-white text-[11px] font-bold py-2 px-4 rounded cursor-pointer">
                     Get this course
                   </button>
-                  <h2 className="font-bold text-2xl sm:text-4xl text-[#2D3A4B] sm:w-4/6 tracking-wide my-4 cursor-pointer">
+                  <h2 className="font-bold text-[32px] sm:text-4xl text-[#2D3A4B] sm:w-4/6 tracking-wide my-4 cursor-pointer">
                     Introduction to Web Development
                   </h2>
                 </div>
-                <p className="text-white items-center inline gap-2 text-sm bg-[#5801A9] rounded p-1">
+                <p className="text-white items-center inline gap-2 text-sm bg-[#5801A9] rounded p-2">
                   Tech Innovators Academy
                 </p>
                 {/* rating and num of students */}
-                <div className="block sm:flex  items-center my-2">
-                  <div className="flex items-center">
-                    <IoIosStar color="#F6A61C" />
-                    <IoIosStar color="#F6A61C" />
-                    <IoIosStar color="#F6A61C" />
-                    <IoIosStar color="#F6A61C" />
-                    <IoIosStar />
-                    <p className="font-bold">(281)</p>
+                <div className="sm:flex flex space-x-28  items-center my-4">
+                  <div className="flex items-center space-x-4">
+                    <StarRating totalStars={5} starnumber={4} />
+                    <p className="font-bold text-[13px] text-[#2D3A4B] leading-[15px]">(281)</p>
                   </div>
 
-                  <div className="flex items-center mx-0 sm:mx-8">
-                    <HiBadgeCheck color="#2D3A4B" />
-                    <p className="ml-5 font-bold">291 certification</p>
+                  <div className="flex items-center mx-0 sm:mx-8 space-x-2">
+                    <LuBadgeCheck color="#2D3A4B h-[19px] w-[19px]" />
+                    <p className="font-bold text-[13px] text-[#2D3A4B] leading-[15px]">291 certification</p>
                   </div>
                 </div>
 
                 {/* creator and last update */}
-                <div className="block sm:flex sm:text-center my-3">
+                <div className="flex space-x-14 sm:flex sm:text-center my-1">
                   <div>
-                    <p className="">
+                    <p className="text-[11px] text-[#2D3A4B] leading-[18px] font-medium">
                       Created by{" "}
                       <span className="underline">Akinbola Kehinde</span>
                     </p>
                   </div>
 
-                  <div className="flex ml-0 sm:ml-5 items-center ">
+                  <div className="flex ml-0 sm:ml-5 items-center  space-x-1">
                     <GiBackwardTime />
-                    <p className="ml-3">Last updated 10|10|24</p>
+                    <p className="text-[11px] text-[#2D3A4B] leading-[18px] font-medium">Last updated 10|10|24</p>
                   </div>
                 </div>
 
                 {/* video prop */}
-                <div className="block sm:flex ">
-                  <div className="flex my-1 items-center">
-                    <FaPlay />
-                    <p>Total play time: 2 hrs 35 mins</p>
+                <div className="block sm:flex space-x-10">
+                  <div className="flex my-1 space-x-2 items-center">
+                    <FaPlay className="h-[11px] w-[11px] text-[#5801A9]"/>
+                    <p className="text-[11px] text-[#2D3A4B] leading-[18px] font-medium">Total play time: 2 hrs 35 mins</p>
                   </div>
-                  <div className="flex sm:ml-5  items-center">
-                    <GrDiamond color="#2D3A4B" />
-                    <p>Difficulty level: Elementary</p>
+                  <div className="flex sm:ml-5 space-x-2 items-center">
+                    <GrDiamond color="#2D3A4B" className="h-[11px] w-[11px]" />
+                    <p className="text-[11px] text-[#2D3A4B] leading-[18px] font-medium">Difficulty level: Elementary</p>
                   </div>
                 </div>
 
-                <div className="flex  items-center">
+                <div className="flex space-x-2 items-center">
                   <div>
-                    <HiBadgeCheck color="#2D3A4B" />
+                    <LuBadgeCheck className="h-[11px] w-[11px] text-[#5801A9]" />
                   </div>
-                  <p>Certificate of Completion</p>
+                  <p className="text-[11px] text-[#2D3A4B] leading-[18px] font-medium">Certificate of Completion</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* right */}
-          <div className="hidden sm:block flex-1">
+          <div className="flex sm:block w-[32%] h-[307px] overflow-y-scroll ">
             <div className="flex justify-between border-b-2 pb-3">
               <h4>Lectures (4)</h4>
               <IoMdArrowDropdown />
@@ -185,24 +183,25 @@ const Explore = () => {
               {subLectures.map((item, i) => (
                 <div
                   key={i}
-                  className="flex justify-center content-center text-sm my-3 cursor-pointer"
+                  className="flex content-center text-sm my-3 cursor-pointer space-x-4"
                   onClick={(e) =>
                     handleCourse(e, e.currentTarget.textContent, router)
                   }
                 >
-                  <div>
+                  <div className="h-full w-[160px] rounded-xl">
                     <Image
                       src={item.img}
                       alt="another course"
-                      className="object-cover"
+                      className="object-cover h-full w-full rounded-xl"
                     />
                   </div>
-                  <div className="ml-4">
+                  <div className="w-[230px]">
                     <h6 className="font-bold">
                       {item.title}
                       <span className="text-[#5801A9]">({item.time})</span>
                     </h6>
                     <p className="font-light mt-2">{item.desc}</p>
+
                   </div>
                 </div>
               ))}

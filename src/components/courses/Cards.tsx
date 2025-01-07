@@ -12,50 +12,46 @@ import Image from "next/image"
 import { IoIosStar } from "@react-icons/all-files/io/IoIosStar"
 import { handleCourse } from "@/utils/helpers"
 import { useRouter } from "next/navigation"
+import StarRating from "../bootcamp/StarRating"
 
 export function CardWithLink() {
   const router = useRouter()
   return (
     <div
-      className="mt-6 w-[100%] sm:w-[65%] border-2 rounded-xl shadow-lg pb-8"
+      className="mt-6 w-[100%] lg:w-[90%] sm:w-[65%] border-2 rounded-xl shadow-lg pb-8"
       onClick={(e) => handleCourse(e, e.currentTarget.textContent, router)}
     >
       <div className="cursor-pointer">
-        <Image className="object-cover" alt="robot" src={robotImg} />
-        <div className="flex justify-between mt-4 px-2 ">
+        <div className="w-full h-[117px] rounded-t-xl">
+        <Image className="object-cover h-full w-full rounded-t-xl" alt="robot" src={robotImg}/>
+        </div>
+        <div className="flex justify-between mt-6 px-5 ">
           {/* course prop  */}
           <div className="">
-            <p className="mb-2">Elementary UI</p>
-            <p className="text-white items-center gap-2 text-sm bg-[#5801A9] my-3 rounded p-1">
+            <p className="mb-2 font-bold text-[14px] leading-[22px] text-[#333333]">Elementary UI</p>
+            <p className="text-white text-[8px] font-extrabold items-center gap-2  bg-[#5801A9] my-2 rounded p-1">
               Tech Innovators Academy
             </p>
           </div>
 
           <div>
             {/* go to course */}
-            <button className="rounded-lg text-xs px-2 py-2 items-center bg-blue-400 text-white">
+            <button className="rounded-lg text-xs px-2 py-2 items-center bg-[#4A90E2] text-white text-[12px] font-semibold leading-[14px]">
               Go to course
             </button>
           </div>
         </div>
       </div>
 
-      <div className="px-2">
-        <div className="flex items-center ">
+      <div className="px-5 mt-2">
+        <div className="flex items-center space-x-3">
           {/* rating */}
-          <div className="flex">
-            <IoIosStar color="#F6A61C" />
-
-            <IoIosStar color="#F6A61C" />
-            <IoIosStar color="#F6A61C" />
-            <IoIosStar color="#F6A61C" />
-            <IoIosStar />
-          </div>
-          <p className="ml-8"> <span className="text-[#5801A9]">1220</span> students</p>
+          <StarRating totalStars={5} starnumber={4} />
+          <p className="text-[14px] text-[#2D3A4B] font-medium leading-[16px]"> <span className="text-[#5801A9]">1220</span> students</p>
         </div>
         <div></div>
-        <p className="mt-2 text-sm">
-          Created by <span className="underline">Akinbola Kehinde</span>
+        <p className="mt-2 text-[14px] text-[#2D3A4B] leading-[19px] font-light">
+          Created by <span className="underline ">Akinbola Kehinde</span>
         </p>
       </div>
       <div />

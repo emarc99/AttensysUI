@@ -8,6 +8,9 @@ import { HiBadgeCheck } from "@react-icons/all-files/hi/HiBadgeCheck"
 import { GrDiamond } from "@react-icons/all-files/gr/GrDiamond"
 import { BsDot } from "@react-icons/all-files/bs/BsDot"
 import timing from "@/assets/timing.svg"
+import StarRating from "../bootcamp/StarRating"
+import { HiOutlineBadgeCheck } from "react-icons/hi";
+
 
 interface ItemProps {
   no: number
@@ -34,20 +37,20 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({ item, selected }) => {
 
   return (
     <div
-      className="bg-white py-12 my-0 sm:my-12 rounded-xl border-2"
+      className="bg-white  sm:my-12 rounded-xl border-[1px] border-[#BCBCBC] h-auto pb-8"
       // onClick={(e) =>
       //   handleMyCourseSubComp(e, "sample-profile", router, item.title)
       // }
     >
       {/* courses created */}
       <div>
-        <div className="flex justify-between border-b-4 my-3">
+        <div className="flex justify-between border-b-[1px] border-b-[#CACBCB] my-3 px-16">
           {/* activate */}
-          <div className="flex items-center text-gradient-to-r from-purple-400 via-purple-30 mx-8 my-5">
+          <div className="flex items-center text-[#A01B9B]  my-5 space-x-3">
             <h4 className="font-bold text-lg text-[#A01B9B]">{selected}</h4>
             <FaUserGraduate color="#A01B9B" />
           </div>
-          <div className="hidden sm:flex items-center mx-8 my-5">
+          <div className="hidden sm:flex items-center  my-5">
             <p className={`${!isActivated ? "text-[#4A90E2]" : "text-black"} `}>
               Deactivate
             </p>
@@ -94,27 +97,29 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({ item, selected }) => {
                 Activate
               </p>
             </div>
-            <div className="mx-6">
+            
+            <div className="px-12 flex space-x-12 items-center">
+            <div className="h-[164px] w-[254px] rounded-xl">
               <Image
                 src={item.url}
                 alt="video"
                 height={250}
-                className="object-cover"
+                className="object-cover h-full w-full rounded-xl"
               />
             </div>
-            <div className="mt-10 flex-1 mx-8 sm:mx-0">
+            <div className="flex-1 mx-8 sm:mx-0">
               <div>
-                <h4 className="font-light text-2xl">{item.title}</h4>
+                <h4 className="text-2xl font-medium leading-[22px] text-[#2D3A4B]">{item.title}</h4>
 
                 {/* video prop */}
                 <div className="block sm:flex items-center my-3">
-                  <div className="flex items-center">
+                  <div className="flex items-center space-x-3">
                     <FaPlay color="#A01B9B" />
-                    <p>Total play time: {item.playTime}</p>
+                    <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">Total play time: {item.playTime}</p>
                   </div>
                   <div className="flex items-center ml-0 sm:ml-5 my-3 sm:my-0">
                     <p className="hidden sm:block">|</p>
-                    <p className="text-sm sm:text-base mx-0 sm:mx-8">
+                    <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px] mx-0 sm:mx-8">
                       Created by: <span className="text-[#A01B9B]">You</span>
                     </p>
                   </div>
@@ -127,42 +132,43 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({ item, selected }) => {
                 </div>
 
                 <div className="block sm:flex items-center my-3">
-                  <div className="flex items-center">
-                    <Image src={timing} alt="time" />
-                    <p>Last updated 10|10|2024</p>
+                  <div className="flex items-center space-x-3">
+                    <Image src={timing} alt="time" className="h-[18px] w-[18px]" />
+                    <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">Last updated 10|10|2024</p>
                   </div>
-                  <div className="flex items-center my-3 sm:my-0 mx-0 sm:mx-16">
-                    {/* <GrDiamond color="#A01B9B" /> */}
-                    <p>Difficulty level: {item.level}</p>
+                  <div className="flex items-center space-x-3 my-3 sm:my-0 mx-0 sm:mx-16">
+                    <GrDiamond color="#A01B9B" />
+                    <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">Difficulty level: {item.level}</p>
                   </div>
                 </div>
 
+
                 {/* rating and num of students */}
                 <div className="block sm:flex  items-center my-3">
-                  <div className="flex items-center">
-                    <IoIosStar color="#F6A61C" className="mx-1" />
-                    <IoIosStar color="#F6A61C" className="mx-1" />
-                    <IoIosStar color="#F6A61C" className="mx-1" />
-                    <IoIosStar color="#F6A61C" className="mx-1" />
-                    <IoIosStar className="mx-2" />
-                    <p className="font-bold">({item.stars})</p>
+                  <div className="flex items-center space-x-3">
+                    <StarRating totalStars={5}  starnumber={4} />
+                    <p className="font-medium text-[13px] text-[#2D3A4B] leading-[16px]">{item.stars} students</p>
                   </div>
 
-                  <div className="flex items-center mx-0 sm:mx-12 my-3 sm:my-0">
+                  <div className="flex items-center space-x-3 mx-0 sm:mx-12 my-3 sm:my-0">
                     <div>
-                      <HiBadgeCheck color="#A01B9B" />
+                      <HiOutlineBadgeCheck color="#A01B9B" className="h-[18px] w-[18px]"  />
                     </div>
-                    <p>Certificate issued:</p>
-                    <p className="ml-5 font-bold">
+                    <p className="font-medium text-[13px] text-[#2D3A4B] leading-[16px]">Certificate issued:</p>
+                    <p className="ml-5 font-medium text-[13px] text-[#2D3A4B] leading-[16px]">
                       <span className="text-[#A01B9B]">
                         {item.certificate}{" "}
                       </span>
-                      certification
+                      certificates
                     </p>
                   </div>
                 </div>
               </div>
             </div>
+
+            </div>
+         
+         
           </div>
         </div>
       </div>
