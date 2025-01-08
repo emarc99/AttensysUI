@@ -8,7 +8,7 @@ const CarouselComp = () => {
     superLargeDesktop: {
       // the naming can be any, depends on you.
       breakpoint: { max: 4000, min: 3000 },
-      items: 5,
+      items: 3,
     },
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
@@ -24,8 +24,18 @@ const CarouselComp = () => {
     },
   }
   return (
-    <div>
-      <Carousel responsive={responsive}>
+    <div className="className='w-[90%] mx-auto flex flex-col justify-center items-center'">
+      <Carousel responsive={responsive} centerMode={true} containerClass="container"    additionalTransfrom={0}
+   arrows
+   dotListClass=""
+   draggable
+   focusOnSelect={false}
+   infinite
+   itemClass=""
+   keyBoardControl
+   minimumTouchDrag={80}
+   autoPlay={true} // Enables auto-scrolling
+   autoPlaySpeed={3000}>
         <CardWithLink />
         <CardWithLink />
         <CardWithLink />

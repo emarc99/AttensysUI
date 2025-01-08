@@ -21,6 +21,17 @@ export const handleCourse = (
     router.push(`/coursepage/${courseName}`)
   }
 }
+export const handleCoursehome = (
+  event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>,
+  courseName: any,
+  router: any,
+) => {
+  event.preventDefault()
+  if (courseName.trim()) {
+    // Redirect to the dynamic page with the user's input
+    router.push(`/Course/Coursehome/course-home-landing-page`)
+  }
+}
 
 export const handleMyCourse = (
   event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>,

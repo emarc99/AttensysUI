@@ -18,27 +18,56 @@ import {
   certificateEarned,
   certSideProperties,
 } from "@/constants/data"
+import { IoMdInformationCircleOutline } from "react-icons/io";
+
 
 interface UserSideBarProps {
   page: string // or another type like `number` or a union type
   selected: string // Replace with appropriate type
   setSelected: (value: string) => void // Function that sets a value
 }
-
+interface argprop {
+  no : number,
+  title : string
+}
 const UserSideBar = ({ page, selected, setSelected }: UserSideBarProps) => {
+
+
+  const renderItem = (arg : argprop) => {
+    if (arg.title == "Courses"){
+        return <div className="text-[12px] ">
+        <span>{arg.no}</span> Course{arg.no > 1 ? "(s)" : ""}
+</div>
+    }else if (arg.title == "Completed courses") {
+        return <div className="text-[12px] ">
+                    <span>{arg.no}</span> Completed course{arg.no > 1 ? "(s)" : ""}
+        </div>
+    }else if (arg.title == "Ongoing") {
+        return <div className="text-[12px] ">
+        <span>{arg.no}</span> Ongoing course{arg.no > 1 ? "(s)" : ""}
+</div>
+    }else if (arg.title == "Created") {
+        return <div className="text-[12px] ">
+        <span>{arg.no}</span> Course{arg.no > 1 ? "(s)" : ""}
+</div>
+    }
+  }
+
   return (
     <div className="pt-12">
       {/* User info */}
 
-      <div className="bg-white py-12 px-8 rounded-xl shadow-lg border-2">
+      <div className="bg-white py-4 px-8 rounded-xl border-[1px] border-[#BCBCBC] w-[400px]">
         <div>
-          <div className="flex justify-between items-start mt-4">
-            <div className="flex justify-around">
-              <Image src={profilePic} alt="profilePic" className="w-1/2" />
+          <div className="flex justify-between items-center mt-4">
+            <div className="flex space-x-4">
+              <div className="w-[54px] h-[54px]">
+              <Image src={profilePic} alt="profilePic" className="h-full w-full object-cover" />
 
-              <div className="ml-3">
-                <p>Akinbola Kehinde</p>
-                <p>0xbc293...190bce</p>
+              </div>
+              <div className="w-[200px]"> 
+                <p className="text-[13px] text-[#2D3A4B] font-bold leading-[22px]">Akinbola Kehinde</p>
+                <p className="text-[#A01B9B] text-[12px] font-normal leading-[24px]">0xb3...1ce</p>
               </div>
             </div>
 
@@ -51,16 +80,16 @@ const UserSideBar = ({ page, selected, setSelected }: UserSideBarProps) => {
             coursesProgress.map((item, i) => (
               <div
                 key={i}
-                className="flex text-sm items-center justify-between my-4"
+                className="flex text-sm items-center space-x-6 my-4"
               >
-                <div className="flex items-center">
-                  <BsFillExclamationCircleFill />
-                  <p className="ml-3">{item.title}</p>
+                <div className="flex items-center w-[160px]">
+                  <IoMdInformationCircleOutline />
+                  <p className="ml-3 text-[13px] text-[#333333] font-medium">{item.title}</p>
                 </div>
 
                 <div className="text-purple-400">
                   <p>
-                    {item.no} Completed course{item.no > 1 ? "(s)" : ""}
+                    {renderItem(item)}
                   </p>
                 </div>
               </div>
@@ -73,13 +102,13 @@ const UserSideBar = ({ page, selected, setSelected }: UserSideBarProps) => {
                 className="flex text-sm items-center justify-between my-4"
               >
                 <div className="flex items-center">
-                  <BsFillExclamationCircleFill />
-                  <p className="ml-3">{item.title} :</p>
+                <IoMdInformationCircleOutline />
+                  <p className="ml-3 text-[13px] text-[#333333] font-medium">{item.title} :</p>
                 </div>
 
-                <div className="text-purple-400">
-                  <p>
-                    {item.no} {item.type}
+                <div>
+                  <p  className="text-[12px] text-[#817676]">
+                    <span className="text-[#9B51E0]">{item.no} </span>{item.type}
                   </p>
                 </div>
               </div>
@@ -90,7 +119,7 @@ const UserSideBar = ({ page, selected, setSelected }: UserSideBarProps) => {
       {page == "myCourse" &&
         sideProperties.map((item, i) => (
           <div
-            className={`bg-white py-4 px-8 rounded-xl shadow-lg border-2 my-2 cursor-pointer hover:bg-violet-600 active:bg-violet-700 ${selected == item.title ? "focus:outline-none focus:ring focus:ring-violet-300" : ""} `}
+            className={`bg-white py-4 px-8 rounded-xl border-[1px] border-[#BCBCBC] my-2 cursor-pointer hover:bg-violet-600 active:bg-violet-700 ${selected == item.title ? "focus:outline-none focus:ring focus:ring-violet-300" : ""} `}
             key={i}
           >
             <div
@@ -100,8 +129,10 @@ const UserSideBar = ({ page, selected, setSelected }: UserSideBarProps) => {
               }}
             >
               <div className="flex items-center">
-                <Image src={item.url} alt={item.title} />
-                <p className="ml-3">
+                <div className="h-[15px] w-[18px]">
+                <Image src={item.url} alt={item.title} className="h-full w-full object-cover" />
+                </div>
+                <p className="ml-3 text-[14px] text-[#2D3A4B] font-bold leading-[19px]">
                   {item.title} {item.no == 0 ? null : <span>({item.no})</span>}
                 </p>
               </div>
@@ -144,7 +175,7 @@ const UserSideBar = ({ page, selected, setSelected }: UserSideBarProps) => {
       {/* Desktop display */}
       {page == "myCertificate" && (
         <div className="hidden sm:block my-4">
-          <div className="flex">
+          <div className="flex space-x-3 items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -160,23 +191,23 @@ const UserSideBar = ({ page, selected, setSelected }: UserSideBarProps) => {
               />
             </svg>
 
-            <h4 className="underline font-bold">Filter</h4>
+            <h4 className="underline font-medium text-[13px] text-[#2D3A4B]">Filter</h4>
           </div>
 
           {certSideProperties.map((item, i) => (
             <div
-              className={`w-96 border-2 my-3 cursor-pointer hover:bg-violet-600 active:bg-violet-700 ${selected == item.title ? "focus:outline-none focus:ring focus:ring-violet-300" : ""} `}
+              className={`border-[1px] border-[#BCBCBC] bg-[#FFFFFF] rounded-xl my-3 h-[62px] w-[400px] px-6 flex items-center cursor-pointer hover:bg-violet-600 active:bg-violet-700 ${selected == item.title ? "focus:outline-none focus:ring focus:ring-violet-300" : ""} `}
               key={i}
             >
               <div
-                className="flex justify-between text-sm items-start "
+                className="flex justify-between text-sm items-center w-full"
                 onClick={() => {
                   setSelected(item.title)
                 }}
               >
                 <div className="flex items-center">
                   <Image src={item.url} alt={item.title} />
-                  <p className="ml-3">{item.title} </p>
+                  <p className="ml-3 font-bold text-[14px] leading-[19px] text-[#2D3A4B]">{item.title} </p>
                 </div>
 
                 <div>
@@ -185,6 +216,8 @@ const UserSideBar = ({ page, selected, setSelected }: UserSideBarProps) => {
                   ) : null}
                 </div>
               </div>
+
+
             </div>
           ))}
         </div>

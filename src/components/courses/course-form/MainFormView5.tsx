@@ -9,6 +9,8 @@ import Image from "next/image"
 import Switch from "react-switch"
 import Lectures from "../Lectures"
 import CourseSideBar from "./SideBar"
+import { MdOutlineDiamond } from "react-icons/md";
+
 
 const MainFormView5 = () => {
   const [isActivated, setIsActivated] = useState(false)
@@ -76,22 +78,22 @@ const MainFormView5 = () => {
           <div className="mx-12 sm:mx-24 mt-12">
             <div className="block sm:grid grid-cols-2 gap-4">
               {/* Course Image */}
-              <div className="">
-                <Image src={video} alt="hero" className=" sm:w-[70%]" />
+              <div className="w-[368px] h-[238px] rounded-xl">
+                <Image src={video} alt="hero" className="h-full w-full object-cover rounded-xl" />
               </div>
 
               {/* Course information */}
               <div>
                 {/* field */}
-                <div className="mb-12 order-first">
-                  <p className="text-[#5801A9]">Technology | Web Development</p>
+                <div className="mb-3 order-first">
+                  <p className="text-[#5801A9] text-[16px] font-medium leading-[22px]">Technology | Web Development</p>
                 </div>
 
-                <h4 className="text-2xl font-bold my-8 ">
+                <h4 className="text-[19px] text-[#333333] leading-[34px] font-bold my-2 ">
                   Introduction to Web Development
                 </h4>
-                <div className="my-8">
-                  <p className="  text-[#333333]">
+                <div className="my-3">
+                  <p className="  text-[#333333] text-[14px] font-light leading-[22px]">
                     {`This course provides a foundational understanding of web
                 development. You'll learn essential skills in HTML and CSS,
                 enabling you to create and style your own web pages. No prior
@@ -99,12 +101,13 @@ const MainFormView5 = () => {
                   </p>
                 </div>
 
-                <div className="bg-[#5801A9] py-2 text-white px-12  my-8 Sm:w-[50%] rounded-xl">
-                  <p className="">Tech Innovators Academy</p>
+                <div className="bg-[#5801A9] py-2 text-white w-[200px]  text-center mt-6 mb-3 Sm:w-[50%] rounded-lg">
+                  <p className="text-[14px] font-extrabold leading-[22px]">Tech Innovators Academy</p>
                 </div>
 
-                <div>
-                  <p>Difficulty level : Elementary</p>
+                <div className="flex space-x-3 items-center">
+                <MdOutlineDiamond color="#333333"/>
+                  <p className="text-[#333333] text-[14px] font-medium leading-[22px]">Difficulty level : Elementary</p>
                 </div>
               </div>
             </div>
@@ -114,10 +117,10 @@ const MainFormView5 = () => {
               <Lectures lectures={lectures} />
               {/* course desc & student req */}
 
-              <div className="my-12">
+              <div className="">
                 <div>
-                  <div className="flex justify-between sm:w-[30%] my-5">
-                    <h4 className="font-bold">Certification for this course</h4>
+                  <div className="flex justify-between sm:w-[30%] mt-5">
+                    <h4 className="font-semibold text-[18px] leading-[31px] text-[#333333]">Certification for this course</h4>
 
                     <Switch
                       onChange={handleSwitch}
@@ -131,12 +134,12 @@ const MainFormView5 = () => {
                       className="mx-2"
                     />
                   </div>
-                  <p>After completion students will be issued certification</p>
+                  <p className="text-[#333333] text-[14px] font-normal leading-[22px]">After completion students will be issued certification</p>
                 </div>
                 <div className="mt-12 mb-24">
                   <form action="course-landing-page" method="post">
                     <button
-                      className="rounded bg-[#4A90E2] px-24 py-3 text-white"
+                      className="rounded-xl bg-[#4A90E2] px-24 py-3 text-white"
                       type="submit"
                     >
                       Save and Publish Course

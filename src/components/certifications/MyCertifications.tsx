@@ -15,51 +15,51 @@ const MyCertifications = () => {
 
   if (selected == "" || selected == "All NFTs") {
     return (
-      <div className="block sm:flex sm:flex-row mx-10 sm:mx-20 my-8">
+      <div className=" sm:flex sm:flex-row sm:mx-20 my-8">
         <UserSideBar
           page={page}
           selected={selected}
           setSelected={setSelected}
         />
 
-        <div className="mx-auto sm:mx-20 my-12">
+        <div className="w-full sm:mx-20 my-12 ">
           {certContent.map((item, i) => (
-            <div key={i}>
+            <div key={i} className="w-[100%]">
               <h1 className="text-[#A01B9B] font-bold text-2xl">
                 {item.heading} ({item.no})
               </h1>
 
-              <div className="grid md:grid-cols-4 lclg:grid-cols-2 gap-4 my-12">
+              <div className="grid lg:grid-cols-3 md:grid-cols-4 lclg:grid-cols-2 gap-8 my-6 ">
                 {item.certificates.map((cert, j) => (
-                  <div key={j} className="bg-[#FFFFFF] rounded-xl shadow-lg my-4 sm:my-0">
+                  <div key={j} className="bg-[#FFFFFF] rounded-xl shadow-lg my-4 sm:my-0 w-[300px]">
                     <div className="relative">
                       <Image
                         src={cert.img}
                         alt={cert.cert_name}
                         className="object-cover w-[100%]"
                       />
-                      <div className="bg-white absolute right-3 top-3 flex p-1 rounded">
+                      <div className="bg-white absolute right-3 top-3 flex py-1 px-2 rounded">
                         <Image src={red_love} alt="love" color="red" />
                         <p className="text-xs ml-3">18k</p>
                       </div>
                     </div>
 
-                    <div className="p-4">
-                      <div className="flex justify-between my-3">
-                        <h4>{cert.cert_name}</h4>
-                        <Image src={love} alt="love" />
+                    <div className="px-8 py-6">
+                      <div className="flex justify-between items-center py-1">
+                        <h4 className="text-[14px] text-[#333333] font-bold leading-[15px]">{cert.cert_name}</h4>
+                        <Image src={love} alt="love" className="h-[12px] w-[13px]"/>
                       </div>
                       <div className="flex justify-between my-3">
-                        <p className="font-bold text-xs">Recipient address: </p>
-                        <p className="text-xs">{cert.recipient}</p>
+                        <p className="text-[9px] text-[#333333] font-bold leading-[15px]">Recipient address: </p>
+                        <p  className="text-[9px] text-[#A01B9B] font-medium leading-[15px]">{cert.recipient}</p>
                       </div>
                       <div className="flex justify-between my-3">
-                        <p className="font-bold text-xs">Author: </p>
-                        <p className="text-xs">{cert.author}</p>
+                        <p className="text-[9px] text-[#333333] font-bold leading-[15px]">Author: </p>
+                        <p className="text-[9px] text-[#333333] font-medium leading-[15px]">{cert.author}</p>
                       </div>
 
                       <div>
-                        <p className="text-xs">{cert.nft_description}</p>
+                        <p className="text-[9px] text-[#333333] font-medium leading-[15px]">{cert.nft_description}</p>
                       </div>
                     </div>
                   </div>
@@ -84,37 +84,37 @@ const MyCertifications = () => {
                 {item.heading} ({item.no})
               </h1>
 
-              <div className="grid md:grid-cols-4 lclg:grid-cols-2 gap-4 my-12">
+              <div className="grid lg:grid-cols-3 md:grid-cols-4 lclg:grid-cols-2 gap-8 my-6">
                 {item.certificates.map((cert, j) => (
-                  <div key={j} className="bg-[#FFFFFF] rounded-xl shadow-lg my-20 sm:my-0">
+                  <div key={j} className="bg-[#FFFFFF] rounded-xl shadow-lg my-20 sm:my-0 w-[300px]">
                     <div className="relative">
                       <Image
                         src={cert.img}
                         alt={cert.cert_name}
                         className="object-cover w-[100%]"
                       />
-                      <div className="bg-white absolute right-3 top-3 flex p-1 rounded">
+                      <div className="bg-white absolute right-3 top-3 flex py-1 px-2 rounded">
                         <Image src={love} alt="love" color="red" />
                         <p className="text-xs ml-3">18k</p>
                       </div>
                     </div>
 
-                    <div className="p-4">
-                      <div className="flex justify-between my-3">
-                        <h4>{cert.cert_name}</h4>
-                        <Image src={love} alt="love" />
+                    <div className="px-8 py-6">
+                      <div className="flex justify-between items-center py-1">
+                        <h4 className="text-[14px] text-[#333333] font-bold leading-[15px]">{cert.cert_name}</h4>
+                        <Image src={love} alt="love" className="h-[12px] w-[13px]"/>
                       </div>
                       <div className="flex justify-between my-3">
-                        <p className="font-bold text-xs">Recipient address: </p>
-                        <p className="text-xs">{cert.recipient}</p>
+                        <p className="text-[9px] text-[#333333] font-bold leading-[15px]">Recipient address: </p>
+                        <p className="text-[9px] text-[#A01B9B] font-medium leading-[15px]">{cert.recipient}</p>
                       </div>
                       <div className="flex justify-between my-3">
-                        <p className="font-bold text-xs">Author: </p>
-                        <p className="text-xs">{cert.author}</p>
+                        <p className="text-[9px] text-[#333333] font-bold leading-[15px]">Author: </p>
+                        <p className="text-[9px] text-[#333333] font-medium leading-[15px]">{cert.author}</p>
                       </div>
 
                       <div>
-                        <p className="text-xs">{cert.nft_description}</p>
+                        <p className="text-[9px] text-[#333333] font-medium leading-[15px]">{cert.nft_description}</p>
                       </div>
                     </div>
                   </div>
