@@ -60,6 +60,19 @@ export const notifCategory = [
         icon: free_books,
         msg: "Your Certification for the completion of the  “Web Development on APTOS” course is ready.",
       },
+      {
+        icon: free_books,
+        msg: "Your Certification for the completion of the  “Web Development on APTOS” course is ready.",
+      },  {
+        icon: free_books,
+        msg: "Your Certification for the completion of the  “Web Development on APTOS” course is ready.",
+      },  {
+        icon: free_books,
+        msg: "Your Certification for the completion of the  “Web Development on APTOS” course is ready.",
+      },  {
+        icon: free_books,
+        msg: "Your Certification for the completion of the  “Web Development on APTOS” course is ready.",
+      },
     ],
   },
   {
@@ -74,6 +87,19 @@ export const notifCategory = [
         msg: "Your Certification for the completion of the  “Web Development on APTOS” course is ready.",
       },
       {
+        icon: certIcon,
+        msg: "📅 Live Q&A in [Course Title] starts in 30 minutes! Join to get your questions answered in real time and connect with other learners.",
+      },
+      {
+        icon: certIcon,
+        msg: "📅 Live Q&A in [Course Title] starts in 30 minutes! Join to get your questions answered in real time and connect with other learners.",
+      },   {
+        icon: certIcon,
+        msg: "📅 Live Q&A in [Course Title] starts in 30 minutes! Join to get your questions answered in real time and connect with other learners.",
+      },   {
+        icon: certIcon,
+        msg: "📅 Live Q&A in [Course Title] starts in 30 minutes! Join to get your questions answered in real time and connect with other learners.",
+      },   {
         icon: certIcon,
         msg: "📅 Live Q&A in [Course Title] starts in 30 minutes! Join to get your questions answered in real time and connect with other learners.",
       },
@@ -187,7 +213,7 @@ export const certContent = [
     type: "Course NFTs",
     certificates: [
       {
-        img: digital,
+        img: Swisstaler,
         cert_name: "Blockchain Africa ‘24",
         recipient: "0x3C4kB...J29",
         author: "Blockchain Africa ‘24",
@@ -196,6 +222,27 @@ export const certContent = [
       },
       {
         img: digital,
+        cert_name: "Blockchain Africa ‘24",
+        recipient: "0x3C4kB...J29",
+        author: "Blockchain Africa ‘24",
+        nft_description:
+          "This NFT certifies that 0x3C4B...D12 has successfully completed the ‘Blockchain Fundamentals’ course provided by Blockchain Academy Pro.",
+      },{
+        img: liveNft,
+        cert_name: "Blockchain Africa ‘24",
+        recipient: "0x3C4kB...J29",
+        author: "Blockchain Africa ‘24",
+        nft_description:
+          "This NFT certifies that 0x3C4B...D12 has successfully completed the ‘Blockchain Fundamentals’ course provided by Blockchain Academy Pro.",
+      },{
+        img: digital,
+        cert_name: "Blockchain Africa ‘24",
+        recipient: "0x3C4kB...J29",
+        author: "Blockchain Africa ‘24",
+        nft_description:
+          "This NFT certifies that 0x3C4B...D12 has successfully completed the ‘Blockchain Fundamentals’ course provided by Blockchain Academy Pro.",
+      },{
+        img: liveNft,
         cert_name: "Blockchain Africa ‘24",
         recipient: "0x3C4kB...J29",
         author: "Blockchain Africa ‘24",
@@ -226,6 +273,13 @@ export const certContent = [
           "This NFT certifies that 0x3C4B...D12 has successfully completed the ‘Blockchain Fundamentals’ course provided by Blockchain Academy Pro.",
       },
       {
+        img: liveNft,
+        cert_name: "Blockchain Africa ‘24",
+        recipient: "0x3C4kB...J29",
+        author: "Blockchain Africa ‘24",
+        nft_description:
+          "This NFT certifies that 0x3C4B...D12 has successfully completed the ‘Blockchain Fundamentals’ course provided by Blockchain Academy Pro.",
+      },   {
         img: liveNft,
         cert_name: "Blockchain Africa ‘24",
         recipient: "0x3C4kB...J29",

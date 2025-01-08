@@ -46,34 +46,34 @@ const MainFormView2 = () => {
           <div className="mx-6 sm:ml-24 mt-12">
             <form action="CourseSetup3">
               <div className="my-12">
-                <label htmlFor="" className="font-bold">
+                <label htmlFor="" className="font-semibold text-[18px] leading-[31px] text-[#333333]">
                   Student requirements
                 </label>
-                <p className="text-sm">
+                <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px]">
                   {` What will users taking this course need to get the best out of it.`}
                 </p>
                 <div className="flex items-start my-4">
                   <input
                     type="input"
-                    className="w-[50%] sm:w-[70%] p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
+                    className="w-[50%] sm:w-[70%] h-[55px] py-2 px-6 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
                     placeholder="e.g A laptop."
                   />
-                  <button className="rounded py-2 px-4  text-black border-2 p-1 ml-5 text-xs sm:text-base bg-white">
-                    <span className="font-bold">+</span> Add Item
+                  <button className="rounded-xl py-2 px-4 h-[55px] font-normal text-[18px] w-[155px] text-[#2D3A4B] leading-[21px] border-2 p-1 ml-5 text-xs sm:text-base bg-white">
+                    <span className="">+</span> Add Item
                   </button>
                 </div>
               </div>
 
               <div className="my-12">
-                <label className="font-bold">Learning Objectives</label>
-                <p>
+                <label className="font-semibold text-[18px] leading-[31px] text-[#333333]">Learning Objectives</label>
+                <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px]">
                   please outline the key skills and knowledge that students will
                   gain by completing your course.
                 </p>
                 <div className="flex items-start my-4">
                   <textarea
                     id="message"
-                    className="block px-2.5 pb-64 py-3 w-[80%] text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="block px-6 pb-64 py-3 w-[80%] text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder={`E.g When this course is done, students will :
 
 Understand fundamental concepts in [Subject/Field]
@@ -83,14 +83,14 @@ Create and implement strategies for [Specific Outcome]`}
               </div>
 
               <div className="my-12">
-                <label className="font-bold">Target Audience</label>
-                <p>
+                <label className="font-semibold text-[18px] leading-[31px] text-[#333333]">Target Audience</label>
+                <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px]">
                   In this section, describe who your course is intended for.
                 </p>
                 <div className="flex items-start my-4">
                   <textarea
                     id="message"
-                    className="block px-2.5 pb-64 py-3 w-[80%] text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="block px-6 pb-64 py-3 w-[80%] text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder={`Example:
 This course is ideal for:
 Beginners with no prior experience in [Subject/Field].
@@ -102,7 +102,7 @@ Professionals looking to enhance their skills in [Specific Area].`}
               <div className="my-12 ">
                 <div className="mt-12 m">
                   <button
-                    className="rounded bg-[#4A90E2] px-28 sm:px-48 py-3 text-white"
+                    className="bg-[#4A90E2] px-28 sm:px-48 py-3 rounded-xl text-white"
                     type="submit"
                      onClick={(e) =>
                                           handleCreateCourse(e, "courseSetup3", router)

@@ -10,7 +10,7 @@ import {
 import robotImg from "../../assets/robot.svg"
 import Image from "next/image"
 import { IoIosStar } from "@react-icons/all-files/io/IoIosStar"
-import { handleCourse } from "@/utils/helpers"
+import { handleCourse, handleCoursehome } from "@/utils/helpers"
 import { useRouter } from "next/navigation"
 import StarRating from "../bootcamp/StarRating"
 
@@ -19,7 +19,7 @@ export function CardWithLink() {
   return (
     <div
       className="mt-6 w-[100%] lg:w-[90%] sm:w-[65%] border-2 rounded-xl shadow-lg pb-8"
-      onClick={(e) => handleCourse(e, e.currentTarget.textContent, router)}
+      onClick={(e) => handleCoursehome(e, e.currentTarget.textContent, router)}
     >
       <div className="cursor-pointer">
         <div className="w-full h-[117px] rounded-t-xl">

@@ -8,12 +8,12 @@ const CourseForm3 = () => {
         <Previous />
       </div>
       <div>
-        <h1 className="mb-12 font-bold text-2xl">
+        <h1 className="mb-12 font-bold text-[26px] text-[#333333] text-center">
           Do you already have a plan for what your course will cover?
         </h1>
       </div>
       <form action="CourseSetup">
-        <div className=" bg-white px-12 py-16 rounded">
+        <div className=" bg-white px-12 py-16 rounded-2xl flex flex-col justify-center w-[524px] mx-auto">
           <div className="flex">
             <input
               type="checkbox"
@@ -24,7 +24,7 @@ const CourseForm3 = () => {
               name="vehicle1"
               value="Bike"
             />
-            <label className="block my-5 ml-3">
+            <label className="block my-5 ml-3  text-[#333333] text-[18px] font-medium leading-[22px]">
               Yes, I have a complete course plan
             </label>
           </div>
@@ -38,7 +38,7 @@ const CourseForm3 = () => {
               name="vehicle1"
               value="Bike"
             />
-            <label className="block my-5 ml-3">
+            <label className="block my-5 ml-3  text-[#333333] text-[18px] font-medium leading-[22px]">
               I have a rough plan, but it needs work
             </label>
           </div>
@@ -52,7 +52,7 @@ const CourseForm3 = () => {
               name="vehicle1"
               value="Bike"
             />
-            <label className="block my-5 ml-3">
+            <label className="block my-5 ml-3  text-[#333333] text-[18px] font-medium leading-[22px]">
               I have some ideas but no clear plan yet
             </label>
           </div>
@@ -67,14 +67,14 @@ const CourseForm3 = () => {
               name="vehicle1"
               value="Bike"
             />
-            <label className="block my-5 ml-3">
+            <label className="block my-5 ml-3  text-[#333333] text-[18px] font-medium leading-[22px]">
               I need help organizing the course
             </label>
           </div>
         </div>
 
         <div className="text-center">
-          <button className="rounded bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] px-40 md:px-60 py-3 text-xs md:text-base mt-12 mb-44 text-white">
+          <button className="bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] w-[350px] rounded-xl  py-3 text-xs md:text-base mt-12 mb-44 text-white">
             Setup my course
           </button>
         </div>

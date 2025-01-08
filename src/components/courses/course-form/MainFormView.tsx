@@ -31,7 +31,7 @@ const MainFormView = () => {
               <div className="px-4 sm:px-8 border-r border-blue-100">
                 <IoMdArrowBack
                   onClick={() => history.back()}
-                  className="cursor-pointer"
+                  className="cursor-pointer text-[#4A90E2]"
                 />
               </div>
               <p className="text-[#4A90E2] text-xl font-bold">
@@ -47,61 +47,60 @@ const MainFormView = () => {
           <div className="mx-6 sm:ml-24 mt-12">
             <form action="CourseSetup2">
               <div className="my-12">
-                <label htmlFor="" className="font-bold">
+                <label htmlFor="" className="font-semibold text-[18px] leading-[31px] text-[#333333]">
                   Course Name
                 </label>
-                <p className="text-sm">
+                <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px]">
                   {` If you are unsure of the perfect title now, don't worry—you can
                 always update it later.`}
                 </p>
-                <div className="flex items-start my-4">
+                <div className="flex items-center my-4 space-x-4">
                   <input
                     type="input"
-                    className="w-[100%] sm:w-[80%] p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
+                    className="w-[100%] h-[55px] sm:w-[80%] px-6 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
                     placeholder="Course name e.g DApp development, Design basics..."
                   />
-                  <input type="checkbox" className="hidden sm:block ml-5" />
+                  <input type="checkbox" className="appearance-none w-[23px] h-[23px] rounded-full border-[1px] border-[#C5D322] checked:bg-[#C5D322] checked:border-[#C5D322] required:border-red-500 checked:before:content-['✔'] checked:before:absolute checked:before:top-[3px] checked:before:left-[6px] checked:before:text-white checked:before:text-[10px] relative" />
                 </div>
               </div>
 
               <div className="my-12">
-                <label htmlFor="" className="font-bold">
+                <label htmlFor="" className="font-semibold text-[18px] leading-[31px] text-[#333333]">
                   Course Description
                 </label>
-                <p>Let your students know a little bit about your course</p>
-                <div className="flex items-start my-4">
+                <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px]">Let your students know a little bit about your course</p>
+                <div className="flex items-start my-4 space-x-4">
                   <textarea
                     id="message"
                     className="block px-2.5 pb-64 py-3 w-[100%] sm:w-[80%] text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="a little bit about your course......"
                   ></textarea>
-                  <input type="checkbox" className="hidden sm:block ml-5" />
+                 <input type="checkbox" className="appearance-none w-[23px] h-[23px] rounded-full border-[1px] border-[#C5D322] checked:bg-[#C5D322] checked:border-[#C5D322] required:border-red-500 checked:before:content-['✔'] checked:before:absolute checked:before:top-[3px] checked:before:left-[6px] checked:before:text-white checked:before:text-[10px] relative" />
+
                 </div>
               </div>
 
               <div className="my-12">
-                <label htmlFor="" className="font-bold">
+                <label htmlFor="" className="font-semibold text-[18px] leading-[31px] text-[#333333]">
                   Course category
                 </label>
-                <div className="my-4 flex items-start">
+                <div className="my-4 flex items-start w-[556px] h-[55px]">
                   <Dropdown options={skills} />
-                  <input type="checkbox" className="flex-1 hidden sm:block" />
                 </div>
               </div>
 
               <div className="my-12">
-                <label htmlFor="">
+                <label htmlFor="" className="font-medium text-[18px] leading-[31px] text-[#333333]">
                   Select the difficulty level (Beginner, Intermediate, Advanced,
                   All levels)
                 </label>
-                <div className="my-4 flex items-start">
+                <div className="my-4 flex items-start w-[556px] h-[55px]">
                   <Dropdown options={levelOptions} />
-                  <input type="checkbox" className="flex-1 hidden sm:block" />
                 </div>
 
                 <div className="mt-12 mb-24">
                   <button
-                    className="rounded bg-[#4A90E2] px-48 py-3 text-white"
+                    className="bg-[#4A90E2] px-48 rounded-xl py-3 text-white"
                     type="submit"
                     // onClick={handleNext}
                     onClick={(e) =>

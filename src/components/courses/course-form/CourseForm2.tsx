@@ -8,12 +8,12 @@ const CourseForm2 = () => {
         <Previous />
       </div>
       <div>
-        <h1 className="mb-12 font-bold text-2xl">
+        <h1 className="mb-12 font-semibold text-[26px] text-[#333333] text-center">
           Who is your course for, and what should they know before starting?
         </h1>
       </div>
       <form action="create-a-course-2">
-        <div className=" bg-white px-12 py-16 rounded">
+        <div className=" bg-white px-12 py-16 rounded-2xl flex flex-col justify-center w-[524px] mx-auto">
           <div className="flex">
             <input
               type="checkbox"
@@ -24,7 +24,7 @@ const CourseForm2 = () => {
               name="vehicle1"
               value="Bike"
             />
-            <label className="block my-5 ml-3">
+            <label className="block my-5 ml-3  text-[#333333] text-[18px] font-medium leading-[22px]">
               Beginners with no experience
             </label>
           </div>
@@ -38,7 +38,7 @@ const CourseForm2 = () => {
               name="vehicle1"
               value="Bike"
             />
-            <label className="block my-5 ml-3">
+            <label className="block my-5 ml-3  text-[#333333] text-[18px] font-medium leading-[22px]">
               People with some basic knowledge
             </label>
           </div>
@@ -52,7 +52,7 @@ const CourseForm2 = () => {
               name="vehicle1"
               value="Bike"
             />
-            <label className="block my-5 ml-3">
+            <label className="block my-5 ml-3  text-[#333333] text-[18px] font-medium leading-[22px]">
               Intermediate learners looking to grow
             </label>
           </div>
@@ -67,14 +67,14 @@ const CourseForm2 = () => {
               name="vehicle1"
               value="Bike"
             />
-            <label className="block my-5 ml-3">
+            <label className="block my-5 ml-3  text-[#333333] text-[18px] font-medium leading-[22px]">
               Advanced learners or professionals
             </label>
           </div>
         </div>
 
         <div className="text-center">
-          <button className="rounded bg-[#4A90E2] px-40 md:px-60 py-3 mt-12 mb-44 text-white">
+          <button className=" w-[350px] rounded-xl  bg-[#4A90E2] py-3 mt-12 mb-44 text-white">
             Next
           </button>
         </div>

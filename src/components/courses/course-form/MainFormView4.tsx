@@ -59,10 +59,10 @@ const MainFormView4 = () => {
           <div className="mx-4 sm:ml-24 sm:mr-96 mt-12">
             <form action="CourseSetup5">
               <div className="my-12">
-                <label htmlFor="" className="font-bold">
+                <label htmlFor="" className="font-semibold text-[18px] leading-[31px] text-[#333333]">
                   Course Pricing
                 </label>
-                <p className="text-sm my-2">
+                <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px] my-2">
                   {`Set a price for your course that reflects the value of the content you’re offering.Pricing your course 
 appropriately can help attract the right audience while providing a fair return on your effort.`}
                 </p>
@@ -75,9 +75,9 @@ appropriately can help attract the right audience while providing a fair return 
                       <div className="fle ">
                         <div className="flex content-start">
                           <Image src={item.sym} alt={item.cost} />
-                          <div className="text-sm  mx-4">
-                            <p className="font-bold">{item.cost}</p>
-                            <p>{item.desc} </p>
+                          <div className="mx-4">
+                            <p className="font-semibold text-[16px] leading-[31px] text-[#333333]">{item.cost}</p>
+                            <p className="font-normal text-[13px] text-[#2D3A4B] leading-[21px]">{item.desc} </p>
                           </div>
                         </div>
 
@@ -90,11 +90,11 @@ appropriately can help attract the right audience while providing a fair return 
                 </div>
               </div>
 
-              <div className="my-12">
-                <label htmlFor="" className="font-bold">
+              <div className="my-16">
+                <label htmlFor="" className="font-semibold text-[18px] leading-[31px] text-[#333333]">
                   Promo and Discount
                 </label>
-                <p>
+                <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px]">
                   Promotional pricing is a great way to create urgency and
                   increase the visibility of your course, helping you reach a
                   wider audience while rewarding early sign-ups.
@@ -103,9 +103,9 @@ appropriately can help attract the right audience while providing a fair return 
                   <input
                     type="text"
                     placeholder="Create Promo Code"
-                    className="rounded flex-1 mr-4 bg-white text-[#2d3a4b] border-[#c0c0c0] border-2 py-2 pl-10"
+                    className="rounded-xl flex-1 mr-4 bg-white text-[#2d3a4b] border-[#c0c0c0] border-[1px] py-2 pl-10"
                   />
-                  <button className="rounded bg-white text-black border-[#d0d5dd] border-2  py-3 px-6">
+                  <button className="rounded-xl bg-white font-normal text-[13px] text-[#2D3A4B] leading-[21px] border-[#d0d5dd] border-[1px]  py-3 px-6">
                     + Add Promo Code
                   </button>
                 </div>
@@ -114,7 +114,7 @@ appropriately can help attract the right audience while providing a fair return 
               <div className="my-12">
                 <div className="mt-12 mb-24">
                   <button
-                    className="rounded bg-[#4A90E2] px-12 sm:px-48 py-3 text-white"
+                    className="rounded-xl bg-[#4A90E2] px-12 sm:px-48 py-3 text-white"
                     type="submit"
                     onClick={(e) =>
                       handleCreateCourse(e, "courseSetup5", router)

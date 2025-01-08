@@ -102,13 +102,13 @@ const UserSideBar = ({ page, selected, setSelected }: UserSideBarProps) => {
                 className="flex text-sm items-center justify-between my-4"
               >
                 <div className="flex items-center">
-                  <BsFillExclamationCircleFill />
-                  <p className="ml-3">{item.title} :</p>
+                <IoMdInformationCircleOutline />
+                  <p className="ml-3 text-[13px] text-[#333333] font-medium">{item.title} :</p>
                 </div>
 
                 <div>
-                  <p>
-                    {item.no} {item.type}
+                  <p  className="text-[12px] text-[#817676]">
+                    <span className="text-[#9B51E0]">{item.no} </span>{item.type}
                   </p>
                 </div>
               </div>
@@ -175,7 +175,7 @@ const UserSideBar = ({ page, selected, setSelected }: UserSideBarProps) => {
       {/* Desktop display */}
       {page == "myCertificate" && (
         <div className="hidden sm:block my-4">
-          <div className="flex">
+          <div className="flex space-x-3 items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -191,23 +191,23 @@ const UserSideBar = ({ page, selected, setSelected }: UserSideBarProps) => {
               />
             </svg>
 
-            <h4 className="underline font-bold">Filter</h4>
+            <h4 className="underline font-medium text-[13px] text-[#2D3A4B]">Filter</h4>
           </div>
 
           {certSideProperties.map((item, i) => (
             <div
-              className={`w-96 border-2 my-3 cursor-pointer hover:bg-violet-600 active:bg-violet-700 ${selected == item.title ? "focus:outline-none focus:ring focus:ring-violet-300" : ""} `}
+              className={`border-[1px] border-[#BCBCBC] bg-[#FFFFFF] rounded-xl my-3 h-[62px] w-[400px] px-6 flex items-center cursor-pointer hover:bg-violet-600 active:bg-violet-700 ${selected == item.title ? "focus:outline-none focus:ring focus:ring-violet-300" : ""} `}
               key={i}
             >
               <div
-                className="flex justify-between text-sm items-start "
+                className="flex justify-between text-sm items-center w-full"
                 onClick={() => {
                   setSelected(item.title)
                 }}
               >
                 <div className="flex items-center">
                   <Image src={item.url} alt={item.title} />
-                  <p className="ml-3">{item.title} </p>
+                  <p className="ml-3 font-bold text-[14px] leading-[19px] text-[#2D3A4B]">{item.title} </p>
                 </div>
 
                 <div>
@@ -216,6 +216,8 @@ const UserSideBar = ({ page, selected, setSelected }: UserSideBarProps) => {
                   ) : null}
                 </div>
               </div>
+
+
             </div>
           ))}
         </div>

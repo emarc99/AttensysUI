@@ -25,7 +25,7 @@ const LearningJourney: React.FC<LearningJourneyProps> = ({
 }) => {
   return (
     <div
-      className="bg-white py-12 my-0 sm:my-12 rounded-xl border-2"
+      className="bg-white my-0 sm:my-12 rounded-xl  border-[1px] border-[#BCBCBC] h-auto pb-8"
       // onClick={(e) =>
       //   handleMyCourseSubComp(e, "sample-profile", router, item.title)
       // }
@@ -33,7 +33,7 @@ const LearningJourney: React.FC<LearningJourneyProps> = ({
       <div>
         <div>
           {item.no == 1 ? (
-            <div className="flex justify-between border-b-4 my-3">
+            <div className="flex justify-between  border-b-[1px] border-b-[#CACBCB] my-3 px-10">
               <div className="flex text-gradient-to-r from-purple-400 via-purple-30 mx-8 my-5">
                 <h4 className="font-bold text-lg text-[#A01B9B]">{selected}</h4>
               </div>
@@ -59,32 +59,32 @@ const LearningJourney: React.FC<LearningJourneyProps> = ({
           ) : null}
 
           <div>
-            <div className="block sm:flex ">
-              <div className="mx-6">
+            <div className="px-12 flex space-x-12 items-center">
+              <div  className="h-[164px] w-[254px] rounded-xl">
                 <Image
                   src={item.url}
                   alt="video"
                   height={250}
-                  className="object-cover"
+                  className="object-cover h-full w-full rounded-xl"
                 />
               </div>
 
               <div className="mt-5 mx-8 flex-1">
                 <div>
-                  <h4 className="font-light text-2xl">
+                  <h4 className="text-2xl font-medium leading-[22px] text-[#2D3A4B]">
                     Elementary Crypto Trading
                   </h4>
 
                   <div className="block sm:flex items-center my-3 ">
-                    <div className="flex items-center">
+                    <div className="flex items-center space-x-3">
                       <FaPlay color="#A01B9B" />
-                      <p className="mx-4 text-sm sm:text-base">
+                      <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
                         Total play time: 2 hrs 35 mins
                       </p>
                     </div>
-                    <div className="block sm:flex mx-0 my-4 sm:my-0 sm:mx-8 ">
+                    <div className="flex items-center sm:flex mx-0 my-4 sm:my-0 sm:mx-8 ">
                       <p className="hidden sm:block">|</p>
-                      <p className="text-sm sm:text-base mx-0 sm:mx-8">
+                      <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px] mx-0 sm:mx-8">
                         Created by:{" "}
                         <span className="underline"> Akinbola Kehinde </span>
                       </p>
@@ -93,12 +93,12 @@ const LearningJourney: React.FC<LearningJourneyProps> = ({
                 </div>
 
                 <div className="my-3">
-                  <ProgressBar completed={"58"} />
+                  <ProgressBar completed={"58"} height="13px" bgColor="#9B51E0" />
                 </div>
 
                 <div className="my-3 flex justify-between">
-                  <p>3/6 Lectures completed</p>
-                  <p className="underline  text-sm sm:text-base text-[#A01B9B]">
+                  <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">3/6 Lectures completed</p>
+                  <p className="underline text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
                     (8:03 mins)
                   </p>
                 </div>

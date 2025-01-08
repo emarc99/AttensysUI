@@ -125,7 +125,7 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({ item, selected }) => {
                   </div>
                   <div className="flex items-center ml-0 sm:ml-5 my-3 sm:my-0">
                     <BsDot color="#A01B9B" width={50} />
-                    <p className="text-sm sm:text-base mx-0 sm:mx-2">
+                    <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px] mx-0 sm:mx-2">
                       <span className="text-[#A01B9B]">4</span> Lectures
                     </p>
                   </div>
@@ -145,7 +145,7 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({ item, selected }) => {
 
                 {/* rating and num of students */}
                 <div className="block sm:flex  items-center my-3">
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-6">
                     <StarRating totalStars={5}  starnumber={4} />
                     <p className="font-medium text-[13px] text-[#2D3A4B] leading-[16px]">{item.stars} students</p>
                   </div>

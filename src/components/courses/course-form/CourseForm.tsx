@@ -6,17 +6,17 @@ const CourseForm = (props: any) => {
     event.preventDefault()
   }
   return (
-    <div className="relative mx-10 md:mx-auto w-auto md:w-5/12 pt-16">
+    <div className="relative mx-10 md:mx-auto w-auto md:w-5/12 pt-16 ">
       <div className="hidden sm:block">
         <Previous />
       </div>
       <div>
-        <h1 className="mb-12 font-bold text-2xl">
+        <h1 className="mb-12 font-semibold text-[26px] text-[#333333] text-center">
           What is the primary goal of your course?
         </h1>
       </div>
       <form action="create-a-course">
-        <div className=" bg-white px-12 py-16 rounded">
+        <div className=" bg-white px-12 py-16 rounded-2xl flex flex-col justify-center w-[524px] mx-auto">
           <div className="flex">
             <input
               type="checkbox"
@@ -27,7 +27,7 @@ const CourseForm = (props: any) => {
               name="vehicle1"
               value="Bike"
             />
-            <label className="block my-5 ml-3">
+            <label className="block my-5 ml-3 text-[#333333] text-[18px] font-medium leading-[22px]">
               Helping people build skills for their job
             </label>
           </div>
@@ -41,7 +41,7 @@ const CourseForm = (props: any) => {
               name="vehicle1"
               value="Bike"
             />
-            <label className="block my-5 ml-3">
+            <label className="block my-5 ml-3 text-[#333333] text-[18px] font-medium leading-[22px]">
               Giving a certificate for completing the course
             </label>
           </div>
@@ -55,7 +55,7 @@ const CourseForm = (props: any) => {
               name="vehicle1"
               value="Bike"
             />
-            <label className="block my-5 ml-3">
+            <label className="block my-5 ml-3 text-[#333333] text-[18px] font-medium leading-[22px]">
               Sharing knowledge about a hobby or interest
             </label>
           </div>
@@ -70,7 +70,7 @@ const CourseForm = (props: any) => {
               name="vehicle1"
               value="Bike"
             />
-            <label className="block my-5 ml-3">
+            <label className="block my-5 ml-3 text-[#333333] text-[18px] font-medium leading-[22px]">
               Teaching new ideas or concepts in a field
             </label>
           </div>
@@ -79,7 +79,7 @@ const CourseForm = (props: any) => {
         <div className="text-center">
           <button
             onSubmit={handleNext}
-            className="rounded bg-[#4A90E2] px-40 md:px-60 py-3 mt-12 mb-44 text-white"
+            className="bg-[#4A90E2] w-[350px] rounded-xl  py-3 mt-12 mb-44 text-white"
             type="submit"
           >
             Next
