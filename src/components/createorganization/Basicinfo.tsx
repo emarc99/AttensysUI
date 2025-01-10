@@ -1,16 +1,21 @@
 import React, { ChangeEvent, useRef } from 'react'
 import Image from 'next/image'
 import add from '@/assets/add.svg'
+import {walletStarknetkitNextAtom, } from "@/state/connectedWalletStarknetkitNext"
 import { Button, Dialog, DialogBackdrop, DialogPanel, DialogTitle, Field, Input, Label } from '@headlessui/react'
 import clsx from 'clsx'
 import Category from './Category'
 import { useRouter } from 'next/navigation'
+import { useAtom } from 'jotai'
+import { walletStarknetkitLatestAtom } from '@/state/connectedWalletStarknetkitLatest'
 
 
 const Basicinfo = () => {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const logofileInputRef = useRef<HTMLInputElement | null>(null);
     const router = useRouter();
+  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
+
     
     const handleImageClick = () => {
         // Trigger the file input on image click
@@ -110,7 +115,7 @@ const Basicinfo = () => {
                             </div>
                         
                         <p className='text-[13px] w-[342px] text-[#2D3A4B] font-light leading-[23px]'>Upload size must be less than 10MB | Best upload dimension is 500px x 500px</p>
-                        <Button onClick={()=>{handlerouting("wallet-info")}} className="w-[342px] h-[47px] flex justify-center items-center text-[#FFFFFF] text-[14px] font-bold leading-[16px] bg-[#4A90E2] rounded-xl">Next</Button>
+                        <Button onClick={()=>{!wallet ? handlerouting("wallet-info") : handlerouting("nft-info")}} className="w-[342px] h-[47px] flex justify-center items-center text-[#FFFFFF] text-[14px] font-bold leading-[16px] bg-[#4A90E2] rounded-xl">Next</Button>
                             
                 </div>
         </div>
