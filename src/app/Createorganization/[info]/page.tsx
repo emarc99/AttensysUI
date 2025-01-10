@@ -1,8 +1,14 @@
 "use client"
-import React from 'react'
+import React, { useEffect } from 'react'
 import Coursedropdown from '@/components/courses/Coursedropdown'
 import { useParams, useRouter} from 'next/navigation';
-import { coursestatusAtom,bootcampdropdownstatus } from "@/state/connectedWalletStarknetkitNext"
+import { coursestatusAtom,bootcampdropdownstatus,connectorAtom,
+    connectorDataAtom,
+    walletStarknetkitNextAtom, } from "@/state/connectedWalletStarknetkitNext"
+  import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest"
+  import { RESET } from "jotai/utils"
+  import { connect, disconnect } from "starknetkit"
+  import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants"
 import Bootcampdropdown from "@/components/bootcamp/Bootcampdropdown"
 import { useAtom, useSetAtom } from "jotai"
 import Basicinfo from '@/components/createorganization/Basicinfo';
@@ -10,6 +16,7 @@ import Walletinfo from '@/components/createorganization/Walletinfo';
 import Admininfo from '@/components/createorganization/Admininfo';
 import Addinstructor from '@/components/createorganization/Addinstructor';
 import Congratulations from '@/components/createorganization/Congratulations';
+import Nftinfo from '@/components/createorganization/Nftinfo';
 
 
 
@@ -19,7 +26,46 @@ const Index = () => {
   const router = useRouter();
   const params = useParams();
   const section = params.info;
+  const setWalletLatest = useSetAtom(walletStarknetkitLatestAtom)
+  const setWalletNext = useSetAtom(walletStarknetkitNextAtom)
+  const setConnectorData = useSetAtom(connectorDataAtom)
+  const setConnector = useSetAtom(connectorAtom)
 
+  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
+  
+  useEffect(() => {
+    setWalletLatest(RESET)
+    setWalletNext(RESET)
+    setConnectorData(RESET)
+    setConnector(RESET)
+  }, [])
+
+  useEffect(() => {
+    const autoConnect = async () => {
+      try {
+        const { wallet: connectedWallet } = await connect({
+          //@ts-ignore
+          provider,
+          modalMode: "neverAsk",
+          webWalletUrl: ARGENT_WEBWALLET_URL,
+          argentMobileOptions: {
+            dappName: "Attensys",
+            url: window.location.hostname,
+            chainId: CHAIN_ID,
+            icons: [],
+          },
+        })
+        setWallet(connectedWallet)
+      } catch (e) {
+        console.error(e)
+        alert((e as any).message)
+      }
+    }
+
+    if (!wallet) {
+      autoConnect()
+    }
+  }, [wallet])
   
   const handlePageClick = () => {
     setbootcampdropstat(false);
@@ -36,7 +82,9 @@ const renderContent = () =>{
             return <><Basicinfo /></>
         
         case "wallet-info":
-            return <><Walletinfo /></>
+            return <>{!wallet ? <Walletinfo /> : <Nftinfo />} </>
+        case "nft-info":
+              return <>{!wallet ? <Walletinfo /> : <Nftinfo />} </>
         
         case "admin-info":
             return <><Admininfo /></>
@@ -148,7 +196,7 @@ const renderHeader = () =>{
                 <div className='mt-20 space-y-5'>
                         <div className={`cursor-pointer h-[67px] w-[278px] text-[16px]  rounded-tl-xl rounded-bl-xl py-5 pl-10 ${section == "basic-info" ? "bg-[#F5F8FA] text-[#5801A9]" : "bg-none text-[#FFFFFF]"} leading-[22px] font-bold`}  onClick={()=>{handlerouting("basic-info")}}>Basic Info</div> 
                         {/* @todo all these items on the panel should be clickable if and only if the details has already been filled, the idea if for it to be more like a way to go back to previously filled items */}
-                        <div className={`cursor-pointer h-[67px] w-[278px] text-[16px]  rounded-tl-xl rounded-bl-xl py-5 pl-10 ${section == "wallet-info" ? "bg-[#F5F8FA] text-[#5801A9]" : "bg-none text-[#FFFFFF]"} leading-[22px] font-bold`} onClick={()=>{handlerouting("wallet-info")}}>Wallet Information</div>
+                        <div className={`cursor-pointer h-[67px] w-[278px] text-[16px]  rounded-tl-xl rounded-bl-xl py-5 pl-10 ${section == "wallet-info" || section == "nft-info" ? "bg-[#F5F8FA] text-[#5801A9]" : "bg-none text-[#FFFFFF]"} leading-[22px] font-bold`} onClick={()=>{!wallet ? handlerouting("wallet-info") : handlerouting("nft-info")}}>{!wallet ? "Wallet Information" : "NFT Information"}</div>
                         <div className={`cursor-pointer h-[67px] w-[278px] text-[16px]  rounded-tl-xl rounded-bl-xl py-5 pl-10 ${section == "admin-info" ? "bg-[#F5F8FA] text-[#5801A9]" : "bg-none text-[#FFFFFF]"} leading-[22px] font-bold`} onClick={()=>{handlerouting("admin-info")}}>Admin information</div>
                         <div className={`cursor-pointer h-[67px] w-[278px] text-[16px]  rounded-tl-xl rounded-bl-xl py-5 pl-10 ${section == "add-instructors" ? "bg-[#F5F8FA] text-[#5801A9]" : "bg-none text-[#FFFFFF]"} leading-[22px] font-bold`} onClick={()=>{handlerouting("add-instructors")}}>Add Instructors</div>
                         <div className={`cursor-pointer h-[67px] w-[278px] text-[16px]  rounded-tl-xl rounded-bl-xl py-5 pl-10 ${section == "create-a-bootcamp" ? "bg-[#F5F8FA] text-[#5801A9]" : "bg-none text-[#FFFFFF]"} leading-[22px] font-bold`} onClick={()=>{handlerouting("create-a-bootcamp")}}>Create bootcamp</div>
