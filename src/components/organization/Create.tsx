@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { ChangeEvent, useRef, useState } from 'react'
 import { IoIosInformationCircleOutline, IoMdClose } from "react-icons/io";
 import {createbootcampoverlay} from '@/state/connectedWalletStarknetkitNext'
 import { useAtom } from 'jotai';
@@ -19,6 +19,8 @@ import cloud from '@/assets/cloud.svg'
 import Image from 'next/image';
 import dividers from '@/assets/Dividers.svg'
 import { useRouter } from 'next/navigation';
+import add from '@/assets/add.svg'
+
 
 
 
@@ -43,7 +45,23 @@ const Create = ({ height }: { height: number | null }) => {
     const [bootcampTimes, setBootcampTimes] = useState([{ day: 1 }]);
     const [isPaid, setIsPaid] = useState<boolean>(false);
     const router = useRouter();
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+
   
+    const handleImageClick = () => {
+        // Trigger the file input on image click
+        fileInputRef.current?.click(); 
+      };
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file && (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg')) {
+          // Process the file 
+          console.log("Selected file:", file);
+        } else {
+          console.log("Please select a valid image file (JPEG, JPG, or PNG).");
+        }
+      };
+
     const handlePublishButton = () => {
       router.push('/Bootcamp/sample-bootcamp-dashboard/Outline')
       setCreateOverlayStat(false);
@@ -146,7 +164,47 @@ const Create = ({ height }: { height: number | null }) => {
                             </Field>
                             </div>
 
+                             {/* NFT data collection */}
+                            <div className='space-y-3 w-[60%] mt-4'>
+                    <h1 className='text-[14px] text-[#2D3A4B] font-light leading-[20px]'>NFT Certificate Name</h1>
+                    <Field>
+                        <Input
+                        placeholder='nft name'
+                        className={clsx(
+                            'h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[100%] rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]',
+                            'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25'
+                        )}
+                        />
+                    </Field>
+                </div>
 
+                <div className='space-y-3 w-[60%] mt-4'>
+                    <h1 className='text-[14px] text-[#2D3A4B] font-light leading-[20px]'>NFT Certificate symbol</h1>
+                    <Field>
+                        <Input
+                        placeholder='Enter nft symbol'
+                        className={clsx(
+                            'h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[100%] rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]',
+                            'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25'
+                        )}
+                        />
+                    </Field>
+                </div>
+
+
+                <div className='space-y-3 w-[60%] mt-4'>
+            <h1 className='text-[14px] text-[#2D3A4B] font-light leading-[20px]'>Upload NFT Certificate Image</h1>
+            <div className="w-[200px] h-[200px] bg-[#3F3E58] rounded-xl flex justify-center items-center cursor-pointer" onClick={handleImageClick}>
+                                    <Image src={add} alt="add"   className="cursor-pointer h-[100px] w-[100px] object-cover rounded-xl" />
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        accept="image/jpeg, image/jpg, image/png"
+                                        onChange={handleFileChange}
+                                        style={{ display: 'none' }} // Hide the input
+                                    />
+            </div>
+        </div>
                             <div className='mt-8'>
                                 <h1 className='text-[16px] leading-[23px] font-semibold text-[#2D3A4B]'>Structure & schedules</h1>
                                 <div className='mt-3 space-y-2'>

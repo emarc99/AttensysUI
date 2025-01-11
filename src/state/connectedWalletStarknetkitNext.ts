@@ -8,6 +8,43 @@ import { atomWithReset } from "jotai/utils"
 import { useEffect } from "react"
 import { ConnectorData, StarknetWindowObject } from "starknetkit-next"
 import { Connector } from "starknetkit"
+import { FileObject } from "pinata";
+
+const emptyData: FileObject = {
+  name: "",
+  type: "",
+  size: 0,
+  lastModified: 0,
+  arrayBuffer: async () => {
+    return new ArrayBuffer(0);
+  },
+};
+
+const InitOrganizationRegstrationData = {
+  organizationBanner : emptyData,
+  organizationName : "",
+  organizationDescription : "",
+  organizationLogo : emptyData,
+  organizationCategory : "",
+  organizationAdminfullname: "",
+  organizationAminEmail : "",
+  organizationAdminWallet : "",
+  organizationInstructorEmails : [""],
+  organizationInstructorsWalletAddresses : [""],
+}
+
+const InitBootcampNftData = {
+  organizationNftName : "",
+  organizationNftSymbol : "",
+  organizationNftImage : emptyData,
+}
+
+//organization data state
+export const organzationInitState = atom(InitOrganizationRegstrationData);
+//bootcamp data state
+export const createBootcampInitState = atom(InitBootcampNftData)
+
+
 
 export const walletStarknetkitNextAtom = atomWithReset<
   StarknetWindowObject | null | undefined
