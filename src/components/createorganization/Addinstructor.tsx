@@ -5,24 +5,89 @@ import cross from '@/assets/cross.svg'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 import Addressinput from './Addressinput';
+import {walletStarknetkitNextAtom, organzationInitState} from "@/state/connectedWalletStarknetkitNext"
+import { useAtom } from 'jotai'
+import { pinata } from "../../../utils/config";
 
-
+import { FileObject } from "pinata";
+const emptyData: FileObject = {
+  name: "",
+  type: "",
+  size: 0,
+  lastModified: 0,
+  arrayBuffer: async () => {
+    return new ArrayBuffer(0);
+  },
+};
+const ResetOrgRegData = {
+  organizationBanner : emptyData,
+  organizationName : "",
+  organizationDescription : "",
+  organizationLogo : emptyData,
+  organizationCategory : "",
+  organizationAdminfullname: "",
+  organizationAminEmail : "",
+  organizationAdminWallet : "",
+  organizationInstructorEmails : [""],
+  organizationInstructorsWalletAddresses : [""],
+}
 
 const Addinstructor = () => {
     const [emailList, setEmailList] = useState<string[]>([]);
     const [AddressList, setAddressList] = useState<string[]>([]);
+    const [organizationData, setOrganizationData] = useAtom(organzationInitState)
+	const [uploading, setUploading] = useState(false);
+
+  
+  
+    // console.dir(organizationData, {depth : null})
 
     const handleEmailsChange = (emails: string[]) => {
       setEmailList(emails);
+      setOrganizationData((prevData) => ({
+        ...prevData, // Spread existing data to retain untouched fields
+        organizationInstructorEmails: emails, // Dynamically update the specific field
+      }));
     };
     const handleAddresssChange = (addr: string[]) => {
       setAddressList(addr);
+      setOrganizationData((prevData) => ({
+        ...prevData, // Spread existing data to retain untouched fields
+        organizationInstructorsWalletAddresses: addr, // Dynamically update the specific field
+      }));
     };
     const router = useRouter();
 
-    const handlerouting = (prop : string) =>{
-        router.push(`/Createorganization/${prop}`)
+    
+    //handles routing and pinata interaction
+    const handlerouting = async (prop : string) =>{
+      setUploading(true);
+      const OrgBannerupload = await pinata.upload.file(organizationData.organizationBanner);
+      const OrgLogoUpload = await pinata.upload.file(organizationData.organizationLogo);
+      const Dataupload = await pinata.upload.json({
+        OrganizationName: organizationData.organizationName,
+        OrganizationDescription: organizationData.organizationDescription,
+        OrganizationBannerCID : OrgBannerupload.cid,
+        OrganizationLogoCID : OrgLogoUpload.cid,
+        OrganizationCategory : organizationData.organizationCategory,
+        OrganizationAdminName : organizationData.organizationAdminfullname,
+        OrganizationAdminEmail : organizationData.organizationAminEmail,
+        OrganizationAminWalletAddress : organizationData.organizationAdminWallet,
+        OrganizationInstructorEmails : organizationData.organizationInstructorEmails,
+        OrganizationInstructorWalletAddresses : organizationData.organizationInstructorsWalletAddresses
+      })
+//@todo reset all data field after pinata data upload is successful
+      if (Dataupload) {
+        console.log("Data upload here",Dataupload);
+        console.log("Cid to send to contract", Dataupload.cid)
+        setUploading(false);
+        //Resets all org data input
+        setOrganizationData(ResetOrgRegData)
+          router.push(`/Createorganization/${prop}`)
+      }
     }
+
+
   return (
     <div className='h-[500px] w-full flex flex-col items-center space-y-8 py-3'>
             <div className='mx-auto pt-12'>
@@ -49,7 +114,7 @@ const Addinstructor = () => {
                         </div>
             </div>
 
-        <Button onClick={()=>{handlerouting("create-a-bootcamp")}} className="w-[342px] h-[47px] flex justify-center items-center text-[#FFFFFF] text-[14px] font-bold leading-[16px] bg-[#4A90E2] rounded-xl">Finish</Button>
+        <Button onClick={()=>{handlerouting("create-a-bootcamp")}} className="w-[342px] h-[47px] flex justify-center items-center text-[#FFFFFF] text-[14px] font-bold leading-[16px] bg-[#4A90E2] rounded-xl">{uploading ? "Uploading..." : "Finish"}</Button>
 
     </div>
   )

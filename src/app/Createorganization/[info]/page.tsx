@@ -16,7 +16,7 @@ import Walletinfo from '@/components/createorganization/Walletinfo';
 import Admininfo from '@/components/createorganization/Admininfo';
 import Addinstructor from '@/components/createorganization/Addinstructor';
 import Congratulations from '@/components/createorganization/Congratulations';
-import Nftinfo from '@/components/createorganization/Nftinfo';
+import WalletisConnected from '@/components/createorganization/WalletisConnected';
 
 
 
@@ -82,10 +82,7 @@ const renderContent = () =>{
             return <><Basicinfo /></>
         
         case "wallet-info":
-            return <>{!wallet ? <Walletinfo /> : <Nftinfo />} </>
-        case "nft-info":
-              return <>{!wallet ? <Walletinfo /> : <Nftinfo />} </>
-        
+            return <>{!wallet ? <Walletinfo /> : <WalletisConnected />} </>
         case "admin-info":
             return <><Admininfo /></>
 
@@ -196,7 +193,7 @@ const renderHeader = () =>{
                 <div className='mt-20 space-y-5'>
                         <div className={`cursor-pointer h-[67px] w-[278px] text-[16px]  rounded-tl-xl rounded-bl-xl py-5 pl-10 ${section == "basic-info" ? "bg-[#F5F8FA] text-[#5801A9]" : "bg-none text-[#FFFFFF]"} leading-[22px] font-bold`}  onClick={()=>{handlerouting("basic-info")}}>Basic Info</div> 
                         {/* @todo all these items on the panel should be clickable if and only if the details has already been filled, the idea if for it to be more like a way to go back to previously filled items */}
-                        <div className={`cursor-pointer h-[67px] w-[278px] text-[16px]  rounded-tl-xl rounded-bl-xl py-5 pl-10 ${section == "wallet-info" || section == "nft-info" ? "bg-[#F5F8FA] text-[#5801A9]" : "bg-none text-[#FFFFFF]"} leading-[22px] font-bold`} onClick={()=>{!wallet ? handlerouting("wallet-info") : handlerouting("nft-info")}}>{!wallet ? "Wallet Information" : "NFT Information"}</div>
+                        <div className={`cursor-pointer h-[67px] w-[278px] text-[16px]  rounded-tl-xl rounded-bl-xl py-5 pl-10 ${section == "wallet-info" ? "bg-[#F5F8FA] text-[#5801A9]" : "bg-none text-[#FFFFFF]"} leading-[22px] font-bold`} onClick={()=>{handlerouting("wallet-info")}}>Wallet Information</div>
                         <div className={`cursor-pointer h-[67px] w-[278px] text-[16px]  rounded-tl-xl rounded-bl-xl py-5 pl-10 ${section == "admin-info" ? "bg-[#F5F8FA] text-[#5801A9]" : "bg-none text-[#FFFFFF]"} leading-[22px] font-bold`} onClick={()=>{handlerouting("admin-info")}}>Admin information</div>
                         <div className={`cursor-pointer h-[67px] w-[278px] text-[16px]  rounded-tl-xl rounded-bl-xl py-5 pl-10 ${section == "add-instructors" ? "bg-[#F5F8FA] text-[#5801A9]" : "bg-none text-[#FFFFFF]"} leading-[22px] font-bold`} onClick={()=>{handlerouting("add-instructors")}}>Add Instructors</div>
                         <div className={`cursor-pointer h-[67px] w-[278px] text-[16px]  rounded-tl-xl rounded-bl-xl py-5 pl-10 ${section == "create-a-bootcamp" ? "bg-[#F5F8FA] text-[#5801A9]" : "bg-none text-[#FFFFFF]"} leading-[22px] font-bold`} onClick={()=>{handlerouting("create-a-bootcamp")}}>Create bootcamp</div>

@@ -2,14 +2,41 @@ import React from 'react'
 import { Button, Field, Input } from '@headlessui/react'
 import clsx from 'clsx'
 import { useRouter } from 'next/navigation';
+import {organzationInitState} from "@/state/connectedWalletStarknetkitNext"
+import { useAtom } from 'jotai'
 
 
 const Admininfo = () => {
     const router = useRouter();
+    const [organizationData, setOrganizationData] = useAtom(organzationInitState)
+
+
+    // console.dir(organizationData, {depth : null})
 
     const handlerouting = (prop : string) =>{
         router.push(`/Createorganization/${prop}`)
     }
+    const handleAdminNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setOrganizationData((prevData) => ({
+          ...prevData, // Spread existing data to retain untouched fields
+          organizationAdminfullname: e.target.value, // Dynamically update the specific field
+    }));
+    }
+
+    const handleEmailAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setOrganizationData((prevData) => ({
+          ...prevData, // Spread existing data to retain untouched fields
+          organizationAminEmail: e.target.value, // Dynamically update the specific field
+    }));
+    }
+
+    const handleWalletAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setOrganizationData((prevData) => ({
+          ...prevData, // Spread existing data to retain untouched fields
+          organizationAdminWallet: e.target.value, // Dynamically update the specific field
+    }));
+    }
+
   return (
     <div className='h-auto w-full flex flex-col items-center space-y-8 py-6'>
                  <div className='space-y-3 w-[60%]'>
@@ -17,6 +44,7 @@ const Admininfo = () => {
                     <Field>
                         <Input
                         placeholder='Your full name'
+                        onChange={handleAdminNameChange}
                         className={clsx(
                             'h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[100%] rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]',
                             'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25'
@@ -30,6 +58,7 @@ const Admininfo = () => {
                     <Field>
                         <Input
                         placeholder='Enter email address'
+                        onChange={handleEmailAddressChange}
                         className={clsx(
                             'h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[100%] rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]',
                             'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25'
@@ -44,6 +73,7 @@ const Admininfo = () => {
                     <Field>
                         <Input
                         placeholder='Enter admin wallet address'
+                        onChange={handleWalletAddressChange}
                         className={clsx(
                             'h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[100%] rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]',
                             'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25'
