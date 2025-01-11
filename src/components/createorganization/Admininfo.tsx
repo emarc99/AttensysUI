@@ -12,6 +12,7 @@ const Admininfo = () => {
 
 
     // console.dir(organizationData, {depth : null})
+    
 
     const handlerouting = (prop : string) =>{
         router.push(`/Createorganization/${prop}`)
