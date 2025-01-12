@@ -2,6 +2,9 @@ import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headless
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
 import { useState } from 'react'
+import {createBootcampInitState} from "@/state/connectedWalletStarknetkitNext"
+import { useAtom } from 'jotai'
+
 
 const Targecategory = [
   { id: 1, name: 'Select from predefined categories' },
@@ -12,10 +15,19 @@ const Targecategory = [
 
 export default function TargetCategory() {
   const [selected, setSelected] = useState(Targecategory[0])
+  const [bootcampData, setBootcampData] = useAtom(createBootcampInitState)
+
+  const handleCategoryChange = (category : any) => {
+    setSelected(category); // Update selected category
+    setBootcampData((prev) => ({
+      ...prev,
+      targetAudience: category.name, // Update organization category in state
+    }));
+  }
 
   return (
     <div className="w-[100%] h-[55px]">
-      <Listbox value={selected} onChange={setSelected}>
+      <Listbox value={selected} onChange={handleCategoryChange}>
         <ListboxButton
           className={clsx(
             'relative block w-full border-[2px] border-[#D0D5DD] rounded-lg bg-[#FFFFFF] h-[56px] py-1.5 pr-8 pl-3 text-left text-sm/6 text-[#98999B]',

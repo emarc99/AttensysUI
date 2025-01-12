@@ -20,6 +20,17 @@ import Image from 'next/image';
 import dividers from '@/assets/Dividers.svg'
 import { useRouter } from 'next/navigation';
 import add from '@/assets/add.svg'
+import {createBootcampInitState} from "@/state/connectedWalletStarknetkitNext"
+import { FileObject } from "pinata";
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs, { Dayjs } from 'dayjs';
+import { FcCancel } from "react-icons/fc";
+import { pinata } from "../../../utils/config";
+
+
 
 
 
@@ -34,20 +45,80 @@ type ValuePiece = Date | null;
 
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
-
+const emptyData: FileObject = {
+    name: "",
+    type: "",
+    size: 0,
+    lastModified: 0,
+    arrayBuffer: async () => {
+      return new ArrayBuffer(0);
+    },
+  };
+const ResetBootcampData = {
+    bootcampName : "",
+    bootcampOrganization: "",
+    targetAudience: "",
+    bootcampDescription: "",
+    bootcampStartdate : "",
+    bootcampEndDate: "",
+    bootcampLecture: [{day:"", lecturetitle:"", lectureDescription: "", start:"", end:""}],
+    price: false,
+    bootcampPrice : "",
+    BootcampLogo : emptyData,
+    bootcampNftName : "",
+    bootCampNftSymbol : "",
+    bootcampNftImage : emptyData,
+  }
+  
+//   {day:"", lecturetitle:"", lectureDescription: "", start:"", end:""}
     
 
 const Create = ({ height }: { height: number | null }) => {
     const [createOverlayStat, setCreateOverlayStat] = useAtom(createbootcampoverlay);
     const [value, onChange] = useState<Value>(new Date());
-    const [startdateStat, SetStartDateStatus] = useState(false);
-    const [EnddateStat, SetEndDateStatus] = useState(false);
+    const [startdateStat, SetStartDateStatus] = React.useState<Dayjs | null>(dayjs());
+    const [EnddateStat, SetEndDateStatus] =  React.useState<Dayjs | null>(dayjs());
     const [bootcampTimes, setBootcampTimes] = useState([{ day: 1 }]);
     const [isPaid, setIsPaid] = useState<boolean>(false);
     const router = useRouter();
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const logoInputRef = useRef<HTMLInputElement | null>(null);
+    const [bootcampData, setBootcampData] = useAtom(createBootcampInitState)
+	const [uploading, setUploading] = useState(false);
 
-  
+
+
+    console.dir(bootcampData, {depth: null})
+    // console.dir(bootcampTimes, {depth: null})
+    
+    const handleBootcampNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setBootcampData((prevData) => ({
+            ...prevData, // Spread existing data to retain untouched fields
+            bootcampName: e.target.value, // Dynamically update the specific field
+          }));
+    }
+
+    const handleBootcampDescriptionChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setBootcampData((prevData) => ({
+            ...prevData, // Spread existing data to retain untouched fields
+            bootcampDescription: e.target.value, // Dynamically update the specific field
+          }));
+    }
+
+    const handleNFTNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setBootcampData((prevData) => ({
+            ...prevData, // Spread existing data to retain untouched fields
+            bootcampNftName: e.target.value, // Dynamically update the specific field
+          }));
+    }
+
+    const handleNFTSymbolChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setBootcampData((prevData) => ({
+            ...prevData, // Spread existing data to retain untouched fields
+            bootCampNftSymbol: e.target.value, // Dynamically update the specific field
+          }));
+    }
+
     const handleImageClick = () => {
         // Trigger the file input on image click
         fileInputRef.current?.click(); 
@@ -56,20 +127,75 @@ const Create = ({ height }: { height: number | null }) => {
         const file = event.target.files?.[0];
         if (file && (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg')) {
           // Process the file 
-          console.log("Selected file:", file);
+          setBootcampData((prevData) => ({
+            ...prevData, // Spread existing data to retain untouched fields
+            bootcampNftImage: file, // Dynamically update the specific field
+          }));
         } else {
           console.log("Please select a valid image file (JPEG, JPG, or PNG).");
         }
       };
 
-    const handlePublishButton = () => {
-      router.push('/Bootcamp/sample-bootcamp-dashboard/Outline')
-      setCreateOverlayStat(false);
-  
+      const handleBootcampPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setBootcampData((prevData) => ({
+            ...prevData, // Spread existing data to retain untouched fields
+            bootcampPrice: e.target.value, // Dynamically update the specific field
+          }));
+      }
+
+      const handleBrowse = () => {
+        // Trigger the file input on image click
+        logoInputRef.current?.click(); 
+      };
+      const handleLogoChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file && (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg')) {
+          // Process the file 
+          setBootcampData((prevData) => ({
+            ...prevData, // Spread existing data to retain untouched fields
+            BootcampLogo: file, // Dynamically update the specific field
+          }));
+        } else {
+          console.log("Please select a valid image file (JPEG, JPG, or PNG).");
+        }
+      };
+
+    const handlePublishButton = async () => {
+        setUploading(true);
+        const bootcamplogo = await pinata.upload.file(bootcampData.BootcampLogo);
+        const Nftimage = await pinata.upload.file(bootcampData.bootcampNftImage);
+        const Dataupload = await pinata.upload.json({
+            BootcampName : bootcampData.bootcampName,
+            BootcampLogo : bootcamplogo.cid,
+            BootcampDescription : bootcampData.bootcampDescription,
+            Bootcamplecturedata : bootcampData.bootcampLecture,
+            BootcampStartDate : bootcampData.bootcampStartdate,
+            BootEndDate : bootcampData.bootcampEndDate,
+            BootcampNFTname : bootcampData.bootcampNftName,
+            BootcampNFTsymbol : bootcampData.bootCampNftSymbol,
+            BootcampNftImage : Nftimage.cid,
+            Organizer : bootcampData.bootcampOrganization,
+            PriceStaus : bootcampData.price,
+            BootcampPrice : bootcampData.bootcampPrice,
+            targetAudience : bootcampData.targetAudience
+        })
+         
+        if(Dataupload) {
+            console.log("Data upload here",Dataupload);
+            console.log("Create bootcamp Cid to send to contract ", Dataupload.cid)
+            setUploading(false);
+            router.push(`/Bootcamp/${bootcampData.bootcampName}/Outline`)
+            setCreateOverlayStat(false);
+            setBootcampData(ResetBootcampData)
+        }
     }
 
     const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsPaid(event.target.checked);
+        setBootcampData((prevData) => ({
+            ...prevData, // Spread existing data to retain untouched fields
+            price: event.target.checked, // Dynamically update the specific field
+          }));
     };
 
 
@@ -79,26 +205,67 @@ const Create = ({ height }: { height: number | null }) => {
       ...prevTimes,
       { day: prevTimes.length + 1 },
     ]);
+    
+    setBootcampData((prevData)=>({
+        ...prevData,
+        bootcampLecture : [
+            ...prevData.bootcampLecture,
+            {
+                day: (prevData.bootcampLecture.length + 1).toString(),
+                lecturetitle: "",
+                lectureDescription: "",
+                start: "",
+                end: "",
+            }
+        ]
+    }))
   };
 
-    function onTimeChange(value : any) {
-        console.log(value && value.format(format));
-      }
+  const handleRemoveDay = () => {
+    setBootcampTimes((prevTimes) => {
+      if (prevTimes.length === 0) return prevTimes; // Prevent removing if no days are present
+      return prevTimes.slice(0, -1); // Remove the last day
+    });
+  };
+
+
+  const handleTitleChange = (index: number, value: string) => {
+    setBootcampData((prevData) => ({
+      ...prevData,
+      bootcampLecture: prevData.bootcampLecture.map((lecture, idx) =>
+        idx === index ? { ...lecture, lecturetitle: value } : lecture
+      ),
+    }));
+  };
+
+  const handleDescriptionChange = (index: number, value: string) => {
+    setBootcampData((prevData) => ({
+      ...prevData,
+      bootcampLecture: prevData.bootcampLecture.map((lecture, idx) =>
+        idx === index ? { ...lecture, lectureDescription: value } : lecture
+      ),
+    }));
+  };
+
 
     const handleCreateOverlay = () => {
         setCreateOverlayStat(false);
+        setBootcampData(ResetBootcampData)
     }
     
-    const handleStartDate = () => {
-        SetStartDateStatus(!startdateStat)
-        SetEndDateStatus(false)
+    const handleStartdateChange = (newValue : any) => {
+        setBootcampData(prevData => ({
+          ...prevData,
+          bootcampStartdate: newValue ? newValue.format('YYYY-MM-DD') : '',
+        }));
+      };
 
-    }
-    const handleEndtDate = () => {
-        SetEndDateStatus(!EnddateStat)
-        SetStartDateStatus(false)
-
-    }
+      const handleEnddateChange = (newValue : any) => {
+        setBootcampData(prevData => ({
+          ...prevData,
+          bootcampEndDate: newValue ? newValue.format('YYYY-MM-DD') : '',
+        }));
+      };
 
     return (
     <div className='absolute z-[1] h-auto w-full'
@@ -121,6 +288,7 @@ const Create = ({ height }: { height: number | null }) => {
                                 <h1 className='text-[14px] text-[#2D3A4B] font-light leading-[20px]'>Bootcamp Name</h1>
                                 <Field>
                                     <Input
+                                    onChange={handleBootcampNameChange}
                                     placeholder='e.g starknet basecamp'
                                     className={clsx(
                                         'h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-full rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]',
@@ -156,6 +324,7 @@ const Create = ({ height }: { height: number | null }) => {
                             <Field>
                                 <textarea
                                 placeholder='Short overview detailing what the bootcamp covers'
+                                onChange={handleBootcampDescriptionChange}
                                 className={clsx(
                                     'h-[110px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[100%] rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]',
                                     'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25',
@@ -169,6 +338,7 @@ const Create = ({ height }: { height: number | null }) => {
                     <h1 className='text-[14px] text-[#2D3A4B] font-light leading-[20px]'>NFT Certificate Name</h1>
                     <Field>
                         <Input
+                        onChange={handleNFTNameChange}
                         placeholder='nft name'
                         className={clsx(
                             'h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[100%] rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]',
@@ -182,6 +352,7 @@ const Create = ({ height }: { height: number | null }) => {
                     <h1 className='text-[14px] text-[#2D3A4B] font-light leading-[20px]'>NFT Certificate symbol</h1>
                     <Field>
                         <Input
+                        onChange={handleNFTSymbolChange}
                         placeholder='Enter nft symbol'
                         className={clsx(
                             'h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[100%] rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]',
@@ -210,35 +381,42 @@ const Create = ({ height }: { height: number | null }) => {
                                 <div className='mt-3 space-y-2'>
                                     <h1 className='text-[14px] text-[#2D3A4B] font-light leading-[20px]'>Bootcamp Date</h1>
                                     <div className='flex space-x-4'>
-                                    <div onClick={handleStartDate} className='relative flex items-center px-4 space-x-3 border-[1px] border-[#D0D5DD] h-[55px] w-[172px] rounded-lg'>
-                                        <FaRegCalendarAlt className='h-[20px] w-[18px] text-[#98999B]' />
-                                        <h1 className='text-[15px] leading-[18px] font-light text-[#98999B]'>Start date</h1>
-                                        <div className='absolute top-14 -left-2'>
-                                        {startdateStat && <Calendar onChange={onChange} value={value} />}
-                                        </div>
-                                    </div>
-                                    <div onClick={handleEndtDate} className=' relative flex items-center px-4 space-x-3 border-[1px] border-[#D0D5DD] h-[55px] w-[172px] rounded-lg'>
-                                        <FaRegCalendarAlt className='h-[20px] w-[18px] text-[#98999B]' />
-                                        <h1 className='text-[15px] leading-[18px] font-light text-[#98999B]'>End date</h1>
-                                        <div className='absolute top-14 -left-1'>
-                                        {EnddateStat && <Calendar onChange={onChange} value={value} />}
-                                        </div>
-                                    </div>
+                                        <>
+                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <DemoContainer components={['DatePicker']}>
+                                            <DatePicker label="Start date" onChange={handleStartdateChange}/>
+                                        </DemoContainer>
+                                        </LocalizationProvider>
+                                        
+                                        </>
+
+                                        <>
+                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <DemoContainer components={['DatePicker']}>
+                                            <DatePicker label="End date" onChange={handleEnddateChange}/>
+                                        </DemoContainer>
+                                        </LocalizationProvider>
+                                        </>
                                     </div>
                                 </div>
                             </div>
 
                             <div className='mt-8 space-y-2'>
                                 <h1 className='text-[14px] text-[#2D3A4B] font-light leading-[20px]'>Bootcamp Time</h1>
-                                <div className='flex space-x-3'>
+                                <div className='flex space-x-3 items-center'>
                                 <div className='flex flex-col space-y-2'>
                                 {bootcampTimes.map((component, index) => (
                                        <BootcampTime key={index} day={index + 1} />
                                     ))}
                                 </div>
-                                    <div id="add-day" onClick={handleAddDay} className=' relative flex items-center px-4 space-x-3 border-[1px] border-[#D0D5DD] h-[55px] w-[130px] rounded-lg'>
+                                    <div id="add-day" onClick={handleAddDay} className='mt-2 cursor-pointer relative flex items-center px-4 space-x-3 border-[1px] border-[#D0D5DD] h-[55px] w-[130px] rounded-lg'>
                                     <FaPlus className='text-[#2D3A4B]' />
                                     <h1 className='text-[15px] leading-[18px] font-light text-[#2D3A4B]'>Add Day</h1>
+                                    </div>
+
+                                    <div id="add-day" onClick={handleRemoveDay} className='mt-2 cursor-pointer relative flex items-center px-4 space-x-3 border-[1px] border-[#D0D5DD] h-[55px] w-[150px] rounded-lg'>
+                                    <FcCancel className='text-[#2D3A4B]' />
+                                    <h1 className='text-[15px] leading-[18px] font-light text-[#2D3A4B]'>Remove Day</h1>
                                     </div>
                                 </div>
                                
@@ -250,47 +428,57 @@ const Create = ({ height }: { height: number | null }) => {
                                 <IoIosInformationCircleOutline />
                                     <h1 className='text-[13px] text-[#2D3A4B] leading-[20px] font-light'>You can edit and add more details later in your dashboard </h1>
                                 </div>
-                                <div className='mt-4 flex space-x-2'>
-                                <Field>
-                                    <Input
-                                    placeholder='Add lecture title'
-                                    className={clsx(
-                                        'h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[395px] rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]',
-                                        'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25'
-                                    )}
-                                    />
-                                </Field>
+                                <div>
 
-                                <div className='relative flex bg-[#A666E3] items-center px-4  justify-between border-[1px] border-[#D0D5DD] h-[55px] w-[157px] rounded-lg'>
-                                        <div className='space-x-3 flex'>
-                                        <FaRegCalendarAlt className='h-[20px] w-[14px] text-[#FFFFFF]' />
-                                        <h1 className='text-[12px] leading-[18px] font-light text-[#FFFFFF]'>Choose day</h1>
+                                </div>
+                           
+                                <div className='space-y-12'>
+                                {bootcampTimes.map((component, index) => (
+                                    <div key={index}>
+                                        <div className='mt-4 flex space-x-2' >
+                                        <Field>
+                                            <Input
+                                            placeholder='Add lecture title'
+                                            onChange={(e) => handleTitleChange(index, e.target.value)}
+                                            className={clsx(
+                                                'h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[395px] rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]',
+                                                'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25'
+                                            )}
+                                            />
+                                        </Field>
+        
+                                        <div className='relative flex bg-[#A666E3] items-center px-4  justify-between border-[1px] border-[#D0D5DD] h-[55px] w-[120px] rounded-lg'>
+                                                <div className='space-x-3 flex'>
+                                                <FaRegCalendarAlt className='h-[20px] w-[14px] text-[#FFFFFF]' />
+                                                <h1 className='text-[12px] leading-[18px] font-light text-[#FFFFFF]'>Day {index + 1}</h1>
+                                                </div>                                   
                                         </div>
-                                        <RiArrowDropDownLine className='h-[20px] w-[20px] text-[#FFFFFF]' />                                     
-                                </div>
-                                </div>
-
-                            </div>
-
-
-
-                            <div className=' mt-4 flex space-x-2 relative'>
-                            <div>
-                            <Field>
-                                <textarea
-                                placeholder='Add lecture description'
-                                className={clsx(
-                                    'h-[127px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[557px] rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]',
-                                    'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25',
-                                )}
-                                />
-                            </Field>
-                            </div>
-                            <div  className='absolute bottom-0 right-64 flex items-center px-4 space-x-3 border-[1px] border-[#D0D5DD] h-[55px] w-[150px] rounded-lg'>
-                                    <FaPlus className='text-[#2D3A4B]' />
-                                    <h1 className='text-[15px] leading-[18px] font-light text-[#2D3A4B]'>Add Lecture</h1>
+                                        </div>
+                                                
+                                            <div className=' mt-4 flex space-x-2 relative'>
+                                            <div>
+                                            <Field>
+                                                <textarea
+                                                onChange={(e) => handleDescriptionChange(index, e.target.value)}
+                                                placeholder='Add lecture description'
+                                                className={clsx(
+                                                    'h-[127px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[557px] rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]',
+                                                    'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25',
+                                                )}
+                                                />
+                                            </Field>
+                                            </div>
+                                            </div>
                                     </div>
+                                    ))}
+                               
+                                </div>
+
                             </div>
+
+
+
+                           
 
                            <div className='mt-6'>
                             <div className='flex space-x-8 items-center'>
@@ -306,7 +494,7 @@ const Create = ({ height }: { height: number | null }) => {
                                 />
                             </div>
                             
-                            <div className='mt-3 flex space-x-3'>
+                            {isPaid && <div className='mt-3 flex space-x-3'>
                                 <div>
                                         <Field>
                                             <Input
@@ -324,6 +512,7 @@ const Create = ({ height }: { height: number | null }) => {
                                         <h1 className='text-[24px] text-[#2D3A4B] font-light'>$</h1>
                                         <Field>
                                             <Input
+                                            onChange={handleBootcampPriceChange}
                                             className={clsx(
                                                 'h-[55px] border-[2px] text-center bg-[#FFFFFF] border-[#D0D5DD] block w-[100px] rounded-lg  py-1.5 px-3 text-sm/6 text-[#4A90E2]',
                                                 'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25'
@@ -332,7 +521,7 @@ const Create = ({ height }: { height: number | null }) => {
                                         </Field>
                                 </div>
 
-                            </div>
+                            </div>}
 
 
                             <div className='mt-6'>
@@ -345,7 +534,14 @@ const Create = ({ height }: { height: number | null }) => {
                                                 <h1 className='text-[14px] text-[#475367] font-light leading-[20px]'><span className='text-[#4A90E2]'>Click to upload</span> or drag and drop</h1>
                                                 <p className='text-[12px] text-[#475367] font-light leading-[17px]'>SVG, PNG, JPG or GIF (max. 800x400px)</p>
                                                 <Image src={dividers} alt='divider' className='mt-7' />
-                                                <Button className="h-[36px] w-[118px] flex justify-center items-center bg-[#9B51E0] rounded-xl text-[14px] text-[#FFFFFF] font-light leading-[20px]">Browse Files</Button>
+                                                <input
+                                        ref={logoInputRef}
+                                        type="file"
+                                        accept="image/jpeg, image/jpg, image/png"
+                                        onChange={handleLogoChange}
+                                        style={{ display: 'none' }} // Hide the input
+                                    />
+                                                <Button onClick={handleBrowse} className="h-[36px] w-[118px] flex justify-center items-center bg-[#9B51E0] rounded-xl text-[14px] text-[#FFFFFF] font-light leading-[20px]">Browse Files</Button>
                                     </div>
                                 </div>
                                 <div className='mt-3 space-y-2'> 
@@ -354,7 +550,7 @@ const Create = ({ height }: { height: number | null }) => {
                                                 <h1 className='text-[8px] text-[#475367] font-light leading-[20px]'><span className='text-[#4A90E2]'>Click to upload</span> or drag and drop</h1>
                                                 <p className='text-[7.5px] text-[#475367] font-light leading-[17px]'>SVG, PNG, JPG or GIF (max. 800x400px)</p>
                                                 <Image src={dividers} alt='divider' className='mt-7' />
-                                                <Button className="h-[23px] w-[74px] flex justify-center items-center bg-[#9B51E0] rounded-xl text-[8px] text-[#FFFFFF] font-light leading-[20px]">Browse Files</Button>
+                                                <Button className="h-[23px] w-[74px] flex justify-center items-center bg-[#9B51E0] rounded-xl text-[8px] text-[#FFFFFF] font-light leading-[20px]" >Browse Files</Button>
                                 </div>
                                     <h1 className='text-[18px] text-[#333333] font-semibold leading-[31px] '>Upload thumbnail</h1>
                                     <p className='w-[254px] text-[14px] font-light text-[#2D3A4B] leading-[21px]'>Upload your bootcamp  image here.
@@ -366,7 +562,7 @@ const Create = ({ height }: { height: number | null }) => {
 
                             <div className='flex justify-end my-5'>
                                         <div className='h-[47px] w-[342px] rounded-xl bg-[#4A90E2] flex items-center justify-center cursor-pointer' onClick={handlePublishButton}>
-                                            <h1 className='text-[#FFFFFF] text-[14px] font-semibold leading-[16px]'>Save and Publish bootcamp</h1>
+                                            <h1 className='text-[#FFFFFF] text-[14px] font-semibold leading-[16px]'>{uploading ? "Uploading data" : "Save and Publish bootcamp"}</h1>
                                         </div>
                             </div>
 
