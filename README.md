@@ -33,6 +33,10 @@ AttenSys is a platform designed to revolutionize the management of educational c
 - Event Organizers: Manage events, track registrations, and handle attendance.
 - Public Explorer: Verify the authenticity of certificates and attendance records
 
+### 6. Sponsorship and Api endpoint
+- Attensys will facilitate sponsorship for events organization and Bootcamps 
+- Third party apps will be able to verify certificates through attensys api endpoints
+
 ## Benefits
 ### For Organizations
 - Simplify event/bootcamp management and attendance tracking for classes and events (access to metrics).
