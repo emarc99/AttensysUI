@@ -93,6 +93,12 @@ AttenSys is a platform designed to revolutionize the management of educational c
 
 
 ## Running locally:
+Clone repo and checkout to main-mirror branch
+```bash 
+git clone https://github.com/AttenSys-Stark/AttensysUI.git
+git checkout main-mirror
+```
+
 Create .env.local in root folder. Obtain the field data by creating an account and api key on pinata and fill it below.
 ```bash
 NEXT_PUBLIC_PINATA_JWT=
