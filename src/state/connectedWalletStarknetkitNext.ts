@@ -33,16 +33,26 @@ const InitOrganizationRegstrationData = {
   organizationInstructorsWalletAddresses : [""],
 }
 
-const InitBootcampNftData = {
-  organizationNftName : "",
-  organizationNftSymbol : "",
-  organizationNftImage : emptyData,
+const InitBootcampData = {
+  bootcampName : "",
+  bootcampOrganization: "",
+  targetAudience: "",
+  bootcampDescription: "",
+  bootcampStartdate : "",
+  bootcampEndDate: "",
+  bootcampLecture: [{day:"", lecturetitle:"", lectureDescription: "", start:"", end:""}],
+  price: false,
+  bootcampPrice : "",
+  BootcampLogo : emptyData,
+  bootcampNftName : "",
+  bootCampNftSymbol : "",
+  bootcampNftImage : emptyData,
 }
 
 //organization data state
 export const organzationInitState = atom(InitOrganizationRegstrationData);
 //bootcamp data state
-export const createBootcampInitState = atom(InitBootcampNftData)
+export const createBootcampInitState = atom(InitBootcampData)
 
 
 
