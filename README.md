@@ -1,4 +1,4 @@
-# Attensys Dapp
+# Attensys
 
 ## Overview
 AttenSys is a platform designed to revolutionize the management of educational certifications for participating in bootcamps, attendance tracking for events & online classes, and online courses certifications. It offers a secure, transparent, and user-friendly solution for organizations, educational institutions, and event planners to streamline their processes and enhance user engagement. By leveraging Starknet, AttenSys ensures the authenticity and traceability of certifications and attendance records while simplifying course participation and event management.
