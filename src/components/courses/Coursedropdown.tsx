@@ -33,7 +33,7 @@ const Coursedropdown = () => {
                   </svg>
 
                   <h1 className="text-[16px] font-bold cursor-pointer">
-                    Explore courses
+                    Explore Courses
                   </h1>
                 </div>
               </a>
@@ -55,7 +55,7 @@ const Coursedropdown = () => {
                   </svg>
 
                   <h1 className="text-[16px] font-bold cursor-pointer">
-                    My courses
+                    My Courses
                   </h1>
                 </div>
               </a>

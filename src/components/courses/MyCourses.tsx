@@ -35,7 +35,7 @@ const MyCourses = (props: any) => {
   }, [page])
 
   return (
-    <div className="block sm:flex flex-row mx-20 my-8 pb-24">
+    <div className="block sm:flex flex-row mx-20 mb-8 pb-24">
       <UserSideBar page={page} selected={selected} setSelected={setSelected} />
 
       <div className="flex-auto ml-0 sm:ml-5">
