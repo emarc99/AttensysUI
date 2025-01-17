@@ -733,6 +733,10 @@ export const attensysOrgAbi = [
         name: "active_status",
         type: "core::bool",
       },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
     ],
   },
   {
@@ -760,8 +764,12 @@ export const attensysOrgAbi = [
         type: "core::integer::u256",
       },
       {
-        name: "nft_address",
-        type: "core::starknet::contract_address::ContractAddress",
+        name: "number_of_all_bootcamps",
+        type: "core::integer::u256",
+      },
+      {
+        name: "org_ipfs_uri",
+        type: "core::byte_array::ByteArray",
       },
     ],
   },
@@ -788,15 +796,7 @@ export const attensysOrgAbi = [
         type: "core::byte_array::ByteArray",
       },
       {
-        name: "nft_name",
-        type: "core::byte_array::ByteArray",
-      },
-      {
-        name: "nft_symbol",
-        type: "core::byte_array::ByteArray",
-      },
-      {
-        name: "nft_uri",
+        name: "org_ipfs_uri",
         type: "core::byte_array::ByteArray",
       },
     ],
@@ -817,11 +817,35 @@ export const attensysOrgAbi = [
   },
   {
     type: "function",
-    name: "create_a_class",
+    name: "create_bootcamp",
     inputs: [
       {
-        name: "org_",
-        type: "core::starknet::contract_address::ContractAddress",
+        name: "org_name",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "bootcamp_name",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "nft_name",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "nft_symbol",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "nft_uri",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "num_of_class_to_create",
+        type: "core::integer::u256",
+      },
+      {
+        name: "bootcamp_ipfs_uri",
+        type: "core::byte_array::ByteArray",
       },
     ],
     outputs: [],
