@@ -1,17 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
 import OutlineCard from './OutlineCard'
 import { FaPlus } from "react-icons/fa6";
+import {addclassmodal} from '@/state/connectedWalletStarknetkitNext'
+import { useAtom } from 'jotai';
+
 
 const Outline = () => {
+  const [dataStat, setDataStat] = useState(false)
+  const [addClass, setAddclass] = useAtom(addclassmodal)
+
+  const handleAddclass = () => {
+    setAddclass(true);
+};
+
   return (
-    <div className='w-[90%] h-[721px] bg-[#FFFFFF] mx-auto rounded-xl border-[#D2D2D2] border-[1px] px-7 overflow-y-scroll'>
+    <div className='relative w-[90%] h-[721px] bg-[#FFFFFF] mx-auto rounded-xl border-[#D2D2D2] border-[1px] px-7 '>
         
-        <OutlineCard />
-        <OutlineCard />
-        <OutlineCard />
-    <div className='flex items-center justify-center space-x-4 border-b-[1px] mt-2 h-[80px]'>
+       {dataStat &&  <div className='h-[600px] w-full flex items-center justify-center'>
+              <h1>No Video upload</h1>
+        </div>}
+        {!dataStat && <div className='h-[600px] w-full overflow-y-scroll'>
+               <OutlineCard />
+               <OutlineCard />
+               <OutlineCard />
+              
+        </div>}
+    <div className='sticky bottom-0 w-[100%] bg-white flex items-center justify-center space-x-4 border-b-[1px] mt-2 h-[80px] cursor-pointer border-[1px] rounded-lg border-[#C2C2C2]' onClick={handleAddclass}>
      <FaPlus />
-    <h1 className='font-medium text-[16px] leading-[22px] underline'>Add new class </h1>
+    <h1 className='font-medium text-[16px] leading-[22px] underline'>Upload new class recording </h1>
     </div>
     </div>
   )

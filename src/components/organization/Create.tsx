@@ -88,7 +88,7 @@ const Create = ({ height }: { height: number | null }) => {
 
 
 
-    console.dir(bootcampData, {depth: null})
+    // console.dir(bootcampData, {depth: null})
     // console.dir(bootcampTimes, {depth: null})
     
     const handleBootcampNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
