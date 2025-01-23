@@ -3,7 +3,7 @@ import CourseOutlinecard from "./CourseOutlinecard"
 
 const CourseOutline = () => {
   return (
-    <div className="w-full max-w-[90%] h-full lg:h-[720px] mt-4 bg-[#FFFFFF] mx-auto rounded-xl border-[#D2D2D2] border-[1px] px-4 lg:px-8 lg:overflow-y-scroll">
+    <div className="w-full max-w-[90%] h-full lg:h-[720px] mt-4 bg-[#FFFFFF] mx-auto rounded-xl border-[#D2D2D2] border-[1px] px-4 lg:px-8 overflow-auto lg:overflow-y-scroll">
       <CourseOutlinecard status={true} />
       <CourseOutlinecard status={true} />
       <CourseOutlinecard status={true} />

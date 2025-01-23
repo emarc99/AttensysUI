@@ -2,11 +2,11 @@ import React from "react"
 
 const BootcampDescription = () => {
   return (
-    <div className="mt-16 w-full flex flex-col space-y-4 max-w-[90%] mx-auto h-auto bg-[#FFFFFF] border-[1px] border-[#DBDBDB] rounded-xl px-4 sm:px-8">
-      <h1 className="text-sm text-[#2D3A4B] font-semibold">
+    <div className="mt-16 w-full flex flex-col space-y-4 max-w-[90%] mx-auto h-auto bg-[#FFFFFF] border-[1px] border-[#DBDBDB] rounded-xl py-8 px-4 sm:px-8">
+      <h1 className="text-md text-[#2D3A4B] font-semibold">
         Bootcamp description
       </h1>
-      <p className="text-xs text-[#2D3A4B] font-light w-full flex-none">
+      <p className="text-sm text-[#2D3A4B] font-light w-full flex-none">
         SapphireBricks is a decentralized real estate platform designed to
         transform property investment by leveraging blockchain technology. This
         platform provides users with direct access to real estate investment
@@ -14,10 +14,10 @@ const BootcampDescription = () => {
         transactions without intermediaries.
       </p>
       <div className="space-y-3">
-        <h1 className="text-sm text-[#2D3A4B] font-semibold">
+        <h1 className="text-md text-[#2D3A4B] font-semibold">
           Support and resources
         </h1>
-        <p className="text-xs text-[#2D3A4B] font-light">
+        <p className="text-sm text-[#2D3A4B] font-light">
           For more enquires contact us on Telegram: @XCODElaunch24
           <br /> X : @thexcodelaunch
         </p>

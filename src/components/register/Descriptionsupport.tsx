@@ -2,7 +2,7 @@ import React from "react"
 
 const Descriptionsupport = () => {
   return (
-    <div className="mt-4 w-full flex flex-col space-y-4 max-w-[90%] mx-auto h-auto px-2 sm:px-4">
+    <div className="mt-4 w-full flex flex-col space-y-4 max-w-[90%] mx-auto h-auto px-2 sm:px-4 py-8">
       <h1 className="text-md text-[#2D3A4B] font-semibold">
         Bootcamp description
       </h1>
