@@ -6,7 +6,7 @@ import Logo from "@/assets/Logo.svg"
 
 const Footer = () => {
   return (
-    <div className='flex space-x-4 justify-between mx-4 py-7  w-[98%]'>
+    <div className='flex space-x-4 justify-between lg:mx-4 py-7  w-[98%]'>
             <div className='bg-[#161313] rounded-lg w-[40%] h-[380px] hidden lg:flex text-white justify-center pt-20'>
                    <div className='h-[300px] space-y-2 lclg:w-[320px]'>
                    <h1 className='font-semibold text-[34px]  leading-[40px] flex text-left w-[320px]'>Built by Geniuses, for Geniuses.</h1>

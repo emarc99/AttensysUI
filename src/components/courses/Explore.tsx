@@ -44,8 +44,7 @@ const Explore = () => {
     <div>
       {/* Hero component */}
       <div>
-        <div
-          className={`bg-[url('/hero_asset.png')] space-y-4 text-white px-12 sm:px-28 py-10 sm:py-20 from-orange-400 via-red-500 to-pink-500 h-64`}
+        <div className={`bg-[url('/hero_asset.png')] space-y-4 text-white px-8 sm:px-28 py-10 sm:py-20 from-orange-400 via-red-500 to-pink-500 h-80`}
         >
           {/* Hero lettering */}
           <h1 className="w-[90%] sm:w-5/12 font-bold text-2xl sm:text-4xl">
@@ -67,10 +66,10 @@ const Explore = () => {
         ))}
       </div>
 
-      <div className="block sm:hidden text-center mx-12 relative bottom-4">
+      <div className="block sm:hidden text-center overflow-hidden rounded-[8px] lg:rounded-none mx-12 relative bottom-4">
         <Carousel responsive={responsive}>
           {skills.map((item, index) => (
-            <p className="bg-[#2D3A4B] p-6 text-white" key={index}>
+            <p className="bg-[#2D3A4B] rounded-[8px] lg:rounded-none p-6 text-white" key={index}>
               {item}
             </p>
           ))}
@@ -102,7 +101,7 @@ const Explore = () => {
         <div className="flex sm:flex justify-start my-24 h-[307px]">
           {/* left */}
           <div className="flex space-x-10 sm:flex sm:mx-0 justify-top">
-            <div className="h-full w-[600px] rounded-xl">
+            <div className="h-full w-[600px] lg:w-auto rounded-xl">
               <Image src={videoHero} alt="video" className="object-cover h-full w-full rounded-xl" />
             </div>
             <div className="my-4 sm:my-0">
