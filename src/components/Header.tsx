@@ -87,11 +87,11 @@ const Header = () => {
     <>
       <Disclosure
         as="nav"
-        className={`${status ? "bg-[#FFFFFF] opacity-80 backdrop-blur-sm" : "bg-[#FFFFFF]"} h-full flex flex-col items-center justify-center lg:h-full pt-1 relative z-20 overflow-hidden w-[100%] clg:overflow-hidden clg:w-[98%] lclg:w-[100%] lclg:overflow-hidden ipad:w-[100%] ipad:overflow-hidden mx-auto`}
+        className={`${status ? "bg-[#FFFFFF] opacity-80 backdrop-blur-sm" : "bg-[#FFFFFF]"} h-full flex flex-col items-center justify-center lg:h-full relative z-20 overflow-hidden w-[100%] clg:overflow-hidden clg:w-[98%] lclg:w-[100%] lclg:overflow-hidden ipad:w-[100%] ipad:overflow-hidden mx-auto`}
       >
-        <div className="hidden lg:flex justify-center items-center px-4 sm:px-6 lg:px-8 lg:h-[85px] lg:my-auto clg:w-[100%] w-full">
-          <div className="relative flex h-20 items-center justify-between w-[98%]">
-            <div className="lg:flex flex-shrink-0 items-center flex justify-between clg:w-[55%] lclg:w-[46%] lclg:mx-auto clg:mx-auto space-x-6 clg:space-x-6 lclg:space-x-6  md:hidden sm:hidden">
+        <div className="hidden xl:flex justify-center items-center px-4 sm:px-6 lg:px-10 lg:h-[85px] lg:my-auto clg:w-[100%] w-full">
+          <div className="relative flex h-20 items-center justify-between xl:w-[98%]">
+            <div className="lg:flex flex-shrink-0 items-center flex justify-between clg:w-[55%] lclg:w-[46%]  space-x-6 clg:space-x-6 lclg:space-x-6  md:hidden sm:hidden">
               <Link href="/" className="cursor-pointer">
                 <Image alt="Your Company" src={Logo} className="h-8 w-full" />
               </Link>
@@ -101,7 +101,7 @@ const Header = () => {
               >
                 Use our explorer
               </a>
-              <div className="relative w-[550px] lclg:w-[380px]">
+              <div className="relative 2xl:w-[550px] lclg:w-[380px] w-full">
                 <form onSubmit={(e) => handleSubmit(e, searchValue, router)}>
                   <Input
                     name="search by address"
@@ -143,7 +143,7 @@ const Header = () => {
                         item.current
                           ? "bg-white text-[#333333]"
                           : "text-[#333333] hover:bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] hover:text-white",
-                        "rounded-md px-3 py-2 font-medium cursor-pointer",
+                        "rounded-md px-3 pr-2 xl:py-2 font-medium cursor-pointer",
                       )}
                       onClick={(e) => handleTabClick(item.name)}
                     >
@@ -176,7 +176,7 @@ const Header = () => {
         </div>
 
         {/* mobile  */}
-        <div className="relative inset-y-0 left-0 flex px-4 py-4 w-full justify-between items-center sm:hidden">
+        <div className="relative inset-y-0 left-0 flex px-4 py-4 w-full justify-between items-center xl:hidden">
           <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
             <span className="absolute -inset-0.5" />
             <span className="sr-only">Open main menu</span>
@@ -191,8 +191,8 @@ const Header = () => {
           <Image src={search_solid} alt="" aria-hidden="true" className="block h-6 w-6 group-data-[open]:hidden" />              
         </div>
 
-        <DisclosurePanel className="sm:hidden">
-          <div className="space-y-1 px-2 pb-3 pt-2">
+        <DisclosurePanel className="xl:hidden">
+          <div className="space-y-1 px-2 pb-3">
             {navigation.map((item) => (
               <DisclosureButton
                 key={item.name}
