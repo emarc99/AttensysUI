@@ -87,11 +87,11 @@ const Header = () => {
     <>
       <Disclosure
         as="nav"
-        className={`${status ? "bg-[#FFFFFF] opacity-80 backdrop-blur-sm" : "bg-[#FFFFFF]"} h-full max-w-screen-2xl w-full flex flex-col items-center justify-center lg:h-full relative z-20 overflow-hidden w-[100%] clg:overflow-hidden clg:w-[98%] lclg:w-[100%] lclg:overflow-hidden ipad:w-[100%] ipad:overflow-hidden mx-auto`}
+        className={`${status ? "bg-[#FFFFFF] opacity-80 backdrop-blur-sm" : "bg-[#FFFFFF]"} h-full max-w-screen-2xl flex flex-col items-center justify-center lg:h-full relative z-20 overflow-hidden w-[100%] clg:overflow-hidden clg:w-[98%] lclg:w-[100%] lclg:overflow-hidden ipad:w-[100%] ipad:overflow-hidden mx-auto`}
       >
-        <div className="hidden xl:flex justify-center items-center px-4 sm:px-6 lg:px-10 lg:h-[85px] lg:my-auto clg:w-[100%] w-full">
-          <div className="relative flex h-20 items-center justify-between xl:w-[98%]">
-            <div className="lg:flex flex-shrink-0 items-center flex justify-between clg:w-[55%] lclg:w-[46%]  space-x-6 clg:space-x-6 lclg:space-x-6  md:hidden sm:hidden">
+        <div className="hidden xl:flex justify-center items-center px-4 sm:px-6 lg:px-10 xl:px-0 lg:h-[85px] lg:my-auto clg:w-[100%] w-full">
+          <div className="relative flex h-20 items-center justify-between xl:w-full xl:px-5">
+            <div className="lg:flex flex-shrink-0 items-center flex justify-between clg:w-[55%] lclg:w-[46%] xl:w-[48%] space-x-6 clg:space-x-6 lclg:space-x-6  md:hidden sm:hidden">
               <Link href="/" className="cursor-pointer">
                 <Image alt="Your Company" src={Logo} className="h-8 w-full" />
               </Link>
@@ -109,7 +109,7 @@ const Header = () => {
                     placeholder="       Search by address"
                     value={searchValue}
                     onChange={handleChange}
-                    className="w-[80%] clg:w-[70%] lclg:w-[90%] p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
+                    className="w-[80%] clg:w-[70%] lclg:w-[90%] xl:w-full p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
                   />
                   {!searchValue && (
                     <svg
@@ -143,7 +143,7 @@ const Header = () => {
                         item.current
                           ? "bg-white text-[#333333]"
                           : "text-[#333333] hover:bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] hover:text-white",
-                        "rounded-md px-3 pr-2 xl:py-2 font-medium cursor-pointer",
+                        "rounded-md px-3 lg:!ml-0 pr-2 xl:py-2 font-medium cursor-pointer",
                       )}
                       onClick={(e) => handleTabClick(item.name)}
                     >
