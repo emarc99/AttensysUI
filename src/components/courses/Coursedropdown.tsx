@@ -5,6 +5,7 @@ import { VscNewFile } from "react-icons/vsc"
 import { handleMyCourse } from "@/utils/helpers"
 import { courseQuestions } from "@/constants/data"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 const Coursedropdown = () => {
   const [status] = useAtom(coursestatusAtom)
@@ -12,61 +13,54 @@ const Coursedropdown = () => {
   return (
     <>
       {status && (
-        <div className=" bg-[#FFFFFF] h-[157px] w-[100%] absolute z-50 shadow-2xl">
-          <div className="flex justify-between mx-auto w-[80%] h-[90%] items-center">
-            <div className="space-y-4 w-[337px] text-[16px] font-bold">
-              <a href="/Course" className=" cursor-pointer">
-                <div className="flex space-x-3  my-3">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="size-6 text-[#9747FF] w-[20px] h-[20px] my-auto"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                    />
-                  </svg>
-
-                  <h1 className="text-[16px] font-bold cursor-pointer">
-                    Explore Courses
-                  </h1>
-                </div>
-              </a>
-              <a
+        <div className="w-full bg-[#FFFFFF] absolute z-50 shadow-2xl py-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-0 items-center w-full mx-auto lg:w-[90%] xl:w-[84%] 2xl:w-[80%] h-full divide-y divide-x-0 md:divide-y-0 md:divide-x divide-gray-300">
+            <div className="col-span-1 w-full flex flex-col items-start justify-start space-y-0 flex-none px-8 md:px-4 xl:px-8 py-4">
+              <Link
+                href="/Course"
+                className="flex flex-row items-center justify-start space-x-3 cursor-pointer w-full mb-4"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="size-6 text-[#9747FF] w-[20px] h-[20px] my-auto"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                  />
+                </svg>
+                <span className="text-md font-medium cursor-pointer">
+                  Explore Courses
+                </span>
+              </Link>
+              <Link
                 //@todo replace sample profile with user profile id
                 href={`/mycoursepage/${"sample-profile"}`}
-                className=" cursor-pointer"
+                className="flex flex-row items-center justify-start space-x-3 cursor-pointer w-full"
               >
-                <div className="flex space-x-3">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="size-6 text-[#9747FF] w-[20px] h-[20px] my-auto"
-                  >
-                    <path d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002c-.114.06-.227.119-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 7.5 12.173v-.224c0-.131.067-.248.172-.311a54.615 54.615 0 0 1 4.653-2.52.75.75 0 0 0-.65-1.352 56.123 56.123 0 0 0-4.78 2.589 1.858 1.858 0 0 0-.859 1.228 49.803 49.803 0 0 0-4.634-1.527.75.75 0 0 1-.231-1.337A60.653 60.653 0 0 1 11.7 2.805Z" />
-                    <path d="M13.06 15.473a48.45 48.45 0 0 1 7.666-3.282c.134 1.414.22 2.843.255 4.284a.75.75 0 0 1-.46.711 47.87 47.87 0 0 0-8.105 4.342.75.75 0 0 1-.832 0 47.87 47.87 0 0 0-8.104-4.342.75.75 0 0 1-.461-.71c.035-1.442.121-2.87.255-4.286.921.304 1.83.634 2.726.99v1.27a1.5 1.5 0 0 0-.14 2.508c-.09.38-.222.753-.397 1.11.452.213.901.434 1.346.66a6.727 6.727 0 0 0 .551-1.607 1.5 1.5 0 0 0 .14-2.67v-.645a48.549 48.549 0 0 1 3.44 1.667 2.25 2.25 0 0 0 2.12 0Z" />
-                    <path d="M4.462 19.462c.42-.419.753-.89 1-1.395.453.214.902.435 1.347.662a6.742 6.742 0 0 1-1.286 1.794.75.75 0 0 1-1.06-1.06Z" />
-                  </svg>
-
-                  <h1 className="text-[16px] font-bold cursor-pointer">
-                    My Courses
-                  </h1>
-                </div>
-              </a>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="size-6 text-[#9747FF] w-[20px] h-[20px] my-auto"
+                >
+                  <path d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002c-.114.06-.227.119-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 7.5 12.173v-.224c0-.131.067-.248.172-.311a54.615 54.615 0 0 1 4.653-2.52.75.75 0 0 0-.65-1.352 56.123 56.123 0 0 0-4.78 2.589 1.858 1.858 0 0 0-.859 1.228 49.803 49.803 0 0 0-4.634-1.527.75.75 0 0 1-.231-1.337A60.653 60.653 0 0 1 11.7 2.805Z" />
+                  <path d="M13.06 15.473a48.45 48.45 0 0 1 7.666-3.282c.134 1.414.22 2.843.255 4.284a.75.75 0 0 1-.46.711 47.87 47.87 0 0 0-8.105 4.342.75.75 0 0 1-.832 0 47.87 47.87 0 0 0-8.104-4.342.75.75 0 0 1-.461-.71c.035-1.442.121-2.87.255-4.286.921.304 1.83.634 2.726.99v1.27a1.5 1.5 0 0 0-.14 2.508c-.09.38-.222.753-.397 1.11.452.213.901.434 1.346.66a6.727 6.727 0 0 0 .551-1.607 1.5 1.5 0 0 0 .14-2.67v-.645a48.549 48.549 0 0 1 3.44 1.667 2.25 2.25 0 0 0 2.12 0Z" />
+                  <path d="M4.462 19.462c.42-.419.753-.89 1-1.395.453.214.902.435 1.347.662a6.742 6.742 0 0 1-1.286 1.794.75.75 0 0 1-1.06-1.06Z" />
+                </svg>
+                <span className="text-md font-medium cursor-pointer">
+                  My Courses
+                </span>
+              </Link>
             </div>
-            <div className="w-[1px] h-[80%] bg-[#B8B9BA]"></div>
-            <div className="space-y-2 w-[337px]">
-              <a
-                href={`/Certifications/${"sample-profile"}`}
-                className="cursor-pointer"
-              >
-                <div className="flex space-x-3">
+            <div className="col-span-1 w-full flex flex-col items-start justify-start space-y-0 flex-none px-8 md:px-4 xl:px-8 py-4">
+              <Link href={`/Certifications/${"sample-profile"}`}>
+                <div className="flex flex-row items-center justify-start space-x-3 cursor-pointer w-full mb-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -79,32 +73,29 @@ const Coursedropdown = () => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <h1 className="text-[16px] font-bold cursor-pointer">
+                  <span className="text-md font-medium cursor-pointer">
                     My Certifications
-                  </h1>
+                  </span>
                 </div>
-              </a>
-              <p className="text-[13px] ml-8 text-[#2D3A4B] ">
-                Access and manage all your course completion certificates in one
-                place.
-              </p>
+                <p className="text-xs pl-8 text-[#2D3A4B]">
+                  Access and manage all your course completion certificates in
+                  one place.
+                </p>
+              </Link>
             </div>
-            <div className="w-[1px] h-[80%] bg-[#B8B9BA]"></div>
-
-            <div className="space-y-2 w-[350px]">
-              <a href={`/Course/CreateACourse/${courseQuestions[0]}`}>
-                <div className="flex space-x-3">
+            <div className="col-span-1 w-full flex flex-col items-start justify-start space-y-0 flex-none px-8 md:px-4 xl:px-8 py-4">
+              <Link href={`/Course/CreateACourse/${courseQuestions[0]}`}>
+                <div className="flex flex-row items-center justify-start space-x-3 cursor-pointer w-full mb-2">
                   <VscNewFile className="size-6 text-[#9747FF] w-[20px] h-[20px] my-auto" />
-
-                  <h1 className="text-[16px] font-bold cursor-pointer">
+                  <span className="text-md font-medium cursor-pointer">
                     Create a course
-                  </h1>
+                  </span>
                 </div>
-                <p className="text-[13px]">
+                <p className="text-xs pl-8 text-[#2D3A4B]">
                   Start building your course by organizing your content into
                   structured sections and engaging video lessons.
                 </p>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
