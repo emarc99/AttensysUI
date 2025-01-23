@@ -87,7 +87,7 @@ const Header = () => {
     <>
       <Disclosure
         as="nav"
-        className={`${status ? "bg-[#FFFFFF] opacity-80 backdrop-blur-sm" : "bg-[#FFFFFF]"} h-full flex flex-col items-center justify-center lg:h-full relative z-20 overflow-hidden w-[100%] clg:overflow-hidden clg:w-[98%] lclg:w-[100%] lclg:overflow-hidden ipad:w-[100%] ipad:overflow-hidden mx-auto`}
+        className={`${status ? "bg-[#FFFFFF] opacity-80 backdrop-blur-sm" : "bg-[#FFFFFF]"} h-full max-w-screen-2xl w-full flex flex-col items-center justify-center lg:h-full relative z-20 overflow-hidden w-[100%] clg:overflow-hidden clg:w-[98%] lclg:w-[100%] lclg:overflow-hidden ipad:w-[100%] ipad:overflow-hidden mx-auto`}
       >
         <div className="hidden xl:flex justify-center items-center px-4 sm:px-6 lg:px-10 lg:h-[85px] lg:my-auto clg:w-[100%] w-full">
           <div className="relative flex h-20 items-center justify-between xl:w-[98%]">
@@ -97,7 +97,7 @@ const Header = () => {
               </Link>
               <a
                 href="/Explorer"
-                className="w-[28%] lclg:w-[40%] flex justify-center text-[#9B51E0]"
+                className="w-[50%] lclg:w-[40%] flex justify-center text-[#9B51E0]"
               >
                 Use our explorer
               </a>

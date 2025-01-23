@@ -8,7 +8,7 @@ import Link from 'next/link'
 
 const Footer = () => {
   return (
-    <div className='flex flex-col md:flex-row space-x-4 justify-between lg:mx-4 py-7 px-4 gap-4 w-full lg:w-[98%]'>
+    <div className='flex flex-col max-w-screen-2xl xl:mx-auto md:flex-row space-x-4 justify-between lg:mx-4 py-7 px-4 gap-4 w-full lg:w-[98%]'>
             <div className='bg-[#161313] relative overflow-hidden px-10 py-12 flex flex-col !items-start rounded-[15px] lg:rounded-[20px] w-full lg:w-[40%] lg:h-[380px] lg:flex-col text-white justify-center lg:pt-20'>
                    <div className='lg:h-[300px] space-y-2 lclg:w-[320px] w-full flex gap-4 lg:gap-0 flex-col items-start'>
                    <h1 className='font-semibold text-[25px] tracking-tight lg:tracking- leading-[1.1] lg:text-[34px]  lg:leading-[40px] flex text-left lg:w-[320px]'>Built by Geniuses, for Geniuses.</h1>
