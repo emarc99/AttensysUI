@@ -3195,6 +3195,7 @@
     bowser "^2.11.0"
 
 "@starknet-io/types-js@^0.7.7":
+"@starknet-io/types-js@^0.7.7":
   version "0.7.10"
   resolved "https://registry.npmjs.org/@starknet-io/types-js/-/types-js-0.7.10.tgz"
   integrity sha512-1VtCqX4AHWJlRRSYGSn+4X1mqolI1Tdq62IwzoU2vUuEE72S1OlEeGhpvd6XsdqXcfHmVzYfj8k1XtKBQqwo9w==
