@@ -97,7 +97,7 @@ const Header = () => {
               </Link>
               <a
                 href="/Explorer"
-                className="w-[50%] lclg:w-[40%] flex justify-center text-[#9B51E0]"
+                className="w-[45%] lclg:w-[40%] flex justify-center text-[#9B51E0]"
               >
                 Use our explorer
               </a>

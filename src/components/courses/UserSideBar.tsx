@@ -61,7 +61,7 @@ const UserSideBar = ({ page, selected, setSelected }: UserSideBarProps) => {
         but feel free to also save your progress manually
         </p>
       </div>
-    <div className="pt-12 px-4 md:mt-[57px]">
+    <div className="pt-12 px-4">
       {/* User info */}
 
       <div className="bg-white py-4 px-8 rounded-xl border-[1px] border-[#BCBCBC] lg:w-[293px] xl:w-[400px]">
