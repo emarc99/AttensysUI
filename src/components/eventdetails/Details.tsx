@@ -28,10 +28,10 @@ const Details = () => {
 
             {modalstat && <Modal status={modalstat} />}
         
-    <div className='h-full w-full  bg-event-gradient flex items-center  justify-center md:py-[10%] py-[15%]' >
+    <div className='h-full w-full  bg-event-gradient flex items-center mx-auto  justify-center md:pt-[5%] md:pb-[10%] py-[15%]' >
             
-            <div className='h-full w-[95%] mx-auto justify-center  lg:w-[80%] md:w-[80%] flex  lg:flex-row flex-col lg:space-x-12 '>
-                    <div className=''>
+            <div className='h-full w-[95%] mx-auto justify-center  lg:w-[80%] md:w-[80%] flex  lg:flex-row flex-col gap-12 '>
+                    <div className='flex flex-col justify-center'>
                             <div className=' w-[100%]  lg:w-[380px] h-[350.44px] rounded-lg overflow-hidden relative md:mx-0 mx-auto'>
                                 <Image src={story} alt="story" objectFit="cover" layout='fill'  />
                             </div>
@@ -77,7 +77,7 @@ const Details = () => {
 
                   
                   <div className='space-y-8   '>
-             <div className='md:w-[720px] w-[95%] mx-auto md:mx-0 h-[222px] md:h-[94px] md:flex-row flex-col bg-details-gradient rounded-xl flex md:justify-between justify-center items-center px-6 lg:mt-0 mt-[10%] gap-4  '>
+             <div className='md:w-[720px] w-[95%] mx-auto md:mx-0 h-[222px] md:h-[94px] md:flex-row flex-col bg-details-gradient rounded-xl flex  justify-center items-center px-6 lg:mt-0 mt-[10%] gap-4  '>
                                  <div className='flex gap-4 '>
                                  <Image src={key} alt='key' />
                                  <div>
@@ -120,7 +120,7 @@ const Details = () => {
                                 </Button>                              
                             </div>
 
-                            <div className=' w-[95%] mx-auto md:mx-0'>                                
+                            <div className=' w-[90%] mx-auto md:mx-0'>                                
                                     <h1 className='text-[#FFFFFF] text-[16px] font-semibold leading-[22px]'>About this Event</h1>
                                     <p className='text-[#FFFFFF] text-[16px] font-light leading-[22px]'>With a diverse range of courses in areas such as smart contract development, NFT creation, and decentralized finance (DeFi), Blockchain Academy Pro is the go-to platform for both beginners and advanced learners.</p>
                             </div>
