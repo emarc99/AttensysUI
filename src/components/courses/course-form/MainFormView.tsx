@@ -5,15 +5,14 @@ import { skills, levelOptions } from "@/constants/data"
 import CourseSideBar from "./SideBar"
 import { handleCreateCourse } from "@/utils/helpers"
 import { useRouter } from "next/navigation"
+import Stepper from "@/components/Stepper"
 
 const MainFormView = () => {
   const router = useRouter()
 
- 
-
   return (
     <div className="block sm:flex">
-      <div className="hidden sm:block">
+      <div className="hidden lg:block">
         <CourseSideBar />
       </div>
 
@@ -24,7 +23,9 @@ const MainFormView = () => {
             also save your progress manually
           </p>
         </div>
-
+        <div className="lg:hidden w-full flex justify-center mt-[58px] mb-[79px]">
+          <Stepper currentStep={1} />
+        </div>
         <div>
           <div className="block sm:flex justify-between py-2 my-5 border-t border-b border-[#d1d1d1] px-5 items-center">
             <div className="flex items-center">
@@ -34,7 +35,7 @@ const MainFormView = () => {
                   className="cursor-pointer text-[#4A90E2]"
                 />
               </div>
-              <p className="text-[#4A90E2] text-xl font-bold">
+              <p className="text-[#4A90E2] md:text-xl font-bold">
                 Course Setup (Basic info)
               </p>
             </div>
@@ -47,60 +48,79 @@ const MainFormView = () => {
           <div className="mx-6 sm:ml-24 mt-12">
             <form action="CourseSetup2">
               <div className="my-12">
-                <label htmlFor="" className="font-semibold text-[18px] leading-[31px] text-[#333333]">
+                <label
+                  htmlFor=""
+                  className="font-semibold text-[18px] leading-[31px] text-[#333333]"
+                >
                   Course Name
                 </label>
-                <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px]">
+                <p className="font-normal mt-1 text-xs/[145%] md:text-sm text-[#2D3A4B] md:leading-[21px]">
                   {` If you are unsure of the perfect title now, don't worry—you can
                 always update it later.`}
                 </p>
                 <div className="flex items-center my-4 space-x-4">
                   <input
                     type="input"
-                    className="w-[100%] h-[55px] sm:w-[80%] px-6 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
+                    className="w-[100%] h-[55px] sm:w-[80%] px-6 border border-gray-300 rounded-[6px] shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
                     placeholder="Course name e.g DApp development, Design basics..."
                   />
-                  <input type="checkbox" className="appearance-none w-[23px] h-[23px] rounded-full border-[1px] border-[#C5D322] checked:bg-[#C5D322] checked:border-[#C5D322] required:border-red-500 checked:before:content-['✔'] checked:before:absolute checked:before:top-[3px] checked:before:left-[6px] checked:before:text-white checked:before:text-[10px] relative" />
+                  <input
+                    type="checkbox"
+                    className="appearance-none w-[23px] h-[23px] hidden md:block rounded-full border-[1px] border-[#C5D322] checked:bg-[#C5D322] checked:border-[#C5D322] required:border-red-500 checked:before:content-['✔'] checked:before:absolute checked:before:top-[3px] checked:before:left-[6px] checked:before:text-white checked:before:text-[10px] relative"
+                  />
                 </div>
               </div>
 
               <div className="my-12">
-                <label htmlFor="" className="font-semibold text-[18px] leading-[31px] text-[#333333]">
+                <label
+                  htmlFor=""
+                  className="font-semibold text-[18px] leading-[31px] text-[#333333]"
+                >
                   Course Description
                 </label>
-                <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px]">Let your students know a little bit about your course</p>
+                <p className="font-normal mt-1 text-xs/[145%] md:text-sm text-[#2D3A4B] md:leading-[21px]">
+                  Let your students know a little bit about your course
+                </p>
                 <div className="flex items-start my-4 space-x-4">
                   <textarea
                     id="message"
-                    className="block px-2.5 pb-64 py-3 w-[100%] sm:w-[80%] text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="block px-2.5 pb-64 py-3 w-[100%] sm:w-[80%] text-sm text-gray-900 bg-gray-50 rounded-[6px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="a little bit about your course......"
                   ></textarea>
-                 <input type="checkbox" className="appearance-none w-[23px] h-[23px] rounded-full border-[1px] border-[#C5D322] checked:bg-[#C5D322] checked:border-[#C5D322] required:border-red-500 checked:before:content-['✔'] checked:before:absolute checked:before:top-[3px] checked:before:left-[6px] checked:before:text-white checked:before:text-[10px] relative" />
-
+                  <input
+                    type="checkbox"
+                    className="appearance-none w-[23px] h-[23px] hidden md:block rounded-full border-[1px] border-[#C5D322] checked:bg-[#C5D322] checked:border-[#C5D322] required:border-red-500 checked:before:content-['✔'] checked:before:absolute checked:before:top-[3px] checked:before:left-[6px] checked:before:text-white checked:before:text-[10px] relative"
+                  />
                 </div>
               </div>
 
               <div className="my-12">
-                <label htmlFor="" className="font-semibold text-[18px] leading-[31px] text-[#333333]">
+                <label
+                  htmlFor=""
+                  className="font-semibold text-[18px] leading-[31px] text-[#333333]"
+                >
                   Course category
                 </label>
-                <div className="my-4 flex items-start w-[556px] h-[55px]">
+                <div className="my-4 flex items-start w-full max-w-[556px] h-[55px]">
                   <Dropdown options={skills} />
                 </div>
               </div>
 
-              <div className="my-12">
-                <label htmlFor="" className="font-medium text-[18px] leading-[31px] text-[#333333]">
+              <div className="my-12 w-full">
+                <label
+                  htmlFor=""
+                  className="font-medium text-[18px] leading-[31px] text-[#333333]"
+                >
                   Select the difficulty level (Beginner, Intermediate, Advanced,
                   All levels)
                 </label>
-                <div className="my-4 flex items-start w-[556px] h-[55px]">
+                <div className="my-4 flex items-start w-full max-w-[556px] h-[55px]">
                   <Dropdown options={levelOptions} />
                 </div>
 
-                <div className="mt-12 mb-24">
+                <div className="mt-12 mb-5 w-full">
                   <button
-                    className="bg-[#4A90E2] px-48 rounded-xl py-3 text-white"
+                    className="bg-[#4A90E2] px-48 rounded-lg py-[15px] text-white w-full max-w-[350px]"
                     type="submit"
                     // onClick={handleNext}
                     onClick={(e) =>
@@ -111,8 +131,8 @@ const MainFormView = () => {
                   </button>
                 </div>
 
-                <div className="mt-6 mb-24">
-                  <button className="block sm:hidden bg-[#c5d322]  text-xs px-12 py-3 rounded text-black">
+                <div className="w-full flex justify-center pb-[74px]">
+                  <button className="block sm:hidden bg-[#c5d322] text-sm px-12 py-[15px] rounded-lg text-black">
                     Save progress
                   </button>
                 </div>
