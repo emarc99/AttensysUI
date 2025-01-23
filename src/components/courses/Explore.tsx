@@ -98,7 +98,7 @@ const Explore = () => {
         </div>
 
         {/* below */}
-        <div className="flex flex-col w-full sm:flex-row justify-start my-24 lg:h-[307px]">
+        <div className="flex flex-col w-full sm:flex-row gap-6 justify-between my-24 lg:h-[307px]">
           <div className="my-4 lg:hidden">
               {/* wording */}
               <h3 className="text-[25px] font-bold text-[#2D3A4B]">Fan favourite</h3>
@@ -110,8 +110,8 @@ const Explore = () => {
               </p>
           </div>
           {/* left */}
-          <div className="flex flex-col lg:flex-row space-x-10 sm:flex sm:mx-0 justify-top max-w-full">
-            <div className="h-full lg:w-auto rounded-xl">
+          <div className="flex flex-col lg:flex-row space-x-10 sm:flex sm:mx-0 justify-top lg:w-[70%] max-w-full">
+            <div className="h-full lg:w-full rounded-xl">
               <Image src={videoHero} alt="video" className="object-cover h-full w-full rounded-xl" />
             </div>
             <div className="my-4 sm:my-0 !ml-0 lg:!ml-8"> 
@@ -124,7 +124,7 @@ const Explore = () => {
                   <button className="bg-[#2D3A4B] hidden lg:block hover:bg-gray-500 text-white text-[11px] font-bold py-2 px-4 rounded cursor-pointer">
                     Get this course
                   </button>
-                  <h2 className="font-bold lg:text-[32px] leading-5 tracking-tight lg:leading-[1.1] text-[23px] sm:text-4xl text-[#2D3A4B] sm:w-4/6 lg:tracking-wide my-4 cursor-pointer">
+                  <h2 className="font-bold lg:text-[32px] leading-5 tracking-tight lg:leading-[1.1] text-[23px] sm:text-4xl text-[#2D3A4B] sm:w-4/6 lg:tracking-tight my-4 cursor-pointer">
                     Introduction to Web Development
                   </h2>
                   
@@ -144,44 +144,37 @@ const Explore = () => {
                     <p className="font-bold text-[13px] text-[#2D3A4B] leading-[15px]">(281)</p>
                   </div>
 
-                  <div className="flex items-center mx-0 sm:mx-8 !ml-0 lg:!ml-16">
+                  <div className="flex items-center  mt-3 lg:mt-0 mx-0 sm:mx-8 !ml-0 lg:!ml-10">
                     <LuBadgeCheck color="#2D3A4B h-[19px] w-[19px]" />
                     <p className="font-bold text-[13px] text-[#2D3A4B] ml-1 leading-[15px]">291 certification</p>
                   </div>
                 </div>
 
-                {/* creator and last update */}
-                <div className="flex sm:flex-row flex-col space-x-14 sm:flex sm:text-center my-1">
-                  <div>
-                    <p className="text-[11px] text-[#2D3A4B] leading-[18px] font-medium">
-                      Created by{" "}
-                      <span className="underline">Akinbola Kehinde</span>
-                    </p>
-                  </div>
-
-                  <div className="flex sm:ml-5 items-center !ml-0 lg:!ml-16">
-                    <GiBackwardTime />
-                    <p className="text-[11px] text-[#2D3A4B] leading-[18px] font-medium">Last updated 10|10|24</p>
-                  </div>
-                </div>
-
-                {/* video prop */}
-                <div className="block sm:flex space-x-10">
-                  <div className="flex my-1 space-x-2 items-center">
-                    <FaPlay className="h-[11px] w-[11px] text-[#5801A9]"/>
-                    <p className="text-[11px] text-[#2D3A4B] leading-[18px] font-medium">Total play time: 2 hrs 35 mins</p>
-                  </div>
-                  <div className="flex sm:ml-5 space-x-2 items-center">
-                    <GrDiamond color="#2D3A4B" className="h-[11px] w-[11px]" />
-                    <p className="text-[11px] text-[#2D3A4B] leading-[18px] font-medium">Difficulty level: Elementary</p>
-                  </div>
-                </div>
-
-                <div className="flex space-x-2 items-center">
-                  <div>
-                    <LuBadgeCheck className="h-[11px] w-[11px] text-[#5801A9]" />
-                  </div>
-                  <p className="text-[11px] text-[#2D3A4B] leading-[18px] font-medium">Certificate of Completion</p>
+                <div className="flex flex-col gap-y-3 lg:gap-x-6 lg:flex-row lg:flex-wrap">
+                  {/* creator and last update */}
+                    <div className="">
+                      <p className="text-[11px] text-[#2D3A4B] leading-[18px] font-medium">
+                        Created by:{" "}
+                        <span className="underline inline">Akinbola Kehinde</span>
+                      </p>
+                    </div>
+                    <span className="flex gap-2 items-center !ml-0 ">
+                      <GiBackwardTime />
+                      <p className="text-[11px] inline text-[#2D3A4B] leading-[18px] font-medium">Last updated 10|10|24</p>
+                    </span>
+                  {/* video prop */}
+                    <span className="flex gap-2 items-center">
+                      <FaPlay className="h-[11px] w-[11px] text-[#5801A9]"/>
+                      <p className="text-[11px] inline text-[#2D3A4B] leading-[18px] font-medium">Total play time: 2 hrs 35 mins</p>
+                    </span>
+                    <span className="flex gap-2 items-center">
+                      <GrDiamond color="#2D3A4B" className="h-[11px] w-[11px]" />
+                      <p className="text-[11px] inline text-[#2D3A4B] leading-[18px] font-medium">Difficulty level: Elementary</p>
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <LuBadgeCheck className="h-[11px] w-[11px] text-[#5801A9]" />
+                      <p className="text-[11px] inline text-[#2D3A4B] leading-[18px] font-medium">Certificate of Completion</p>
+                    </span>
                 </div>
               </div>
             </div>
