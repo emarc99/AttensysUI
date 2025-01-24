@@ -47,7 +47,7 @@ const ResultGrid = ({
   const renderContent = (arg : string) => {
       if(arg == "Key"){
           return <>
-            <p className="text-[12px] font-medium leading-[16px] text-[#817676]">
+            <p className="text-[12px] font-medium leading-[16px] text-[#817676] w-[3]">
                 Address{" "}
                 <span className="text-[#5801A9]">
                   (0x5c956e61...de5232dc11)
@@ -99,10 +99,10 @@ const ResultGrid = ({
   }
 
   return (
-    <div className="grid grid-cols-2 gap-10">
+    <div className="grid grid-cols-1 md:grid-cols-2  gap-4 md:gap-10 p-4 md:p-0 w-[440px]  md:w-auto lg:w-auto">
       <div className="row-span-2 bg-[#FFFFFF] rounded-lg mb-6 py-5 border border-[#b9b9ba]">
         {/* Event overview */}
-        <div className="border-b-2 border-[#b9b9ba]">
+        <div className="border-b-2 border-[#b9b9ba] ">
           <div className="flex gap-2 w-60 rounded-xl mx-12  items-center border-[1px] border-[#6B6D6E] p-3 mb-3">
             <Image src={event_icon} alt="event_icon" />
             <h1>{item.name} Overview</h1>
