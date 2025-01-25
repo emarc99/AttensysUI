@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { Button, Input } from "@headlessui/react"
 import Image from "next/image"
 import filter from "@/assets/filter.png"
 import { RiArrowDropDownLine } from "react-icons/ri";
-import { BsFillExclamationCircleFill } from "@react-icons/all-files/bs/BsFillExclamationCircleFill"
-import TableList from "../TableList"
 import { eventsData, gridsData } from "@/constants/data"
 import ResultGrid from "./ResultGrid"
 import { handleSubmit } from "@/utils/helpers"
@@ -22,11 +20,6 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
   const itemsPerPage = 10
 
   const totalPages = Math.ceil(eventsData.length / itemsPerPage)
-
-  const currentItems = eventsData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  )
 
   const goToPage = (page: any) => {
     setCurrentPage(page)
@@ -70,9 +63,9 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
   }
 
   return (
-    <div className="bg-[#F5F7FA] min-h-screen w-[460px] md:w-full  lg:w-full">
+    <div className="bg-[#F5F7FA] min-h-screen w-full px-4 sm:px-6 lg:px-36">
       {/* Top Section */}
-      <div className="px-4 sm:px-6 lg:px-36 md:px-2 py-5">
+      <div className="py-5">
         <div className="flex flex-col md:flex-row justify-between items-center border-b-2 border-[#e0e0e0] pb-4">
           <div className="space-y-2 mb-4 md:mb-0">
             <h1 className="text-base md:text-lg font-medium text-[#333333]">Explorer Result</h1>
@@ -133,7 +126,7 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
       </div>
 
       {/* Grid Results */}
-      <div className="px-4 sm:px-6 lg:px-36">
+      <div>
         {gridsData.map((item, i) => (
           <ResultGrid
             key={i}

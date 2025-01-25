@@ -99,7 +99,8 @@ const ResultGrid = ({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2  gap-4 md:gap-10 p-4 md:p-0 w-[440px]  md:w-auto lg:w-auto">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-10">
       <div className="row-span-2 bg-[#FFFFFF] rounded-lg mb-6 py-5 border border-[#b9b9ba]">
         {/* Event overview */}
         <div className="border-b-2 border-[#b9b9ba] ">
@@ -182,121 +183,105 @@ const ResultGrid = ({
       </div>
 
       <div className="row-span-3 text-xs">
-        {/* All Event */}
-
-        <div className="mx-auto h-auto bg-[#FFFFFF] rounded-lg mb-24 border border-[#b9b9ba]">
-          <div className="border-b-2 border-[#b9b9ba]">
-            <div className="flex justify-between items-center px-8 pt-5">
-              <div className="border-[1px] border-[#6B6D6E] p-3 mb-3 rounded-xl">
-                <h1 className="text-xs">{item.viewPartName}</h1>
-              </div>
-
-              {item.eventsData.length == 0 ? (
-                <Image src={up} alt="up" />
-              ) : (
-                <Image src={down} alt="down" />
-              )}
-            </div>
+  {/* Large Screen Layout */}
+  <div className="hidden lg:block">
+    {/* Events Table Section */}
+    <div className="mx-auto h-auto bg-[#FFFFFF] rounded-lg mb-24 border border-[#b9b9ba]">
+      <div className="border-b-2 border-[#b9b9ba]">
+        <div className="flex justify-between items-center px-8 pt-5">
+          <div className="border-[1px] border-[#6B6D6E] p-3 mb-3 rounded-xl">
+            <h1 className="text-xs">{item.viewPartName}</h1>
           </div>
-
-          <div className={`${item.eventsData.length > 0 ? "" : "h-[308px]"} `}>
-            <table className="w-full border-separate border-spacing-y-3">
-              <thead>
-                <tr className="h-[42px] border-b-2 border-black  font-normal text-[#2d3a4b] leading-[19.79px] rounded">
-                  {item.heading.map((item, i) => (
-                    <td
-                      key={i}
-                      className="py-3 pl-3 border-b-2 border-[#b9b9ba] "
-                    >
-                      {item}
-                    </td>
-                  ))}
-                </tr>
-              </thead>
-              {item.eventsData.length > 0 && (
-                item.eventsData.map((data, index) => {
-                  return (
-                    <tbody key={index}>
-                      <tr>
-                        <td className="py-3 pl-10  border-b-2 border-[#b9b9ba] ">
-                          {data.eventName}
-                        </td>
-                        <td className="p-3 mb-3  border-b-2 border-[#b9b9ba] font-normal text-xs leading-[19.79px]">
-                          <div className="flex p-2 rounded-lg text-xs items-center justify-around bg-[#C4FFA2] text-[#115E2C]">
-                            {data.status}
-                          </div>
-                        </td>
-                        <td className="p-3 border-b-2 border-[#b9b9ba] text-xs font-normal text-[#5801A9] leading-[19.79px]">
-                          <h1 className="h-[30px] flex justify-center items-center text-[#5801A9] text-center ">
-                            {data.certification}
-                          </h1>
-                        </td>
-                        <td className="p-3 border-b-2 border-[#b9b9ba]  text-xs py-2 font-normal text-[#5801A9] leading-[19.79px]">
-                          {data.date}
-                        </td>
-                      </tr>
-                    </tbody>
-                  )
-                })
-              )}
-            </table>
-            {item.eventsData.length == 0 && (
-              <div className="h-[70%] w-full flex items-center justify-center">
-              <h1 className="text-[15px] text-[#817676] font-medium leading-[18px]">This address has no event data</h1>
-      </div>
-            ) }
-            
-          </div>
-
-          {/* Pagination Controls */}
-          {item.eventsData.length == 0 ? null : item.eventsData.length > 6 ? (
-            <div className="flex justify-center space-x-2 my-4">
-              <button
-                // onClick={goToPreviousPage}
-                // disabled={currentPage === 1}
-                className="px-4 py-2 border-[#D0D5DD] border-[1px] rounded disabled:opacity-50"
-              >
-                {"<"}
-              </button>
-              {generatePageNumbers().map((page, index) =>
-                page == "..." ? (
-                  <span key={index} className="px-2 text-base mt-2">
-                    ...
-                  </span>
-                ) : (
-                  <button
-                    key={index}
-                    onClick={() => goToPage(page)}
-                    className={`px-4 py-2 rounded text-[14px] ${currentPage == page ? "bg-none text-[#000000] border-[#F56630] border-[1px]" : "bg-none text-[#000000]"}`}
-                  >
-                    {page}
-                  </button>
-                ),
-              )}
-
-              <button
-                // onClick={goToNextPage}
-                // disabled={currentPage === totalPages}
-                className="px-4 py-2 border-[#D0D5DD] border-[1px] text-[20px] rounded disabled:opacity-50"
-              >
-                {">"}
-              </button>
-            </div>
+          {item.eventsData.length === 0 ? (
+            <Image src={up} alt="up" />
           ) : (
-            <div className="flex justify-center my-4">
-              <p
-                // onClick={goToPreviousPage}
-                // disabled={currentPage === 1}
-                className="px-2 py-2  bg-gradient-to-r from-[#4A90E2] to-[#9B51E0]  inline-block text-transparent bg-clip-text"
-              >
-                Show more
-              </p>
-              <Image src={show_arrow} alt="show_arrow" />
-            </div>
+            <Image src={down} alt="down" />
           )}
         </div>
       </div>
+
+      <div className={`${item.eventsData.length > 0 ? "" : "h-[308px]"}`}>
+        <table className="w-full border-separate border-spacing-y-3">
+          <thead>
+            <tr className="h-[42px] border-b-2 border-black font-normal text-[#2d3a4b] leading-[19.79px] rounded">
+              {item.heading.map((item, i) => (
+                <td key={i} className="py-3 pl-3 border-b-2 border-[#b9b9ba]">
+                  {item}
+                </td>
+              ))}
+            </tr>
+          </thead>
+          {item.eventsData.length > 0 && (
+            item.eventsData.map((data, index) => (
+              <tbody key={index}>
+                <tr>
+                  <td className="py-3 pl-10 border-b-2 border-[#b9b9ba]">
+                    {data.eventName}
+                  </td>
+                  <td className="p-3 mb-3 border-b-2 border-[#b9b9ba] font-normal text-xs leading-[19.79px]">
+                    <div className={`flex p-2 rounded-lg text-xs items-center justify-around ${
+                      data.status === 'Course Complete' ? 'bg-[#C4FFA2] text-[#115E2C]' : 'bg-[#F6A61C2B] text-[#8#730404]'
+                    }`}>
+                      {data.status}
+                    </div>
+                  </td>
+                  <td className="p-3 border-b-2 border-[#b9b9ba] text-xs font-normal text-[#5801A9] leading-[19.79px]">
+                    <h1 className="h-[30px] flex justify-center items-center text-[#5801A9] text-center">
+                      {data.certification}
+                    </h1>
+                  </td>
+                  <td className="p-3 border-b-2 border-[#b9b9ba] text-xs py-2 font-normal text-[#5801A9] leading-[19.79px]">
+                    {data.date}
+                  </td>
+                </tr>
+              </tbody>
+            ))
+          )}
+        </table>
+        {item.eventsData.length === 0 && (
+          <div className="h-[70%] w-full flex items-center justify-center">
+            <h1 className="text-[15px] text-[#817676] font-medium leading-[18px]">This address has no event data</h1>
+          </div>
+        )}
+      </div>
     </div>
+  </div>
+
+  {/* Mobile Layout */}
+  <div className="block lg:hidden">
+    <div className="mx-auto h-auto mb-24">
+      <div className="p-3 mb-3">
+        <h1 className="text-xs">{item.viewPartName}</h1>
+      </div>
+
+      <div className={`${item.eventsData.length > 0 ? "" : "h-[308px]"}`}>
+        {item.eventsData.map((data, index) => (
+          <div key={index} className="bg-white rounded-lg mb-4 border border-[#b9b9ba] p-4">
+            <h3 className="text-sm font-medium text-[#333333] mb-2">{data.eventName}</h3>
+            <div className="flex justify-between items-center">
+              <div className={`px-2 py-1 rounded-lg text-xs font-medium ${
+                data.status === 'Course Complete' ? 'bg-[#C4FFA2] text-[#115E2C]' : 'bg-[#F6A61C2B] text-[#8#730404]'
+              }`}>
+                {data.status}
+              </div>
+              <div className="text-xs font-normal text-[#5801A9]">{data.certification}</div>
+              <div className="text-xs font-normal text-[#5801A9]">{data.date}</div>
+            </div>
+          </div>
+        ))}
+        {item.eventsData.length === 0 && (
+          <div className="h-[70%] w-full flex items-center justify-center">
+            <h1 className="text-[15px] text-[#817676] font-medium leading-[18px]">This address has no event data</h1>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+</div>
+ 
   )
 }
 

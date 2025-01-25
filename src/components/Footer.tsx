@@ -5,7 +5,7 @@ import Logo from "@/assets/Logo.svg"
 
 const Footer = () => {
   return (
-    <div className='flex flex-col lg:flex-row space-y-4 lg:space-y-0 space-x-0 lg:space-x-4 justify-between mx-4 py-7 w-[98%]'>
+    <div className='flex flex-col lg:flex-row space-y-4 lg:space-y-0 space-x-0 lg:space-x-4 justify-between mx-auto max-w-7xl px-4 py-7'>
       {/* Mobile and Desktop Left Section */}
       <div className='bg-[#161313] rounded-lg w-full lg:w-[40%] h-auto lg:h-[380px] flex flex-col text-white justify-center p-6 lg:pt-20'>
         <div className='space-y-4 w-full max-w-[480px]'>
