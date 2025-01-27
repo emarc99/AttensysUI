@@ -93,7 +93,7 @@ const Header = () => {
           <div className="relative flex h-20 items-center justify-between xl:w-full xl:px-5">
             <div className="lg:flex flex-shrink-0 items-center flex justify-between clg:w-[55%] lclg:w-[46%] xl:w-[48%] space-x-6 clg:space-x-6 lclg:space-x-6  md:hidden sm:hidden">
               <Link href="/" className="cursor-pointer">
-                <Image alt="Your Company" src={Logo} className="h-8 w-full" />
+                <Image alt="Your Company" src={Logo} className="h-8 xl:h-16 w-full" />
               </Link>
               <a
                 href="/Explorer"
