@@ -12,11 +12,11 @@ const Coursedropdown = () => {
   return (
     <>
       {status && (
-        <div className="bg-[#ffffffff] w-full absolute z-50 shadow-2xl p-4">
-          <div className="flex flex-col sm:flex-row justify-between space-y-4 sm:space-y-0">
-            <div className="space-y-4 sm:w-1/3 text-[16px] font-bold">
-              <a href="/Course" className="cursor-pointer">
-                <div className="flex space-x-3 my-3">
+        <div className=" bg-[#FFFFFF] h-[157px] w-[100%] absolute z-50 shadow-2xl">
+          <div className="flex justify-between mx-auto w-[80%] h-[90%] items-center">
+            <div className="space-y-4 w-[337px] text-[16px] font-bold">
+              <a href="/Course" className=" cursor-pointer">
+                <div className="flex space-x-3  my-3">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -31,14 +31,16 @@ const Coursedropdown = () => {
                       d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
                     />
                   </svg>
+
                   <h1 className="text-[16px] font-bold cursor-pointer">
                     Explore Courses
                   </h1>
                 </div>
               </a>
               <a
+                //@todo replace sample profile with user profile id
                 href={`/mycoursepage/${"sample-profile"}`}
-                className="cursor-pointer"
+                className=" cursor-pointer"
               >
                 <div className="flex space-x-3">
                   <svg
@@ -51,14 +53,15 @@ const Coursedropdown = () => {
                     <path d="M13.06 15.473a48.45 48.45 0 0 1 7.666-3.282c.134 1.414.22 2.843.255 4.284a.75.75 0 0 1-.46.711 47.87 47.87 0 0 0-8.105 4.342.75.75 0 0 1-.832 0 47.87 47.87 0 0 0-8.104-4.342.75.75 0 0 1-.461-.71c.035-1.442.121-2.87.255-4.286.921.304 1.83.634 2.726.99v1.27a1.5 1.5 0 0 0-.14 2.508c-.09.38-.222.753-.397 1.11.452.213.901.434 1.346.66a6.727 6.727 0 0 0 .551-1.607 1.5 1.5 0 0 0 .14-2.67v-.645a48.549 48.549 0 0 1 3.44 1.667 2.25 2.25 0 0 0 2.12 0Z" />
                     <path d="M4.462 19.462c.42-.419.753-.89 1-1.395.453.214.902.435 1.347.662a6.742 6.742 0 0 1-1.286 1.794.75.75 0 0 1-1.06-1.06Z" />
                   </svg>
+
                   <h1 className="text-[16px] font-bold cursor-pointer">
                     My Courses
                   </h1>
                 </div>
               </a>
             </div>
-            <div className="hidden sm:block w-[1px] h-[80%] bg-[#B8B9BA]"></div>
-            <div className="space-y-2 sm:w-1/3">
+            <div className="w-[1px] h-[80%] bg-[#B8B9BA]"></div>
+            <div className="space-y-2 w-[337px]">
               <a
                 href={`/Certifications/${"sample-profile"}`}
                 className="cursor-pointer"
@@ -80,17 +83,19 @@ const Coursedropdown = () => {
                     My Certifications
                   </h1>
                 </div>
-                <p className="text-[13px] ml-8 text-[#2D3A4B]">
-                  Access and manage all your course completion certificates in one
-                  place.
-                </p>
               </a>
+              <p className="text-[13px] ml-8 text-[#2D3A4B] ">
+                Access and manage all your course completion certificates in one
+                place.
+              </p>
             </div>
-            <div className="hidden sm:block w-[1px] h-[80%] bg-[#B8B9BA]"></div>
-            <div className="space-y-2 sm:w-1/3">
+            <div className="w-[1px] h-[80%] bg-[#B8B9BA]"></div>
+
+            <div className="space-y-2 w-[350px]">
               <a href={`/Course/CreateACourse/${courseQuestions[0]}`}>
                 <div className="flex space-x-3">
                   <VscNewFile className="size-6 text-[#9747FF] w-[20px] h-[20px] my-auto" />
+
                   <h1 className="text-[16px] font-bold cursor-pointer">
                     Create a course
                   </h1>

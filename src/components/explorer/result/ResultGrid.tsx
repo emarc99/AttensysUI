@@ -5,6 +5,8 @@ import Image from "next/image";
 import { SlExclamation } from "react-icons/sl";
 import up from "@/assets/up.svg"
 import down from "@/assets/down.svg"
+import show_arrow from "@/assets/show_arrow.svg";
+
 interface Events {
   eventName: string;
   status: string;
@@ -25,7 +27,7 @@ interface ResultGridProps {
   item: Item;
   eventsData: Events[];
   generatePageNumbers: () => (string | number)[];
-  goToPage: (page: number) => void;
+  goToPage: (page: any) => void
   currentPage: number;
 }
 
@@ -165,7 +167,7 @@ const ResultGrid: React.FC<ResultGridProps> = ({
           </div> */}
            <div className="hidden lg:block">
     {/* Events Table Section */}
-    <div className="mx-auto h-auto bg-[#FFFFFF] rounded-lg mb-24 border border-[#b9b9ba] w-[450px]">
+    <div className="mx-auto h-auto bg-[#FFFFFF] rounded-lg mb-24 border border-[#b9b9ba] ">
       <div className="border-b-2 border-[#b9b9ba]">
         <div className="flex justify-between items-center px-8 pt-5">
           <div className="border-[1px] border-[#6B6D6E] p-3 mb-3 rounded-xl">
@@ -223,6 +225,56 @@ const ResultGrid: React.FC<ResultGridProps> = ({
           </div>
         )}
       </div>
+       {/* Pagination Controls */}
+       {item.eventsData.length == 0 ? null : item.eventsData.length > 6 ? (
+              <div className="flex justify-center space-x-2 my-4">
+                <button
+                  // onClick={goToPreviousPage}
+                  // disabled={currentPage === 1}
+                  className="px-4 py-2 border-[#D0D5DD] border-[1px] rounded disabled:opacity-50"
+                >
+                  {"<"}
+                </button>
+                {generatePageNumbers().map((page, index) =>
+                  page == "..." ? (
+                    <span key={index} className="px-2 text-base mt-2">
+                      ...
+                    </span>
+                  ) : (
+                    <button
+                      key={index}
+                      onClick={() => goToPage(page)}
+                      className={`px-4 py-2 rounded text-[14px] ${
+                        currentPage == page
+                          ? "bg-none text-[#000000] border-[#F56630] border-[1px]"
+                          : "bg-none text-[#000000]"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  )
+                )}
+
+                <button
+                  // onClick={goToNextPage}
+                  // disabled={currentPage === totalPages}
+                  className="px-4 py-2 border-[#D0D5DD] border-[1px] text-[20px] rounded disabled:opacity-50"
+                >
+                  {">"}
+                </button>
+              </div>
+            ) : (
+              <div className="flex justify-center my-4">
+                <p
+                  // onClick={goToPreviousPage}
+                  // disabled={currentPage === 1}
+                  className="px-2 py-2 bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] inline-block text-transparent bg-clip-text"
+                >
+                  Show more
+                </p>
+                <Image src={show_arrow} alt="show_arrow" />
+              </div>
+            )}
     </div>
   </div>
 
