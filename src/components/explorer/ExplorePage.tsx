@@ -115,7 +115,7 @@ const ExplorePage = () => {
 
       {/* Table Section */}
       <div className="min-h-[930px] mx-auto bg-white mt-4 rounded-lg mb-24 p-4 md:p-6">
-        <div className="flex bg-[#9B51E052] bg-opacity-[35%] md:bg-[#9B51E052] xl:bg-transparent h-[80px] rounded-xl xl:max-h-20 justify-between align-middle  items-center px-5 md:px-5 xl:px-12 mt-10">
+      <div className="flex bg-[#9B51E052] bg-opacity-[35%] md:bg-[#9B51E052] xl:bg-transparent h-[80px] rounded-xl xl:max-h-20 justify-between align-middle items-center px-5 md:px-5 xl:px-12 mt-10 max-w-[92%] mx-auto">
 
           <h1 className="text-[18px] font-medium leading-[22px] text-[#333333]">
             Recent activity
