@@ -1,5 +1,5 @@
-import React from 'react'
-import { Button } from '@headlessui/react'
+import React from "react"
+import { Button } from "@headlessui/react"
 import Image from "next/image"
 import Logo from "@/assets/Logo.svg"
 import footerDesign from "@/assets/footer_design.svg"
