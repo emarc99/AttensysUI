@@ -50,35 +50,57 @@ const World = () => {
       </div>
 
       {/* Imágenes Responsivas */}
-      <div className="w-full sm:w-[40%] relative flex flex-col sm:flex-row justify-center sm:justify-end">
+      <div className="w-full sm:w-[40%] relative">
 
-        {/* Imagenes para pantallas pequeñas */}
-        <div className="sm:hidden flex flex-col items-center">
-          <Image alt="planet" src={plane} className="w-[250px] h-auto mb-4" />
-          <Image alt="speech" src={thoughts} className="w-[200px] h-auto" />
-        </div>
-
-        {/* Imagenes para pantallas más grandes */}
-        <div className="hidden sm:flex items-center relative">
-          {/* Planeta */}
+        {/* 📌 Imagenes para pantallas pequeñas */}
+        <div className="sm:hidden relative mb-[350px]">
+          {/* Imagen del planeta */}
           <Image
             alt="planet"
             src={plane}
-            className="
-        w-[200px] sm:w-[250px] md:w-[300px] lg:w-[350px] xl:w-[400px] 2xl:w-[420px]
-        h-auto"
+            className="absolute top-[-320px] left-[50px] w-[280px] h-[280px]"
           />
-
-          {/* Burbuja de texto */}
+          {/* Imagen de la burbuja de texto */}
           <Image
             alt="speech"
             src={thoughts}
-            className="
-        absolute
-        top-[-20px] sm:top-[-30px] md:top-[-40px] lg:top-[-50px] xl:top-[-60px]
-        right-0 sm:right-5 md:right-10 lg:right-16 xl:right-24"
+            className="absolute top-[-370px] left-[-10px] w-[233px] h-[150px]"
           />
         </div>
+
+        {/* 📌 Imagenes para pantallas medianas */}
+        <div className="hidden sm:hidden md:flex lg:hidden relative h-[400px]">
+          {/* Imagen del planeta */}
+          <Image
+            alt="planet"
+            src={plane}
+            className="absolute top-[-300px] left-[450px] w-[320px] h-[320px]"
+          />
+          {/* Imagen de la burbuja de texto */}
+          <Image
+            alt="speech"
+            src={thoughts}
+            className="absolute top-[-350px] left-[370px] w-[240px] h-[140px]"
+          />
+        </div>
+
+        {/* 📌 Imagenes para pantallas más grandes */}
+        <div className="hidden lg:flex items-center relative">
+          {/* 🌍 Planeta */}
+          <Image
+            alt="planet"
+            src={plane}
+            className="absolute top-[-80px] left-[40px] w-[380px] h-[380px] "
+            />
+          {/* 💬 Burbuja de texto */}
+          <Image
+            alt="speech"
+            src={thoughts}
+            className="absolute top-[-180px] left-[-90px] w-[290px] h-[190px] "
+          />
+        </div>
+
+
       </div>
 
     </div>

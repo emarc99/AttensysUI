@@ -27,18 +27,18 @@ const Cardsection = () => {
   ];
 
   return (
-    <div className="mt-4 sm:mt-10 w-[90%] mx-auto flex flex-col sm:flex-row sm:justify-center sm:space-x-6 space-y-6 sm:space-y-0">
+    <div className="mt-4 sm:mt-10 md:mt-12 w-[90%] md:w-[80%] lg:w-[90%] mx-auto flex flex-col sm:flex-row md:flex-col md:items-center lg:flex-row sm:justify-center sm:space-x-6 space-y-6 sm:space-y-0 md:space-y-8 md:px-6">
       {data.map((item, index) => (
         <div
           key={index}
-          className="w-full sm:w-[424px] h-auto bg-[#FFFFFF] rounded-xl shadow-lg flex flex-col sm:flex-row justify-center items-center sm:space-x-4 p-4"
+          className="w-full sm:w-[424px] md:w-full lg:w-[30%] h-auto bg-[#FFFFFF] rounded-xl shadow-lg flex flex-col sm:flex-row md:flex-col justify-center items-center sm:space-x-4 md:space-x-0 p-6 md:p-8"
         >
           <Image
             alt="icon"
             src={item?.icon}
             className="size-6 text-[#9747FF] w-[46px] h-[46px] my-auto"
           />
-          <div className="space-y-2 sm:w-[270px] text-center sm:text-left">
+          <div className="space-y-2 sm:w-[270px] md:w-full text-center sm:text-left md:text-center">
             <h1 className="text-[18px] text-[#2D3A4B] font-bold">
               {item.header}
             </h1>

@@ -74,7 +74,7 @@ const Herosection = () => {
       <div className="block md:block lg:hidden mt-6">
         <Image
           alt="Combined Hero"
-          src={combinedHero}
+          src={combinedHeroBig}
           className="mx-auto"
           width={400} // 🔹 Ajustamos el ancho un poco para md
           height={320}
