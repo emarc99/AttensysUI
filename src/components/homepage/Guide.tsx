@@ -48,7 +48,7 @@ const Guide = () => {
                 <h1 className="text-white font-bold leading-[37px]">Sign Up</h1>
                 <p className="text-white text-[14px] font-light max-w-[320px]">
                   Create an account and get instant access to our dashboard. Whether
-                  you're a school, organization, or event manager, we have the tools for you.
+                  you&apos;re a school, organization, or event manager, we have the tools for you.
                 </p>
               </div>
 
@@ -100,7 +100,7 @@ const Guide = () => {
                 <h1 className="text-white font-bold leading-[24px]">Sign Up</h1>
                 <p className="text-white text-[16px] font-light">
                   Create an account and get instant access to our dashboard. Whether
-                  you're a school, organization, or event manager, we have the tools for you.
+                  you&apos;re a school, organization, or event manager, we have the tools for you.
                 </p>
               </div>
 
@@ -150,7 +150,7 @@ const Guide = () => {
                 <h1 className="text-white font-bold leading-[28px] text-[20px]">Sign Up</h1>
                 <p className="text-white text-[16px] font-light max-w-[450px]">
                   Create an account and get instant access to our dashboard. Whether
-                  you're a school, organization, or event manager, we have the tools for you.
+                  you&apos;re a school, organization, or event manager, we have the tools for you.
                 </p>
               </div>
 
