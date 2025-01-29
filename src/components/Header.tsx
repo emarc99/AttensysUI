@@ -196,186 +196,193 @@ const Header = () => {
 
           </div>
         </div>
-      
 
 
-      {/* 🔹 HEADER PARA MOBILE */}
-      <div className="flex justify-between items-center px-4 py-2 lg:hidden">
-        {/* Menú hamburguesa */}
-        <DisclosureButton className="text-gray-500 focus:outline-none">
-          <Bars3Icon className="h-6 w-6" />
-        </DisclosureButton>
 
-        {/* Logo */}
-        <Link href="/" className="flex justify-center flex-1">
-          <Image alt="Attensys Logo" src={Logo} className="h-8 w-auto" />
-        </Link>
+        {/* 🔹 HEADER FOR MOBILE */}
+        <div className="flex justify-between items-center px-4 py-2 lg:hidden">
+          {/* Hamburger menu */}
+          <DisclosureButton className="text-gray-500 focus:outline-none">
+            <Bars3Icon className="h-6 w-6" />
+          </DisclosureButton>
 
-        {/* Ícono de búsqueda a la derecha */}
-        <button className="text-gray-500 focus:outline-none">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="h-6 w-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-            />
-          </svg>
-        </button>
-      </div>
+          {/* Logo */}
+          <Link href="/" className="flex justify-center flex-1">
+            <Image alt="Attensys Logo" src={Logo} className="h-8 w-auto" />
+          </Link>
 
-
-      {/* 🔹 PANEL DESPLEGABLE DEL MENÚ MOBILE */}
-      <DisclosurePanel className="lg:hidden bg-white shadow-md">
-        <div className="flex flex-col h-full">
-          {/* 📌 Barra superior con logo y botón de cerrar */}
-          <div className="flex items-center justify-between px-4 py-3 border-b">
-            <Link href="/" className="flex items-center">
-              <Image alt="Attensys Logo" src={Logo} className="h-8 w-auto" />
-            </Link>
-            {/* Botón de cerrar */}
-            <DisclosureButton className="text-gray-500 focus:outline-none">
-              <XMarkIcon className="h-6 w-6" />
-            </DisclosureButton>
-          </div>
+          {/* Search icon on the right */}
+          <button className="text-gray-500 focus:outline-none">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="h-6 w-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+              />
+            </svg>
+          </button>
         </div>
-        <div className="space-y-2 px-4 py-3">
-          {/* 🟢 Datos de la Wallet */}
-          <div className="flex items-center space-x-3 px-4 py-3 border-b">
-            {wallet && wallet.account ? (
-              <>
-                {/* Imagen de perfil */}
-                <Image src={ProfilePic} alt="Profile Picture" width={40} height={40} className="rounded-full" />
 
-                {/* Información de la Wallet */}
-                <div>
-                  <p className="font-semibold text-gray-900">{wallet.account.name || "Connected User"}</p>
-                  <p className="text-[#9B51E0] text-sm">
-                    {wallet.account.address
-                      ? `${wallet.account.address.slice(0, 6)}...${wallet.account.address.slice(-4)}`
-                      : "Unknown"}
-                  </p>
-                </div>
-              </>
-            ) : (
-              <div className="w-full text-center py-2">
-                <p className="text-gray-500 text-sm">Not connected</p>
-              </div>
-            )}
+
+        {/* 🔹 MOBILE MENU DROP-DOWN PANEL */}
+        <DisclosurePanel className="lg:hidden bg-white shadow-md">
+          <div className="flex flex-col h-full">
+            {/* 📌 Barra superior con logo y botón de cerrar */}
+            <div className="flex items-center justify-between px-4 py-3 border-b">
+              <Link href="/" className="flex items-center">
+                <Image alt="Attensys Logo" src={Logo} className="h-8 w-auto" />
+              </Link>
+              {/* Close button */}
+
+              <DisclosureButton className="text-gray-500 focus:outline-none">
+                <XMarkIcon className="h-6 w-6" />
+              </DisclosureButton>
+            </div>
           </div>
+          <div className="space-y-2 px-4 py-3">
+            {/* 🟢 Wallet data */}
 
+            <div className="flex items-center space-x-3 px-4 py-3 border-b">
+              {wallet && wallet.account ? (
+                <>
+                  {/* Profile picture */}
 
-          {/* 🟢 Navegación */}
-          <nav className="px-4 space-y-2">
-            <Link href="/" className="block px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200">
-              Home
-            </Link>
-            <Link href="/Explorer" className="block px-3 py-2 text-[#9B51E0] font-semibold hover:bg-gray-200">
-              Use our explorer
-            </Link>
+                  <Image src={ProfilePic} alt="Profile Picture" width={40} height={40} className="rounded-full" />
 
-            {/* 📌 Courses - DESPLEGABLE */}
-            <div>
-              <button
-                className="flex justify-between items-center w-full px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200"
-                onClick={() => setIsCoursesOpen(!isCoursesOpen)}
-              >
-                <span>Courses</span>
-                {isCoursesOpen ? <ChevronUpIcon className="w-5 h-5" /> : <ChevronDownIcon className="w-5 h-5" />}
-              </button>
+                  {/* Wallet information */}
 
-              {isCoursesOpen && (
-                <div className="pl-4 mt-2 space-y-2">
-                  <Link href="/explore-courses" className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200">
-                    <Image src={LupaPurple} alt="Explore Courses" width={20} height={20} className="mr-2" />
-                    Explore Courses
-                  </Link>
-
-                  <Link href="/my-courses" className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200">
-                    <Image src={ImagenCourses2} alt="My Courses" width={20} height={20} className="mr-2" />
-                    My Courses
-                  </Link>
-
-                  <Link href="/my-certifications" className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200">
-                    <Image src={ImagenCourses3} alt="My Certifications" width={20} height={20} className="mr-2" />
-                    My Certifications
-                  </Link>
-
-                  <Link href="/create-course" className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200">
-                    <Image src={ImagenCourses3} alt="Create a Course" width={20} height={20} className="mr-2" />
-                    Create a Course
-                  </Link>
+                  <div>
+                    <p className="font-semibold text-gray-900">{wallet.account.name || "Connected User"}</p>
+                    <p className="text-[#9B51E0] text-sm">
+                      {wallet.account.address
+                        ? `${wallet.account.address.slice(0, 6)}...${wallet.account.address.slice(-4)}`
+                        : "Unknown"}
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <div className="w-full text-center py-2">
+                  <p className="text-gray-500 text-sm">Not connected</p>
                 </div>
               )}
             </div>
-            {/* 📌 Events - Enlace directo */}
-            <Link href="/events" className="block px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200">
-              Events
-            </Link>
-          </nav>
 
-          {/* 📌 Bootcamps - NUEVO DESPLEGABLE */}
-          <div>
-            <button
-              className="flex justify-between items-center w-full px-7 py-2 text-gray-700 rounded-md hover:bg-gray-200"
-              onClick={() => setIsBootcampsOpen(!isBootcampsOpen)}
-            >
-              <span>Bootcamps</span>
-              {isBootcampsOpen ? <ChevronUpIcon className="w-5 h-5" /> : <ChevronDownIcon className="w-5 h-5" />}
-            </button>
 
-            {isBootcampsOpen && (
-              <div className="pl-4 mt-2 space-y-2">
-                <Link href="/explore-bootcamps" className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200">
-                  <Image src={Lupa} alt="Explore Bootcamps" width={20} height={20} className="mr-2" />
-                  Explore Bootcamps
-                </Link>
+            {/* 🟢 Navigation */}
 
-                <Link href="/explore-bootcamps" className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200">
-                  <Image src={organizationHeader} alt="Explore Bootcamps" width={20} height={20} className="mr-2" />
-                  Create organization
-                </Link>
+            <nav className="px-4 space-y-2">
+              <Link href="/" className="block px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200">
+                Home
+              </Link>
+              <Link href="/Explorer" className="block px-3 py-2 text-[#9B51E0] font-semibold hover:bg-gray-200">
+                Use our explorer
+              </Link>
 
-                <Link href="/my-bootcamps" className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200">
-                  <Image src={PeopleBoot} alt="My Bootcamps" width={20} height={20} className="mr-2" />
-                  My Bootcamps
-                </Link>
+              {/* 📌 Courses - DESPLEGABLE */}
+              <div>
+                <button
+                  className="flex justify-between items-center w-full px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200"
+                  onClick={() => setIsCoursesOpen(!isCoursesOpen)}
+                >
+                  <span>Courses</span>
+                  {isCoursesOpen ? <ChevronUpIcon className="w-5 h-5" /> : <ChevronDownIcon className="w-5 h-5" />}
+                </button>
+
+                {isCoursesOpen && (
+                  <div className="pl-4 mt-2 space-y-2">
+                    <Link href="/explore-courses" className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200">
+                      <Image src={LupaPurple} alt="Explore Courses" width={20} height={20} className="mr-2" />
+                      Explore Courses
+                    </Link>
+
+                    <Link href="/my-courses" className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200">
+                      <Image src={ImagenCourses2} alt="My Courses" width={20} height={20} className="mr-2" />
+                      My Courses
+                    </Link>
+
+                    <Link href="/my-certifications" className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200">
+                      <Image src={ImagenCourses3} alt="My Certifications" width={20} height={20} className="mr-2" />
+                      My Certifications
+                    </Link>
+
+                    <Link href="/create-course" className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200">
+                      <Image src={ImagenCourses3} alt="Create a Course" width={20} height={20} className="mr-2" />
+                      Create a Course
+                    </Link>
+                  </div>
+                )}
               </div>
+              {/* 📌 Events - Enlace directo */}
+              <Link href="/events" className="block px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200">
+                Events
+              </Link>
+            </nav>
 
-            )}
-          </div>
+            {/* 📌 Events - Direct link */}
 
-
-
-
-          {/* 🔹 Botón de Conectar/Desconectar Wallet */}
-          <div className="px-4 py-3">
-            {wallet ? (
+            <div>
               <button
-                onClick={() => {
-                  disconnect();
-                  setWallet(RESET);
-                }}
-                className="w-full bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] text-white py-2 rounded-md flex items-center justify-center space-x-2"
+                className="flex justify-between items-center w-full px-7 py-2 text-gray-700 rounded-md hover:bg-gray-200"
+                onClick={() => setIsBootcampsOpen(!isBootcampsOpen)}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="h-5 w-5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25V9m-4.5 0h12m-9 0v9a2.25 2.25 0 0 0 2.25 2.25h3A2.25 2.25 0 0 0 15 18V9m-6 0h6" />
-                </svg>
-                <span>Disconnect Wallet</span>
+                <span>Bootcamps</span>
+                {isBootcampsOpen ? <ChevronUpIcon className="w-5 h-5" /> : <ChevronDownIcon className="w-5 h-5" />}
               </button>
-            ) : (
-              <ConnectButton />
-            )}
+
+              {isBootcampsOpen && (
+                <div className="pl-4 mt-2 space-y-2">
+                  <Link href="/explore-bootcamps" className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200">
+                    <Image src={Lupa} alt="Explore Bootcamps" width={20} height={20} className="mr-2" />
+                    Explore Bootcamps
+                  </Link>
+
+                  <Link href="/explore-bootcamps" className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200">
+                    <Image src={organizationHeader} alt="Explore Bootcamps" width={20} height={20} className="mr-2" />
+                    Create organization
+                  </Link>
+
+                  <Link href="/my-bootcamps" className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200">
+                    <Image src={PeopleBoot} alt="My Bootcamps" width={20} height={20} className="mr-2" />
+                    My Bootcamps
+                  </Link>
+                </div>
+
+              )}
+            </div>
+
+
+
+
+            {/* 🔹 Connect/Disconnect Wallet button */}
+
+            <div className="px-4 py-3">
+              {wallet ? (
+                <button
+                  onClick={() => {
+                    disconnect();
+                    setWallet(RESET);
+                  }}
+                  className="w-full bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] text-white py-2 rounded-md flex items-center justify-center space-x-2"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="h-5 w-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25V9m-4.5 0h12m-9 0v9a2.25 2.25 0 0 0 2.25 2.25h3A2.25 2.25 0 0 0 15 18V9m-6 0h6" />
+                  </svg>
+                  <span>Disconnect Wallet</span>
+                </button>
+              ) : (
+                <ConnectButton />
+              )}
+            </div>
           </div>
-        </div>
-      </DisclosurePanel>
-    </Disclosure >
+        </DisclosurePanel>
+      </Disclosure >
     </>
   )
 

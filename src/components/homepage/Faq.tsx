@@ -16,9 +16,9 @@ const Faq = () => {
     const togglefiftfaq = () => setfiftfaq(!fiftfaq);
 
   return (
-    <div className="w-full bg-[#2D3A4B] py-12 mt-16"> {/* 📌 AÑADIDO `mt-16` PARA MÁS MARGEN ARRIBA */}
+    <div className="w-full bg-[#2D3A4B] py-12 mt-16"> {/* 📌 ADDED `mt-16` FOR MORE MARGIN ON TOP */}
 
-      {/* 📌 FAQ para pantallas grandes (Se mantiene igual) */}
+      {/* 📌 FAQ for large screens (Remains the same) */}
       <div className='hidden lg:flex lg:h-auto w-[100%] flex-col py-12'>
         <div className='w-[896px] mx-auto'>
             <h1 className='font-bold text-[34px] text-[#FFFFFF] text-center'>FAQ</h1>
@@ -35,12 +35,12 @@ const Faq = () => {
         </div>
       </div>
 
-      {/* 📌 FAQ para pantallas pequeñas (`sm` y menores) */}
+      {/* 📌 FAQ for small screens (`sm` and below) */}
       <div className="lg:hidden w-full px-6 py-12 text-center">
           <h1 className='font-bold text-[28px] text-[#FFFFFF] pb-4'>FAQ</h1>
           <p className='text-[16px] text-[#BCBCBC] font-semibold pb-6'>Frequently Asked Questions</p>
 
-          {/* Preguntas en modo móvil */}
+          {/* Questions in mobile mode */}
           {[togglefirstfaq, togglesecondfaq, togglethirdfaq, togglefourthfaq, togglefiftfaq].map((toggle, index) => (
             <div key={index} className='w-full border-[#C3C3C3] border rounded-lg mb-6 p-4 bg-[#334155]'>
                 <div className='w-full flex items-center space-x-4 cursor-pointer' onClick={toggle}>

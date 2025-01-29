@@ -34,9 +34,9 @@ const Testimonial = () => {
   ];
 
   return (
-      <div className="w-full bg-transparent"> {/* 🔹 Fondo transparente */}
+      <div className="w-full bg-transparent"> {/* 🔹 Transparent background */}
 
-          {/* 📌 Sección para pantallas grandes */}
+          {/* 📌 Section for large screens */}
           <div className='h-[530px] w-[100%] hidden lg:flex items-center justify-center'>
               <div className='h-[397.06px] w-[893px]'>
                   <h1 className='text-center font-bold text-[24px] text-[#2D3A4B] h-[31px] leading-[31px] pt-8'>
@@ -70,15 +70,15 @@ const Testimonial = () => {
               </div>
           </div>
 
-          {/* 📌 Sección para pantallas `sm` y menores */}
-          <div className="w-full flex flex-col items-center text-center lg:hidden py-10 px-4 pb-14"> {/* 🔹 Más margen inferior */}
+          {/* 📌 Section for small screens */}
+          <div className="w-full flex flex-col items-center text-center lg:hidden py-10 px-4 pb-14"> {/* 🔹 More bottom margin */}
               
-              {/* 📝 Título Responsivo */}
+              {/* 📝 Responsive Title */}
               <h1 className='text-center font-bold text-[22px] text-[#2D3A4B] leading-[28px] pb-6'>
                   Why <span className='text-[#9B51E0]'>they</span> Love Attensys...
               </h1>
 
-              {/* 🎡 Testimonial Carousel en Pantallas Pequeñas */}
+              {/* 🎡 Testimonial Carousel on Small Screens */}
               <Carousel 
                   responsive={responsive} 
                   centerMode={false} 
@@ -86,7 +86,7 @@ const Testimonial = () => {
                   className='w-full max-w-[90%] mt-4'  
                   renderArrowsWhenDisabled={false}
                   additionalTransfrom={0}
-                  arrows={false} // 🔹 No flechas en móvil
+                  arrows={false} // 🔹 No arrows on mobile
                   dotListClass="flex justify-center mt-4"
                   draggable
                   focusOnSelect={false}
@@ -96,21 +96,21 @@ const Testimonial = () => {
                   minimumTouchDrag={80}
               >
                   {mockdata.map((data, index) => (
-                      <div key={index} className="bg-white shadow-md rounded-2xl p-8 w-full max-w-[320px] mx-auto flex flex-col items-center text-center"> {/* 🔹 Caja más grande y estilizada */}
+                      <div key={index} className="bg-white shadow-md rounded-2xl p-8 w-full max-w-[320px] mx-auto flex flex-col items-center text-center"> {/* 🔹 Bigger and stylish box */}
                           
-                          {/* 🔹 Imagen de Perfil */}
+                          {/* 🔹 Profile Image */}
                           <Image
                               src={data.profile}
                               alt={data.name}
                               width={90}
                               height={90}
-                              className="w-[90px] h-[90px] rounded-full border-4  object-cover mb-4"
+                              className="w-[90px] h-[90px] rounded-full border-4 object-cover mb-4"
                           />
 
-                          {/* Nombre del Usuario */}
+                          {/* User Name */}
                           <p className="text-[18px] font-bold text-[#2D3A4B] mt-2">{data.name}</p>
 
-                          {/* Testimonio */}
+                          {/* Testimonial */}
                           <p className="text-[14px] text-[#2D3A4B] leading-[20px] mt-4">{data.statement}</p>
                       </div>
                   ))}

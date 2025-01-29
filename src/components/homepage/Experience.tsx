@@ -16,10 +16,10 @@ const Experience = () => {
     return (
         <div className="w-full relative">
             
-            {/* 📌 Sección para pantallas pequeñas (`sm` y menores) */}
+            {/* 📌 Section for small screens (`sm` and below) */}
             <div className="lg:hidden">
                 
-                {/* 📌 Contenedor de imágenes en forma diagonal */}
+                {/* 📌 Container for diagonally arranged images */}
                 <div className="relative w-full h-[300px] sm:h-[400px] flex justify-center items-center">
                     <Image
                         alt="icon"
@@ -53,16 +53,16 @@ const Experience = () => {
                     />
                 </div>
 
-                {/* 📌 Texto y Botón en `sm` y menores (Debajo de las imágenes) */}
+                {/* 📌 Text and Button for `sm` and below (Below the images) */}
                 <div className="flex flex-col items-center text-center w-[90%] mx-auto pt-1">
                     
-                    {/* 📝 Texto Responsivo */}
+                    {/* 📝 Responsive Text */}
                     <p className="text-[18px] sm:text-[18px] font-bold text-[#2D3A4B] w-[90%]">
                         Our <span className="text-[#4A90E2]">bootcamps</span> are designed for learners seeking high-impact,
                         career-advancing courses hosted by Industry Leaders.
                     </p>
 
-                    {/* 📌 Botón Responsivo */}
+                    {/* 📌 Responsive Button */}
                     <Button
                         className="mt-4 flex items-center rounded-lg bg-gradient-to-r from-[#9B51E0] to-[#4A90E2] py-2 px-4 h-[50px] text-sm text-white font-semibold"
                     >
@@ -73,7 +73,7 @@ const Experience = () => {
 
             </div>
 
-            {/* 📌 Imágenes para pantallas grandes */}
+            {/* 📌 Images for large screens */}
             <div className='h-[520px] w-[100%] hidden lg:flex relative'>
                 <Image alt="icon" src={settings} className="absolute left-[25%]" />
                 <Image alt="icon" src={slash} className="absolute left-[12%] top-[13%]" />

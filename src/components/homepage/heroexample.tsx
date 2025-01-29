@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { Button } from "@headlessui/react";
 
-// Importación de imágenes
+// Image imports
 import model from "@/assets/model.svg";
 import rectangle from "@/assets/rectangle.svg";
 import bg from "@/assets/bg.svg";
@@ -19,11 +19,11 @@ import combinedHero from "@/assets/combined-hero.png";
 const Herosection = () => {
   return (
     <div className="lg:flex h-auto sm:w-[80%] mx-auto pt-6 items-center justify-center relative">
-      {/* Contenido principal */}
+      {/* Main Content */}
       <div className="block sm:flex h-[100%] justify-between">
-        {/* 📌 Texto y botones */}
+        {/* 📌 Text and buttons */}
         <div className="w-[100%] space-y-8 sm:h-[55%] my-auto px-6 md:px-10 lg:px-12 relative">
-          {/* 📌 Título Responsivo */}
+          {/* 📌 Responsive Title */}
           <h1 className="relative w-[90%] sm:w-[70%] md:w-[80%] lg:w-[70%] xl:w-[65%] 
                   text-[26px] sm:text-[26px] md:text-[30px] lg:text-[36px] xl:text-[38px] 
                   leading-[35px] sm:leading-[45px] md:leading-[48px] lg:leading-[50px] 
@@ -31,7 +31,7 @@ const Herosection = () => {
             One <span className="text-[#9B51E0]">Platform</span>, Infinite Possibilities—Track,
             Stream, and Secure Your Certifications
 
-            {/* 📌 Línea decorativa debajo del título */}
+            {/* 📌 Decorative line below the title */}
             <Image
               alt="line"
               src={line}
@@ -39,7 +39,7 @@ const Herosection = () => {
             />
           </h1>
 
-          {/* 📌 Párrafo descriptivo */}
+          {/* 📌 Descriptive Paragraph */}
           <p className="break-words text-[#2D3A4B] font-light text-[16px] sm:text-[17px] md:text-[18px] 
                   leading-[22px] sm:leading-[24px] md:leading-[26px] 
                   w-[100%] sm:w-[70%] md:w-[80%] lg:w-[70%] xl:w-[65%]">
@@ -47,7 +47,7 @@ const Herosection = () => {
             management for schools, organizations, and event managers.
           </p>
 
-          {/* 📌 Botones Responsivos */}
+          {/* 📌 Responsive Buttons */}
           <div className="flex space-x-3 sm:w-[60%] md:w-[70%] lg:w-[60%] xl:w-[50%]">
             <Button className="flex rounded-lg bg-[#2D3A4B] py-2 px-4 h-[45px] sm:h-[50px] 
                          md:h-[52px] lg:h-[47px] items-center w-[150px] md:w-[180px] 
@@ -64,9 +64,7 @@ const Herosection = () => {
             </Button>
           </div>
 
-
-
-          {/* Imagen agrupada para pantallas pequeñas, movida aquí */}
+          {/* Grouped image for small screens, moved here */}
           <div className="block sm:hidden mt-6">
             <Image
               alt="Combined Hero"
@@ -78,7 +76,7 @@ const Herosection = () => {
           </div>
         </div>
 
-        {/* Imagen principal */}
+        {/* Main Image */}
         <div className="h-full sm:w-full lg:w-[45%] clg:w-[50%] flex justify-end relative">
           <Image
             alt="star"
@@ -113,9 +111,9 @@ const Herosection = () => {
         </div>
       </div>
 
-      {/* Elementos individuales para pantallas grandes */}
+      {/* Individual elements for large screens */}
       <div className="hidden sm:block">
-        {/* Imagenes decorativas */}
+        {/* Decorative images */}
         <Image
           alt="bluesplit"
           src={bluesplit}
