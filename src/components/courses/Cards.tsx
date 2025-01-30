@@ -18,7 +18,7 @@ export function CardWithLink() {
   const router = useRouter()
   return (
     <div
-      className="mt-6 w-[100%] lg:w-[90%] sm:w-[65%] border-2 rounded-xl shadow-lg pb-8"
+      className="mt-6 w-[100%] lg:w-[95%] sm:w-[65%] border-2 rounded-xl pb-8"
       onClick={(e) => handleCoursehome(e, e.currentTarget.textContent, router)}
     >
       <div className="cursor-pointer">
@@ -28,8 +28,8 @@ export function CardWithLink() {
         <div className="flex justify-between mt-6 px-5 ">
           {/* course prop  */}
           <div className="">
-            <p className="mb-2 font-bold text-[14px] leading-[22px] text-[#333333]">Elementary UI</p>
-            <p className="text-white text-[8px] font-extrabold items-center gap-2  bg-[#5801A9] my-2 rounded p-1">
+            <p className="mb-2 font-bold lg:text-[14px] leading-[22px] text-[#333333]">Elementary UI</p>
+            <p className="text-white text-[12px] font-extrabold items-center gap-2  bg-[#5801A9] my-2 rounded p-1">
               Tech Innovators Academy
             </p>
           </div>

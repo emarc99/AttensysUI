@@ -16,6 +16,7 @@ import Carousel from "react-multi-carousel"
 import "react-multi-carousel/lib/styles.css"
 import StarRating from "../bootcamp/StarRating"
 import { LuBadgeCheck } from "react-icons/lu";
+import { CardWithLink } from "./Cards"
 
 const Explore = () => {
   const router = useRouter()
@@ -43,11 +44,10 @@ const Explore = () => {
   return (
     <div>
       {/* Hero component */}
-      <div>
-        <div className={`bg-[url('/hero_asset.png')] space-y-4 text-white px-8 sm:px-28 py-10 sm:py-20 from-orange-400 via-red-500 to-pink-500 h-80`}
-        >
+      <div className={`bg-[url('/hero_asset.png')] space-y-4 text-white px-8 sm:px-28 py-10 sm:py-20 from-orange-400 via-red-500 to-pink-500 h-80`}>
+        <div className="w-full mx-auto max-w-screen-2xl">
           {/* Hero lettering */}
-          <h1 className="w-[90%] sm:w-5/12 font-bold text-2xl sm:text-4xl">
+          <h1 className="w-[90%] lg:w-5/12 font-bold text-2xl sm:text-4xl">
             Continuous learning is the key to success - upskill with us
           </h1>
           <p className="w-[90%] sm:w-1/2">
@@ -58,7 +58,7 @@ const Explore = () => {
       </div>
 
       {/* skills  */}
-      <div className="mx-12 my-16 hidden sm:flex flex-row justify-center">
+      <div className="ml-6 lg:mx-12 overflow-x-scroll xl:overflow-auto my-16 hidden sm:flex flex-row lg:justify-center">
         {skills.map((item, index) => (
           <p className="bg-[#2D3A4B] p-6 text-white" key={index}>
             {item}
@@ -77,10 +77,10 @@ const Explore = () => {
       </div>
 
       {/* what to learn next */}
-      <div className="mx-6 sm:mx-28">
-        <div className="">
+      <div className="mx-6 lg:mx-auto">
+        <div className="mx-auto max-w-screen-2xl">
           {/* upper */}
-          <div className="my-4">
+          <div className="my-4 mx-6">
             {/* wording */}
             <h3 className="text-[25px] font-bold text-[#2D3A4B]">What to learn next</h3>
             <p className="font-light text-base lg:text-xl text-[#2D3A4B]">
@@ -94,11 +94,17 @@ const Explore = () => {
           {/* cards  */}
           {/* <div className="mx-12 sm:mx-0"> */}
           <CarouselComp />
+          <div className="flex lg:hidden flex-col w-full">
+            <CardWithLink />
+            <CardWithLink />
+            <CardWithLink />
+            <CardWithLink />
+          </div>
           {/* </div> */}
         </div>
 
         {/* below */}
-        <div className="flex flex-col w-full sm:flex-row gap-6 justify-between my-24 lg:h-[307px]">
+        <div className="px-6 lg:mx-auto max-w-screen-2xl flex flex-col w-full lg:flex-row gap-6 justify-between my-24 lg:h-[307px]">
           <div className="my-4 lg:hidden">
               {/* wording */}
               <h3 className="text-[25px] font-bold text-[#2D3A4B]">Fan favourite</h3>
@@ -124,7 +130,7 @@ const Explore = () => {
                   <button className="bg-[#2D3A4B] hidden lg:block hover:bg-gray-500 text-white text-[11px] font-bold py-2 px-4 rounded cursor-pointer">
                     Get this course
                   </button>
-                  <h2 className="font-bold lg:text-[32px] leading-5 tracking-tight lg:leading-[1.1] text-[23px] sm:text-4xl text-[#2D3A4B] sm:w-4/6 lg:tracking-tight my-4 cursor-pointer">
+                  <h2 className="font-bold lg:text-[32px] leading-5 tracking-tight lg:leading-[1.1] text-[23px] sm:text-4xl text-[#2D3A4B] xl:w-4/6 lg:tracking-tight my-4 cursor-pointer">
                     Introduction to Web Development
                   </h2>
                   
@@ -134,7 +140,7 @@ const Explore = () => {
                 </p>
                 <button onClick={(e) =>
                     handleCourse(e, e.currentTarget.textContent, router)
-                  } className="bg-[#9B51E0] ml-3 lg:hidden hover:bg-gray-500 text-white text-[14x] rounded-md font-bold py-[15px] px-[10px] cursor-pointer">
+                  } className="bg-[#9B51E0] ml-3 lg:hidden hover:bg-gray-500 text-white text-[14px] rounded-md font-bold py-[15px] px-[10px] cursor-pointer">
                     Get this course
                   </button>
                 {/* rating and num of students */}
@@ -181,7 +187,7 @@ const Explore = () => {
           </div>
 
           {/* right */}
-          <div className="hidden lg:block sm:block w-[32%] h-[307px] overflow-y-scroll ">
+          <div className="hidden xl:block w-[32%] h-[307px] overflow-y-scroll ">
             <div className="flex justify-between border-b-2 pb-3">
               <h4>Lectures (4)</h4>
               <IoMdArrowDropdown />
@@ -221,16 +227,18 @@ const Explore = () => {
       {/* recommended for you based on rating */}
       <div>
         <div className="bg-gradient-to-r from-purple-400 via-purple-300 to-blue-400 p-4 sm:p-8 my-4">
-          <p className="text-white font-light text-sm sm:text-base sm:font-bold ml-24">
-            Recommended to you based on rating
-          </p>
-          {/* background: linear-gradient(90deg, #9B51E0 0%, #4A90E2 100%); */}
+          <div className="mx-auto max-w-screen-2xl">
+            <p className="text-white font-light text-sm sm:text-base sm:font-bold lg:ml-24">
+              Recommended to you based on rating
+            </p>
+            {/* background: linear-gradient(90deg, #9B51E0 0%, #4A90E2 100%); */}
+          </div>
         </div>
-        <div className="mx-6 sm:mx-28">
+        <div className="mx-6 lg:mx-auto max-w-screen-2xl">
           <CarouselComp />
 
-          <div className="mt-24">
-            <div className="my-4">
+          <div className="mt-24 mx-auto max-w-screen-2xl">
+            <div className="my-4 md:mx-6">
               {/* wording */}
               <h3 className="text-2xl font-bold">You will love this</h3>
               <p className="font-light text-base lg:text-xl text-[#2D3A4B]">
