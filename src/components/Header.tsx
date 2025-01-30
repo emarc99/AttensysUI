@@ -34,6 +34,21 @@ import { useAtom, useSetAtom } from "jotai"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { handleSubmit } from "@/utils/helpers"
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
+
+
+
+import ImagenCourses1 from "@/assets/ImagenCourses1.png";
+import ImagenCourses2 from "@/assets/ImagenCourses2.png";
+import ImagenCourses3 from "@/assets/ImagenCourses3.png";
+
+import Lupa from "@/assets/Lupa.png";
+import PeopleBoot from "@/assets/PeopleBoot.png";
+import ProfilePic from "@/assets/profile_pic.png";
+import LupaPurple from "@/assets/LupaPurple.png";
+import organizationHeader from "@/assets/organizationHeader.png";
+
+
 
 const navigation = [
   { name: "Courses", href: "/Course", current: false },
@@ -59,6 +74,9 @@ const Header = () => {
     bootcampdropdownstatus,
   )
 
+  const [isBootcampsOpen, setIsBootcampsOpen] = useState(false);
+
+
   const handleChange = (event: { target: { value: any } }) => {
     setSearchValue(event.target.value)
   }
@@ -75,6 +93,14 @@ const Header = () => {
       setbootcampdropstat(!bootcampdropstat)
     }
   }
+  const [isCoursesOpen, setIsCoursesOpen] = useState(false);
+
+  useEffect(() => {
+    setWalletLatest(RESET);
+    setWalletNext(RESET);
+    setConnectorData(RESET);
+    setConnector(RESET);
+  }, []);
 
   useEffect(() => {
     setWalletLatest(RESET)
@@ -158,7 +184,7 @@ const Header = () => {
                 </div>
               </div>
             </div>
-            <div className="absolute inset-y-0 right-0 flex items-center sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+            <div className="hidden md:hidden lg:flex absolute inset-y-0 right-0 items-center sm:static sm:inset-auto sm:ml-6 sm:pr-0">
               {wallet ? (
                 <>
                   <DisconnectButton
@@ -172,6 +198,7 @@ const Header = () => {
                 <ConnectButton />
               )}
             </div>
+
           </div>
         </div>
 
@@ -212,6 +239,10 @@ const Header = () => {
       </Disclosure>
     </>
   )
+
+
+
+
 }
 
 export default Header
