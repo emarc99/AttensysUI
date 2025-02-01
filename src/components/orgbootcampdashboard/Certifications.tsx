@@ -12,7 +12,7 @@ const Certifications = () => {
   }
 
   return (
-    <div className="h-auto w-full">
+    <div className="w-full">
       <div className="2xl:h-[120px] w-full 2xl:px-24 px-6 flex  flex-col 2xl:flex-row 2xl:items-center 2xl:justify-between 2xl:border-b-[1px] 2xl:border-b-[rgb(202,203,203)] space-y-6 2xl:space-y-0 py-5 2xl:py-0">
         <div className="md:h-[52px] md:w-[80%] lg:w-[500px] xl:w-[650px] bg-transparent  md:bg-[#FFFFFF] md:border-[1px] md:border-[#C0C0C0] md:rounded-xl md:px-4 flex flex-col justify-center">
           <div className="flex flex-col md:flex-row ">
@@ -54,7 +54,7 @@ const Certifications = () => {
         </div>
       </div>
 
-      <div className="h-[500px] w-full ">
+      <div className="h-auto lg:h-[500px] w-full ">
         <div className="w-[90%] mx-auto py-10">
           <h1 className="text-[18px] text-[#5801A9] leading-[23px] font-semibold">
             Mass Certification
