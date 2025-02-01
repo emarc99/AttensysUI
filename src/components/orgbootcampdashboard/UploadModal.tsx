@@ -124,7 +124,7 @@ export default function UploadModal(prop: any) {
 
                 <div className="flex flex-col md:flex-row gap-4 md:gap-0 md:space-x-16">
                   <div className="h-[316px] w-full md:w-[459px] mt-3 rounded-lg  flex flex-col md:flex-row justify-center items-center">
-                    <div className="h-[246px] w-[251px] md:w-[400px] border-[3px] border-dotted border-[#D0D5DD] bg-[#FFFFFF] rounded-xl space-y-3 flex flex-col items-center justify-center">
+                    <div className="h-[246px] w-full md:w-[400px] border-[3px] border-dotted border-[#D0D5DD] bg-[#FFFFFF] rounded-xl space-y-3 flex flex-col items-center justify-center">
                       <Image src={cloud} alt="upload" />
                       <h1 className="text-[14px] text-[#475367] font-light leading-[20px]">
                         <span className="text-[#4A90E2]">Click to upload</span>{" "}
