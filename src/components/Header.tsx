@@ -43,6 +43,7 @@ import PeopleBoot from "@/assets/PeopleBoot.png"
 import ProfilePic from "@/assets/profile_pic.png"
 import LupaPurple from "@/assets/LupaPurple.png"
 import organizationHeader from "@/assets/organizationHeader.png"
+import { courseQuestions } from "@/constants/data"
 
 const navigation = [
   { name: "Courses", href: "#", current: false },
@@ -312,7 +313,7 @@ const Header = () => {
                 {isCoursesOpen && (
                   <div className="pl-4 mt-2 space-y-2">
                     <Link
-                      href="/explore-courses"
+                      href="/Course"
                       className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200"
                     >
                       <Image
@@ -326,7 +327,7 @@ const Header = () => {
                     </Link>
 
                     <Link
-                      href="/my-courses"
+                      href={`/mycoursepage/${"sample-profile"}`}
                       className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200"
                     >
                       <Image
@@ -340,7 +341,7 @@ const Header = () => {
                     </Link>
 
                     <Link
-                      href="/my-certifications"
+                      href={`/Certifications/${"sample-profile"}`}
                       className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200"
                     >
                       <Image
@@ -354,7 +355,7 @@ const Header = () => {
                     </Link>
 
                     <Link
-                      href="/create-course"
+                      href={`/Course/CreateACourse/${courseQuestions[0]}`}
                       className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200"
                     >
                       <Image
@@ -371,7 +372,7 @@ const Header = () => {
               </div>
               {/* 📌 Events - Enlace directo */}
               <Link
-                href="/events"
+                href="/Events/events"
                 className="block px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200"
               >
                 Events
@@ -396,7 +397,7 @@ const Header = () => {
               {isBootcampsOpen && (
                 <div className="pl-4 mt-2 space-y-2">
                   <Link
-                    href="/explore-bootcamps"
+                    href="/Bootcamps"
                     className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200"
                   >
                     <Image
@@ -410,7 +411,7 @@ const Header = () => {
                   </Link>
 
                   <Link
-                    href="/explore-bootcamps"
+                    href="/Createorganization"
                     className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200"
                   >
                     <Image
@@ -424,7 +425,7 @@ const Header = () => {
                   </Link>
 
                   <Link
-                    href="/my-bootcamps"
+                    href="/Mybootcamps"
                     className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200"
                   >
                     <Image
