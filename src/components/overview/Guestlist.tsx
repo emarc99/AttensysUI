@@ -66,8 +66,8 @@ const Guestlist = () => {
   }
 
   return (
-    <div className="h-auto w-full pb-10 px-4 lg:px-0">
-      <div className="h-auto md:w-[80%] mx-auto bg-[#FFFFFF] rounded-lg flex flex-wrap justify-between items-center px-4 md:px-16 py-8 md:py-0 md:h-[150px]">
+    <div className="h-auto w-full md:w-[90%] max-w-[992px] mx-auto pb-10 px-4 lg:px-0">
+      <div className="h-auto bg-[#FFFFFF] rounded-lg flex flex-wrap justify-between items-center px-4 md:px-16 py-8 md:py-0 md:h-[150px]">
         <div className="w-[45%] md:w-auto mb-8 md:mb-0">
           <p className="text-[#2D3A4B] text-[16px] font-medium leading-[18px]">
             Your Guests

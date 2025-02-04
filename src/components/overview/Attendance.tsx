@@ -65,8 +65,8 @@ const Attendance = () => {
   }
 
   return (
-    <div className="h-auto w-[90%] mx-auto pb-10">
-      <div className="bg-[#FFFFFF] rounded-lg flex flex-wrap items-center md:p-16 md:divide-x md:divide-gray-400">
+    <div className="h-auto w-[90%] max-w-[992px] mx-auto pb-10">
+      <div className="bg-[#FFFFFF] rounded-lg flex flex-wrap items-center md:py-4 md:divide-x md:divide-gray-400">
         {[
           { label: "Total scans", value: 39 },
           { label: "Confirmed scans", value: 31 },

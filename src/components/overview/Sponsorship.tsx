@@ -4,10 +4,10 @@ import { approvedsponsors, pendingsponsors } from '@/constants/data'
 
 const Sponsorship = () => {
     return (
-        <div className="h-auto w-full pb-10">
+        <div className="h-auto w-full mx-auto pb-10">
             <h1 className='mb-5 w-[80%] mx-auto font-semibold text-[18px] text-[#333333]'>Sponsorship</h1>
             <div className='h-[360px] rounded-lg w-[80%] mx-auto bg-[#FFFFFF] border-[1px] border-[#DEDEDE] overflow-y-auto '>
-                <table className="border-spacing-y-3 w-[800px]" style={{ tableLayout: 'fixed' }}>
+                <table className="border-spacing-y-3 w-[800px] md:w-[1400px]" style={{ tableLayout: 'fixed' }}>
                     <colgroup>
                         <col span={1} style={{ width: '35%' }} />
                         <col span={1} style={{ width: '10%' }} />
@@ -38,7 +38,7 @@ const Sponsorship = () => {
                     </tbody>
                 </table>
 
-                <table className="border-spacing-y-3 border-b-[2px] w-[800px]" style={{ tableLayout: 'fixed' }}>
+                <table className="border-spacing-y-3 border-b-[2px] w-[800px] md:w-[1400px]" style={{ tableLayout: 'fixed' }}>
                     <colgroup>
                         <col span={1} style={{ width: '35%' }} />
                         <col span={1} style={{ width: '10%' }} />
