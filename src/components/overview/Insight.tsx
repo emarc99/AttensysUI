@@ -88,8 +88,7 @@ const Insight = () => {
                                         <input
                                             type="text"
                                             className='flex-1 px-1 md:px-4 h-full text-sm md:text-base py-2 border-gray-300 focus:outline-none rounded-r-2xl focus:ring-2 focus:ring-[#9B51E0] w-[80%]'
-                                            readOnly
-                                            value="/event-registration-link"
+                                            placeholder="/event-registration-link"
                                         />
                                     </div>
                                     <Button className='md:w-[130px] px-6 py-4 flex items-center justify-center bg-[#53545C45] text-[#333333] font-semibold text-[12px] rounded-lg h-[36px] md:absolute md:right-4'>
@@ -103,7 +102,7 @@ const Insight = () => {
                         <div className='mt-12'>
                             <h1 className='text-[#2D3A4B] text-[16px] font-medium leading-[18.15px]'>Assigned Managers</h1>
                             <div className='flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 items-center'>
-                                <div className='w-full md:w-[590px] h-[60px] border-[2px] rounded-2xl mt-5'>
+                                <div className='w-full md:w-[590px] h-[60px] border-[2px] overflow-x-auto whitespace-nowrap rounded-2xl mt-5'>
                                     <Emailinput onEmailsChange={handleEmailsChange} />
                                 </div>
                                 <div className='w-full flex justify-end md:w-auto'>

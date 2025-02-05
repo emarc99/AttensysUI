@@ -113,15 +113,15 @@ const Guestlist = () => {
               Guest list
             </h1>
             {/* Group 3: Buttons */}
-            <div className="flex justify-between gap-4 lg:pl-4 lg:w-3/12">
-              <Button className="rounded-lg bg-[#4A90E21F] py-2 px-4 lg:h-[42px] flex space-x-4 items-center text-sm text-[#2D3A4B] data-[hover]:bg-sky-500 data-[active]:bg-sky-700">
+            <div className="flex justify-between gap-1 md:gap-4 lg:pl-4 lg:w-3/12">
+              <Button className="rounded-lg bg-[#4A90E21F] py-2 px-4 lg:h-[42px] flex space-x-1 md:space-x-4 items-center text-sm text-[#2D3A4B] data-[hover]:bg-sky-500 data-[active]:bg-sky-700">
                 <div className="flex space-x-4 items-center font-semibold text-[16px]">
                   <Image src={downlaod} alt="ticket" className="mr-2" />
                 </div>
                 <div className="text-[11px]">Download</div>
               </Button>
 
-              <Button className="rounded-lg bg-[#4A90E21F] py-2 px-4 lg:h-[42px] flex space-x-4 items-center text-sm text-[#2D3A4B] data-[hover]:bg-sky-500 data-[active]:bg-sky-700">
+              <Button className="rounded-lg bg-[#4A90E21F] py-2 px-4 lg:h-[42px] flex space-x-1 md:space-x-4 items-center text-sm text-[#2D3A4B] data-[hover]:bg-sky-500 data-[active]:bg-sky-700">
                 <div className="font-semibold text-[16px]">
                   <Image src={filter} alt="ticket" className="mr-2" />
                 </div>
