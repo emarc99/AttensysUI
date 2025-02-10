@@ -27,7 +27,7 @@ const Congratulations = () => {
           }}
           className="lg:w-[342px] w-full h-[47px] flex justify-center items-center text-[#FFFFFF] text-[14px] font-bold leading-[16px] bg-[#4A90E2] rounded-xl"
         >
-          Go to Create Course
+          Go to dashboard
         </Button>
         <div className="flex items-center">
           <p className="text-[14px] font-semibold mr-3 text-[#5801A9] cursor-pointer leading-[23px]">

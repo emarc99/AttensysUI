@@ -9,7 +9,7 @@ import clsx from "clsx"
 import { useState } from "react"
 import {
   walletStarknetkitNextAtom,
-  organzationInitState,
+  organzationInitState,isinputError
 } from "@/state/connectedWalletStarknetkitNext"
 import { useAtom } from "jotai"
 
@@ -24,6 +24,7 @@ const Organizationcategory = [
 export default function Category() {
   const [selected, setSelected] = useState(Organizationcategory[0])
   const [organizationData, setOrganizationData] = useAtom(organzationInitState)
+  const [inputError, setInputError] = useAtom(isinputError);
 
   const handleCategoryChange = (category: any) => {
     setSelected(category) // Update selected category
@@ -31,6 +32,7 @@ export default function Category() {
       ...prev,
       organizationCategory: category.name, // Update organization category in state
     }))
+    setInputError(false)
   }
 
   return (

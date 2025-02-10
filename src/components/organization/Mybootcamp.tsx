@@ -4,14 +4,19 @@ import "react-multi-carousel/lib/styles.css";
 import Mybootcampcarousel from './Mybootcampcarousel';
 import {caroselldata} from '@/constants/data'
 import { useRouter } from 'next/navigation';
+import {currentID} from '@/state/connectedWalletStarknetkitNext'
+import { useSetAtom } from 'jotai';
 
-const Mybootcamp = () => {
+
+const Mybootcamp = (props : any) => {
   const router = useRouter();
+  const setCurrentID = useSetAtom(currentID)
 
-  const handlebootcamproute = (props : string) => {
+  const handlebootcamproute = (props : string, id : any) => {
+    setCurrentID(id)
     router.push(`/Bootcamp/${props}/Outline`)
-
   }
+  console.log("dataa heerr", props.bootcampInfo)
     const responsive = {
         superLargeDesktop: {
           // the naming can be any, depends on you.
@@ -52,17 +57,15 @@ const Mybootcamp = () => {
    autoPlay={false} // Enables auto-scrolling
    autoPlaySpeed={3000}
    >
-           {caroselldata.map((data, index) => (
+           {props.bootcampInfo.map((data : any, index : any) => (
                     <Mybootcampcarousel
                     key={index}
-                        name={data.name} 
-                        time={data.time}
-                        flier={data.flier}
-                        logo={data.logo}
+                        name={data.bootcamp_name} 
                         action="Ongoing"
                         height="200px"
                         width='200px'
-                        onClick={() => handlebootcamproute(data.name)}
+                        uri={data.bootcamp_ipfs_uri}
+                        onClick={() => handlebootcamproute(data.bootcamp_name, Number(data.bootcamp_id))}
                     />
                 ))}
                     </Carousel>

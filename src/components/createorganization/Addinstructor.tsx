@@ -45,7 +45,7 @@ const Addinstructor = (props: any) => {
   const [AddressList, setAddressList] = useState<string[]>([])
   const [organizationData, setOrganizationData] = useAtom(organzationInitState)
   const [uploading, setUploading] = useState(false)
-  const [cidToContract, setCidToContract] = useState<string>("")
+  // const [cidToContract, setCidToContract] = useState<string>("")
 
   // console.dir(organizationData, {depth : null})
 
@@ -66,7 +66,8 @@ const Addinstructor = (props: any) => {
   const router = useRouter()
 
   //handles routing and pinata interaction
-  const handlerouting = async () => {
+  // function to handle multicall of create_org and add_instructor functions from contract
+  const handle_multicall_routing = async () => {
     setUploading(true)
     const OrgBannerupload = await pinata.upload.file(
       organizationData.organizationBanner,
@@ -74,11 +75,12 @@ const Addinstructor = (props: any) => {
     const OrgLogoUpload = await pinata.upload.file(
       organizationData.organizationLogo,
     )
+    console.log("org data here",organizationData);
     const Dataupload = await pinata.upload.json({
       OrganizationName: organizationData.organizationName,
       OrganizationDescription: organizationData.organizationDescription,
-      OrganizationBannerCID: OrgBannerupload.cid,
-      OrganizationLogoCID: OrgLogoUpload.cid,
+      OrganizationBannerCID: OrgBannerupload.IpfsHash,
+      OrganizationLogoCID: OrgLogoUpload.IpfsHash,
       OrganizationCategory: organizationData.organizationCategory,
       OrganizationAdminName: organizationData.organizationAdminfullname,
       OrganizationAdminEmail: organizationData.organizationAminEmail,
@@ -91,18 +93,8 @@ const Addinstructor = (props: any) => {
     //@todo reset all data field after pinata data upload is successful
     if (Dataupload) {
       console.log("Data upload here", Dataupload)
-      console.log("Cid to send to contract", Dataupload.cid)
-      setCidToContract(Dataupload.cid)
-      setUploading(false)
-    }
-  }
-
-  // function to handle multicall of create_org and add_instructor functions from contract
-  const handleMulticall = async (prop: string) => {
-    // invoke first the handleRouting to upload data to pinata
-    handlerouting()
-
-    //initialize provider with a Sepolia Testnet node
+      console.log("Cid to send to contract", Dataupload.IpfsHash)
+          //initialize provider with a Sepolia Testnet node
     const organizationContract = new Contract(
       attensysOrgAbi,
       attensysOrgAddress,
@@ -114,17 +106,17 @@ const Addinstructor = (props: any) => {
       [
         organizationData.organizationName,
         // @ts-ignore
-        cidToContract,
+        Dataupload.IpfsHash,
       ],
     )
 
     const add_instructor_calldata = organizationContract.populate(
       "add_instructor_to_org",
-      [organizationData.organizationInstructorsWalletAddresses[0]],
+      [organizationData.organizationInstructorsWalletAddresses, organizationData.organizationName],
     )
 
     //@ts-ignore
-    const multiCall = await connectorDataAccount.executeImpl([
+    const multiCall = await connectorDataAccount.execute([
       {
         contractAddress: attensysOrgAddress,
         entrypoint: "create_org_profile",
@@ -147,9 +139,17 @@ const Addinstructor = (props: any) => {
       .finally(() => {
         //Resets all org data input
         setOrganizationData(ResetOrgRegData)
-        router.push(`/Createorganization/${prop}`)
+        router.push(`/Createorganization/create-a-bootcamp`)
       })
+      setUploading(false)
+    }
+        setUploading(false)
+
+
+
   }
+
+ 
 
   return (
     <div className="lg:h-[500px] w-full flex flex-col items-center space-y-8 py-3">
@@ -161,20 +161,28 @@ const Addinstructor = (props: any) => {
           <div className="lg:w-[590px] lg:h-[60px] w-full border-[2px] rounded-2xl mt-5">
             <Emailinput onEmailsChange={handleEmailsChange} />
           </div>
-          <Button className="bg-[#4A90E21F] text-[#5801A9] font-normal text-[14px] rounded-lg h-[48px] w-[155px] items-center flex justify-center mt-5">
-            <Image src={plus} alt="drop" className="mr-2" />
-            Send invite
-          </Button>
         </div>
       </div>
-
+      <div className="mx-auto">
+        <h1 className="text-[16px] text-[#2D3A4B] font-light leading-[23px]">
+          Use commas (,) to seperate wallet addresses
+        </h1>
+        <div className="flex space-x-3 items-center">
+          <div className="w-[590px] h-[60px] border-[2px] rounded-2xl mt-5">
+            <Addressinput onAddressChange={handleAddresssChange} />
+          </div>
+          {/* <Button className='bg-[#4A90E21F] text-[#5801A9] font-normal text-[14px] rounded-lg h-[48px] w-[155px] items-center flex justify-center mt-5'>
+                            <Image src={cross} alt='drop' className='mr-2'/>
+                            Send invite</Button>    */}
+        </div>
+      </div>
       <Button
         onClick={() => {
-          handleMulticall("create-a-bootcamp")
+          handle_multicall_routing()
         }}
         className="w-[342px] h-[47px] mt-8 flex justify-center items-center text-[#FFFFFF] text-[14px] font-bold leading-[16px] bg-[#4A90E2] rounded-xl"
       >
-        {uploading ? "Uploading..." : "Create your first course"}
+        {uploading ? "Uploading..." : "Create your first bootcamp"}
       </Button>
     </div>
   )

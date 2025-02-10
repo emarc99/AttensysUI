@@ -103,6 +103,12 @@ export const registrationsuccess = atom(false);
 export const addclassmodal = atom(false);
 
 export const createMeeting = atom(false);
+export const isinputError = atom(false);
+export const currentID = atom(null);
+
+export const isRegisteredatom = atom(false);
+export const orgnameatom = atom("none");
+
 export const useWalletAccountChange = () => {
   const wallet = useAtomValue(walletStarknetkitNextAtom)
   const setConnectorData = useSetAtom(connectorDataAtom)

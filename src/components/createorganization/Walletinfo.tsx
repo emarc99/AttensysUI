@@ -46,10 +46,6 @@ const Walletinfo = () => {
           </div>
 
           <ConnectButton />
-
-          <h3 className="underline cursor-pointer text-[#5801A9] font-medium">
-            Create new wallet
-          </h3>
         </div>
 
         <Button
