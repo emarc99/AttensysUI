@@ -16,7 +16,7 @@ import {
   eventcreatedAtom,
   eventregistedAtom,
 } from "@/state/connectedWalletStarknetkitNext"
-import FadeIn from '../Fadein'
+import FadeIn from '@/components/FadeIn'
 
 const Landing = () => {
     const [status, setstatus] = useAtom(coursestatusAtom); 
