@@ -4,7 +4,7 @@ import "react-multi-carousel/lib/styles.css"
 import Carosellcard from "./Carosellcard"
 import { caroselldata } from "@/constants/data"
 
-const BootcampCarousell = () => {
+const BootcampCarousell = (props : any) => {
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -53,16 +53,14 @@ const BootcampCarousell = () => {
           autoPlay={true} // Enables auto-scrolling
           autoPlaySpeed={3000}
         >
-          {caroselldata.map((data, index) => (
+          {props.allbootcampInfo.map((data :any, index :any) => (
             <Carosellcard
               key={index}
-              name={data.name}
-              time={data.time}
-              flier={data.flier}
-              logo={data.logo}
-              action="Register"
-              height="300px"
-              width="300px"
+              name={data.bootcamp_name} 
+              uri={data.bootcamp_ipfs_uri}
+             action="Register"
+              height='300px'
+              width='300px'
             />
           ))}
         </Carousel>

@@ -2,16 +2,16 @@ import React, { useState } from "react"
 import Organizationcard from "./Organizationcard"
 import { organizationData } from "@/constants/data"
 
-const Organizations = () => {
+const Organizations = (props : any) => {
   const [currentPage, setCurrentPage] = useState(1)
 
   const itemsPerPage = 6
 
   // Calculate total pages
-  const totalPages = Math.ceil(organizationData.length / itemsPerPage)
+  const totalPages = Math.ceil(props.allorginfo.length / itemsPerPage)
 
   // Get current page items
-  const currentItems = organizationData.slice(
+  const currentItems = props.allorginfo.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   )
@@ -63,20 +63,11 @@ const Organizations = () => {
       </h1>
       <div className="h-auto w-[90%] mx-auto bg-[#FFFFFF] border-[1px] border-[#C8C8C8] rounded-lg p-4 xl:p-8">
         <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 items-stretch xl:grid-cols-4">
-          {currentItems.map((data, index) => {
+          {currentItems.map((data : any, index : any) => {
             return (
               <div key={index} className="col-span-1 flex flex-none w-full">
                 <Organizationcard
-                  key={index}
-                  name={data.name}
-                  about={data.about}
-                  numberofbootcamps={data.bootcampnumber}
-                  numberofinstructors={data.instructors}
-                  stars={data.stars}
-                  totalreviews={data.reviewnumber}
-                  tags={data.tags}
-                  logo={data.logo}
-                  flier={data.flier}
+                 key={index} orgaddress={data.address_of_org}
                 />
               </div>
             )

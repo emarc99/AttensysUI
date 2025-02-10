@@ -1,5 +1,5 @@
-import React from 'react'
-import { bootcampdropdownstatus } from "@/state/connectedWalletStarknetkitNext"
+import React, { useEffect } from 'react'
+import { bootcampdropdownstatus , isRegisteredatom, orgnameatom} from "@/state/connectedWalletStarknetkitNext"
 import { useAtom, useSetAtom } from "jotai"
 import { VscNewFile } from "react-icons/vsc"
 import bootsearch from '@/assets/bootsearch.svg'
@@ -7,15 +7,47 @@ import bootcreate from '@/assets/bootcreate.svg'
 import Image from 'next/image'
 import people from '@/assets/people.svg'
 import { useRouter } from 'next/navigation'
+import { BlockNumber, Contract, RpcProvider, Account } from "starknet";
+import {attensysOrgAbi} from '@/deployments/abi'
+import {attensysOrgAddress} from '@/deployments/contracts'
+import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants"
+import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest"
 
+
+const orgContract = new Contract(attensysOrgAbi, attensysOrgAddress, provider);
 
 const Bootcampdropdown = () => {
   const [bootcampdropstat] = useAtom(bootcampdropdownstatus)
+  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
+  const [isreg,setisRegistered] = useAtom(isRegisteredatom)
+  const [orgname,setOrgname] = useAtom(orgnameatom)
   const router = useRouter();
   
   // const handleBootcampExplore = () => {
   //   router.push('')
   // }
+    
+  const getOrgInfo = async () => {
+    let org_info = await orgContract?.get_org_info(wallet?.selectedAddress ?? "0x0")
+    console.log(org_info)
+    
+    if(org_info?.org_name != ""){
+      setisRegistered(true);
+      setOrgname(org_info.org_name);
+      console.log(org_info.org_name)
+    }else {
+      setisRegistered(false);
+    }
+   
+  }
+
+  useEffect(() => {
+    const fetchOrgInfo = async () => {
+      await getOrgInfo();
+    };
+  
+    fetchOrgInfo();
+  }, [wallet]);
    
   return (
     <>
@@ -37,7 +69,21 @@ about their courses.</p>
               </a>
             </div>
             <div className="space-y-2 w-[337px]">
-              <a href="/Createorganization" className="cursor-pointer">
+            {isreg ? <a href={`/Organization/${orgname}`} className="cursor-pointer">
+                <div className="flex space-x-3">
+                <Image src={bootcreate} alt='search' />
+                  <h1 className="text-[16px] font-bold cursor-pointer">
+                    Manage Organization
+                  </h1>
+                </div>
+              <p className="text-[13px] text-[#2D3A4B] ">
+              Manage your organization profile, add or edit 
+instructors, create new courses, and track your 
+organizations performance. 
+              </p>
+            </a>
+                :
+            <a href="/Createorganization" className="cursor-pointer">
                 <div className="flex space-x-3">
                 <Image src={bootcreate} alt='search' />
                   <h1 className="text-[16px] font-bold cursor-pointer">
@@ -49,7 +95,8 @@ about their courses.</p>
 instructors, create new courses, and track your 
 organizations performance. 
               </p>
-            </a>
+            </a>}
+
             </div>
         
             <div className="space-y-2 w-[350px]">

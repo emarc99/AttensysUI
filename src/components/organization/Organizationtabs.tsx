@@ -13,7 +13,7 @@ import { useAtom } from 'jotai'
 
 
 
-const Organizationtabs = () => {
+const Organizationtabs = (props : any) => {
     const [mybootcampStat, setMyBootcampStat] = useState(true);
     const [PermissionsStat, setPermissionscampStat] = useState(false);
     const [RegisteredStat, setRegisteredStat] = useState(false);
@@ -73,7 +73,7 @@ const Organizationtabs = () => {
                             <Image src={drop} alt='drop' onClick={handlemybootcamp} className='cursor-pointer' />
                     </div>
                 </div>
-                {mybootcampStat && <Mybootcamp />}
+                {mybootcampStat && <Mybootcamp bootcampInfo={props.bootcampinfo} />}
             </div>
 
             <div>
