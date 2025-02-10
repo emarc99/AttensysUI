@@ -352,7 +352,7 @@ const Index = () => {
 
       <div className="flex justify-center lg:justify-start w-full ">
         <div className="w-[20%] bg-create-gradient lg:flex hidden justify-end">
-          <div className="mt-2 bg-[#F5F8FA]0 space-y-2 md:space-y-5">
+          <div className="mt-20 bg-[#F5F8FA]0 space-y-2 md:space-y-5">
             <div
               className={`cursor-pointer h-[67px] w-[278px] text-[16px]  rounded-tl-xl rounded-bl-xl py-5 pl-10 ${section == "basic-info" ? "bg-[#F5F8FA] text-[#5801A9]" : "bg-none text-[#FFFFFF]"} leading-[22px] font-bold`}
               onClick={() => {
