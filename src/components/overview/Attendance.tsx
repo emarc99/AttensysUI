@@ -5,6 +5,7 @@ import Image from 'next/image'
 import check from '@/assets/check.svg'
 import { attendanceData } from '@/constants/data'
 import AttendanceList from './AttendanceList'
+import EventQRCode from '../eventdetails/EventQRCode'
 
 
 const Attendance = () => {
@@ -125,7 +126,8 @@ const Attendance = () => {
 
         <div className='h-[300px] w-full mt-6 flex items-center justify-center'>
           <div className='w-[235px] h-[224px] border-[3px] border-[#4A90E2] rounded-xl mx-auto flex justify-center items-center'>
-            <Image src={scan} alt="scan" />
+            {/* <Image src={scan} alt="scan" /> */}
+            <EventQRCode eventId='sample-event' />
           </div>
         </div>
         <h1 className='mt-6 text-[18px] font-medium text-[#333333] leading-[22px] w-[92%] mx-auto'>Scan Results</h1>
