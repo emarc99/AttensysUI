@@ -16,6 +16,7 @@ import {
   eventcreatedAtom,
   eventregistedAtom,
 } from "@/state/connectedWalletStarknetkitNext"
+import FadeIn from '../Fadein'
 
 const Landing = () => {
     const [status, setstatus] = useAtom(coursestatusAtom); 
@@ -46,15 +47,40 @@ const Landing = () => {
         <Bootcampdropdown />
         </div>
 
+        <FadeIn duration={100}>
         <Herosection />
+        </FadeIn>
+       
+        <FadeIn duration={100}>
         <Cardsection />
+        </FadeIn>
+
+        <FadeIn duration={100}>
         <Mantrasection />
+        </FadeIn>
+        
+        <FadeIn duration={100}>
         <Guide />
+        </FadeIn>
+
+        <FadeIn duration={100}>
         <World />
+        </FadeIn>
+        
+        <FadeIn duration={100}>
         <Eventsection />
+        </FadeIn>
+
+        <FadeIn duration={100}>
         <Experience />
+        </FadeIn>
+        <FadeIn duration={100}>
         <Testimonial />
+        </FadeIn>
+
+        <FadeIn duration={100}>
         <Faq />
+        </FadeIn>
     </div>
   )
 }
