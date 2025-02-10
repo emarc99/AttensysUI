@@ -6,11 +6,7 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   // If you're going to use auth you'll want to verify here
   try {
-    const url = await pinata.upload.createSignedURL({
-      expires: 180000000000, // The only required param
-      name: "Client File",
-    //   group: "my-group-id"
-    })
+    const url = ""
     return NextResponse.json({ url: url }, { status: 200 }); // Returns the signed upload URL
   } catch (error) {
     console.log(error);
