@@ -29,7 +29,7 @@ const DashboardTab = (props: any) => {
   const router = useRouter()
 
   const handleAddclass = () => {
-    setAddclass(true)
+    setAddclass((prev) => ({ ...prev, modalstatus: true }))
   }
 
   const handleinsightclick = () => {
@@ -64,7 +64,7 @@ const DashboardTab = (props: any) => {
             onClick={handleinsightclick}
             className={`${outlineClickstat && `border-[#9B51E0] border-b-[4px]`} w-[140px] text-[16px] font-medium text-[#333333]`}
           >
-            Course Ouline
+            Course Outline
           </Button>
           <Button
             onClick={handlegueslistclick}

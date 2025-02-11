@@ -9,6 +9,7 @@ import { useEffect } from "react"
 import { ConnectorData, StarknetWindowObject } from "starknetkit-next"
 import { Connector } from "starknetkit"
 import { FileObject } from "pinata";
+import { number } from "starknet"
 
 const emptyData: FileObject = {
   name: "",
@@ -100,7 +101,13 @@ export const detailsEntryStat = atom(true);
 export const detailsEntryLoading = atom(false);
 
 export const registrationsuccess = atom(false);
-export const addclassmodal = atom(false);
+
+const data = {
+  modalstatus : false,
+  idnumber : 0
+}
+
+export const addclassmodal = atom(data);
 
 export const createMeeting = atom(false);
 export const isinputError = atom(false);
