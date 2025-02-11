@@ -70,10 +70,22 @@ const Header = () => {
   )
 
   const [isBootcampsOpen, setIsBootcampsOpen] = useState(false)
+  const [error, setError] = useState('');
 
   const handleChange = (event: { target: { value: any } }) => {
     setSearchValue(event.target.value)
+    if (error) setError('');
   }
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    if (!searchValue.trim()) {
+      e.preventDefault();
+      setError('Please enter an address to search');
+      return;
+    }
+    
+    handleSubmit(e, searchValue, router);
+  };
 
   const handleTabClick = (arg: string) => {
     if (arg == "Courses") {
@@ -125,7 +137,7 @@ const Header = () => {
                 Use our explorer
               </a>
               <div className="relative w-[550px] lclg:w-[380px]">
-                <form onSubmit={(e) => handleSubmit(e, searchValue, router)}>
+                <form onSubmit={onSubmit}>
                   <Input
                     name="search by address"
                     type="text"
@@ -150,6 +162,9 @@ const Header = () => {
                       />
                     </svg>
                   )}
+                   {error && (
+          <p className="absolute -bottom-6 left-0 text-red-500 text-sm">{error}</p>
+        )}
                 </form>
               </div>
             </div>

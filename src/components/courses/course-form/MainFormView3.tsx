@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useRef, useState } from "react"
 import { IoMdArrowBack } from "@react-icons/all-files/io/IoMdArrowBack"
 import Dropdown from "../Dropdown"
 import Image from "next/image"
@@ -14,8 +14,40 @@ import { useRouter } from "next/navigation"
 import { Button } from "@headlessui/react"
 import Stepper from "@/components/Stepper"
 
+interface Lecture {
+  id: string
+  title: string
+  description: string
+  file: File | null
+  titleError: string
+  fileError: string
+}
 const MainFormView3 = () => {
   const router = useRouter()
+  const [lectureTitle, setLectureTitle] = useState("")
+  const [lectureTitleError, setLectureTitleError] = useState("")
+ 
+
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    // Reset errors
+    setLectureTitleError("")
+
+    let hasError = false
+
+    // Validate lecture title only
+    if (!lectureTitle.trim()) {
+      setLectureTitleError("Lecture title is required")
+      hasError = true
+    }
+
+    if (hasError) return
+
+    // Proceed to next step
+    handleCreateCourse(e, "courseSetup4", router)
+}
   const handleBrowsefiles = () => {
     //@todo handle file upload logic
     console.log("click")
@@ -57,7 +89,7 @@ const MainFormView3 = () => {
           </div>
 
           <div className="mx-5 md:mx-10  mt-12">
-            <form action="CourseSetup4">
+            <form  onSubmit={handleSubmit}>
               <div className="my-12 w-full">
                 <label
                   htmlFor=""
@@ -203,8 +235,16 @@ You want to make sure your creative is very catchy.`}
                     <input
                       placeholder="Class Title e.g UI/UX Basics"
                       className="w-auto lg:w-[80%]"
+                      onChange={(e) => {
+                        setLectureTitle(e.target.value)
+                        setLectureTitleError("")
+                      }}
                     />
                   </div>
+                  {lectureTitleError && (
+                <p className="text-red-500 text-xs mt-1">{lectureTitleError}</p>
+              )}
+
                   <div className="flex bg-white p-5 rounded-[5px] my-3">
                     <p className="font-medium mr-3 text-[16px]">Description:</p>
                     <textarea
@@ -292,9 +332,6 @@ You want to make sure your creative is very catchy.`}
                   <button
                     className="rounded-lg bg-[#4A90E2] px-8 py-[15px] text-white w-full md:max-w-[350px]"
                     type="submit"
-                    onClick={(e) =>
-                      handleCreateCourse(e, "courseSetup4", router)
-                    }
                   >
                     Almost there!
                   </button>
