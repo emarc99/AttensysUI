@@ -14,7 +14,7 @@ import { RESET } from "jotai/utils"
 import { connect, disconnect } from "starknetkit"
 import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants"
 
-import Coursedropdown from '@/components/courses/Coursedropdown'
+import Coursedropdown from "@/components/courses/Coursedropdown"
 import Bootcampdropdown from "@/components/bootcamp/Bootcampdropdown"
 import { useAtom, useSetAtom } from "jotai"
 import BootcampLanding from "@/components/bootcamp/BootcampLanding"
@@ -32,7 +32,7 @@ const Index = () => {
   const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
 
   useEffect(() => {
-    setWalletLatest(RESET)
+    /* setWalletLatest(RESET) */
     setWalletNext(RESET)
     setConnectorData(RESET)
     setConnector(RESET)

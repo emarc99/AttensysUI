@@ -42,7 +42,7 @@ const Index = () => {
   const [connectorDataAccount, setConnectorDataAccount] = useState<null | any>()
 
   useEffect(() => {
-    setWalletLatest(RESET)
+    /* setWalletLatest(RESET) */
     setWalletNext(RESET)
     setConnectorData(RESET)
     setConnector(RESET)

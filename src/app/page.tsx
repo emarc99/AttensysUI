@@ -7,7 +7,7 @@ import {
   connectorDataAtom,
   walletStarknetkitNextAtom,
 } from "@/state/connectedWalletStarknetkitNext"
-import { useSetAtom } from "jotai"
+import { atom, useSetAtom } from "jotai"
 import { RESET } from "jotai/utils"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { DisconnectButton } from "@/components/DisconnectButton"
@@ -39,8 +39,11 @@ export default function Home() {
 
   const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
 
+  // Create a new atom for our random number
+  const randomNumberAtom = atom(Math.floor(Math.random() * 100))
+
   useEffect(() => {
-    setWalletLatest(RESET)
+    /* setWalletLatest(RESET) */
     setWalletNext(RESET)
     setConnectorData(RESET)
     setConnector(RESET)

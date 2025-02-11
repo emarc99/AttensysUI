@@ -36,7 +36,7 @@ const Index = () => {
   const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
 
   useEffect(() => {
-    setWalletLatest(RESET)
+    /* setWalletLatest(RESET) */
     setWalletNext(RESET)
     setConnectorData(RESET)
     setConnector(RESET)

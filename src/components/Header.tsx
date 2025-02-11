@@ -90,14 +90,14 @@ const Header = () => {
   const [isCoursesOpen, setIsCoursesOpen] = useState(false)
 
   useEffect(() => {
-    setWalletLatest(RESET)
+    /* setWalletLatest(RESET) */
     setWalletNext(RESET)
     setConnectorData(RESET)
     setConnector(RESET)
   }, [])
 
   useEffect(() => {
-    setWalletLatest(RESET)
+    /* setWalletLatest(RESET) */
     setWalletNext(RESET)
     setConnectorData(RESET)
     setConnector(RESET)
@@ -105,13 +105,13 @@ const Header = () => {
 
   return (
     <>
-<Disclosure
-  as="nav"
-  className={`${status ? "bg-white opacity-80 backdrop-blur-sm" : "bg-white"} 
+      <Disclosure
+        as="nav"
+        className={`${status ? "bg-white opacity-80 backdrop-blur-sm" : "bg-white"} 
     pt-1 relative z-20 overflow-hidden 
     w-[98%] mx-auto 
      lclg:w-[100%] clg:w-[98%] xlg:w-[100%]`}
->
+      >
         <div className="lg:flex hidden sm:hidden justify-center items-center sm:px-6 lg:px-8 lg:h-[85px] lg:my-auto clg:w-[100%] w-full sm1275:hidden">
           <div className="relative flex h-20 items-center justify-between w-[98%]">
             <div className="lg:flex flex-shrink-0 items-center flex justify-between clg:w-[55%] lclg:w-[46%] lclg:mx-auto clg:mx-auto space-x-6 clg:space-x-6 lclg:space-x-6 md:hidden sm:hidden">
