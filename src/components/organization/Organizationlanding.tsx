@@ -44,10 +44,12 @@ const Organizationlanding = (prop: any) => {
       console.log(data?.data);
       //@ts-ignore
       const logoData: GetCIDResponse = await pinata.gateways.get(
+        //@ts-ignore
         data?.data?.OrganizationLogoCID,
       );
       //@ts-ignore
       const bannerData: GetCIDResponse = await pinata.gateways.get(
+        //@ts-ignore
         data?.data?.OrganizationBannerCID,
       );
       // Extract the data from the response

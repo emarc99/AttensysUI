@@ -6,6 +6,7 @@ import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitL
 import { useAtom } from "jotai";
 import { pinata } from "../../../utils/config";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import { GetCIDResponse } from "pinata";
 
 // interface CarousellCardProp {
 //   name : string,
@@ -32,12 +33,14 @@ const Mybootcampcarousel = (props: any) => {
       console.log("bootcamp uri here", data?.data);
       //@ts-ignore
       const logoData: GetCIDResponse = await pinata.gateways.get(
+        //@ts-ignore
         data?.data?.BootcampLogo,
       );
       const objectURL = URL.createObjectURL(logoData.data as Blob);
 
       //@ts-ignore
       const nftData: GetCIDResponse = await pinata.gateways.get(
+        //@ts-ignore
         data?.data?.BootcampNftImage,
       );
       const logoObjectURL = URL.createObjectURL(nftData.data as Blob);
@@ -66,20 +69,20 @@ const Mybootcampcarousel = (props: any) => {
           <Image
             src={logoImagesource}
             alt="eventimage"
-            className="h-full w-full object-cover rounded-2xl"
+            className="object-cover w-full h-full rounded-2xl"
             layout="fill"
           />
         </div>
         <Button className="hidden absolute top-3 right-6 justify-center lg:flex rounded-lg bg-[#9B51E0] text-[#FFFCFC] py-2 px-4 lg:h-[23px] items-center lg:w-[50px] text-sm data-[hover]:bg-sky-500 data-[active]:bg-sky-700">
           <div className="text-[7px]">{props.action}</div>
         </Button>
-        <div className="absolute bottom-0 z-20 w-full flex items-center justify-center text-center bg-carousell-gradient pb-4">
-          <div className="flex space-x-3 mt-20">
+        <div className="absolute bottom-0 z-20 flex items-center justify-center w-full pb-4 text-center bg-carousell-gradient">
+          <div className="flex mt-20 space-x-3">
             <div className="rounded-full h-[24px] w-[24px]">
               <Image
                 src={NFTImagesource}
                 alt="logo"
-                className="object-cover h-full w-full rounded-full"
+                className="object-cover w-full h-full rounded-full"
                 height={24}
                 width={24}
               />

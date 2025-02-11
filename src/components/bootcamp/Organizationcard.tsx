@@ -52,15 +52,17 @@ const Organizationcard = (props: any) => {
 
   const getPubIpfs = async (CID: string) => {
     try {
-      const data = await pinata.gateways.get(CID);
       //@ts-ignore
+      const data = await pinata.gateways.get(CID);
       console.log(data?.data);
       //@ts-ignore
       const logoData: GetCIDResponse = await pinata.gateways.get(
+        //@ts-ignore
         data?.data?.OrganizationLogoCID,
       );
       //@ts-ignore
       const bannerData: GetCIDResponse = await pinata.gateways.get(
+        //@ts-ignore
         data?.data?.OrganizationBannerCID,
       );
       // Extract the data from the response
@@ -114,7 +116,7 @@ const Organizationcard = (props: any) => {
         <Image
           src={bannerImagesource}
           alt="shake"
-          className="w-full h-full rounded-t-xl object-cover absolute"
+          className="absolute object-cover w-full h-full rounded-t-xl"
           layout="fill"
         />
         <div className="h-[60px] w-[60px] rounded-full absolute z-20 bottom-[-25%] left-3">
@@ -142,8 +144,8 @@ const Organizationcard = (props: any) => {
             <span className="text-[#9B51E0]">{tutors}</span> Instructors
           </p>
         </div>
-        <div className="flex space-x-0 justify-between flex-wrap items-center">
-          <div className="flex space-x-2 flex-none items-center mr-6 mb-2">
+        <div className="flex flex-wrap items-center justify-between space-x-0">
+          <div className="flex items-center flex-none mb-2 mr-6 space-x-2">
             <StarRating totalStars={5} starnumber={4} />
             <p className="text-xs text-[#2D3A4B] leading-[14px] font-medium">
               201 reviews

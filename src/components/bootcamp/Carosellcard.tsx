@@ -6,6 +6,7 @@ import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitL
 import { useAtom } from "jotai";
 import { pinata } from "../../../utils/config";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import { GetCIDResponse } from "pinata";
 
 // interface CarousellCardProp {
 //   name: string
@@ -36,15 +37,18 @@ const Carosellcard = (props: any) => {
 
   const obtainCIDdata = async (CID: string) => {
     try {
+      //@ts-ignore
       const data = await pinata.gateways.get(CID);
       //@ts-ignore
       const logoData: GetCIDResponse = await pinata.gateways.get(
+        //@ts-ignore
         data?.data?.BootcampLogo,
       );
       const objectURL = URL.createObjectURL(logoData.data as Blob);
 
       //@ts-ignore
       const nftData: GetCIDResponse = await pinata.gateways.get(
+        //@ts-ignore
         data?.data?.BootcampNftImage,
       );
       const logoObjectURL = URL.createObjectURL(nftData.data as Blob);
@@ -72,7 +76,7 @@ const Carosellcard = (props: any) => {
       <Image
         src={logoImagesource}
         alt="eventimage"
-        className="h-full w-full object-cover"
+        className="object-cover w-full h-full"
         layout="fill"
       />
 
@@ -86,7 +90,7 @@ const Carosellcard = (props: any) => {
 
       {/* Bottom Section with Gradient */}
       <div className="absolute bottom-0 z-20 w-full h-[150px] flex items-center justify-center text-center bg-carousell-gradient rounded-b-2xl">
-        <div className="flex space-x-3 mt-20">
+        <div className="flex mt-20 space-x-3">
           {/* Logo */}
           <div className="rounded-full h-[41px] w-[41px] overflow-hidden">
             <Image
