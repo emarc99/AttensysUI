@@ -1,43 +1,43 @@
-"use client"
-import React, { useEffect } from "react"
-import Eventslanding from "@/components/events/Eventslanding"
-import Coursedropdown from "@/components/courses/Coursedropdown"
-import { useRouter } from "next/router"
-import { useParams } from "next/navigation"
+"use client";
+import React, { useEffect } from "react";
+import Eventslanding from "@/components/events/Eventslanding";
+import Coursedropdown from "@/components/courses/Coursedropdown";
+import { useRouter } from "next/router";
+import { useParams } from "next/navigation";
 import {
   coursestatusAtom,
   bootcampdropdownstatus,
   connectorAtom,
   connectorDataAtom,
   walletStarknetkitNextAtom,
-} from "@/state/connectedWalletStarknetkitNext"
-import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest"
-import { RESET } from "jotai/utils"
-import { connect, disconnect } from "starknetkit"
-import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants"
-import Bootcampdropdown from "@/components/bootcamp/Bootcampdropdown"
-import { useAtom, useSetAtom } from "jotai"
+} from "@/state/connectedWalletStarknetkitNext";
+import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest";
+import { RESET } from "jotai/utils";
+import { connect, disconnect } from "starknetkit";
+import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
+import Bootcampdropdown from "@/components/bootcamp/Bootcampdropdown";
+import { useAtom, useSetAtom } from "jotai";
 
 const Index = () => {
-  const [status, setstatus] = useAtom(coursestatusAtom)
+  const [status, setstatus] = useAtom(coursestatusAtom);
   const [bootcampdropstat, setbootcampdropstat] = useAtom(
     bootcampdropdownstatus,
-  )
-  const params = useParams()
-  const section = params.section
-  const setWalletLatest = useSetAtom(walletStarknetkitLatestAtom)
-  const setWalletNext = useSetAtom(walletStarknetkitNextAtom)
-  const setConnectorData = useSetAtom(connectorDataAtom)
-  const setConnector = useSetAtom(connectorAtom)
+  );
+  const params = useParams();
+  const section = params.section;
+  const setWalletLatest = useSetAtom(walletStarknetkitLatestAtom);
+  const setWalletNext = useSetAtom(walletStarknetkitNextAtom);
+  const setConnectorData = useSetAtom(connectorDataAtom);
+  const setConnector = useSetAtom(connectorAtom);
 
-  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
+  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom);
 
   useEffect(() => {
     /* setWalletLatest(RESET) */
-    setWalletNext(RESET)
-    setConnectorData(RESET)
-    setConnector(RESET)
-  }, [])
+    setWalletNext(RESET);
+    setConnectorData(RESET);
+    setConnector(RESET);
+  }, []);
 
   useEffect(() => {
     const autoConnect = async () => {
@@ -53,23 +53,23 @@ const Index = () => {
             chainId: CHAIN_ID,
             icons: [],
           },
-        })
-        setWallet(connectedWallet)
+        });
+        setWallet(connectedWallet);
       } catch (e) {
-        console.error(e)
-        alert((e as any).message)
+        console.error(e);
+        alert((e as any).message);
       }
-    }
+    };
 
     if (!wallet) {
-      autoConnect()
+      autoConnect();
     }
-  }, [wallet])
+  }, [wallet]);
 
   const handlePageClick = () => {
-    setbootcampdropstat(false)
-    setstatus(false)
-  }
+    setbootcampdropstat(false);
+    setstatus(false);
+  };
 
   return (
     <div className="overflow-x-hidden" onClick={handlePageClick}>
@@ -87,7 +87,7 @@ const Index = () => {
       </div>
       <Eventslanding section={section} />
     </div>
-  )
-}
+  );
+};
 
-export default Index
+export default Index;

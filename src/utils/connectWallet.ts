@@ -1,5 +1,5 @@
-import { connect } from "starknetkit"
-import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants"
+import { connect } from "starknetkit";
+import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
 
 export const connectWallet = async (alwaysAsk = false) => {
   try {
@@ -13,14 +13,14 @@ export const connectWallet = async (alwaysAsk = false) => {
         chainId: CHAIN_ID,
         icons: [],
       },
-    })
-    return wallet
+    });
+    return wallet;
   } catch (e) {
-    console.error(e)
-    alert((e as any).message ?? "An error occurred")
-    return null
+    console.error(e);
+    alert((e as any).message ?? "An error occurred");
+    return null;
   }
-}
+};
 
 /* export const reConnectWallet = async () => {
   try {

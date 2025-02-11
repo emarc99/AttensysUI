@@ -1,14 +1,13 @@
-import { Button, Input } from '@headlessui/react'
-import React, { useState } from 'react'
-import scan from '@/assets/scan.svg'
-import Image from 'next/image'
-import check from '@/assets/check.svg'
-import { attendanceData } from '@/constants/data'
-import AttendanceList from './AttendanceList'
-
+import { Button, Input } from "@headlessui/react";
+import React, { useState } from "react";
+import scan from "@/assets/scan.svg";
+import Image from "next/image";
+import check from "@/assets/check.svg";
+import { attendanceData } from "@/constants/data";
+import AttendanceList from "./AttendanceList";
 
 const Attendance = () => {
-  const [searchValue, setSearchValue] = useState("")
+  const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
   // Calculate total pages
@@ -17,7 +16,7 @@ const Attendance = () => {
   // Get current page items
   const currentItems = attendanceData.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   const goToPage = (page: any) => {
@@ -35,7 +34,11 @@ const Attendance = () => {
     if (currentPage > 3) pageNumbers.push("...");
 
     // Show the range of pages around the current page
-    for (let i = Math.max(1, currentPage - 1); i <= Math.min(currentPage + 1, totalPages); i++) {
+    for (
+      let i = Math.max(1, currentPage - 1);
+      i <= Math.min(currentPage + 1, totalPages);
+      i++
+    ) {
       pageNumbers.push(i);
     }
 
@@ -57,12 +60,9 @@ const Attendance = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
-
-
-
   const handleChange = (event: { target: { value: any } }) => {
-    setSearchValue(event.target.value)
-  }
+    setSearchValue(event.target.value);
+  };
 
   return (
     <div className="h-auto w-[90%] max-w-[992px] mx-auto pb-10">
@@ -70,7 +70,7 @@ const Attendance = () => {
         {[
           { label: "Total scans", value: 39 },
           { label: "Confirmed scans", value: 31 },
-          { label: "Error scans", value: 3 }
+          { label: "Error scans", value: 3 },
         ].map((item, index) => (
           <div key={index} className="w-1/2 md:flex-1 text-center p-6">
             <p className="text-[#2D3A4B] text-[16px] font-medium leading-[18px]">
@@ -90,7 +90,9 @@ const Attendance = () => {
               Attendance
             </h1>
             <Button className="lg:flex rounded-lg justify-center bg-[#2D3A4B] py-2 px-4 lg:h-[42px] items-center lg:w-[140px] text-sm text-[#FFFFFF] data-[hover]:bg-sky-500 data-[active]:bg-sky-700">
-              <div className="text-[11px] items-center font-semibold">Confirm Attendee</div>
+              <div className="text-[11px] items-center font-semibold">
+                Confirm Attendee
+              </div>
             </Button>
           </div>
           <div className="lg:absolute lg:left-[calc(100%/12*4)] lg:w-6/12 top-1 lg:w-[calc(100% - (100%/12 * 2) - 10px)]">
@@ -123,29 +125,43 @@ const Attendance = () => {
           </div>
         </div>
 
-        <div className='h-[300px] w-full mt-6 flex items-center justify-center'>
-          <div className='w-[235px] h-[224px] border-[3px] border-[#4A90E2] rounded-xl mx-auto flex justify-center items-center'>
+        <div className="h-[300px] w-full mt-6 flex items-center justify-center">
+          <div className="w-[235px] h-[224px] border-[3px] border-[#4A90E2] rounded-xl mx-auto flex justify-center items-center">
             <Image src={scan} alt="scan" />
           </div>
         </div>
-        <h1 className='mt-6 text-[18px] font-medium text-[#333333] leading-[22px] w-[92%] mx-auto'>Scan Results</h1>
+        <h1 className="mt-6 text-[18px] font-medium text-[#333333] leading-[22px] w-[92%] mx-auto">
+          Scan Results
+        </h1>
         <div className="mt-6 h-[350px] overflow-auto">
           <table className="w-full border-separate border-spacing-y-3">
             <thead>
               <tr className="h-[56px] w-full text-[14px] bg-[#9B51E052] text-[#5801A9] leading-[19.79px]">
-                <th className="w-[50px] px-4 rounded-tl-xl rounded-bl-xl"><Image src={check} alt="ticket" /></th>
+                <th className="w-[50px] px-4 rounded-tl-xl rounded-bl-xl">
+                  <Image src={check} alt="ticket" />
+                </th>
                 <th className=" text-center font-light">Name</th>
                 <th className=" text-center font-light ">Address</th>
                 <th className=" text-center font-light">Scan Status</th>
                 <th className=" text-center font-light">Role</th>
-                <th className="text-center font-light rounded-tr-xl rounded-br-xl">Reg date</th>
+                <th className="text-center font-light rounded-tr-xl rounded-br-xl">
+                  Reg date
+                </th>
               </tr>
             </thead>
             {currentItems.map((data, index) => {
-              return <AttendanceList key={index} name={data.name} address={data.address} role={data.role} regdate={data.date} checkstat={data.checkstat} />
+              return (
+                <AttendanceList
+                  key={index}
+                  name={data.name}
+                  address={data.address}
+                  role={data.role}
+                  regdate={data.date}
+                  checkstat={data.checkstat}
+                />
+              );
             })}
           </table>
-
         </div>
         {/* Pagination Controls */}
         <div className="flex justify-center space-x-2 mt-4">
@@ -158,7 +174,9 @@ const Attendance = () => {
           </button>
           {generatePageNumbers().map((page, index) =>
             page == "..." ? (
-              <span key={index} className="px-2 text-base mt-2">...</span>
+              <span key={index} className="px-2 text-base mt-2">
+                ...
+              </span>
             ) : (
               <button
                 key={index}
@@ -167,7 +185,7 @@ const Attendance = () => {
               >
                 {page}
               </button>
-            )
+            ),
           )}
 
           <button
@@ -178,10 +196,9 @@ const Attendance = () => {
             {">"}
           </button>
         </div>
-
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Attendance
+export default Attendance;

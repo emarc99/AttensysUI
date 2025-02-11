@@ -1,40 +1,42 @@
-import React, { useEffect, useState } from "react"
-import handshake from "@/assets/handshake.svg"
-import Image from "next/image"
-import testlogo from "@/assets/testlogo.svg"
-import StarRating from "./StarRating"
-import { Button } from "@headlessui/react"
-import { useRouter } from "next/navigation"
+import React, { useEffect, useState } from "react";
+import handshake from "@/assets/handshake.svg";
+import Image from "next/image";
+import testlogo from "@/assets/testlogo.svg";
+import StarRating from "./StarRating";
+import { Button } from "@headlessui/react";
+import { useRouter } from "next/navigation";
 import { BlockNumber, Contract, RpcProvider, Account } from "starknet";
-import {attensysOrgAbi} from '@/deployments/abi'
-import {attensysOrgAddress} from '@/deployments/contracts'
-import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants"
+import { attensysOrgAbi } from "@/deployments/abi";
+import { attensysOrgAddress } from "@/deployments/contracts";
+import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
 import { pinata } from "../../../utils/config";
-import axios from "axios"
-import { GetCIDResponse } from 'pinata'; 
-import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest"
-import { useAtom } from 'jotai'
-import { StaticImport } from 'next/dist/shared/lib/get-img-props'
+import axios from "axios";
+import { GetCIDResponse } from "pinata";
+import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest";
+import { useAtom } from "jotai";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 interface OrganizationCardProp {
-  name: string
-  about: string
-  numberofbootcamps: string
-  numberofinstructors: string
-  stars: number
-  totalreviews: string
-  tags: Array<string>
-  logo: any
-  flier: any
+  name: string;
+  about: string;
+  numberofbootcamps: string;
+  numberofinstructors: string;
+  stars: number;
+  totalreviews: string;
+  tags: Array<string>;
+  logo: any;
+  flier: any;
 }
 
 const orgContract = new Contract(attensysOrgAbi, attensysOrgAddress, provider);
 
-const Organizationcard = (props : any) => {
-  const router = useRouter()
-  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
+const Organizationcard = (props: any) => {
+  const router = useRouter();
+  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom);
   const [logoImagesource, setLogoImage] = useState<string | StaticImport>("");
-  const [bannerImagesource, setBannerImage] = useState<string | StaticImport>("");
+  const [bannerImagesource, setBannerImage] = useState<string | StaticImport>(
+    "",
+  );
   const [organizationName, setOrgName] = useState<string | null>(null);
   const [Owneraddress, setOwnerAddress] = useState<string | null>(null);
   const [classessNumber, setNumberofClasses] = useState<number | null>(null);
@@ -45,65 +47,66 @@ const Organizationcard = (props : any) => {
   const [description, setDescription] = useState<string | null>(null);
 
   const handleDetailsRoute = () => {
-    router.push(`/Bootcamps/${props.name}`)
-  }
+    router.push(`/Bootcamps/${props.name}`);
+  };
 
-  const getPubIpfs = async (CID : string) => {
+  const getPubIpfs = async (CID: string) => {
     try {
-        const data = await pinata.gateways.get(CID);
-        //@ts-ignore
-        console.log(data?.data)
-         //@ts-ignore
-        const logoData : GetCIDResponse = await pinata.gateways.get(data?.data?.OrganizationLogoCID)     
-        //@ts-ignore 
-        const bannerData : GetCIDResponse = await pinata.gateways.get(data?.data?.OrganizationBannerCID)      
-        // Extract the data from the response
-        const objectURL = URL.createObjectURL(logoData.data as Blob);
-        const bannerobjectURL = URL.createObjectURL(bannerData.data as Blob);
+      const data = await pinata.gateways.get(CID);
+      //@ts-ignore
+      console.log(data?.data);
+      //@ts-ignore
+      const logoData: GetCIDResponse = await pinata.gateways.get(
+        data?.data?.OrganizationLogoCID,
+      );
+      //@ts-ignore
+      const bannerData: GetCIDResponse = await pinata.gateways.get(
+        data?.data?.OrganizationBannerCID,
+      );
+      // Extract the data from the response
+      const objectURL = URL.createObjectURL(logoData.data as Blob);
+      const bannerobjectURL = URL.createObjectURL(bannerData.data as Blob);
 
-        setLogoImage(objectURL)
-        setBannerImage(bannerobjectURL)
-        //@ts-ignore
-        setOrgName(data?.data.OrganizationName)
+      setLogoImage(objectURL);
+      setBannerImage(bannerobjectURL);
+      //@ts-ignore
+      setOrgName(data?.data.OrganizationName);
 
-        //@ts-ignore
-        setOwnerAddress(data?.data.OrganizationAminWalletAddress)
+      //@ts-ignore
+      setOwnerAddress(data?.data.OrganizationAminWalletAddress);
 
-        //@ts-ignore
-        setCreator(data?.data.OrganizationAdminName)
+      //@ts-ignore
+      setCreator(data?.data.OrganizationAdminName);
 
-        //@ts-ignore
-        const truncated = truncateToWords(data?.data.OrganizationDescription)
-        setDescription(truncated)
-    } catch (error) {
-        
-    }
-}
+      //@ts-ignore
+      const truncated = truncateToWords(data?.data.OrganizationDescription);
+      setDescription(truncated);
+    } catch (error) {}
+  };
 
-const getOrgInfo = async () => {
-    let org_info = await orgContract?.get_org_info(props.orgaddress)
+  const getOrgInfo = async () => {
+    let org_info = await orgContract?.get_org_info(props.orgaddress);
 
-    console.log("here is specific org",org_info)    
-    setNumberofClasses(Number(org_info.number_of_all_classes))
-    setNumberofTutors(Number(org_info.number_of_instructors))
-    setStudentNumber(Number(org_info.number_of_students))
-    setBootcampNumber(Number(org_info.number_of_all_bootcamps))
-    getPubIpfs(org_info.org_ipfs_uri)
-  }
+    console.log("here is specific org", org_info);
+    setNumberofClasses(Number(org_info.number_of_all_classes));
+    setNumberofTutors(Number(org_info.number_of_instructors));
+    setStudentNumber(Number(org_info.number_of_students));
+    setBootcampNumber(Number(org_info.number_of_all_bootcamps));
+    getPubIpfs(org_info.org_ipfs_uri);
+  };
 
   function truncateToWords(text: any): string {
-    const words = text.split(/\s+/); 
-   const wordLimit: number = 20
+    const words = text.split(/\s+/);
+    const wordLimit: number = 20;
     if (words.length > wordLimit) {
       return words.slice(0, wordLimit).join(" ") + " ...";
     }
     return text;
   }
 
-useEffect(() => {
+  useEffect(() => {
     getOrgInfo();
-  },[wallet])
-
+  }, [wallet]);
 
   return (
     <div className="h-auto pb-2 w-full rounded-xl border-[1px] border-[#C8C8C8] bg-[#FFFFFF]">
@@ -112,10 +115,15 @@ useEffect(() => {
           src={bannerImagesource}
           alt="shake"
           className="w-full h-full rounded-t-xl object-cover absolute"
-          layout='fill'
+          layout="fill"
         />
         <div className="h-[60px] w-[60px] rounded-full absolute z-20 bottom-[-25%] left-3">
-          <Image src={logoImagesource} alt="logo" layout='fill' className='rounded-full'/>
+          <Image
+            src={logoImagesource}
+            alt="logo"
+            layout="fill"
+            className="rounded-full"
+          />
         </div>
       </div>
 
@@ -128,12 +136,10 @@ useEffect(() => {
         </p>
         <div className="flex space-x-4">
           <p className="text-[12px] text-[#817676] leading-[14px] font-medium">
-            <span className="text-[#9B51E0]">{bootcampNumber}</span>{" "}
-            Bootcamps
+            <span className="text-[#9B51E0]">{bootcampNumber}</span> Bootcamps
           </p>
           <p className="text-[12px] text-[#817676] leading-[14px] font-medium">
-            <span className="text-[#9B51E0]">{tutors}</span>{" "}
-            Instructors
+            <span className="text-[#9B51E0]">{tutors}</span> Instructors
           </p>
         </div>
         <div className="flex space-x-0 justify-between flex-wrap items-center">
@@ -164,7 +170,7 @@ useEffect(() => {
         </div> */}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Organizationcard
+export default Organizationcard;
