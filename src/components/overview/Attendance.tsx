@@ -5,6 +5,7 @@ import Image from "next/image";
 import check from "@/assets/check.svg";
 import { attendanceData } from "@/constants/data";
 import AttendanceList from "./AttendanceList";
+import EventQRCode from "../eventdetails/EventQRCode";
 
 const Attendance = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -72,7 +73,7 @@ const Attendance = () => {
           { label: "Confirmed scans", value: 31 },
           { label: "Error scans", value: 3 },
         ].map((item, index) => (
-          <div key={index} className="w-1/2 md:flex-1 text-center p-6">
+          <div key={index} className="w-1/2 p-6 text-center md:flex-1">
             <p className="text-[#2D3A4B] text-[16px] font-medium leading-[18px]">
               {item.label}
             </p>
@@ -85,7 +86,7 @@ const Attendance = () => {
 
       <div className="mx-auto p-4 lg:p-16 bg-[#FFFFFF] mt-4 rounded-lg">
         <div className="relative">
-          <div className="flex justify-between items-center h-12">
+          <div className="flex items-center justify-between h-12">
             <h1 className="text-[18px] lg:w-1/12 font-medium leading-[22px] text-[#333333]">
               Attendance
             </h1>
@@ -103,7 +104,7 @@ const Attendance = () => {
                 placeholder="Search wallet address"
                 value={searchValue}
                 onChange={handleChange}
-                className="w-full h-10 p-2 pl-8 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
+                className="w-full h-10 p-2 pl-8 text-sm text-gray-700 placeholder-gray-400 border border-gray-300 shadow-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
               {!searchValue && (
                 <svg
@@ -112,7 +113,7 @@ const Attendance = () => {
                   viewBox="0 0 24 24"
                   strokeWidth="1.5"
                   stroke="currentColor"
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+                  className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2"
                 >
                   <path
                     strokeLinecap="round"
@@ -127,7 +128,8 @@ const Attendance = () => {
 
         <div className="h-[300px] w-full mt-6 flex items-center justify-center">
           <div className="w-[235px] h-[224px] border-[3px] border-[#4A90E2] rounded-xl mx-auto flex justify-center items-center">
-            <Image src={scan} alt="scan" />
+            {/* <Image src={scan} alt="scan" /> */}
+            <EventQRCode eventId="sample-event" />
           </div>
         </div>
         <h1 className="mt-6 text-[18px] font-medium text-[#333333] leading-[22px] w-[92%] mx-auto">
@@ -140,11 +142,11 @@ const Attendance = () => {
                 <th className="w-[50px] px-4 rounded-tl-xl rounded-bl-xl">
                   <Image src={check} alt="ticket" />
                 </th>
-                <th className=" text-center font-light">Name</th>
-                <th className=" text-center font-light ">Address</th>
-                <th className=" text-center font-light">Scan Status</th>
-                <th className=" text-center font-light">Role</th>
-                <th className="text-center font-light rounded-tr-xl rounded-br-xl">
+                <th className="font-light text-center ">Name</th>
+                <th className="font-light text-center ">Address</th>
+                <th className="font-light text-center ">Scan Status</th>
+                <th className="font-light text-center ">Role</th>
+                <th className="font-light text-center rounded-tr-xl rounded-br-xl">
                   Reg date
                 </th>
               </tr>
@@ -164,7 +166,7 @@ const Attendance = () => {
           </table>
         </div>
         {/* Pagination Controls */}
-        <div className="flex justify-center space-x-2 mt-4">
+        <div className="flex justify-center mt-4 space-x-2">
           <button
             onClick={goToPreviousPage}
             disabled={currentPage === 1}
@@ -174,7 +176,7 @@ const Attendance = () => {
           </button>
           {generatePageNumbers().map((page, index) =>
             page == "..." ? (
-              <span key={index} className="px-2 text-base mt-2">
+              <span key={index} className="px-2 mt-2 text-base">
                 ...
               </span>
             ) : (
