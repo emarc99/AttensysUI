@@ -1,67 +1,68 @@
-import React, { useState } from "react"
-import { Button, Field, Input } from "@headlessui/react"
-import clsx from "clsx"
-import { useRouter } from "next/navigation"
-import { organzationInitState } from "@/state/connectedWalletStarknetkitNext"
-import { useAtom } from "jotai"
+import React, { useState } from "react";
+import { Button, Field, Input } from "@headlessui/react";
+import clsx from "clsx";
+import { useRouter } from "next/navigation";
+import { organzationInitState } from "@/state/connectedWalletStarknetkitNext";
+import { useAtom } from "jotai";
 
 const Admininfo = () => {
-  const router = useRouter()
-  const [organizationData, setOrganizationData] = useAtom(organzationInitState)
+  const router = useRouter();
+  const [organizationData, setOrganizationData] = useAtom(organzationInitState);
   const [adminNameError, setAdminNameError] = useState(false);
   const [adminEmailError, setAdminEmailError] = useState(false);
   const [adminwalletError, setAdminwalletError] = useState(false);
 
   // console.dir(organizationData, {depth : null})
 
-  const handlerouting = (prop : string) =>{
+  const handlerouting = (prop: string) => {
     let isValid = true;
-    if(!organizationData.organizationAdminfullname.trim()){
-        setAdminNameError(true)
-        isValid = false
-    }else {
-        setAdminNameError(false)
+    if (!organizationData.organizationAdminfullname.trim()) {
+      setAdminNameError(true);
+      isValid = false;
+    } else {
+      setAdminNameError(false);
     }
-    if (!organizationData.organizationAminEmail.trim()){
-        setAdminEmailError(true)
-        isValid = false
-    }else {
-        setAdminEmailError(false)
+    if (!organizationData.organizationAminEmail.trim()) {
+      setAdminEmailError(true);
+      isValid = false;
+    } else {
+      setAdminEmailError(false);
     }
     if (!organizationData.organizationAdminWallet.trim()) {
-        setAdminwalletError(true)
-        isValid = false
-    }else {
-        setAdminwalletError(false)
+      setAdminwalletError(true);
+      isValid = false;
+    } else {
+      setAdminwalletError(false);
     }
     if (isValid) {
-        router.push(`/Createorganization/${prop}`)
+      router.push(`/Createorganization/${prop}`);
     }
-}
-const handleAdminNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  };
+  const handleAdminNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOrganizationData((prevData) => ({
       ...prevData, // Spread existing data to retain untouched fields
       organizationAdminfullname: e.target.value, // Dynamically update the specific field
-}));
-setAdminNameError(false);
-}
+    }));
+    setAdminNameError(false);
+  };
 
-const handleEmailAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEmailAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOrganizationData((prevData) => ({
       ...prevData, // Spread existing data to retain untouched fields
       organizationAminEmail: e.target.value, // Dynamically update the specific field
-}));
-setAdminEmailError(false)
-}
+    }));
+    setAdminEmailError(false);
+  };
 
-const handleWalletAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleWalletAddressChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setOrganizationData((prevData) => ({
       ...prevData, // Spread existing data to retain untouched fields
       organizationAdminWallet: e.target.value, // Dynamically update the specific field
-}));
-setAdminwalletError(false)
-}
-
+    }));
+    setAdminwalletError(false);
+  };
 
   return (
     <div className="lg:min-h-screen w-full px-4 sm:px-6 flex flex-col items-center space-y-6 sm:space-y-8 py-6">
@@ -80,7 +81,9 @@ setAdminwalletError(false)
             )}
           />
         </Field>
-        {adminNameError && <p className='text-red-400 text-[13px]' >* Required</p>}
+        {adminNameError && (
+          <p className="text-red-400 text-[13px]">* Required</p>
+        )}
       </div>
 
       {/* Email Address Section */}
@@ -100,7 +103,9 @@ setAdminwalletError(false)
               )}
             />
           </Field>
-          {adminEmailError && <p className='text-red-400 text-[13px]' >* Required</p>}
+          {adminEmailError && (
+            <p className="text-red-400 text-[13px]">* Required</p>
+          )}
         </div>
       </div>
 
@@ -109,7 +114,7 @@ setAdminwalletError(false)
         <h1 className="text-[14px] sm:text-[16px] text-[#2D3A4B] font-normal leading-[20px] sm:leading-[23px]">
           Admin Wallet address
         </h1>
-       
+
         <div className="relative">
           <Field>
             <Input
@@ -122,7 +127,9 @@ setAdminwalletError(false)
               )}
             />
           </Field>
-          {adminwalletError && <p className='text-red-400 text-[13px]' >* Required</p>}
+          {adminwalletError && (
+            <p className="text-red-400 text-[13px]">* Required</p>
+          )}
         </div>
       </div>
 
@@ -134,7 +141,7 @@ setAdminwalletError(false)
         Verify
       </Button>
     </div>
-  )
-}
+  );
+};
 
-export default Admininfo
+export default Admininfo;

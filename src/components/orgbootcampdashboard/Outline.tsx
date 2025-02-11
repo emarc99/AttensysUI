@@ -68,7 +68,7 @@ const Outline = () => {
         </h1>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Outline
+export default Outline;

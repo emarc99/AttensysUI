@@ -1,5 +1,11 @@
-"use client"
-import { ChangeEvent, SetStateAction, useEffect, useRef, useState } from "react"
+"use client";
+import {
+  ChangeEvent,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   Button,
   Dialog,
@@ -235,9 +241,9 @@ export default function UploadModal(prop: any) {
       window.scrollTo({
         top: Math.max(0, 130),
         behavior: "smooth",
-      })
+      });
     }
-  }, [open])
+  }, [open]);
 
   return (
     <Dialog open={open} onClose={setOpen} className="relative z-10">
@@ -459,5 +465,5 @@ export default function UploadModal(prop: any) {
         </div>
       </div>
     </Dialog>
-  )
+  );
 }

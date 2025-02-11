@@ -1,16 +1,15 @@
-import React from 'react'
+import React from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import Mybootcampcarousel from './Mybootcampcarousel';
-import {caroselldata} from '@/constants/data'
-import { useRouter } from 'next/navigation';
-import {currentID} from '@/state/connectedWalletStarknetkitNext'
-import { useSetAtom } from 'jotai';
+import Mybootcampcarousel from "./Mybootcampcarousel";
+import { caroselldata } from "@/constants/data";
+import { useRouter } from "next/navigation";
+import { currentID } from "@/state/connectedWalletStarknetkitNext";
+import { useSetAtom } from "jotai";
 
-
-const Mybootcamp = (props : any) => {
+const Mybootcamp = (props: any) => {
   const router = useRouter();
-  const setCurrentID = useSetAtom(currentID)
+  const setCurrentID = useSetAtom(currentID);
 
   const handlebootcamproute = (props : string, id : any) => {
     setCurrentID(id)
@@ -72,7 +71,7 @@ const Mybootcamp = (props : any) => {
         </div>
                            
     </div>
-  )
-}
+  );
+};
 
-export default Mybootcamp
+export default Mybootcamp;
