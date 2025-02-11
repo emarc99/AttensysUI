@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react"
-import Image from "next/image"
-import { Button } from "@headlessui/react"
-import { useRouter } from "next/navigation"
-import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest"
-import { useAtom } from 'jotai'
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import { Button } from "@headlessui/react";
+import { useRouter } from "next/navigation";
+import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest";
+import { useAtom } from "jotai";
 import { pinata } from "../../../utils/config";
-import { StaticImport } from 'next/dist/shared/lib/get-img-props';
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import { GetCIDResponse } from "pinata";
 
 // interface CarousellCardProp {
 //   name: string
@@ -17,49 +18,54 @@ import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 //   width: string
 // }
 
-const Carosellcard = (props : any) => {
-  const router = useRouter()
-  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
+const Carosellcard = (props: any) => {
+  const router = useRouter();
+  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom);
   const [logoImagesource, setLogoImage] = useState<string | StaticImport>("");
   const [NFTImagesource, setNFTLogoImage] = useState<string | StaticImport>("");
   const [date, setDate] = useState<string | null>(null);
 
   const handleActionClick = (arg: any) => {
     if (arg == "Register") {
-      router.push(`/Register/${props.name}`)
+      router.push(`/Register/${props.name}`);
     } else if (arg == "Finished") {
-      router.push(`/Register/${props.name}`)
+      router.push(`/Register/${props.name}`);
     } else if (arg == "Manage") {
-      router.push(`/Mybootcamps/${props.name}`)
+      router.push(`/Mybootcamps/${props.name}`);
     }
-  }
+  };
 
   const obtainCIDdata = async (CID: string) => {
     try {
+      //@ts-ignore
       const data = await pinata.gateways.get(CID);
-         //@ts-ignore
-    const logoData : GetCIDResponse = await pinata.gateways.get(data?.data?.BootcampLogo) 
-    const objectURL = URL.createObjectURL(logoData.data as Blob);
+      //@ts-ignore
+      const logoData: GetCIDResponse = await pinata.gateways.get(
+        //@ts-ignore
+        data?.data?.BootcampLogo,
+      );
+      const objectURL = URL.createObjectURL(logoData.data as Blob);
 
+      //@ts-ignore
+      const nftData: GetCIDResponse = await pinata.gateways.get(
+        //@ts-ignore
+        data?.data?.BootcampNftImage,
+      );
+      const logoObjectURL = URL.createObjectURL(nftData.data as Blob);
 
-    //@ts-ignore
-    const nftData : GetCIDResponse = await pinata.gateways.get(data?.data?.BootcampNftImage) 
-    const logoObjectURL = URL.createObjectURL(nftData.data as Blob);
-
-     //@ts-ignore
-     setDate(data?.data?.BootcampStartDate)
-     setLogoImage(objectURL)
-     setNFTLogoImage(logoObjectURL)
-
+      //@ts-ignore
+      setDate(data?.data?.BootcampStartDate);
+      setLogoImage(objectURL);
+      setNFTLogoImage(logoObjectURL);
     } catch (error) {
       console.error("Error fetching IPFS content:", error);
       throw error;
     }
-}
+  };
 
-useEffect(() => {
-  obtainCIDdata(props.uri)
-},[wallet])
+  useEffect(() => {
+    obtainCIDdata(props.uri);
+  }, [wallet]);
 
   return (
     <div
@@ -70,8 +76,8 @@ useEffect(() => {
       <Image
         src={logoImagesource}
         alt="eventimage"
-        className="h-full w-full object-cover"
-        layout='fill' 
+        className="object-cover w-full h-full"
+        layout="fill"
       />
 
       {/* Action Button */}
@@ -84,10 +90,16 @@ useEffect(() => {
 
       {/* Bottom Section with Gradient */}
       <div className="absolute bottom-0 z-20 w-full h-[150px] flex items-center justify-center text-center bg-carousell-gradient rounded-b-2xl">
-        <div className="flex space-x-3 mt-20">
+        <div className="flex mt-20 space-x-3">
           {/* Logo */}
           <div className="rounded-full h-[41px] w-[41px] overflow-hidden">
-            <Image src={NFTImagesource} alt="logo" className="object-cover" height={41} width={41}/>
+            <Image
+              src={NFTImagesource}
+              alt="logo"
+              className="object-cover"
+              height={41}
+              width={41}
+            />
           </div>
           {/* Name and Time */}
           <div>
@@ -101,7 +113,7 @@ useEffect(() => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Carosellcard
+export default Carosellcard;

@@ -21,7 +21,6 @@ const MainFormView = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Reset errors
     setCourseNameError("");
     setCourseDescriptionError("");
     setSkillError("");
@@ -29,7 +28,6 @@ const MainFormView = () => {
 
     let hasError = false;
 
-    // Validate inputs
     if (!courseName.trim()) {
       setCourseNameError("Course Name is required.");
       hasError = true;
@@ -213,4 +211,4 @@ const MainFormView = () => {
   )
 }
 
-export default MainFormView
+export default MainFormView;

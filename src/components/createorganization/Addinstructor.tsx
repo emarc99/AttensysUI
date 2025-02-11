@@ -1,31 +1,31 @@
-import React, { useState } from "react"
-import Emailinput from "../overview/Emailinput"
-import { Button } from "@headlessui/react"
-import cross from "@/assets/cross.svg"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
-import Addressinput from "./Addressinput"
+import React, { useState } from "react";
+import Emailinput from "../overview/Emailinput";
+import { Button } from "@headlessui/react";
+import cross from "@/assets/cross.svg";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import Addressinput from "./Addressinput";
 import {
   walletStarknetkitNextAtom,
   organzationInitState,
-} from "@/state/connectedWalletStarknetkitNext"
-import { useAtom } from "jotai"
-import { pinata } from "../../../utils/config"
-import { attensysOrgAddress } from "../../deployments/contracts"
-import { attensysOrgAbi } from "../../deployments/abi"
-import { Contract } from "starknet"
-import plus from "../../../public/plus.svg"
+} from "@/state/connectedWalletStarknetkitNext";
+import { useAtom } from "jotai";
+import { pinata } from "../../../utils/config";
+import { attensysOrgAddress } from "../../deployments/contracts";
+import { attensysOrgAbi } from "../../deployments/abi";
+import { Contract } from "starknet";
+import plus from "../../../public/plus.svg";
 
-import { FileObject } from "pinata"
+import { FileObject } from "pinata";
 const emptyData: FileObject = {
   name: "",
   type: "",
   size: 0,
   lastModified: 0,
   arrayBuffer: async () => {
-    return new ArrayBuffer(0)
+    return new ArrayBuffer(0);
   },
-}
+};
 const ResetOrgRegData = {
   organizationBanner: emptyData,
   organizationName: "",
@@ -37,45 +37,45 @@ const ResetOrgRegData = {
   organizationAdminWallet: "",
   organizationInstructorEmails: [""],
   organizationInstructorsWalletAddresses: [""],
-}
+};
 
 const Addinstructor = (props: any) => {
-  const { connectorDataAccount } = props
-  const [emailList, setEmailList] = useState<string[]>([])
-  const [AddressList, setAddressList] = useState<string[]>([])
-  const [organizationData, setOrganizationData] = useAtom(organzationInitState)
-  const [uploading, setUploading] = useState(false)
+  const { connectorDataAccount } = props;
+  const [emailList, setEmailList] = useState<string[]>([]);
+  const [AddressList, setAddressList] = useState<string[]>([]);
+  const [organizationData, setOrganizationData] = useAtom(organzationInitState);
+  const [uploading, setUploading] = useState(false);
   // const [cidToContract, setCidToContract] = useState<string>("")
 
   // console.dir(organizationData, {depth : null})
 
   const handleEmailsChange = (emails: string[]) => {
-    setEmailList(emails)
+    setEmailList(emails);
     setOrganizationData((prevData) => ({
       ...prevData, // Spread existing data to retain untouched fields
       organizationInstructorEmails: emails, // Dynamically update the specific field
-    }))
-  }
+    }));
+  };
   const handleAddresssChange = (addr: string[]) => {
-    setAddressList(addr)
+    setAddressList(addr);
     setOrganizationData((prevData) => ({
       ...prevData, // Spread existing data to retain untouched fields
       organizationInstructorsWalletAddresses: addr, // Dynamically update the specific field
-    }))
-  }
-  const router = useRouter()
+    }));
+  };
+  const router = useRouter();
 
   //handles routing and pinata interaction
   // function to handle multicall of create_org and add_instructor functions from contract
   const handle_multicall_routing = async () => {
-    setUploading(true)
+    setUploading(true);
     const OrgBannerupload = await pinata.upload.file(
       organizationData.organizationBanner,
-    )
+    );
     const OrgLogoUpload = await pinata.upload.file(
       organizationData.organizationLogo,
-    )
-    console.log("org data here",organizationData);
+    );
+    console.log("org data here", organizationData);
     const Dataupload = await pinata.upload.json({
       OrganizationName: organizationData.organizationName,
       OrganizationDescription: organizationData.organizationDescription,
@@ -89,67 +89,65 @@ const Addinstructor = (props: any) => {
         organizationData.organizationInstructorEmails,
       OrganizationInstructorWalletAddresses:
         organizationData.organizationInstructorsWalletAddresses,
-    })
+    });
     //@todo reset all data field after pinata data upload is successful
     if (Dataupload) {
-      console.log("Data upload here", Dataupload)
-      console.log("Cid to send to contract", Dataupload.IpfsHash)
-          //initialize provider with a Sepolia Testnet node
-    const organizationContract = new Contract(
-      attensysOrgAbi,
-      attensysOrgAddress,
-      connectorDataAccount,
-    )
+      console.log("Data upload here", Dataupload);
+      console.log("Cid to send to contract", Dataupload.IpfsHash);
+      //initialize provider with a Sepolia Testnet node
+      const organizationContract = new Contract(
+        attensysOrgAbi,
+        attensysOrgAddress,
+        connectorDataAccount,
+      );
 
-    const create_org_calldata = organizationContract.populate(
-      "create_org_profile",
-      [
-        organizationData.organizationName,
-        // @ts-ignore
-        Dataupload.IpfsHash,
-      ],
-    )
+      const create_org_calldata = organizationContract.populate(
+        "create_org_profile",
+        [
+          organizationData.organizationName,
+          // @ts-ignore
+          Dataupload.IpfsHash,
+        ],
+      );
 
-    const add_instructor_calldata = organizationContract.populate(
-      "add_instructor_to_org",
-      [organizationData.organizationInstructorsWalletAddresses, organizationData.organizationName],
-    )
+      const add_instructor_calldata = organizationContract.populate(
+        "add_instructor_to_org",
+        [
+          organizationData.organizationInstructorsWalletAddresses,
+          organizationData.organizationName,
+        ],
+      );
 
-    //@ts-ignore
-    const multiCall = await connectorDataAccount.execute([
-      {
-        contractAddress: attensysOrgAddress,
-        entrypoint: "create_org_profile",
-        calldata: create_org_calldata.calldata,
-      },
-      {
-        contractAddress: attensysOrgAddress,
-        entrypoint: "add_instructor_to_org",
-        calldata: add_instructor_calldata.calldata,
-      },
-    ])
+      //@ts-ignore
+      const multiCall = await connectorDataAccount.execute([
+        {
+          contractAddress: attensysOrgAddress,
+          entrypoint: "create_org_profile",
+          calldata: create_org_calldata.calldata,
+        },
+        {
+          contractAddress: attensysOrgAddress,
+          entrypoint: "add_instructor_to_org",
+          calldata: add_instructor_calldata.calldata,
+        },
+      ]);
 
-    //@ts-ignore
-    connectorDataAccount?.provider
-      .waitForTransaction(multiCall.transaction_hash)
-      .then(() => {})
-      .catch((e: any) => {
-        console.log("Error: ", e)
-      })
-      .finally(() => {
-        //Resets all org data input
-        setOrganizationData(ResetOrgRegData)
-        router.push(`/Createorganization/create-a-bootcamp`)
-      })
-      setUploading(false)
+      //@ts-ignore
+      connectorDataAccount?.provider
+        .waitForTransaction(multiCall.transaction_hash)
+        .then(() => {})
+        .catch((e: any) => {
+          console.log("Error: ", e);
+        })
+        .finally(() => {
+          //Resets all org data input
+          setOrganizationData(ResetOrgRegData);
+          router.push(`/Createorganization/create-a-bootcamp`);
+        });
+      setUploading(false);
     }
-        setUploading(false)
-
-
-
-  }
-
- 
+    setUploading(false);
+  };
 
   return (
     <div className="lg:h-[500px] w-full flex flex-col items-center space-y-8 py-3">
@@ -178,14 +176,14 @@ const Addinstructor = (props: any) => {
       </div>
       <Button
         onClick={() => {
-          handle_multicall_routing()
+          handle_multicall_routing();
         }}
         className="w-[342px] h-[47px] mt-8 flex justify-center items-center text-[#FFFFFF] text-[14px] font-bold leading-[16px] bg-[#4A90E2] rounded-xl"
       >
         {uploading ? "Uploading..." : "Create your first bootcamp"}
       </Button>
     </div>
-  )
-}
+  );
+};
 
-export default Addinstructor
+export default Addinstructor;
