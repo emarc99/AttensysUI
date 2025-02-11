@@ -1,39 +1,39 @@
-import { Button, Input } from "@headlessui/react"
-import React, { useState } from "react"
-import Image from "next/image"
-import downlaod from "@/assets/download.svg"
-import filter from "@/assets/filter.png"
-import check from "@/assets/check.svg"
-import List from "./List"
-import { guestdata } from "@/constants/data"
+import { Button, Input } from "@headlessui/react";
+import React, { useState } from "react";
+import Image from "next/image";
+import downlaod from "@/assets/download.svg";
+import filter from "@/assets/filter.png";
+import check from "@/assets/check.svg";
+import List from "./List";
+import { guestdata } from "@/constants/data";
 
 const Guestlist = () => {
-  const [searchValue, setSearchValue] = useState("")
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 10
+  const [searchValue, setSearchValue] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   // Calculate total pages
-  const totalPages = Math.ceil(guestdata.length / itemsPerPage)
+  const totalPages = Math.ceil(guestdata.length / itemsPerPage);
 
   // Get current page items
   const currentItems = guestdata.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
-  )
+  );
 
   const goToPage = (page: any) => {
-    setCurrentPage(page)
-  }
+    setCurrentPage(page);
+  };
 
   const generatePageNumbers = () => {
-    const pageNumbers = []
-    const maxVisiblePages = 10
+    const pageNumbers = [];
+    const maxVisiblePages = 10;
 
     // Always show the first page
-    if (currentPage > 2) pageNumbers.push(1)
+    if (currentPage > 2) pageNumbers.push(1);
 
     // Show ellipsis if there are pages between the first page and current page range
-    if (currentPage > 3) pageNumbers.push("...")
+    if (currentPage > 3) pageNumbers.push("...");
 
     // Show the range of pages around the current page
     for (
@@ -41,29 +41,29 @@ const Guestlist = () => {
       i <= Math.min(currentPage + 1, totalPages);
       i++
     ) {
-      pageNumbers.push(i)
+      pageNumbers.push(i);
     }
 
     // Show ellipsis if there are pages between the current range and the last page
-    if (currentPage < totalPages - 2) pageNumbers.push("...")
+    if (currentPage < totalPages - 2) pageNumbers.push("...");
 
     // Always show the last page
-    if (currentPage < totalPages - 1) pageNumbers.push(totalPages)
+    if (currentPage < totalPages - 1) pageNumbers.push(totalPages);
 
-    return pageNumbers
-  }
+    return pageNumbers;
+  };
 
   // Handle pagination controls
   const goToNextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages))
-  }
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+  };
 
   const goToPreviousPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))
-  }
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
   const handleChange = (event: { target: { value: any } }) => {
-    setSearchValue(event.target.value)
-  }
+    setSearchValue(event.target.value);
+  };
 
   return (
     <div className="h-auto w-full md:w-[90%] max-w-[992px] mx-auto pb-10 px-4 lg:px-0">
@@ -159,7 +159,6 @@ const Guestlist = () => {
               )}
             </div>
           </div>
-
         </div>
         <div className="mt-6 h-[750px] overflow-y-auto">
           <table className="w-full border-separate border-spacing-y-3 ">
@@ -188,7 +187,7 @@ const Guestlist = () => {
                   role={data.role}
                   regdate={data.date}
                 />
-              )
+              );
             })}
           </table>
         </div>
@@ -228,7 +227,7 @@ const Guestlist = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Guestlist
+export default Guestlist;

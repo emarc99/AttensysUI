@@ -1,5 +1,11 @@
-"use client"
-import { ChangeEvent, SetStateAction, useEffect, useRef, useState } from "react"
+"use client";
+import {
+  ChangeEvent,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   Button,
   Dialog,
@@ -9,29 +15,29 @@ import {
   Field,
   Input,
   Label,
-} from "@headlessui/react"
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline"
-import { useAtom } from "jotai"
-import Image from "next/image"
-import cancel from "@/assets/cancel.svg"
-import { addclassmodal } from "@/state/connectedWalletStarknetkitNext"
-import clsx from "clsx"
-import { FaPlus } from "react-icons/fa6"
-import cloud from "@/assets/cloud.svg"
-import dividers from "@/assets/Dividers.svg"
+} from "@headlessui/react";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { useAtom } from "jotai";
+import Image from "next/image";
+import cancel from "@/assets/cancel.svg";
+import { addclassmodal } from "@/state/connectedWalletStarknetkitNext";
+import clsx from "clsx";
+import { FaPlus } from "react-icons/fa6";
+import cloud from "@/assets/cloud.svg";
+import dividers from "@/assets/Dividers.svg";
 
 export default function UploadModal(prop: any) {
-  const [open, setOpen] = useState(prop.status)
-  const [addClass, setAddclass] = useAtom(addclassmodal)
+  const [open, setOpen] = useState(prop.status);
+  const [addClass, setAddclass] = useAtom(addclassmodal);
 
   useEffect(() => {
     if (open) {
       window.scrollTo({
         top: Math.max(0, 130), // Scroll up by 100 pixels
         behavior: "smooth",
-      })
+      });
     }
-  }, [open])
+  }, [open]);
 
   return (
     <Dialog open={open} onClose={setOpen} className="relative z-10">
@@ -51,8 +57,8 @@ export default function UploadModal(prop: any) {
                 src={cancel}
                 alt="cancel"
                 onClick={() => {
-                  setOpen(false)
-                  setAddclass(false)
+                  setOpen(false);
+                  setAddclass(false);
                 }}
               />
             </div>
@@ -179,8 +185,8 @@ export default function UploadModal(prop: any) {
             <div className="flex justify-end my-5 px-16">
               <div
                 onClick={() => {
-                  setOpen(false)
-                  setAddclass(false)
+                  setOpen(false);
+                  setAddclass(false);
                 }}
                 className="h-[47px] w-[342px] rounded-xl bg-[#9B51E0] flex items-center justify-center cursor-pointer"
               >
@@ -193,5 +199,5 @@ export default function UploadModal(prop: any) {
         </div>
       </div>
     </Dialog>
-  )
+  );
 }

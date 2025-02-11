@@ -1,16 +1,16 @@
-import React, { useState } from "react"
-import OutlineCard from "./OutlineCard"
-import { FaPlus } from "react-icons/fa6"
-import { addclassmodal } from "@/state/connectedWalletStarknetkitNext"
-import { useAtom } from "jotai"
+import React, { useState } from "react";
+import OutlineCard from "./OutlineCard";
+import { FaPlus } from "react-icons/fa6";
+import { addclassmodal } from "@/state/connectedWalletStarknetkitNext";
+import { useAtom } from "jotai";
 
 const Outline = () => {
-  const [dataStat, setDataStat] = useState(false)
-  const [addClass, setAddclass] = useAtom(addclassmodal)
+  const [dataStat, setDataStat] = useState(false);
+  const [addClass, setAddclass] = useAtom(addclassmodal);
 
   const handleAddclass = () => {
-    setAddclass(true)
-  }
+    setAddclass(true);
+  };
 
   return (
     <div className="relative w-full md:w-[90%] h-[721px] bg-transparent md:bg-[#FFFFFF]  md:mx-auto md:rounded-xl md:border-[#D2D2D2] md:border-[1px] px-6 md:px-7 ">
@@ -36,7 +36,7 @@ const Outline = () => {
         </h1>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Outline
+export default Outline;
