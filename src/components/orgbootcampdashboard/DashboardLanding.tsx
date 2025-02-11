@@ -16,7 +16,7 @@ const DashboardLanding = (props: any) => {
 
   return (
     <div className="bg-[#f4f7f9] w-full h-auto py-10">
-      {addClass && <UploadModal status={addClass} />}
+      {addClass.modalstatus && <UploadModal status={addClass} />}
       {meetingCreation && <Createmeeting status={meetingCreation} />}
       <div className="w-full h-[220px] -mt-10 lg:hidden ">
         <Image
