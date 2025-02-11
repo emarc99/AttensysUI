@@ -39,9 +39,6 @@ export default function Home() {
 
   const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom);
 
-  // Create a new atom for our random number
-  const randomNumberAtom = atom(Math.floor(Math.random() * 100));
-
   useEffect(() => {
     /* setWalletLatest(RESET) */
     setWalletNext(RESET);
