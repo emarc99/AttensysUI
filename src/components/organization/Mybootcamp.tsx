@@ -13,9 +13,9 @@ const Mybootcamp = (props: any) => {
 
   const handlebootcamproute = (props: string, id: any) => {
     setCurrentID(id);
-    router.push(`/Bootcamp/${props}/Outline`);
+    router.push(`/Bootcamp/${props}/Outline/?id=${id}`);
   };
-  console.log("dataa heerr", props.bootcampInfo);
+  console.info("dataa heerr", props.bootcampInfo);
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
