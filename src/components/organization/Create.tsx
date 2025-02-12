@@ -33,7 +33,7 @@ import { attensysOrgAbi } from "@/deployments/abi";
 import { attensysOrgAddress } from "@/deployments/contracts";
 import { connect } from "starknetkit";
 import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
-import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest";
+import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
 import { Contract } from "starknet";
 
 const format = "h:mm a";
@@ -90,7 +90,7 @@ const Create = (props: any) => {
   const logoInputRef = useRef<HTMLInputElement | null>(null);
   const [bootcampData, setBootcampData] = useAtom(createBootcampInitState);
   const [uploading, setUploading] = useState(false);
-  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom);
+  const [wallet, setWallet] = useAtom(walletStarknetkit);
   const [numOfClassesToCreate, setNumOfClassesToCreate] = useState<
     number | any
   >(1);
@@ -175,7 +175,7 @@ const Create = (props: any) => {
         bootcampNftImage: file, // Dynamically update the specific field
       }));
     } else {
-      console.log("Please select a valid image file (JPEG, JPG, or PNG).");
+      console.error("Please select a valid image file (JPEG, JPG, or PNG).");
     }
   };
 
@@ -206,7 +206,7 @@ const Create = (props: any) => {
         BootcampLogo: file, // Dynamically update the specific field
       }));
     } else {
-      console.log("Please select a valid image file (JPEG, JPG, or PNG).");
+      console.error("Please select a valid image file (JPEG, JPG, or PNG).");
     }
   };
 
@@ -231,8 +231,8 @@ const Create = (props: any) => {
     });
 
     if (Dataupload) {
-      console.log("Data upload here", Dataupload);
-      console.log(
+      console.info("Data upload here", Dataupload);
+      console.info(
         "Create bootcamp Cid to send to contract ",
         Dataupload.IpfsHash,
       );
@@ -273,7 +273,7 @@ const Create = (props: any) => {
         .waitForTransaction(callContract.transaction_hash)
         .then(() => {})
         .catch((e: any) => {
-          console.log("Error: ", e);
+          console.error("Error: ", e);
         })
         .finally(() => {
           setUploading(false);
@@ -367,7 +367,7 @@ const Create = (props: any) => {
         height: height ? `${height}px` : "100vh", // Use dynamic height or fallback to 100vh
       }}
     >
-      <div className="h-full flex">
+      <div className="flex h-full">
         <div className="w-[35%] h-full bg-[#07070733]"></div>
 
         <div className="w-[65%] h-full bg-[#FFFFFF] overflow-y-scroll">
@@ -383,7 +383,7 @@ const Create = (props: any) => {
           </div>
 
           <div className="w-[90%] mx-auto mt-6">
-            <div className="space-y-3 w-full">
+            <div className="w-full space-y-3">
               <h1 className="text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                 Bootcamp Name
               </h1>
@@ -399,8 +399,8 @@ const Create = (props: any) => {
               </Field>
             </div>
 
-            <div className="flex justify-between w-full space-x-2 mt-4">
-              <div className="space-y-3 w-full">
+            <div className="flex justify-between w-full mt-4 space-x-2">
+              <div className="w-full space-y-3">
                 <h1 className="text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                   Bootcamp Organization
                 </h1>
@@ -416,7 +416,7 @@ const Create = (props: any) => {
                   />
                 </Field>
               </div>
-              <div className="space-y-3 w-full">
+              <div className="w-full space-y-3">
                 <h1 className="text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                   Target Audience
                 </h1>
@@ -424,7 +424,7 @@ const Create = (props: any) => {
               </div>
             </div>
 
-            <div className="space-y-3 mt-4">
+            <div className="mt-4 space-y-3">
               <h1 className="text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                 Description
               </h1>
@@ -533,7 +533,7 @@ const Create = (props: any) => {
               <h1 className="text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                 Bootcamp Time
               </h1>
-              <div className="flex space-x-3 items-center">
+              <div className="flex items-center space-x-3">
                 <div className="flex flex-col space-y-2">
                   {bootcampTimes.map((component, index) => (
                     <BootcampTime key={index} day={index + 1} />
@@ -578,7 +578,7 @@ const Create = (props: any) => {
               <div className="space-y-12">
                 {bootcampTimes.map((component, index) => (
                   <div key={index}>
-                    <div className="mt-4 flex space-x-2">
+                    <div className="flex mt-4 space-x-2">
                       <Field>
                         <Input
                           placeholder="Add lecture title"
@@ -593,7 +593,7 @@ const Create = (props: any) => {
                       </Field>
 
                       <div className="relative flex bg-[#A666E3] items-center px-4  justify-between border-[1px] border-[#D0D5DD] h-[55px] w-[120px] rounded-lg">
-                        <div className="space-x-3 flex">
+                        <div className="flex space-x-3">
                           <FaRegCalendarAlt className="h-[20px] w-[14px] text-[#FFFFFF]" />
                           <h1 className="text-[12px] leading-[18px] font-light text-[#FFFFFF]">
                             Day {index + 1}
@@ -602,7 +602,7 @@ const Create = (props: any) => {
                       </div>
                     </div>
 
-                    <div className=" mt-4 flex space-x-2 relative">
+                    <div className="relative flex mt-4 space-x-2 ">
                       <div>
                         <Field>
                           <textarea
@@ -624,7 +624,7 @@ const Create = (props: any) => {
             </div>
 
             <div className="mt-6">
-              <div className="flex space-x-8 items-center">
+              <div className="flex items-center space-x-8">
                 <div>
                   <h1 className="text-[16px] leading-[23px] font-semibold text-[#2D3A4B]">
                     Pricing
@@ -642,7 +642,7 @@ const Create = (props: any) => {
               </div>
 
               {isPaid && (
-                <div className="mt-3 flex space-x-3">
+                <div className="flex mt-3 space-x-3">
                   <div>
                     <Field>
                       <Input
@@ -656,7 +656,7 @@ const Create = (props: any) => {
                       />
                     </Field>
                   </div>
-                  <div className="flex space-x-1 items-center">
+                  <div className="flex items-center space-x-1">
                     <h1 className="text-[24px] text-[#2D3A4B] font-light">$</h1>
                     <Field>
                       <Input

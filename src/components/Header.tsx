@@ -14,7 +14,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Logo from "@/assets/Logo.svg";
 import Image from "next/image";
 import { ConnectButton } from "./connect/ConnectButton";
-import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest";
+import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
 import {
   connectorAtom,
   connectorDataAtom,
@@ -44,6 +44,7 @@ import ProfilePic from "@/assets/profile_pic.png";
 import LupaPurple from "@/assets/LupaPurple.png";
 import organizationHeader from "@/assets/organizationHeader.png";
 import { courseQuestions } from "@/constants/data";
+import { useWallet } from "@/hooks/useWallet";
 
 const navigation = [
   { name: "Courses", href: "#", current: false },
@@ -57,18 +58,14 @@ function classNames(...classes: any[]) {
 
 const Header = () => {
   const router = useRouter();
-  const setWalletLatest = useSetAtom(walletStarknetkitLatestAtom);
-  const setWalletNext = useSetAtom(walletStarknetkitNextAtom);
-  const setConnectorData = useSetAtom(connectorDataAtom);
-  const setConnector = useSetAtom(connectorAtom);
-  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom);
+  const [wallet] = useAtom(walletStarknetkit);
   const [searchValue, setSearchValue] = useState("");
   const [coursestatus, setcourseStatus] = useAtom(coursestatusAtom);
   const [status] = useAtom(coursestatusAtom);
   const [bootcampdropstat, setbootcampdropstat] = useAtom(
     bootcampdropdownstatus,
   );
-
+  const { disconnectWallet } = useWallet();
   const [isBootcampsOpen, setIsBootcampsOpen] = useState(false);
 
   const handleChange = (event: { target: { value: any } }) => {
@@ -88,20 +85,6 @@ const Header = () => {
     }
   };
   const [isCoursesOpen, setIsCoursesOpen] = useState(false);
-
-  useEffect(() => {
-    /* setWalletLatest(RESET) */
-    setWalletNext(RESET);
-    setConnectorData(RESET);
-    setConnector(RESET);
-  }, []);
-
-  useEffect(() => {
-    /* setWalletLatest(RESET) */
-    setWalletNext(RESET);
-    setConnectorData(RESET);
-    setConnector(RESET);
-  }, []);
 
   return (
     <>
@@ -187,7 +170,7 @@ const Header = () => {
                   <DisconnectButton
                     disconnectFn={disconnect}
                     resetFn={() => {
-                      setWallet(RESET);
+                      disconnectWallet();
                     }}
                   />
                 </>
@@ -447,8 +430,7 @@ const Header = () => {
               {wallet ? (
                 <button
                   onClick={() => {
-                    disconnect();
-                    setWallet(RESET);
+                    disconnectWallet();
                   }}
                   className="w-full bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] text-white py-2 rounded-md flex items-center justify-center space-x-2"
                 >
