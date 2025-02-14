@@ -39,9 +39,9 @@ import { Contract } from "starknet";
 const format = "h:mm a";
 const now = moment().hour(0).minute(0);
 
-type ValuePiece = Date | null;
+type ValuePiece = Date | null
 
-type Value = ValuePiece | [ValuePiece, ValuePiece];
+type Value = ValuePiece | [ValuePiece, ValuePiece]
 
 const emptyData: FileObject = {
   name: "",
@@ -49,9 +49,9 @@ const emptyData: FileObject = {
   size: 0,
   lastModified: 0,
   arrayBuffer: async () => {
-    return new ArrayBuffer(0);
+    return new ArrayBuffer(0)
   },
-};
+}
 const ResetBootcampData = {
   bootcampName: "",
   bootcampOrganization: "",
@@ -68,7 +68,7 @@ const ResetBootcampData = {
   bootcampNftName: "",
   bootCampNftSymbol: "",
   bootcampNftImage: emptyData,
-};
+}
 
 //   {day:"", lecturetitle:"", lectureDescription: "", start:"", end:""}
 
@@ -131,8 +131,8 @@ const Create = (props: any) => {
     setBootcampData((prevData) => ({
       ...prevData, // Spread existing data to retain untouched fields
       bootcampName: e.target.value, // Dynamically update the specific field
-    }));
-  };
+    }))
+  }
 
   const handleBootcampDescriptionChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -140,29 +140,29 @@ const Create = (props: any) => {
     setBootcampData((prevData) => ({
       ...prevData, // Spread existing data to retain untouched fields
       bootcampDescription: e.target.value, // Dynamically update the specific field
-    }));
-  };
+    }))
+  }
 
   const handleNFTNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBootcampData((prevData) => ({
       ...prevData, // Spread existing data to retain untouched fields
       bootcampNftName: e.target.value, // Dynamically update the specific field
-    }));
-  };
+    }))
+  }
 
   const handleNFTSymbolChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBootcampData((prevData) => ({
       ...prevData, // Spread existing data to retain untouched fields
       bootCampNftSymbol: e.target.value, // Dynamically update the specific field
-    }));
-  };
+    }))
+  }
 
   const handleImageClick = () => {
     // Trigger the file input on image click
-    fileInputRef.current?.click();
-  };
+    fileInputRef.current?.click()
+  }
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+    const file = event.target.files?.[0]
     if (
       file &&
       (file.type === "image/jpeg" ||
@@ -173,11 +173,11 @@ const Create = (props: any) => {
       setBootcampData((prevData) => ({
         ...prevData, // Spread existing data to retain untouched fields
         bootcampNftImage: file, // Dynamically update the specific field
-      }));
+      }))
     } else {
-      console.log("Please select a valid image file (JPEG, JPG, or PNG).");
+      console.log("Please select a valid image file (JPEG, JPG, or PNG).")
     }
-  };
+  }
 
   const handleBootcampPriceChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -185,15 +185,15 @@ const Create = (props: any) => {
     setBootcampData((prevData) => ({
       ...prevData, // Spread existing data to retain untouched fields
       bootcampPrice: e.target.value, // Dynamically update the specific field
-    }));
-  };
+    }))
+  }
 
   const handleBrowse = () => {
     // Trigger the file input on image click
-    logoInputRef.current?.click();
-  };
+    logoInputRef.current?.click()
+  }
   const handleLogoChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+    const file = event.target.files?.[0]
     if (
       file &&
       (file.type === "image/jpeg" ||
@@ -204,11 +204,11 @@ const Create = (props: any) => {
       setBootcampData((prevData) => ({
         ...prevData, // Spread existing data to retain untouched fields
         BootcampLogo: file, // Dynamically update the specific field
-      }));
+      }))
     } else {
-      console.log("Please select a valid image file (JPEG, JPG, or PNG).");
+      console.log("Please select a valid image file (JPEG, JPG, or PNG).")
     }
-  };
+  }
 
   const handlePublishButton = async () => {
     setUploading(true);
@@ -285,12 +285,12 @@ const Create = (props: any) => {
   };
 
   const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsPaid(event.target.checked);
+    setIsPaid(event.target.checked)
     setBootcampData((prevData) => ({
       ...prevData, // Spread existing data to retain untouched fields
       price: event.target.checked, // Dynamically update the specific field
-    }));
-  };
+    }))
+  }
 
   const handleAddDay = () => {
     // Add a new BootcampTime component with an incremented day value
@@ -298,7 +298,7 @@ const Create = (props: any) => {
     setBootcampTimes((prevTimes) => [
       ...prevTimes,
       { day: prevTimes.length + 1 },
-    ]);
+    ])
 
     setBootcampData((prevData) => ({
       ...prevData,
@@ -312,16 +312,16 @@ const Create = (props: any) => {
           end: "",
         },
       ],
-    }));
-  };
+    }))
+  }
 
   const handleRemoveDay = () => {
     setNumOfClassesToCreate(numOfClassesToCreate - 1);
     setBootcampTimes((prevTimes) => {
-      if (prevTimes.length === 0) return prevTimes; // Prevent removing if no days are present
-      return prevTimes.slice(0, -1); // Remove the last day
-    });
-  };
+      if (prevTimes.length === 0) return prevTimes // Prevent removing if no days are present
+      return prevTimes.slice(0, -1) // Remove the last day
+    })
+  }
 
   const handleTitleChange = (index: number, value: string) => {
     setBootcampData((prevData) => ({
@@ -329,8 +329,8 @@ const Create = (props: any) => {
       bootcampLecture: prevData.bootcampLecture.map((lecture, idx) =>
         idx === index ? { ...lecture, lecturetitle: value } : lecture,
       ),
-    }));
-  };
+    }))
+  }
 
   const handleDescriptionChange = (index: number, value: string) => {
     setBootcampData((prevData) => ({
@@ -338,39 +338,39 @@ const Create = (props: any) => {
       bootcampLecture: prevData.bootcampLecture.map((lecture, idx) =>
         idx === index ? { ...lecture, lectureDescription: value } : lecture,
       ),
-    }));
-  };
+    }))
+  }
 
   const handleCreateOverlay = () => {
-    setCreateOverlayStat(false);
-    setBootcampData(ResetBootcampData);
-  };
+    setCreateOverlayStat(false)
+    setBootcampData(ResetBootcampData)
+  }
 
   const handleStartdateChange = (newValue: any) => {
     setBootcampData((prevData) => ({
       ...prevData,
       bootcampStartdate: newValue ? newValue.format("YYYY-MM-DD") : "",
-    }));
-  };
+    }))
+  }
 
   const handleEnddateChange = (newValue: any) => {
     setBootcampData((prevData) => ({
       ...prevData,
       bootcampEndDate: newValue ? newValue.format("YYYY-MM-DD") : "",
-    }));
-  };
+    }))
+  }
 
   return (
     <div
-      className="absolute z-[1] h-auto w-full"
+      className="absolute z-[999] h-auto w-full"
       style={{
         height: height ? `${height}px` : "100vh", // Use dynamic height or fallback to 100vh
       }}
     >
       <div className="h-full flex">
-        <div className="w-[35%] h-full bg-[#07070733]"></div>
+        <div className="w-[35%] hidden lg:block h-full bg-[#07070733]"></div>
 
-        <div className="w-[65%] h-full bg-[#FFFFFF] overflow-y-scroll">
+        <div className="lg:w-[65%] w-[100%] h-full bg-[#FFFFFF] overflow-y-scroll">
           <div className="w-[100%] h-[10px] bg-bootcreate-gradient"></div>
           <div className="w-[90%] mx-auto flex justify-between mt-5">
             <h1 className="text-[22px] leading-[22px] text-[#333333] font-semibold">
@@ -384,7 +384,7 @@ const Create = (props: any) => {
 
           <div className="w-[90%] mx-auto mt-6">
             <div className="space-y-3 w-full">
-              <h1 className="text-[14px] text-[#2D3A4B] font-light leading-[20px]">
+              <h1 className="text-[12px] lg:text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                 Bootcamp Name
               </h1>
               <Field>
@@ -392,32 +392,32 @@ const Create = (props: any) => {
                   onChange={handleBootcampNameChange}
                   placeholder="e.g starknet basecamp"
                   className={clsx(
-                    "h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-full rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]",
+                    "h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-full rounded-lg  py-1.5 px-3 text-[12px] lg:text-sm/6 text-[#667185]",
                     "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
                   )}
                 />
               </Field>
             </div>
 
-            <div className="flex justify-between w-full space-x-2 mt-4">
+            <div className="flex-col flex lg:flex-row justify-between w-full space-y-5 space-x-2 mt-4">
               <div className="space-y-3 w-full">
-                <h1 className="text-[14px] text-[#2D3A4B] font-light leading-[20px]">
+                <h1 className="text-[12px] lg:text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                   Bootcamp Organization
                 </h1>
                 <Field>
                   <Input
-                    value={organizationName}
+                    value="Orangutan Edu Academy"
                     readOnly
                     placeholder="e.g starknet basecamp"
                     className={clsx(
-                      "h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-full rounded-lg  py-1.5 px-3 text-sm/6 text-[#4A90E2]",
+                      "h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-full rounded-lg  py-1.5 px-3 text-[12px] lg:text-sm/6 text-[#4A90E2]",
                       "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
                     )}
                   />
                 </Field>
               </div>
               <div className="space-y-3 w-full">
-                <h1 className="text-[14px] text-[#2D3A4B] font-light leading-[20px]">
+                <h1 className="text-[12px] lg:text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                   Target Audience
                 </h1>
                 <TargetCategory />
@@ -425,7 +425,7 @@ const Create = (props: any) => {
             </div>
 
             <div className="space-y-3 mt-4">
-              <h1 className="text-[14px] text-[#2D3A4B] font-light leading-[20px]">
+              <h1 className="text-[12px] lg:text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                 Description
               </h1>
               <Field>
@@ -433,7 +433,7 @@ const Create = (props: any) => {
                   placeholder="Short overview detailing what the bootcamp covers"
                   onChange={handleBootcampDescriptionChange}
                   className={clsx(
-                    "h-[110px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[100%] rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]",
+                    "h-[110px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[100%] rounded-lg  py-1.5 px-3 text-[12px] lg:text-sm/6 text-[#667185]",
                     "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
                   )}
                 />
@@ -442,7 +442,7 @@ const Create = (props: any) => {
 
             {/* NFT data collection */}
             <div className="space-y-3 w-[60%] mt-4">
-              <h1 className="text-[14px] text-[#2D3A4B] font-light leading-[20px]">
+              <h1 className="text-[12px] lg:text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                 NFT Certificate Name
               </h1>
               <Field>
@@ -450,7 +450,7 @@ const Create = (props: any) => {
                   onChange={handleNFTNameChange}
                   placeholder="nft name"
                   className={clsx(
-                    "h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[100%] rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]",
+                    "h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[100%] rounded-lg  py-1.5 px-3 text-[12px] lg:text-sm/6 text-[#667185]",
                     "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
                   )}
                 />
@@ -458,7 +458,7 @@ const Create = (props: any) => {
             </div>
 
             <div className="space-y-3 w-[60%] mt-4">
-              <h1 className="text-[14px] text-[#2D3A4B] font-light leading-[20px]">
+              <h1 className="text-[12px] lg:text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                 NFT Certificate symbol
               </h1>
               <Field>
@@ -466,7 +466,7 @@ const Create = (props: any) => {
                   onChange={handleNFTSymbolChange}
                   placeholder="Enter nft symbol"
                   className={clsx(
-                    "h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[100%] rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]",
+                    "h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[100%] rounded-lg  py-1.5 px-3 text-[12px] lg:text-sm/6 text-[#667185]",
                     "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
                   )}
                 />
@@ -474,7 +474,7 @@ const Create = (props: any) => {
             </div>
 
             <div className="space-y-3 w-[60%] mt-4">
-              <h1 className="text-[14px] text-[#2D3A4B] font-light leading-[20px]">
+              <h1 className="text-[12px] lg:text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                 Upload NFT Certificate Image
               </h1>
               <div
@@ -500,10 +500,10 @@ const Create = (props: any) => {
                 Structure & schedules
               </h1>
               <div className="mt-3 space-y-2">
-                <h1 className="text-[14px] text-[#2D3A4B] font-light leading-[20px]">
+                <h1 className="text-[12px] lg:text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                   Bootcamp Date
                 </h1>
-                <div className="flex space-x-4">
+                <div className="flex gap-x-4">
                   <>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={["DatePicker"]}>
@@ -530,36 +530,39 @@ const Create = (props: any) => {
             </div>
 
             <div className="mt-8 space-y-2">
-              <h1 className="text-[14px] text-[#2D3A4B] font-light leading-[20px]">
+              <h1 className="text-[12px] lg:text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                 Bootcamp Time
               </h1>
-              <div className="flex space-x-3 items-center">
-                <div className="flex flex-col space-y-2">
+              <div className="flex flex-col lg:flex-row gap-x-3 items-start gap-y-4">
+                <div className="flex flex-col lg:flex-row gap-y-2 items-center gap-x-3">
                   {bootcampTimes.map((component, index) => (
                     <BootcampTime key={index} day={index + 1} />
                   ))}
                 </div>
-                <div
-                  id="add-day"
-                  onClick={handleAddDay}
-                  className="mt-2 cursor-pointer relative flex items-center px-4 space-x-3 border-[1px] border-[#D0D5DD] h-[55px] w-[130px] rounded-lg"
-                >
-                  <FaPlus className="text-[#2D3A4B]" />
-                  <h1 className="text-[15px] leading-[18px] font-light text-[#2D3A4B]">
-                    Add Day
-                  </h1>
+
+                <div className="flex">
+                  <div
+                    id="add-day"
+                    onClick={handleAddDay}
+                    className="mt-2 cursor-pointer relative flex items-center px-4 gap-x-3 border-[1px] border-[#D0D5DD] h-[55px] w-[130px] rounded-lg"
+                  >
+                    <FaPlus className="text-[#2D3A4B]" />
+                    <h1 className="text-[15px] leading-[18px] font-light text-[#2D3A4B]">
+                      Add Day
+                    </h1>
+                  </div>
+                  <div
+                    id="add-day"
+                    onClick={handleRemoveDay}
+                    className="mt-2 cursor-pointer relative flex items-center px-4 space-x-3 border-[1px] border-[#D0D5DD] h-[55px] w-[150px] rounded-lg"
+                  >
+                    <FcCancel className="text-[#2D3A4B]" />
+                    <h1 className="text-[15px] leading-[18px] font-light text-[#2D3A4B]">
+                      Remove Day
+                    </h1>
+                  </div>
                 </div>
 
-                <div
-                  id="add-day"
-                  onClick={handleRemoveDay}
-                  className="mt-2 cursor-pointer relative flex items-center px-4 space-x-3 border-[1px] border-[#D0D5DD] h-[55px] w-[150px] rounded-lg"
-                >
-                  <FcCancel className="text-[#2D3A4B]" />
-                  <h1 className="text-[15px] leading-[18px] font-light text-[#2D3A4B]">
-                    Remove Day
-                  </h1>
-                </div>
               </div>
             </div>
 
@@ -578,7 +581,7 @@ const Create = (props: any) => {
               <div className="space-y-12">
                 {bootcampTimes.map((component, index) => (
                   <div key={index}>
-                    <div className="mt-4 flex space-x-2">
+                    <div className="mt-4 flex-col flex lg:flex-row gap-x-2 space-y-5 lg:space-y-0">
                       <Field>
                         <Input
                           placeholder="Add lecture title"
@@ -586,7 +589,7 @@ const Create = (props: any) => {
                             handleTitleChange(index, e.target.value)
                           }
                           className={clsx(
-                            "h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[395px] rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]",
+                            "h-[55px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[395px] rounded-lg  py-1.5 px-3 text-[12px] lg:text-sm/6 text-[#667185]",
                             "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
                           )}
                         />
@@ -611,7 +614,7 @@ const Create = (props: any) => {
                             }
                             placeholder="Add lecture description"
                             className={clsx(
-                              "h-[127px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[557px] rounded-lg  py-1.5 px-3 text-sm/6 text-[#667185]",
+                              "h-[127px] border-[2px] bg-[#FFFFFF] border-[#D0D5DD] block w-[390px] lg:w-[557px] rounded-lg  py-1.5 px-3 text-[12px] lg:text-sm/6 text-[#667185]",
                               "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
                             )}
                           />
@@ -650,7 +653,7 @@ const Create = (props: any) => {
                         readOnly
                         placeholder="e.g starknet basecamp"
                         className={clsx(
-                          "h-[55px] border-[2px] text-center bg-[#FFFFFF] border-[#D0D5DD] block w-[179px] rounded-lg  py-1.5 px-3 text-sm/6 text-[#4A90E2]",
+                          "h-[55px] border-[2px] text-center bg-[#FFFFFF] border-[#D0D5DD] block w-[179px] rounded-lg  py-1.5 px-3 text-[12px] lg:text-sm/6 text-[#4A90E2]",
                           "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
                         )}
                       />
@@ -662,7 +665,7 @@ const Create = (props: any) => {
                       <Input
                         onChange={handleBootcampPriceChange}
                         className={clsx(
-                          "h-[55px] border-[2px] text-center bg-[#FFFFFF] border-[#D0D5DD] block w-[100px] rounded-lg  py-1.5 px-3 text-sm/6 text-[#4A90E2]",
+                          "h-[55px] border-[2px] text-center bg-[#FFFFFF] border-[#D0D5DD] block w-[100px] rounded-lg  py-1.5 px-3 text-[12px] lg:text-sm/6 text-[#4A90E2]",
                           "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
                         )}
                       />
@@ -676,11 +679,11 @@ const Create = (props: any) => {
                   Upload Bootcamp creative
                 </h1>
 
-                <div className="flex space-x-16">
-                  <div className="h-[316px] w-[459px] mt-3 rounded-lg bg-[#DCDCDC] flex justify-center items-center">
-                    <div className="h-[246px] w-[400px] border-[3px] border-dotted border-[#D0D5DD] bg-[#FFFFFF] rounded-xl space-y-3 flex flex-col items-center justify-center">
+                <div className="flex flex-col lg:flex-row gap-x-16 lg:space-x-16 space-y-10">
+                  <div className="h-[316px] lg:w-[459px] w-[390px] mt-3 rounded-lg bg-[#DCDCDC] flex justify-center items-center">
+                    <div className="h-[256px] lg:w-[400px] w-[350px] border-[3px] border-dotted border-[#D0D5DD] bg-[#FFFFFF] rounded-xl space-y-3 flex flex-col items-center justify-center">
                       <Image src={cloud} alt="upload" />
-                      <h1 className="text-[14px] text-[#475367] font-light leading-[20px]">
+                      <h1 className="text-[12px] lg:text-[14px] text-[#475367] font-light leading-[20px]">
                         <span className="text-[#4A90E2]">Click to upload</span>{" "}
                         or drag and drop
                       </h1>
@@ -697,13 +700,13 @@ const Create = (props: any) => {
                       />
                       <Button
                         onClick={handleBrowse}
-                        className="h-[36px] w-[118px] flex justify-center items-center bg-[#9B51E0] rounded-xl text-[14px] text-[#FFFFFF] font-light leading-[20px]"
+                        className="h-[36px] w-[118px] flex justify-center items-center bg-[#9B51E0] rounded-xl text-[12px] lg:text-[14px] text-[#FFFFFF] font-light leading-[20px]"
                       >
                         Browse Files
                       </Button>
                     </div>
                   </div>
-                  <div className="mt-3 space-y-2">
+                  <div className="mt-3 flex flex-col-reverse lg:flex-col space-y-5 lg:space-y-2">
                     <div className="h-[166px] w-[251px] border-[3px] border-dotted border-[#D0D5DD] bg-[#FFFFFF] rounded-xl space-y-0 flex flex-col items-center justify-center">
                       <Image src={cloud} alt="upload" />
                       <h1 className="text-[8px] text-[#475367] font-light leading-[20px]">
@@ -721,19 +724,19 @@ const Create = (props: any) => {
                     <h1 className="text-[18px] text-[#333333] font-semibold leading-[31px] ">
                       Upload thumbnail
                     </h1>
-                    <p className="w-[254px] text-[14px] font-light text-[#2D3A4B] leading-[21px]">
+                    <p className="w-[254px] text-[12px] lg:text-[14px] font-light text-[#2D3A4B] leading-[21px]">
                       Upload your bootcamp image here. 750x422 pixels; .jpg,
                       .jpeg,. gif, or .png.{" "}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex justify-end my-5">
+                <div className="flex justify-end my-10 lg:my-5">
                   <div
-                    className="h-[47px] w-[342px] rounded-xl bg-[#4A90E2] flex items-center justify-center cursor-pointer"
+                    className="h-[47px] w-full px-6 sm:w-auto lg:w-[342px] rounded-xl bg-[#4A90E2] flex items-center justify-center cursor-pointer"
                     onClick={handlePublishButton}
                   >
-                    <h1 className="text-[#FFFFFF] text-[14px] font-semibold leading-[16px]">
+                    <h1 className="text-[#FFFFFF] text-[12px] lg:text-[14px] font-semibold leading-[16px]">
                       {uploading
                         ? "Uploading data"
                         : "Save and Publish bootcamp"}
@@ -749,4 +752,4 @@ const Create = (props: any) => {
   );
 };
 
-export default Create;
+export default Create

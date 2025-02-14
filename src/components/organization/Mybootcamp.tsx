@@ -6,6 +6,7 @@ import { caroselldata } from "@/constants/data";
 import { useRouter } from "next/navigation";
 import { currentID } from "@/state/connectedWalletStarknetkitNext";
 import { useSetAtom } from "jotai";
+import MobileBootcampCard from "./MobileBootcampCard";
 
 const Mybootcamp = (props: any) => {
   const router = useRouter();
@@ -42,34 +43,48 @@ const Mybootcamp = (props: any) => {
  
     return (
     <div className='h-auto w-full flex flex-col items-center bg-[#FFFFFF] border-[1px] border-[#D9D9D9] rounded-b-xl py-8'>
-        <div className='w-[100%] mx-auto flex flex-col items-center -z-0'>
-        <Carousel responsive={responsive} centerMode={false} containerClass="container"  renderArrowsWhenDisabled={false}
-   additionalTransfrom={0}
-   arrows
-   dotListClass=""
-   draggable
-   focusOnSelect={false}
-   infinite
-   itemClass=""
-   keyBoardControl
-   minimumTouchDrag={80}
-   autoPlay={false} // Enables auto-scrolling
-   autoPlaySpeed={3000}
-   >
-           {props.bootcampInfo.map((data : any, index : any) => (
-                    <Mybootcampcarousel
-                    key={index}
-                        name={data.bootcamp_name} 
-                        action="Ongoing"
-                        height="200px"
-                        width='200px'
-                        uri={data.bootcamp_ipfs_uri}
-                        onClick={() => handlebootcamproute(data.bootcamp_name, Number(data.bootcamp_id))}
-                    />
-                ))}
-                    </Carousel>
+        <div className='w-[100%] mx-auto md:flex flex-col items-center -z-0 hidden'>
+          <Carousel responsive={responsive} centerMode={false} containerClass="container"  renderArrowsWhenDisabled={false}
+            additionalTransfrom={0}
+            arrows
+            dotListClass=""
+            draggable
+            focusOnSelect={false}
+            infinite
+            itemClass=""
+            keyBoardControl
+            minimumTouchDrag={80}
+            autoPlay={false} // Enables auto-scrolling
+            autoPlaySpeed={3000}
+          >
+            {props.bootcampInfo.map((data : any, index : any) => (
+              <Mybootcampcarousel
+                  key={index}
+                  name={data.bootcamp_name} 
+                  action="Ongoing"
+                  height="200px"
+                  width='200px'
+                  uri={data.bootcamp_ipfs_uri}
+                  onClick={() => handlebootcamproute(data.bootcamp_name, Number(data.bootcamp_id))}
+              />
+            ))}
+          </Carousel>
         </div>
-                           
+        <div className='flex flex-wrap gap-x-3 sm:gap-x-5 gap-y-4 justify-start px-3 py-5 items-start md:hidden'>
+          {props.bootcampInfo.slice(0, 3).map((data: any, index: any) => (
+            <div className={`flex flex-col ${index === 2 && 'hidden'} items-center gap-2`} key={index}>
+              <MobileBootcampCard
+                  key={index}
+                  name={data.bootcamp_name} 
+                  action="Ongoing"
+                  height="200px"
+                  width='200px'
+                  uri={data.bootcamp_ipfs_uri}
+                  onClick={() => handlebootcamproute(data.bootcamp_name, Number(data.bootcamp_id))}
+              />
+            </div>
+          ))}
+        </div>
     </div>
   );
 };
