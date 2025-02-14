@@ -111,6 +111,7 @@ export const addclassmodal = atom(data);
 export const createMeeting = atom(false);
 export const isinputError = atom(false);
 export const currentID = atom(null);
+export const orgowneraddress = atom(null);
 
 export const isRegisteredatom = atom(false);
 export const orgnameatom = atom("none");

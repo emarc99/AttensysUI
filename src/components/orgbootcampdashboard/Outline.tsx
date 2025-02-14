@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react"
 import OutlineCard from "./OutlineCard"
 import { FaPlus } from "react-icons/fa6"
-import { addclassmodal } from "@/state/connectedWalletStarknetkitNext"
+import { addclassmodal,currentID, orgowneraddress } from "@/state/connectedWalletStarknetkitNext"
 import { useAtom } from "jotai"
 import { BlockNumber, Contract, RpcProvider, Account } from "starknet";
 import {attensysOrgAbi} from '@/deployments/abi'
@@ -19,17 +19,23 @@ const Outline = () => {
   const [dataStat, setDataStat] = useState(false)
   const [addClass, setAddclass] = useAtom(addclassmodal)
     const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom)
+    const [bootcampid, setbootcampid] = useAtom(currentID)
+    const [ownerAddress, setowneraddress] = useAtom(orgowneraddress)
     const [videoarray, setVideoArray] = useState([])
     const searchParams = useSearchParams();
     const id = searchParams.get('id');
+    const org = searchParams.get('org');
   
   console.log("this is ID",id)
+  console.log("this is org",org)
+  // console.log("new new id",bootcampid )
+  // console.log("ownerAddress",ownerAddress )
     const handleAddclass = () => {
     setAddclass({ modalstatus: true, idnumber: Number(id) })
   }
 
   const getUploadedVideo = async () => {
-      let video_data = await orgContract.get_bootcamp_uploaded_video_link("0x05Bf9E38B116B37A8249a4cd041D402903a5E8a67C1a99d2D336ac7bd8B4034e", 0)
+      let video_data = await orgContract.get_bootcamp_uploaded_video_link(org, id)
       console.log("video data here", video_data)
 
       if (video_data?.length == 0) {

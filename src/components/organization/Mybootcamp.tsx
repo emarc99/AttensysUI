@@ -4,16 +4,18 @@ import "react-multi-carousel/lib/styles.css";
 import Mybootcampcarousel from "./Mybootcampcarousel";
 import { caroselldata } from "@/constants/data";
 import { useRouter } from "next/navigation";
-import { currentID } from "@/state/connectedWalletStarknetkitNext";
+import { currentID, orgowneraddress } from "@/state/connectedWalletStarknetkitNext";
 import { useSetAtom } from "jotai";
 
 const Mybootcamp = (props: any) => {
   const router = useRouter();
   const setCurrentID = useSetAtom(currentID);
+  const setOwnerAddress = useSetAtom(orgowneraddress);
 
-  const handlebootcamproute = (props : string, id : any) => {
+  const handlebootcamproute = (props : string, id : any, org_owner_address : any) => {
     setCurrentID(id)
-    router.push(`/Bootcamp/${props}/Outline/?id=${id}`)
+    setOwnerAddress(org_owner_address)
+    router.push(`/Bootcamp/${props}/Outline/?id=${id}&org=${org_owner_address}`)
   }
   console.log("dataa heerr", props.bootcampInfo)
     const responsive = {
@@ -64,7 +66,7 @@ const Mybootcamp = (props: any) => {
                         height="200px"
                         width='200px'
                         uri={data.bootcamp_ipfs_uri}
-                        onClick={() => handlebootcamproute(data.bootcamp_name, Number(data.bootcamp_id))}
+                        onClick={() => handlebootcamproute(data.bootcamp_name, Number(data.bootcamp_id), data.address_of_org)}
                     />
                 ))}
                     </Carousel>
