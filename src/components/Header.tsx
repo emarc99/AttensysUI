@@ -68,8 +68,21 @@ const Header = () => {
   const { disconnectWallet } = useWallet();
   const [isBootcampsOpen, setIsBootcampsOpen] = useState(false);
 
+  const [error, setError] = useState("");
+
   const handleChange = (event: { target: { value: any } }) => {
     setSearchValue(event.target.value);
+    if (error) setError("");
+  };
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    if (!searchValue.trim()) {
+      e.preventDefault();
+      setError("Please enter an address to search");
+      return;
+    }
+
+    handleSubmit(e, searchValue, router);
   };
 
   const handleTabClick = (arg: string) => {
@@ -108,7 +121,7 @@ const Header = () => {
                 Use our explorer
               </a>
               <div className="relative w-[550px] lclg:w-[380px]">
-                <form onSubmit={(e) => handleSubmit(e, searchValue, router)}>
+                <form onSubmit={onSubmit}>
                   <Input
                     name="search by address"
                     type="text"
@@ -132,6 +145,11 @@ const Header = () => {
                         d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
                       />
                     </svg>
+                  )}
+                  {error && (
+                    <p className="absolute left-0 text-sm text-red-500 -bottom-6">
+                      {error}
+                    </p>
                   )}
                 </form>
               </div>
