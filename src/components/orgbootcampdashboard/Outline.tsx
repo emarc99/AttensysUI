@@ -21,7 +21,7 @@ const orgContract = new Contract(attensysOrgAbi, attensysOrgAddress, provider);
 const Outline = () => {
   const [dataStat, setDataStat] = useState(false);
   const [addClass, setAddclass] = useAtom(addclassmodal);
-  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom);
+  const [wallet, setWallet] = useAtom(walletStarknetkit);
   const [bootcampid, setbootcampid] = useAtom(currentID);
   const [ownerAddress, setowneraddress] = useAtom(orgowneraddress);
   const [videoarray, setVideoArray] = useState([]);
