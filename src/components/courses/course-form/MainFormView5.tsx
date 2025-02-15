@@ -244,6 +244,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                     </h4>
 
                     <Switch
+                      //@ts-ignore
                       onChange={handleSwitch}
                       checked={isActivated}
                       onColor="#9B51E0"
