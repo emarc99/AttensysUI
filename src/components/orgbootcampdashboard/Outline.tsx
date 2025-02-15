@@ -9,7 +9,7 @@ import { attensysOrgAbi } from "@/deployments/abi";
 import { attensysOrgAddress } from "@/deployments/contracts";
 import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
 import { pinata } from "../../../utils/config";
-import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest";
+import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
 import { useSearchParams } from "next/navigation";
 
 const orgContract = new Contract(attensysOrgAbi, attensysOrgAddress, provider);
@@ -17,7 +17,7 @@ const orgContract = new Contract(attensysOrgAbi, attensysOrgAddress, provider);
 const Outline = () => {
   const [dataStat, setDataStat] = useState(false);
   const [addClass, setAddclass] = useAtom(addclassmodal);
-  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom);
+  const [wallet, setWallet] = useAtom(walletStarknetkit);
   const [videoarray, setVideoArray] = useState([]);
   const searchParams = useSearchParams();
   const id = searchParams.get("id");

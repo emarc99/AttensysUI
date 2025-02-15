@@ -29,8 +29,7 @@ import axios from "axios";
 import { Contract } from "starknet";
 import { attensysOrgAbi } from "@/deployments/abi";
 import { attensysOrgAddress } from "@/deployments/contracts";
-import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
-import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest";
+import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
 import { pinata } from "../../../utils/config";
 interface FormData {
   topic: string;
@@ -50,7 +49,7 @@ interface UploadStatus {
 export default function UploadModal(prop: any) {
   const [open, setOpen] = useState(prop.status.modalstatus);
   const [addClass, setAddclass] = useAtom(addclassmodal);
-  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom);
+  const [wallet, setWallet] = useAtom(walletStarknetkit);
   const [uploadStatus, setUploadStatus] = useState({
     video: {
       success: false,
