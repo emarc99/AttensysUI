@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@headlessui/react";
 import { IoSettingsSharp } from "react-icons/io5";
-import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest";
+import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
 import { useAtom } from "jotai";
 import { pinata } from "../../../utils/config";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
@@ -21,7 +21,7 @@ import { GetCIDResponse } from "pinata";
 // }
 
 const Mybootcampcarousel = (props: any) => {
-  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom);
+  const [wallet, setWallet] = useAtom(walletStarknetkit);
   const [logoImagesource, setLogoImage] = useState<string | StaticImport>("");
   const [NFTImagesource, setNFTLogoImage] = useState<string | StaticImport>("");
   const [date, setDate] = useState<string | null>(null);
@@ -30,7 +30,7 @@ const Mybootcampcarousel = (props: any) => {
     try {
       const data = await pinata.gateways.get(CID);
       //@ts-ignore
-      console.log("bootcamp uri here", data?.data);
+      console.info("bootcamp uri here", data?.data);
       //@ts-ignore
       const logoData: GetCIDResponse = await pinata.gateways.get(
         //@ts-ignore

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@headlessui/react";
 import { IoSettingsSharp } from "react-icons/io5";
-import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest";
+import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
 import { useAtom } from "jotai";
 import { pinata } from "../../../utils/config";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
@@ -21,7 +21,7 @@ import { GetCIDResponse } from "pinata";
 // }
 
 const MobileBootcampCard = (props: any) => {
-  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom);
+  const [wallet, setWallet] = useAtom(walletStarknetkit);
   const [logoImagesource, setLogoImage] = useState<string | StaticImport>("");
   const [NFTImagesource, setNFTLogoImage] = useState<string | StaticImport>("");
   const [date, setDate] = useState<string | null>(null);
@@ -30,7 +30,7 @@ const MobileBootcampCard = (props: any) => {
     try {
       const data = await pinata.gateways.get(CID);
       //@ts-ignore
-      console.log("bootcamp uri here", data?.data);
+      console.info("bootcamp uri here", data?.data);
       //@ts-ignore
       const logoData: GetCIDResponse = await pinata.gateways.get(
         //@ts-ignore
@@ -69,15 +69,13 @@ const MobileBootcampCard = (props: any) => {
           <Image
             src={logoImagesource}
             alt="eventimage"
-            className="h-full w-full object-cover"
+            className="object-cover w-full h-full"
             layout="fill"
           />
         </div>
 
-        <Button
-            className="absolute top-3 right-4 justify-center lg:flex rounded-lg bg-[#9B51E0] text-[#FFFCFC] py-2 px-4 lg:h-[50px] items-center lg:w-[90px] text-[12px] data-[hover]:bg-sky-500 data-[active]:bg-sky-700"
-        >
-            {props.action}
+        <Button className="absolute top-3 right-4 justify-center lg:flex rounded-lg bg-[#9B51E0] text-[#FFFCFC] py-2 px-4 lg:h-[50px] items-center lg:w-[90px] text-[12px] data-[hover]:bg-sky-500 data-[active]:bg-sky-700">
+          {props.action}
         </Button>
 
         <div className="absolute bottom-0 z-20 flex items-center justify-center w-full pb-4 text-center bg-carousell-gradient">
@@ -95,9 +93,7 @@ const MobileBootcampCard = (props: any) => {
               <h1 className="text-[#FFFFFF] text-[8px] font-bold">
                 {props.name}
               </h1>
-              <h1 className="text-[#FFFFFF] text-[6px] font-medium">
-                {date}
-              </h1>
+              <h1 className="text-[#FFFFFF] text-[6px] font-medium">{date}</h1>
             </div>
           </div>
         </div>
