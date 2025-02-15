@@ -1,11 +1,11 @@
-import React, { useState } from "react"
-import { IoMdArrowBack } from "@react-icons/all-files/io/IoMdArrowBack"
-import Dropdown from "../Dropdown"
-import { skills, levelOptions } from "@/constants/data"
-import CourseSideBar from "./SideBar"
-import { handleCreateCourse } from "@/utils/helpers"
-import { useRouter } from "next/navigation"
-import Stepper from "@/components/Stepper"
+import React, { useState } from "react";
+import { IoMdArrowBack } from "@react-icons/all-files/io/IoMdArrowBack";
+import Dropdown from "../Dropdown";
+import { skills, levelOptions } from "@/constants/data";
+import CourseSideBar from "./SideBar";
+import { handleCreateCourse } from "@/utils/helpers";
+import { useRouter } from "next/navigation";
+import Stepper from "@/components/Stepper";
 
 const MainFormView = () => {
   const router = useRouter();
@@ -52,8 +52,7 @@ const MainFormView = () => {
       return;
     }
 
-  
-    handleCreateCourse(e, 'courseSetup2', router);
+    handleCreateCourse(e, "courseSetup2", router);
   };
 
   return (
@@ -109,8 +108,9 @@ const MainFormView = () => {
                     type="input"
                     className="w-[100%] h-[55px] sm:w-[80%] px-6 border border-gray-300 rounded-[6px] shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
                     placeholder="Course name e.g DApp development, Design basics..."
-                    onChange={(e) => {setCourseName(e.target.value);
-                      setCourseNameError('')
+                    onChange={(e) => {
+                      setCourseName(e.target.value);
+                      setCourseNameError("");
                     }}
                   />
                   <input
@@ -138,7 +138,10 @@ const MainFormView = () => {
                     id="message"
                     className="block px-2.5 pb-64 py-3 w-[100%] sm:w-[80%] text-sm text-gray-900 bg-gray-50 rounded-[6px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="a little bit about your course......"
-                    onChange={(e) => {setCourseDescription(e.target.value); setCourseDescriptionError('')}}
+                    onChange={(e) => {
+                      setCourseDescription(e.target.value);
+                      setCourseDescriptionError("");
+                    }}
                   ></textarea>
                   <input
                     type="checkbox"
@@ -146,7 +149,9 @@ const MainFormView = () => {
                   />
                 </div>
                 {courseDescriptionError && (
-                  <p className="text-red-500 text-xs mt-1">{courseDescriptionError}</p>
+                  <p className="text-red-500 text-xs mt-1">
+                    {courseDescriptionError}
+                  </p>
                 )}
               </div>
 
@@ -158,15 +163,17 @@ const MainFormView = () => {
                   Course category
                 </label>
                 <div className="my-4 flex items-start w-full max-w-[556px] h-[55px]">
-                  <Dropdown 
-                    options={skills} 
-                    selectedOption={selectedSkill} 
-                    onSelect={(option: string) => {setSelectedSkill(option); setSkillError('')}} 
-                    required 
+                  <Dropdown
+                    options={skills}
+                    selectedOption={selectedSkill}
+                    onSelect={(option: string) => {
+                      setSelectedSkill(option);
+                      setSkillError("");
+                    }}
+                    required
                     errorMessage={skillError}
                   />
                 </div>
-
               </div>
 
               <div className="my-12 w-full">
@@ -178,15 +185,17 @@ const MainFormView = () => {
                   All levels)
                 </label>
                 <div className="my-4 flex items-start w-full max-w-[556px] h-[55px]">
-                  <Dropdown 
-                    options={levelOptions} 
-                    selectedOption={selectedLevel} 
-                    onSelect={(option: string) => {setSelectedLevel(option); setLevelError('')}} 
-                    required 
+                  <Dropdown
+                    options={levelOptions}
+                    selectedOption={selectedLevel}
+                    onSelect={(option: string) => {
+                      setSelectedLevel(option);
+                      setLevelError("");
+                    }}
+                    required
                     errorMessage={levelError}
                   />
                 </div>
-
 
                 <div className="mt-12 mb-5 w-full">
                   <button
@@ -208,7 +217,7 @@ const MainFormView = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default MainFormView;

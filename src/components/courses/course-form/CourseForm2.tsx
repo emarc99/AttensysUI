@@ -1,6 +1,6 @@
-import React, { useState } from "react"
-import Previous from "./previous"
-import { useRouter } from 'next/navigation'
+import React, { useState } from "react";
+import Previous from "./previous";
+import { useRouter } from "next/navigation";
 
 interface FormData {
   beginner: boolean;
@@ -29,57 +29,59 @@ const CourseForm2 = () => {
   });
 
   const [errors, setErrors] = useState<FormErrors>({
-    beginner: '',
-    bitOfKnowledge: '',
-    intermediate: '',
-    advanced: '',
-    general: ''
-  })
+    beginner: "",
+    bitOfKnowledge: "",
+    intermediate: "",
+    advanced: "",
+    general: "",
+  });
 
   const handleCheckboxChange = (field: keyof FormData): void => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: !prev[field]
+      [field]: !prev[field],
     }));
 
     if (errors[field]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [field]: ''
+        [field]: "",
       }));
     }
     if (errors.general) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        general: ''
+        general: "",
       }));
     }
   };
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
-      event.preventDefault();
-      
-      setErrors({
-        beginner: '',
-        bitOfKnowledge: '',
-        intermediate: '',
-        advanced: '',
-        general: ''
-      });
-      
-      const isAnyChecked = Object.values(formData).some(value => value);
-      
-      if (!isAnyChecked) {
-        setErrors(prev => ({
-          ...prev,
-          general: 'Please select at least one goal for your course'
-        }));
-        return; 
-      }
-      
-      router.push('/Course/CreateACourse/create-a-course-2');
-    };
-  
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ): Promise<void> => {
+    event.preventDefault();
+
+    setErrors({
+      beginner: "",
+      bitOfKnowledge: "",
+      intermediate: "",
+      advanced: "",
+      general: "",
+    });
+
+    const isAnyChecked = Object.values(formData).some((value) => value);
+
+    if (!isAnyChecked) {
+      setErrors((prev) => ({
+        ...prev,
+        general: "Please select at least one goal for your course",
+      }));
+      return;
+    }
+
+    router.push("/Course/CreateACourse/create-a-course-2");
+  };
+
   return (
     <div className="relative mx-10 md:mx-auto w-auto md:w-3/4 lg:w-5/12 pt-16">
       <div className="hidden lg:block">
@@ -102,9 +104,12 @@ const CourseForm2 = () => {
               name="beginner"
               value="Bike"
               checked={formData.beginner}
-              onChange={() => handleCheckboxChange('beginner')}
+              onChange={() => handleCheckboxChange("beginner")}
             />
-            <label htmlFor="beginner" className="block my-2 md:my-3 ml-3  text-[#333333] text-xs md:text-[18px] font-medium md:leading-[22px]">
+            <label
+              htmlFor="beginner"
+              className="block my-2 md:my-3 ml-3  text-[#333333] text-xs md:text-[18px] font-medium md:leading-[22px]"
+            >
               Beginners with no experience
             </label>
           </div>
@@ -118,9 +123,12 @@ const CourseForm2 = () => {
               name="bitOfKnowledge"
               value="Bike"
               checked={formData.bitOfKnowledge}
-              onChange={() => handleCheckboxChange('bitOfKnowledge')}
+              onChange={() => handleCheckboxChange("bitOfKnowledge")}
             />
-            <label htmlFor="bitOfKnowledge" className="block my-2 md:my-3 ml-3  text-[#333333] text-xs md:text-[18px] font-medium md:leading-[22px]">
+            <label
+              htmlFor="bitOfKnowledge"
+              className="block my-2 md:my-3 ml-3  text-[#333333] text-xs md:text-[18px] font-medium md:leading-[22px]"
+            >
               People with some basic knowledge
             </label>
           </div>
@@ -134,9 +142,12 @@ const CourseForm2 = () => {
               name="intermediate"
               value="Bike"
               checked={formData.intermediate}
-              onChange={() => handleCheckboxChange('intermediate')}
+              onChange={() => handleCheckboxChange("intermediate")}
             />
-            <label htmlFor="intermediate" className="block my-2 md:my-3 ml-3  text-[#333333] text-xs md:text-[18px] font-medium md:leading-[22px]">
+            <label
+              htmlFor="intermediate"
+              className="block my-2 md:my-3 ml-3  text-[#333333] text-xs md:text-[18px] font-medium md:leading-[22px]"
+            >
               Intermediate learners looking to grow
             </label>
           </div>
@@ -151,9 +162,12 @@ const CourseForm2 = () => {
               name="advanced"
               value="Bike"
               checked={formData.advanced}
-              onChange={() => handleCheckboxChange('advanced')}
+              onChange={() => handleCheckboxChange("advanced")}
             />
-            <label htmlFor="advanced" className="block my-2 md:my-3 ml-3  text-[#333333] text-xs md:text-[18px] font-medium md:leading-[22px]">
+            <label
+              htmlFor="advanced"
+              className="block my-2 md:my-3 ml-3  text-[#333333] text-xs md:text-[18px] font-medium md:leading-[22px]"
+            >
               Advanced learners or professionals
             </label>
           </div>
@@ -162,10 +176,11 @@ const CourseForm2 = () => {
           )}
         </div>
 
-      
-
         <div className="text-center">
-          <button type="submit" className=" w-full max-w-[350px] rounded-xl  bg-[#4A90E2] py-3 mt-12 mb-44 text-white">
+          <button
+            type="submit"
+            className=" w-full max-w-[350px] rounded-xl  bg-[#4A90E2] py-3 mt-12 mb-44 text-white"
+          >
             Next
           </button>
         </div>
@@ -175,7 +190,7 @@ const CourseForm2 = () => {
         <Previous />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CourseForm2
+export default CourseForm2;

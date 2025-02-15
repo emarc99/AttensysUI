@@ -33,15 +33,15 @@ import { attensysOrgAbi } from "@/deployments/abi";
 import { attensysOrgAddress } from "@/deployments/contracts";
 import { connect } from "starknetkit";
 import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
-import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest";
+import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
 import { Contract } from "starknet";
 
 const format = "h:mm a";
 const now = moment().hour(0).minute(0);
 
-type ValuePiece = Date | null
+type ValuePiece = Date | null;
 
-type Value = ValuePiece | [ValuePiece, ValuePiece]
+type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 const emptyData: FileObject = {
   name: "",
@@ -49,9 +49,9 @@ const emptyData: FileObject = {
   size: 0,
   lastModified: 0,
   arrayBuffer: async () => {
-    return new ArrayBuffer(0)
+    return new ArrayBuffer(0);
   },
-}
+};
 const ResetBootcampData = {
   bootcampName: "",
   bootcampOrganization: "",
@@ -68,7 +68,7 @@ const ResetBootcampData = {
   bootcampNftName: "",
   bootCampNftSymbol: "",
   bootcampNftImage: emptyData,
-}
+};
 
 //   {day:"", lecturetitle:"", lectureDescription: "", start:"", end:""}
 
@@ -90,7 +90,7 @@ const Create = (props: any) => {
   const logoInputRef = useRef<HTMLInputElement | null>(null);
   const [bootcampData, setBootcampData] = useAtom(createBootcampInitState);
   const [uploading, setUploading] = useState(false);
-  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom);
+  const [wallet, setWallet] = useAtom(walletStarknetkit);
   const [numOfClassesToCreate, setNumOfClassesToCreate] = useState<
     number | any
   >(1);
@@ -131,8 +131,8 @@ const Create = (props: any) => {
     setBootcampData((prevData) => ({
       ...prevData, // Spread existing data to retain untouched fields
       bootcampName: e.target.value, // Dynamically update the specific field
-    }))
-  }
+    }));
+  };
 
   const handleBootcampDescriptionChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -140,29 +140,29 @@ const Create = (props: any) => {
     setBootcampData((prevData) => ({
       ...prevData, // Spread existing data to retain untouched fields
       bootcampDescription: e.target.value, // Dynamically update the specific field
-    }))
-  }
+    }));
+  };
 
   const handleNFTNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBootcampData((prevData) => ({
       ...prevData, // Spread existing data to retain untouched fields
       bootcampNftName: e.target.value, // Dynamically update the specific field
-    }))
-  }
+    }));
+  };
 
   const handleNFTSymbolChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBootcampData((prevData) => ({
       ...prevData, // Spread existing data to retain untouched fields
       bootCampNftSymbol: e.target.value, // Dynamically update the specific field
-    }))
-  }
+    }));
+  };
 
   const handleImageClick = () => {
     // Trigger the file input on image click
-    fileInputRef.current?.click()
-  }
+    fileInputRef.current?.click();
+  };
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+    const file = event.target.files?.[0];
     if (
       file &&
       (file.type === "image/jpeg" ||
@@ -173,11 +173,11 @@ const Create = (props: any) => {
       setBootcampData((prevData) => ({
         ...prevData, // Spread existing data to retain untouched fields
         bootcampNftImage: file, // Dynamically update the specific field
-      }))
+      }));
     } else {
-      console.log("Please select a valid image file (JPEG, JPG, or PNG).")
+      console.error("Please select a valid image file (JPEG, JPG, or PNG).");
     }
-  }
+  };
 
   const handleBootcampPriceChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -185,15 +185,15 @@ const Create = (props: any) => {
     setBootcampData((prevData) => ({
       ...prevData, // Spread existing data to retain untouched fields
       bootcampPrice: e.target.value, // Dynamically update the specific field
-    }))
-  }
+    }));
+  };
 
   const handleBrowse = () => {
     // Trigger the file input on image click
-    logoInputRef.current?.click()
-  }
+    logoInputRef.current?.click();
+  };
   const handleLogoChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+    const file = event.target.files?.[0];
     if (
       file &&
       (file.type === "image/jpeg" ||
@@ -204,11 +204,11 @@ const Create = (props: any) => {
       setBootcampData((prevData) => ({
         ...prevData, // Spread existing data to retain untouched fields
         BootcampLogo: file, // Dynamically update the specific field
-      }))
+      }));
     } else {
-      console.log("Please select a valid image file (JPEG, JPG, or PNG).")
+      console.error("Please select a valid image file (JPEG, JPG, or PNG).");
     }
-  }
+  };
 
   const handlePublishButton = async () => {
     setUploading(true);
@@ -231,8 +231,8 @@ const Create = (props: any) => {
     });
 
     if (Dataupload) {
-      console.log("Data upload here", Dataupload);
-      console.log(
+      console.info("Data upload here", Dataupload);
+      console.info(
         "Create bootcamp Cid to send to contract ",
         Dataupload.IpfsHash,
       );
@@ -273,7 +273,7 @@ const Create = (props: any) => {
         .waitForTransaction(callContract.transaction_hash)
         .then(() => {})
         .catch((e: any) => {
-          console.log("Error: ", e);
+          console.error("Error: ", e);
         })
         .finally(() => {
           setUploading(false);
@@ -285,12 +285,12 @@ const Create = (props: any) => {
   };
 
   const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsPaid(event.target.checked)
+    setIsPaid(event.target.checked);
     setBootcampData((prevData) => ({
       ...prevData, // Spread existing data to retain untouched fields
       price: event.target.checked, // Dynamically update the specific field
-    }))
-  }
+    }));
+  };
 
   const handleAddDay = () => {
     // Add a new BootcampTime component with an incremented day value
@@ -298,7 +298,7 @@ const Create = (props: any) => {
     setBootcampTimes((prevTimes) => [
       ...prevTimes,
       { day: prevTimes.length + 1 },
-    ])
+    ]);
 
     setBootcampData((prevData) => ({
       ...prevData,
@@ -312,16 +312,16 @@ const Create = (props: any) => {
           end: "",
         },
       ],
-    }))
-  }
+    }));
+  };
 
   const handleRemoveDay = () => {
     setNumOfClassesToCreate(numOfClassesToCreate - 1);
     setBootcampTimes((prevTimes) => {
-      if (prevTimes.length === 0) return prevTimes // Prevent removing if no days are present
-      return prevTimes.slice(0, -1) // Remove the last day
-    })
-  }
+      if (prevTimes.length === 0) return prevTimes; // Prevent removing if no days are present
+      return prevTimes.slice(0, -1); // Remove the last day
+    });
+  };
 
   const handleTitleChange = (index: number, value: string) => {
     setBootcampData((prevData) => ({
@@ -329,8 +329,8 @@ const Create = (props: any) => {
       bootcampLecture: prevData.bootcampLecture.map((lecture, idx) =>
         idx === index ? { ...lecture, lecturetitle: value } : lecture,
       ),
-    }))
-  }
+    }));
+  };
 
   const handleDescriptionChange = (index: number, value: string) => {
     setBootcampData((prevData) => ({
@@ -338,27 +338,27 @@ const Create = (props: any) => {
       bootcampLecture: prevData.bootcampLecture.map((lecture, idx) =>
         idx === index ? { ...lecture, lectureDescription: value } : lecture,
       ),
-    }))
-  }
+    }));
+  };
 
   const handleCreateOverlay = () => {
-    setCreateOverlayStat(false)
-    setBootcampData(ResetBootcampData)
-  }
+    setCreateOverlayStat(false);
+    setBootcampData(ResetBootcampData);
+  };
 
   const handleStartdateChange = (newValue: any) => {
     setBootcampData((prevData) => ({
       ...prevData,
       bootcampStartdate: newValue ? newValue.format("YYYY-MM-DD") : "",
-    }))
-  }
+    }));
+  };
 
   const handleEnddateChange = (newValue: any) => {
     setBootcampData((prevData) => ({
       ...prevData,
       bootcampEndDate: newValue ? newValue.format("YYYY-MM-DD") : "",
-    }))
-  }
+    }));
+  };
 
   return (
     <div
@@ -367,7 +367,7 @@ const Create = (props: any) => {
         height: height ? `${height}px` : "100vh", // Use dynamic height or fallback to 100vh
       }}
     >
-      <div className="h-full flex">
+      <div className="flex h-full">
         <div className="w-[35%] hidden lg:block h-full bg-[#07070733]"></div>
 
         <div className="lg:w-[65%] w-[100%] h-full bg-[#FFFFFF] overflow-y-scroll">
@@ -383,7 +383,7 @@ const Create = (props: any) => {
           </div>
 
           <div className="w-[90%] mx-auto mt-6">
-            <div className="space-y-3 w-full">
+            <div className="w-full space-y-3">
               <h1 className="text-[12px] lg:text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                 Bootcamp Name
               </h1>
@@ -399,8 +399,8 @@ const Create = (props: any) => {
               </Field>
             </div>
 
-            <div className="flex-col flex lg:flex-row justify-between w-full space-y-5 space-x-2 mt-4">
-              <div className="space-y-3 w-full">
+            <div className="flex flex-col justify-between w-full mt-4 space-x-2 space-y-5 lg:flex-row">
+              <div className="w-full space-y-3">
                 <h1 className="text-[12px] lg:text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                   Bootcamp Organization
                 </h1>
@@ -416,7 +416,7 @@ const Create = (props: any) => {
                   />
                 </Field>
               </div>
-              <div className="space-y-3 w-full">
+              <div className="w-full space-y-3">
                 <h1 className="text-[12px] lg:text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                   Target Audience
                 </h1>
@@ -424,7 +424,7 @@ const Create = (props: any) => {
               </div>
             </div>
 
-            <div className="space-y-3 mt-4">
+            <div className="mt-4 space-y-3">
               <h1 className="text-[12px] lg:text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                 Description
               </h1>
@@ -533,8 +533,8 @@ const Create = (props: any) => {
               <h1 className="text-[12px] lg:text-[14px] text-[#2D3A4B] font-light leading-[20px]">
                 Bootcamp Time
               </h1>
-              <div className="flex flex-col lg:flex-row gap-x-3 items-start gap-y-4">
-                <div className="flex flex-col lg:flex-row gap-y-2 items-center gap-x-3">
+              <div className="flex flex-col items-start lg:flex-row gap-x-3 gap-y-4">
+                <div className="flex flex-col items-center lg:flex-row gap-y-2 gap-x-3">
                   {bootcampTimes.map((component, index) => (
                     <BootcampTime key={index} day={index + 1} />
                   ))}
@@ -562,7 +562,6 @@ const Create = (props: any) => {
                     </h1>
                   </div>
                 </div>
-
               </div>
             </div>
 
@@ -581,7 +580,7 @@ const Create = (props: any) => {
               <div className="space-y-12">
                 {bootcampTimes.map((component, index) => (
                   <div key={index}>
-                    <div className="mt-4 flex-col flex lg:flex-row gap-x-2 space-y-5 lg:space-y-0">
+                    <div className="flex flex-col mt-4 space-y-5 lg:flex-row gap-x-2 lg:space-y-0">
                       <Field>
                         <Input
                           placeholder="Add lecture title"
@@ -596,7 +595,7 @@ const Create = (props: any) => {
                       </Field>
 
                       <div className="relative flex bg-[#A666E3] items-center px-4  justify-between border-[1px] border-[#D0D5DD] h-[55px] w-[120px] rounded-lg">
-                        <div className="space-x-3 flex">
+                        <div className="flex space-x-3">
                           <FaRegCalendarAlt className="h-[20px] w-[14px] text-[#FFFFFF]" />
                           <h1 className="text-[12px] leading-[18px] font-light text-[#FFFFFF]">
                             Day {index + 1}
@@ -605,7 +604,7 @@ const Create = (props: any) => {
                       </div>
                     </div>
 
-                    <div className=" mt-4 flex space-x-2 relative">
+                    <div className="relative flex mt-4 space-x-2 ">
                       <div>
                         <Field>
                           <textarea
@@ -627,7 +626,7 @@ const Create = (props: any) => {
             </div>
 
             <div className="mt-6">
-              <div className="flex space-x-8 items-center">
+              <div className="flex items-center space-x-8">
                 <div>
                   <h1 className="text-[16px] leading-[23px] font-semibold text-[#2D3A4B]">
                     Pricing
@@ -645,7 +644,7 @@ const Create = (props: any) => {
               </div>
 
               {isPaid && (
-                <div className="mt-3 flex space-x-3">
+                <div className="flex mt-3 space-x-3">
                   <div>
                     <Field>
                       <Input
@@ -659,7 +658,7 @@ const Create = (props: any) => {
                       />
                     </Field>
                   </div>
-                  <div className="flex space-x-1 items-center">
+                  <div className="flex items-center space-x-1">
                     <h1 className="text-[24px] text-[#2D3A4B] font-light">$</h1>
                     <Field>
                       <Input
@@ -679,7 +678,7 @@ const Create = (props: any) => {
                   Upload Bootcamp creative
                 </h1>
 
-                <div className="flex flex-col lg:flex-row gap-x-16 lg:space-x-16 space-y-10">
+                <div className="flex flex-col space-y-10 lg:flex-row gap-x-16 lg:space-x-16">
                   <div className="h-[316px] lg:w-[459px] w-[390px] mt-3 rounded-lg bg-[#DCDCDC] flex justify-center items-center">
                     <div className="h-[256px] lg:w-[400px] w-[350px] border-[3px] border-dotted border-[#D0D5DD] bg-[#FFFFFF] rounded-xl space-y-3 flex flex-col items-center justify-center">
                       <Image src={cloud} alt="upload" />
@@ -706,7 +705,7 @@ const Create = (props: any) => {
                       </Button>
                     </div>
                   </div>
-                  <div className="mt-3 flex flex-col-reverse lg:flex-col space-y-5 lg:space-y-2">
+                  <div className="flex flex-col-reverse mt-3 space-y-5 lg:flex-col lg:space-y-2">
                     <div className="h-[166px] w-[251px] border-[3px] border-dotted border-[#D0D5DD] bg-[#FFFFFF] rounded-xl space-y-0 flex flex-col items-center justify-center">
                       <Image src={cloud} alt="upload" />
                       <h1 className="text-[8px] text-[#475367] font-light leading-[20px]">
@@ -752,4 +751,4 @@ const Create = (props: any) => {
   );
 };
 
-export default Create
+export default Create;

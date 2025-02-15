@@ -1,62 +1,62 @@
-import React, { useState } from "react"
-import { IoMdArrowBack } from "@react-icons/all-files/io/IoMdArrowBack"
-import CourseSideBar from "./SideBar"
-import { handleCreateCourse } from "@/utils/helpers"
-import { useRouter } from "next/navigation"
-import Stepper from "@/components/Stepper"
+import React, { useState } from "react";
+import { IoMdArrowBack } from "@react-icons/all-files/io/IoMdArrowBack";
+import CourseSideBar from "./SideBar";
+import { handleCreateCourse } from "@/utils/helpers";
+import { useRouter } from "next/navigation";
+import Stepper from "@/components/Stepper";
 
 const MainFormView2 = () => {
-  const router = useRouter()
-  const [requirements, setRequirements] = useState<string[]>([])
-  const [requirementInput, setRequirementInput] = useState("")
-  const [learningObjectives, setLearningObjectives] = useState("")
-  const [targetAudience, setTargetAudience] = useState("")
-  const [requirementsError, setRequirementsError] = useState("")
-  const [learningObjectivesError, setLearningObjectivesError] = useState("")
-  const [targetAudienceError, setTargetAudienceError] = useState("")
+  const router = useRouter();
+  const [requirements, setRequirements] = useState<string[]>([]);
+  const [requirementInput, setRequirementInput] = useState("");
+  const [learningObjectives, setLearningObjectives] = useState("");
+  const [targetAudience, setTargetAudience] = useState("");
+  const [requirementsError, setRequirementsError] = useState("");
+  const [learningObjectivesError, setLearningObjectivesError] = useState("");
+  const [targetAudienceError, setTargetAudienceError] = useState("");
 
   const handleAddRequirement = (e: React.MouseEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (requirementInput.trim()) {
-      setRequirements([...requirements, requirementInput.trim()])
-      setRequirementInput("")
-      setRequirementsError("")
+      setRequirements([...requirements, requirementInput.trim()]);
+      setRequirementInput("");
+      setRequirementsError("");
     }
-  }
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // Reset errors
-    setRequirementsError("")
-    setLearningObjectivesError("")
-    setTargetAudienceError("")
+    setRequirementsError("");
+    setLearningObjectivesError("");
+    setTargetAudienceError("");
 
-    let hasError = false
+    let hasError = false;
 
     // Validate requirements
     if (requirements.length === 0) {
-      setRequirementsError("At least one student requirement is required")
-      hasError = true
+      setRequirementsError("At least one student requirement is required");
+      hasError = true;
     }
 
     // Validate learning objectives
     if (!learningObjectives.trim()) {
-      setLearningObjectivesError("Learning objectives are required")
-      hasError = true
+      setLearningObjectivesError("Learning objectives are required");
+      hasError = true;
     }
 
     // Validate target audience
     if (!targetAudience.trim()) {
-      setTargetAudienceError("Target audience description is required")
-      hasError = true
+      setTargetAudienceError("Target audience description is required");
+      hasError = true;
     }
 
-    if (hasError) return
+    if (hasError) return;
 
     // Proceed to next step
-    handleCreateCourse(e, "courseSetup3", router)
-  }
+    handleCreateCourse(e, "courseSetup3", router);
+  };
 
   return (
     <div className="flex">
@@ -113,8 +113,8 @@ const MainFormView2 = () => {
                     placeholder="e.g A laptop."
                     value={requirementInput}
                     onChange={(e) => {
-                      setRequirementInput(e.target.value)
-                      setRequirementsError("")
+                      setRequirementInput(e.target.value);
+                      setRequirementsError("");
                     }}
                   />
                   <button
@@ -125,7 +125,9 @@ const MainFormView2 = () => {
                   </button>
                 </div>
                 {requirementsError && (
-                  <p className="text-red-500 text-xs mt-1">{requirementsError}</p>
+                  <p className="text-red-500 text-xs mt-1">
+                    {requirementsError}
+                  </p>
                 )}
                 <div className="mt-2">
                   {requirements.map((req, index) => (
@@ -151,13 +153,15 @@ const MainFormView2 = () => {
                     placeholder={`E.g When this course is done, students will :`}
                     value={learningObjectives}
                     onChange={(e) => {
-                      setLearningObjectives(e.target.value)
-                      setLearningObjectivesError("")
+                      setLearningObjectives(e.target.value);
+                      setLearningObjectivesError("");
                     }}
                   ></textarea>
                 </div>
                 {learningObjectivesError && (
-                  <p className="text-red-500 text-xs mt-1">{learningObjectivesError}</p>
+                  <p className="text-red-500 text-xs mt-1">
+                    {learningObjectivesError}
+                  </p>
                 )}
               </div>
 
@@ -175,13 +179,15 @@ const MainFormView2 = () => {
                     placeholder={`Example:`}
                     value={targetAudience}
                     onChange={(e) => {
-                      setTargetAudience(e.target.value)
-                      setTargetAudienceError("")
+                      setTargetAudience(e.target.value);
+                      setTargetAudienceError("");
                     }}
                   ></textarea>
                 </div>
                 {targetAudienceError && (
-                  <p className="text-red-500 text-xs mt-1">{targetAudienceError}</p>
+                  <p className="text-red-500 text-xs mt-1">
+                    {targetAudienceError}
+                  </p>
                 )}
               </div>
 
@@ -206,7 +212,7 @@ const MainFormView2 = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default MainFormView2
+export default MainFormView2;

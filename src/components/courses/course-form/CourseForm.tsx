@@ -1,6 +1,6 @@
-import React, { useState } from "react"
-import Previous from "./previous"
-import { useRouter } from 'next/navigation'
+import React, { useState } from "react";
+import Previous from "./previous";
+import { useRouter } from "next/navigation";
 
 interface CourseFormProps {
   section: string;
@@ -27,59 +27,61 @@ const CourseForm = ({ section }: CourseFormProps) => {
     jobSkills: false,
     certificate: false,
     hobby: false,
-    newIdeas: false
+    newIdeas: false,
   });
-  
+
   const [errors, setErrors] = useState<FormErrors>({
-    jobSkills: '',
-    certificate: '',
-    hobby: '',
-    newIdeas: '',
-    general: ''
+    jobSkills: "",
+    certificate: "",
+    hobby: "",
+    newIdeas: "",
+    general: "",
   });
 
   const handleCheckboxChange = (field: keyof FormData): void => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: !prev[field]
+      [field]: !prev[field],
     }));
 
     if (errors[field]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [field]: ''
+        [field]: "",
       }));
     }
     if (errors.general) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        general: ''
+        general: "",
       }));
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ): Promise<void> => {
     event.preventDefault();
-    
+
     setErrors({
-      jobSkills: '',
-      certificate: '',
-      hobby: '',
-      newIdeas: '',
-      general: ''
+      jobSkills: "",
+      certificate: "",
+      hobby: "",
+      newIdeas: "",
+      general: "",
     });
-    
-    const isAnyChecked = Object.values(formData).some(value => value);
-    
+
+    const isAnyChecked = Object.values(formData).some((value) => value);
+
     if (!isAnyChecked) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        general: 'Please select at least one goal for your course'
+        general: "Please select at least one goal for your course",
       }));
-      return; 
+      return;
     }
-    
-    router.push('/Course/CreateACourse/create-a-course');
+
+    router.push("/Course/CreateACourse/create-a-course");
   };
 
   return (
@@ -100,10 +102,13 @@ const CourseForm = ({ section }: CourseFormProps) => {
                 type="checkbox"
                 id="jobSkills"
                 checked={formData.jobSkills}
-                onChange={() => handleCheckboxChange('jobSkills')}
+                onChange={() => handleCheckboxChange("jobSkills")}
                 className="required:border-red-500 indeterminate:bg-gray-300"
               />
-              <label htmlFor="jobSkills" className="block my-2 md:my-3 ml-3 text-[#333333] text-xs md:text-[18px] font-medium leading-[22px]">
+              <label
+                htmlFor="jobSkills"
+                className="block my-2 md:my-3 ml-3 text-[#333333] text-xs md:text-[18px] font-medium leading-[22px]"
+              >
                 Helping people build skills for their job
               </label>
             </div>
@@ -115,10 +120,13 @@ const CourseForm = ({ section }: CourseFormProps) => {
                 type="checkbox"
                 id="certificate"
                 checked={formData.certificate}
-                onChange={() => handleCheckboxChange('certificate')}
+                onChange={() => handleCheckboxChange("certificate")}
                 className="required:border-red-500 indeterminate:bg-gray-300"
               />
-              <label htmlFor="certificate" className="block my-2 md:my-3 ml-3 text-[#333333] text-xs md:text-[18px] font-medium leading-[22px]">
+              <label
+                htmlFor="certificate"
+                className="block my-2 md:my-3 ml-3 text-[#333333] text-xs md:text-[18px] font-medium leading-[22px]"
+              >
                 Giving a certificate for completing the course
               </label>
             </div>
@@ -130,10 +138,13 @@ const CourseForm = ({ section }: CourseFormProps) => {
                 type="checkbox"
                 id="hobby"
                 checked={formData.hobby}
-                onChange={() => handleCheckboxChange('hobby')}
+                onChange={() => handleCheckboxChange("hobby")}
                 className="required:border-red-500 indeterminate:bg-gray-300"
               />
-              <label htmlFor="hobby" className="block my-2 md:my-3 ml-3 text-[#333333] text-xs md:text-[18px] font-medium leading-[22px]">
+              <label
+                htmlFor="hobby"
+                className="block my-2 md:my-3 ml-3 text-[#333333] text-xs md:text-[18px] font-medium leading-[22px]"
+              >
                 Sharing knowledge about a hobby or interest
               </label>
             </div>
@@ -145,10 +156,13 @@ const CourseForm = ({ section }: CourseFormProps) => {
                 type="checkbox"
                 id="newIdeas"
                 checked={formData.newIdeas}
-                onChange={() => handleCheckboxChange('newIdeas')}
+                onChange={() => handleCheckboxChange("newIdeas")}
                 className="required:border-red-500 indeterminate:bg-gray-300"
               />
-              <label htmlFor="newIdeas" className="block my-2 md:my-3 ml-3 text-[#333333] text-xs md:text-[18px] font-medium leading-[22px]">
+              <label
+                htmlFor="newIdeas"
+                className="block my-2 md:my-3 ml-3 text-[#333333] text-xs md:text-[18px] font-medium leading-[22px]"
+              >
                 Teaching new ideas or concepts in a field
               </label>
             </div>
@@ -168,7 +182,7 @@ const CourseForm = ({ section }: CourseFormProps) => {
           </button>
         </div>
       </form>
-    
+
       <div className="block absolute left-[35%] bottom-36 lg:hidden">
         <Previous />
       </div>

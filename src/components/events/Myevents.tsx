@@ -1,84 +1,93 @@
-"use client"
-import React, { ChangeEvent, useEffect, useRef, useState } from "react"
-import calenderimage from "@/assets/calendar.svg"
-import ticket from "@/assets/ticket.svg"
-import Image from "next/image"
-import { Button } from "@headlessui/react"
-import Eventcard from "./Eventcard"
+"use client";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import calenderimage from "@/assets/calendar.svg";
+import ticket from "@/assets/ticket.svg";
+import Image from "next/image";
+import { Button } from "@headlessui/react";
+import Eventcard from "./Eventcard";
 import {
   eventcreatedAtom,
   eventregistedAtom,
   existingeventCreationAtom,
   createEventClickAtom,
   createorexplore,
-} from "@/state/connectedWalletStarknetkitNext"
-import { useAtom, useSetAtom } from "jotai"
-import { useRouter } from "next/navigation"
-import { Description, Field, Input, Label } from "@headlessui/react"
-import clsx from "clsx"
-import add from "@/assets/add.svg"
+} from "@/state/connectedWalletStarknetkitNext";
+import { useAtom, useSetAtom } from "jotai";
+import { useRouter } from "next/navigation";
+import { Description, Field, Input, Label } from "@headlessui/react";
+import clsx from "clsx";
+import add from "@/assets/add.svg";
 
 const Myevents = (props: any) => {
   const [eventName, setEventName] = useState("");
-const [startTime, setStartTime] = useState("");
-const [endTime, setEndTime] = useState("");
-const [location, setLocation] = useState("");
-const [description, setDescription] = useState("");
-const [selectedFile, setSelectedFile] = useState<File | null>(null);
-const [errors, setErrors] = useState({
-  eventName: "",
-  startTime: "",
-  endTime: "",
-  location: "",
-  description: "",
-  file: "",
-});
-  const [createdstat, setCreatedStat] = useAtom(eventcreatedAtom)
-  const [Regstat, setRegStat] = useAtom(eventregistedAtom)
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [location, setLocation] = useState("");
+  const [description, setDescription] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [errors, setErrors] = useState({
+    eventName: "",
+    startTime: "",
+    endTime: "",
+    location: "",
+    description: "",
+    file: "",
+  });
+  const [createdstat, setCreatedStat] = useAtom(eventcreatedAtom);
+  const [Regstat, setRegStat] = useAtom(eventregistedAtom);
   const [existingeventStat, setexistingeventStat] = useAtom(
     existingeventCreationAtom,
-  )
+  );
   const [CreateeventClickStat, setCreateeventClickStat] =
-    useAtom(createEventClickAtom)
-  const [CreateorExplorestat, setCreateorExplorestat] = useAtom(createorexplore)
-  const router = useRouter()
-  const fileInputRef = useRef<HTMLInputElement | null>(null)
+    useAtom(createEventClickAtom);
+  const [CreateorExplorestat, setCreateorExplorestat] =
+    useAtom(createorexplore);
+  const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleImageClick = () => {
     // Trigger the file input on image click
-    fileInputRef.current?.click()
-  }
+    fileInputRef.current?.click();
+  };
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && (file.type === "image/jpeg" || file.type === "image/png" || file.type === "image/jpg")) {
+    if (
+      file &&
+      (file.type === "image/jpeg" ||
+        file.type === "image/png" ||
+        file.type === "image/jpg")
+    ) {
       setSelectedFile(file);
-      setErrors(prev => ({...prev, file: ""}));
+      setErrors((prev) => ({ ...prev, file: "" }));
     } else {
       setSelectedFile(null);
-      setErrors(prev => ({...prev, file: "Please select a valid image file (JPEG, JPG, or PNG)."}));
+      setErrors((prev) => ({
+        ...prev,
+        file: "Please select a valid image file (JPEG, JPG, or PNG).",
+      }));
     }
   };
 
-  const height = props.section === "createevent" ? "900px" : "630px"
+  const height = props.section === "createevent" ? "900px" : "630px";
   const handlecreatedEventStat = () => {
-    setCreatedStat(true)
-    setRegStat(false)
-    sessionStorage.setItem("scrollPosition", `${window.scrollY}`)
-    router.push("/Events/createdevent")
-  }
+    setCreatedStat(true);
+    setRegStat(false);
+    sessionStorage.setItem("scrollPosition", `${window.scrollY}`);
+    router.push("/Events/createdevent");
+  };
   const handleRegEventStat = () => {
-    setCreatedStat(false)
-    setRegStat(true)
-    sessionStorage.setItem("scrollPosition", `${window.scrollY}`)
-    router.push("/Events/registeredevent")
-  }
+    setCreatedStat(false);
+    setRegStat(true);
+    sessionStorage.setItem("scrollPosition", `${window.scrollY}`);
+    router.push("/Events/registeredevent");
+  };
 
   const handleCreateEventClick = () => {
-    setCreateeventClickStat(true)
-    sessionStorage.setItem("scrollPosition", `${window.scrollY}`)
-    router.push("/Events/createevent")
-  }
+    setCreateeventClickStat(true);
+    sessionStorage.setItem("scrollPosition", `${window.scrollY}`);
+    router.push("/Events/createevent");
+  };
 
   const handleCreateEventButton = () => {
     const newErrors = {
@@ -89,18 +98,18 @@ const [errors, setErrors] = useState({
       description: !description.trim() ? "Description is required" : "",
       file: !selectedFile ? "Event image is required" : "",
     };
-  
+
     // Time validation
     if (startTime && endTime && startTime >= endTime) {
       newErrors.endTime = "End time must be after start time";
     }
-  
+
     setErrors(newErrors);
-  
-    if (Object.values(newErrors).some(error => error)) return;
-  
+
+    if (Object.values(newErrors).some((error) => error)) return;
+
     //@todo replace sample event with event name
-    router.push("/Overview/sample-event/insight")
+    router.push("/Overview/sample-event/insight");
   };
 
   const data = [
@@ -125,7 +134,7 @@ const [errors, setErrors] = useState({
       host: "Selfless hearts Foundation",
       location: "Google Meet",
     },
-  ]
+  ];
 
   const mockeventcreatedData = [
     {
@@ -135,7 +144,7 @@ const [errors, setErrors] = useState({
       host: "Selfless hearts Foundation",
       location: "Google Meet",
     },
-  ]
+  ];
 
   const boiler = () => {
     return (
@@ -162,14 +171,14 @@ const [errors, setErrors] = useState({
         </div>
         <div className="w-[100%] h-[1px] bg-[#7B7B7B8A]"></div>
       </>
-    )
-  }
+    );
+  };
 
   const renderContent = () => {
     switch (props.section) {
       case "createevent":
         {
-          setCreateorExplorestat(true)
+          setCreateorExplorestat(true);
         }
         return (
           <>
@@ -211,18 +220,20 @@ const [errors, setErrors] = useState({
                     className={clsx(
                       "mt-3 block w-full border-b-[1px] border-white/50 bg-transparent text-[40px] font-bold leading-[83.53px] text-[#FFFFFF]",
                       "placeholder-white/50 focus:border-b-4 focus:border-[#ABADBA] focus:outline-none",
-                      errors.eventName && "border-red-500"
+                      errors.eventName && "border-red-500",
                     )}
                     placeholder="Event Name"
                     value={eventName}
-    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-      setEventName(e.target.value);
-      setErrors(prev => ({...prev, eventName: ""}));
-    }}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      setEventName(e.target.value);
+                      setErrors((prev) => ({ ...prev, eventName: "" }));
+                    }}
                   />
                   {errors.eventName && (
-    <p className="text-red-500 text-sm mt-1">{errors.eventName}</p>
-  )}
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.eventName}
+                    </p>
+                  )}
                 </div>
                 <div className="w-full max-w-lg px-4 mt-4">
                   <Field>
@@ -234,17 +245,19 @@ const [errors, setErrors] = useState({
                       className={clsx(
                         "mt-1 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
                         "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
-                        errors.startTime && "border border-red-500"
+                        errors.startTime && "border border-red-500",
                       )}
                       value={startTime}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setStartTime(e.target.value);
-                        setErrors(prev => ({...prev, startTime: ""}));
+                        setErrors((prev) => ({ ...prev, startTime: "" }));
                       }}
                     />
-                     {errors.startTime && (
-      <p className="text-red-500 text-sm mt-1">{errors.startTime}</p>
-    )}
+                    {errors.startTime && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.startTime}
+                      </p>
+                    )}
                   </Field>
                 </div>
 
@@ -258,17 +271,19 @@ const [errors, setErrors] = useState({
                       className={clsx(
                         "mt-1 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
                         "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
-                        errors.endTime && "border border-red-500"
+                        errors.endTime && "border border-red-500",
                       )}
                       value={endTime}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setEndTime(e.target.value);
-                        setErrors(prev => ({...prev, endTime: ""}));
+                        setErrors((prev) => ({ ...prev, endTime: "" }));
                       }}
                     />
-                     {errors.endTime && (
-      <p className="text-red-500 text-sm mt-1">{errors.endTime}</p>
-    )}
+                    {errors.endTime && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.endTime}
+                      </p>
+                    )}
                   </Field>
                 </div>
 
@@ -281,20 +296,22 @@ const [errors, setErrors] = useState({
                       Choose Onsite Location or Virtual link{" "}
                     </Description>
                     <textarea
-                       className={clsx(
+                      className={clsx(
                         "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white h-20",
                         "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 resize-none",
-                        errors.location && "border border-red-500"
+                        errors.location && "border border-red-500",
                       )}
                       value={location}
                       onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                         setLocation(e.target.value);
-                        setErrors(prev => ({...prev, location: ""}));
+                        setErrors((prev) => ({ ...prev, location: "" }));
                       }}
                     />
                     {errors.location && (
-      <p className="text-red-500 text-sm mt-1">{errors.location}</p>
-    )}
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.location}
+                      </p>
+                    )}
                   </Field>
                 </div>
                 <div className="w-full max-w-lg px-4 mt-4">
@@ -306,19 +323,21 @@ const [errors, setErrors] = useState({
                       A brief description of the event{" "}
                     </Description>
                     <textarea
-                       className={clsx(
+                      className={clsx(
                         "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white h-36",
                         "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 resize-none",
-                        errors.description && "border border-red-500"
+                        errors.description && "border border-red-500",
                       )}
                       value={description}
                       onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                         setDescription(e.target.value);
-                        setErrors(prev => ({...prev, description: ""}));
+                        setErrors((prev) => ({ ...prev, description: "" }));
                       }}
                     />
                     {errors.description && (
-                      <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.description}
+                      </p>
                     )}
                   </Field>
                 </div>
@@ -342,9 +361,9 @@ const [errors, setErrors] = useState({
                     onChange={handleFileChange}
                     style={{ display: "none" }} // Hide the input
                   />
-                   {errors.file && (
-    <p className="text-red-500 text-sm mt-1">{errors.file}</p>
-  )}
+                  {errors.file && (
+                    <p className="text-red-500 text-sm mt-1">{errors.file}</p>
+                  )}
                 </div>
                 <Button
                   onClick={handleCreateEventButton}
@@ -361,12 +380,12 @@ const [errors, setErrors] = useState({
               </Button>
             </div>
           </>
-        )
+        );
       case "createdevent":
         {
-          setCreatedStat(true)
-          setRegStat(false)
-          setCreateorExplorestat(false)
+          setCreatedStat(true);
+          setRegStat(false);
+          setCreateorExplorestat(false);
         }
         return (
           <>
@@ -406,12 +425,12 @@ const [errors, setErrors] = useState({
               </div>
             )}
           </>
-        )
+        );
       case "registeredevent":
         {
-          setCreatedStat(false)
-          setRegStat(true)
-          setCreateorExplorestat(false)
+          setCreatedStat(false);
+          setRegStat(true);
+          setCreateorExplorestat(false);
         }
         return (
           <>
@@ -429,12 +448,12 @@ const [errors, setErrors] = useState({
               ))}
             </div>
           </>
-        )
+        );
       case "events":
         {
-          setCreatedStat(true)
-          setRegStat(false)
-          setCreateorExplorestat(false)
+          setCreatedStat(true);
+          setRegStat(false);
+          setCreateorExplorestat(false);
         }
         return (
           <>
@@ -474,25 +493,25 @@ const [errors, setErrors] = useState({
               </div>
             )}
           </>
-        )
+        );
       default:
-        return <p>Error 404</p>
+        return <p>Error 404</p>;
     }
-  }
+  };
 
   useEffect(() => {
-    setexistingeventStat(false)
-  })
+    setexistingeventStat(false);
+  });
 
   useEffect(() => {
-    const scrollY = sessionStorage.getItem("scrollPosition")
+    const scrollY = sessionStorage.getItem("scrollPosition");
     if (scrollY) {
-      window.scrollTo(0, parseFloat(scrollY))
+      window.scrollTo(0, parseFloat(scrollY));
     }
     if (props.section == "events") {
-      window.scrollTo(0, 0)
+      window.scrollTo(0, 0);
     }
-  }, [])
+  }, []);
 
   return (
     <div
@@ -501,7 +520,7 @@ const [errors, setErrors] = useState({
     >
       {renderContent()}
     </div>
-  )
-}
+  );
+};
 
-export default Myevents
+export default Myevents;
