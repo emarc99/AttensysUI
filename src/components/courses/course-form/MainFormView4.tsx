@@ -8,7 +8,17 @@ import CourseSideBar from "./SideBar"
 import { handleCreateCourse } from "@/utils/helpers"
 import { useRouter } from "next/navigation"
 
-const MainFormView4 = () => {
+interface ChildComponentProps {
+  courseData: any
+  handleCoursePricing: (event: React.ChangeEvent<HTMLInputElement>) => void
+  handleCoursePromoCode: (event: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+const MainFormView4: React.FC<ChildComponentProps> = ({
+  courseData,
+  handleCoursePricing,
+  handleCoursePromoCode,
+}) => {
   const router = useRouter()
   const pricing = [
     {
@@ -23,10 +33,23 @@ const MainFormView4 = () => {
     },
   ]
 
+  const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    // Check if an option is selected before navigating
+    if (
+      courseData.coursePricing.trim() !== "" &&
+      courseData.promoAndDiscount.trim() !== ""
+    ) {
+      router.push(`/Course/CreateACourse/courseSetup5`)
+    } else {
+      alert("Please select an option before proceeding.")
+    }
+  }
+
   return (
     <div className="flex">
       <div className="hidden sm:block">
-        <CourseSideBar />
+        <CourseSideBar courseData={courseData} />
       </div>
 
       <div className="flex-1">
@@ -57,9 +80,12 @@ const MainFormView4 = () => {
           </div>
 
           <div className="mx-4 sm:ml-24 sm:mr-96 mt-12">
-            <form action="CourseSetup5">
+            <form onSubmit={handleNext}>
               <div className="my-12">
-                <label htmlFor="" className="font-semibold text-[18px] leading-[31px] text-[#333333]">
+                <label
+                  htmlFor=""
+                  className="font-semibold text-[18px] leading-[31px] text-[#333333]"
+                >
                   Course Pricing
                 </label>
                 <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px] my-2">
@@ -67,7 +93,7 @@ const MainFormView4 = () => {
 appropriately can help attract the right audience while providing a fair return on your effort.`}
                 </p>
                 <div className="sm:flex my-12">
-                  {pricing.map((item, id) => (
+                  {pricing.map((item, id: number) => (
                     <div
                       key={id}
                       className="relative border border-3 border-black mr-12 px-5 py-10 rounded-xl sm:my-0 my-8"
@@ -76,13 +102,24 @@ appropriately can help attract the right audience while providing a fair return 
                         <div className="flex content-start">
                           <Image src={item.sym} alt={item.cost} />
                           <div className="mx-4">
-                            <p className="font-semibold text-[16px] leading-[31px] text-[#333333]">{item.cost}</p>
-                            <p className="font-normal text-[13px] text-[#2D3A4B] leading-[21px]">{item.desc} </p>
+                            <p className="font-semibold text-[16px] leading-[31px] text-[#333333]">
+                              {item.cost}
+                            </p>
+                            <p className="font-normal text-[13px] text-[#2D3A4B] leading-[21px]">
+                              {item.desc}{" "}
+                            </p>
                           </div>
                         </div>
 
                         <div className="p-1 rounded-xl absolute right-4 top-4">
-                          <input type="checkbox" name="xxw" id="" />
+                          <input
+                            type="checkbox"
+                            name="xxw"
+                            id={item.cost}  // Use item.cost as the id
+                            value={item.cost}
+                            checked={courseData.coursePricing === item.cost}  // Check state
+                            onChange={handleCoursePricing}
+                          />
                         </div>
                       </div>
                     </div>
@@ -91,7 +128,10 @@ appropriately can help attract the right audience while providing a fair return 
               </div>
 
               <div className="my-16">
-                <label htmlFor="" className="font-semibold text-[18px] leading-[31px] text-[#333333]">
+                <label
+                  htmlFor=""
+                  className="font-semibold text-[18px] leading-[31px] text-[#333333]"
+                >
                   Promo and Discount
                 </label>
                 <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px]">
@@ -104,6 +144,8 @@ appropriately can help attract the right audience while providing a fair return 
                     type="text"
                     placeholder="Create Promo Code"
                     className="rounded-xl flex-1 mr-4 bg-white text-[#2d3a4b] border-[#c0c0c0] border-[1px] py-2 pl-10"
+                    value={courseData.promoAndDiscount}
+                    onChange={handleCoursePromoCode}
                   />
                   <button className="rounded-xl bg-white font-normal text-[13px] text-[#2D3A4B] leading-[21px] border-[#d0d5dd] border-[1px]  py-3 px-6">
                     + Add Promo Code
@@ -116,9 +158,6 @@ appropriately can help attract the right audience while providing a fair return 
                   <button
                     className="rounded-xl bg-[#4A90E2] px-12 sm:px-48 py-3 text-white"
                     type="submit"
-                    onClick={(e) =>
-                      handleCreateCourse(e, "courseSetup5", router)
-                    }
                   >
                     Save and Proceed
                   </button>

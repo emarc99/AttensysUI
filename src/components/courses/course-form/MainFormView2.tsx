@@ -5,15 +5,43 @@ import CourseSideBar from "./SideBar"
 import { handleCreateCourse } from "@/utils/helpers"
 import { useRouter } from "next/navigation"
 
+interface ChildComponentProps {
+  courseData: any
+  handleStudentReqChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  handleLearningObjChange: (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => void
+  handleTADescriptionChange: (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => void
+}
 
-const MainFormView2 = () => {
-    const router = useRouter()
-  
-   
+const MainFormView2: React.FC<ChildComponentProps> = ({
+  courseData,
+  handleStudentReqChange,
+  handleLearningObjChange,
+  handleTADescriptionChange,
+}) => {
+  const router = useRouter()
+
+  const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    // Check if an option is selected before navigating
+    if (
+      courseData.studentRequirements.trim() !== "" &&
+      courseData.learningObjectives.trim() !== "" &&
+      courseData.targetAudienceDesc.trim() !== ""
+    ) {
+      router.push(`/Course/CreateACourse/CourseSetup3`)
+    } else {
+      alert("Please select an option before proceeding.")
+    }
+  }
+
   return (
     <div className="flex">
       <div className="hidden sm:block">
-        <CourseSideBar />
+        <CourseSideBar courseData={courseData} />
       </div>
 
       <div className="flex-1">
@@ -44,9 +72,12 @@ const MainFormView2 = () => {
           </div>
 
           <div className="mx-6 sm:ml-24 mt-12">
-            <form action="CourseSetup3">
+            <form onSubmit={handleNext}>
               <div className="my-12">
-                <label htmlFor="" className="font-semibold text-[18px] leading-[31px] text-[#333333]">
+                <label
+                  htmlFor=""
+                  className="font-semibold text-[18px] leading-[31px] text-[#333333]"
+                >
                   Student requirements
                 </label>
                 <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px]">
@@ -57,6 +88,8 @@ const MainFormView2 = () => {
                     type="input"
                     className="w-[50%] sm:w-[70%] h-[55px] py-2 px-6 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
                     placeholder="e.g A laptop."
+                    value={courseData.studentRequirements}
+                    onChange={handleStudentReqChange}
                   />
                   <button className="rounded-xl py-2 px-4 h-[55px] font-normal text-[18px] w-[155px] text-[#2D3A4B] leading-[21px] border-2 p-1 ml-5 text-xs sm:text-base bg-white">
                     <span className="">+</span> Add Item
@@ -65,7 +98,9 @@ const MainFormView2 = () => {
               </div>
 
               <div className="my-12">
-                <label className="font-semibold text-[18px] leading-[31px] text-[#333333]">Learning Objectives</label>
+                <label className="font-semibold text-[18px] leading-[31px] text-[#333333]">
+                  Learning Objectives
+                </label>
                 <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px]">
                   please outline the key skills and knowledge that students will
                   gain by completing your course.
@@ -78,12 +113,16 @@ const MainFormView2 = () => {
 
 Understand fundamental concepts in [Subject/Field]
 Create and implement strategies for [Specific Outcome]`}
+                    value={courseData.learningObjectives}
+                    onChange={handleLearningObjChange}
                   ></textarea>
                 </div>
               </div>
 
               <div className="my-12">
-                <label className="font-semibold text-[18px] leading-[31px] text-[#333333]">Target Audience</label>
+                <label className="font-semibold text-[18px] leading-[31px] text-[#333333]">
+                  Target Audience
+                </label>
                 <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px]">
                   In this section, describe who your course is intended for.
                 </p>
@@ -95,6 +134,8 @@ Create and implement strategies for [Specific Outcome]`}
 This course is ideal for:
 Beginners with no prior experience in [Subject/Field].
 Professionals looking to enhance their skills in [Specific Area].`}
+                    value={courseData.targetAudienceDesc}
+                    onChange={handleTADescriptionChange}
                   ></textarea>
                 </div>
               </div>
@@ -104,9 +145,9 @@ Professionals looking to enhance their skills in [Specific Area].`}
                   <button
                     className="bg-[#4A90E2] px-28 sm:px-48 py-3 rounded-xl text-white"
                     type="submit"
-                     onClick={(e) =>
-                                          handleCreateCourse(e, "courseSetup3", router)
-                                        }
+                    onClick={(e) =>
+                      handleCreateCourse(e, "courseSetup3", router)
+                    }
                   >
                     Next
                   </button>

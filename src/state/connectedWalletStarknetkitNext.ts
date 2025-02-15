@@ -3,12 +3,12 @@ import {
   ChainId,
   NetworkChangeEventHandler,
 } from "@starknet-io/types-js"
-import { useAtomValue, useSetAtom, atom} from "jotai"
+import { useAtomValue, useSetAtom, atom } from "jotai"
 import { atomWithReset } from "jotai/utils"
 import { useEffect } from "react"
 import { ConnectorData, StarknetWindowObject } from "starknetkit-next"
 import { Connector } from "starknetkit"
-import { FileObject } from "pinata";
+import { FileObject } from "pinata"
 
 const emptyData: FileObject = {
   name: "",
@@ -16,35 +16,67 @@ const emptyData: FileObject = {
   size: 0,
   lastModified: 0,
   arrayBuffer: async () => {
-    return new ArrayBuffer(0);
+    return new ArrayBuffer(0)
   },
-};
+}
+
+export const lectureData = {
+  lectureName: "",
+  description: "",
+  video: emptyData,
+}
 
 const InitOrganizationRegstrationData = {
-  organizationBanner : emptyData,
-  organizationName : "",
-  organizationDescription : "",
-  organizationLogo : emptyData,
-  organizationCategory : "",
+  organizationBanner: emptyData,
+  organizationName: "",
+  organizationDescription: "",
+  organizationLogo: emptyData,
+  organizationCategory: "",
   organizationAdminfullname: "",
-  organizationAminEmail : "",
-  organizationAdminWallet : "",
-  organizationInstructorEmails : [""],
-  organizationInstructorsWalletAddresses : [""],
+  organizationAminEmail: "",
+  organizationAdminWallet: "",
+  organizationInstructorEmails: [""],
+  organizationInstructorsWalletAddresses: [""],
 }
 
 const InitBootcampNftData = {
-  organizationNftName : "",
-  organizationNftSymbol : "",
-  organizationNftImage : emptyData,
+  organizationNftName: "",
+  organizationNftSymbol: "",
+  organizationNftImage: emptyData,
+}
+
+interface Lecture {
+  name: string
+  description: string
+  video: File | null
+}
+
+
+const InitCourseRegistrationData = {
+  primaryGoal: "",
+  targetAudience: "",
+  courseArea: "",
+  courseName: "",
+  courseDescription: "",
+  courseCategory: "",
+  difficultyLevel: "",
+  studentRequirements: "",
+  learningObjectives: "",
+  targetAudienceDesc: "",
+  courseImage: emptyData,
+  courseCurriculum: [] as Lecture[],
+  coursePricing: "",
+  promoAndDiscount: "",
+  publishWithCertificate: false,
 }
 
 //organization data state
-export const organzationInitState = atom(InitOrganizationRegstrationData);
+export const organzationInitState = atom(InitOrganizationRegstrationData)
 //bootcamp data state
 export const createBootcampInitState = atom(InitBootcampNftData)
 
-
+// course data state
+export const courseInitState = atom(InitCourseRegistrationData)
 
 export const walletStarknetkitNextAtom = atomWithReset<
   StarknetWindowObject | null | undefined
@@ -54,42 +86,41 @@ export const connectorDataAtom = atomWithReset<ConnectorData | null>(null)
 
 export const connectorAtom = atomWithReset<Connector | null>(null)
 
-export const coursestatusAtom = atom(false);
+export const coursestatusAtom = atom(false)
 
-export const eventcreatedAtom = atom(true);
-export const eventregistedAtom = atom(false);
-export const existingeventCreationAtom = atom(false);
-export const createEventClickAtom = atom(false);
-export const createorexplore = atom(false);
+export const eventcreatedAtom = atom(true)
+export const eventregistedAtom = atom(false)
+export const existingeventCreationAtom = atom(false)
+export const createEventClickAtom = atom(false)
+export const createorexplore = atom(false)
 
-export const insightClick = atom(true);
-export const guestlistclick = atom(false);
-export const attendanceclick = atom(false);
-export const sponsorshipclick = atom(false);
-export const modalstatus = atom(false);
+export const insightClick = atom(true)
+export const guestlistclick = atom(false)
+export const attendanceclick = atom(false)
+export const sponsorshipclick = atom(false)
+export const modalstatus = atom(false)
 
-export const orguploadstatus = atom(true);
-export const confirmationstatus = atom(false);
+export const orguploadstatus = atom(true)
+export const confirmationstatus = atom(false)
 
+export const sendingstatus = atom(false)
+export const successstatus = atom(false)
 
-export const sendingstatus = atom(false);
-export const successstatus = atom(false);
+export const bootcampdropdownstatus = atom(false)
 
-export const bootcampdropdownstatus = atom(false);
+export const createbootcampoverlay = atom(false)
 
-export const createbootcampoverlay = atom(false);
+export const outlineclick = atom(true)
+export const allstudentclick = atom(false)
+export const certificationsclick = atom(false)
 
-export const outlineclick = atom(true);
-export const allstudentclick = atom(false);
-export const certificationsclick = atom(false);
+export const registerModal = atom(false)
 
-export const registerModal = atom(false);
+export const detailsEntryStat = atom(true)
 
-export const detailsEntryStat = atom(true);
+export const detailsEntryLoading = atom(false)
 
-export const detailsEntryLoading = atom(false);
-
-export const registrationsuccess = atom(false);
+export const registrationsuccess = atom(false)
 
 export const useWalletAccountChange = () => {
   const wallet = useAtomValue(walletStarknetkitNextAtom)

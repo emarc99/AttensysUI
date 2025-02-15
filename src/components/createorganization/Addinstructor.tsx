@@ -46,7 +46,6 @@ const Addinstructor = (props: any) => {
   const [uploading, setUploading] = useState(false)
   const [cidToContract, setCidToContract] = useState<string>("")
 
-  // console.dir(organizationData, {depth : null})
 
   const handleEmailsChange = (emails: string[]) => {
     setEmailList(emails)

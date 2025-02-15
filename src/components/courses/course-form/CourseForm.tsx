@@ -1,10 +1,39 @@
-import React from "react"
+import React, { useState } from "react"
 import Previous from "./previous"
+import { useRouter } from "next/navigation"
 
-const CourseForm = (props: any) => {
-  const handleNext = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
+interface ChildComponentProps {
+  section: any
+  handleCoursePrimaryGoalChange: (e: string) => void
+}
+
+const CourseForm: React.FC<ChildComponentProps> = ({
+  section,
+  handleCoursePrimaryGoalChange,
+}) => {
+  const [selectedOption, setSelectedOption] = useState<string>("")
+  const router = useRouter()
+
+  // Handle change event
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedOption(event.target.value)
   }
+
+  const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    handleCoursePrimaryGoalChange(selectedOption)
+
+    console.log("Selected Option:", selectedOption)
+
+    // Check if an option is selected before navigating
+    if (selectedOption) {
+      router.push(`/Course/CreateACourse/create-a-course`)
+    } else {
+      alert("Please select an option before proceeding.")
+    }
+  }
+
   return (
     <div className="relative mx-10 md:mx-auto w-auto md:w-5/12 pt-16 ">
       <div className="hidden sm:block">
@@ -15,7 +44,7 @@ const CourseForm = (props: any) => {
           What is the primary goal of your course?
         </h1>
       </div>
-      <form action="create-a-course">
+      <form  onSubmit={handleNext}>
         <div className=" bg-white px-12 py-16 rounded-2xl flex flex-col justify-center w-[524px] mx-auto">
           <div className="flex">
             <input
@@ -23,11 +52,18 @@ const CourseForm = (props: any) => {
               min="2"
               max="5"
               className="required:border-red-500 indeterminate:bg-gray-300"
-              id="vehicle1"
-              name="vehicle1"
-              value="Bike"
+              id="option1"
+              name="option"
+              value="Helping people build skills for their job"
+              checked={
+                selectedOption === "Helping people build skills for their job"
+              }
+              onChange={handleChange}
             />
-            <label className="block my-5 ml-3 text-[#333333] text-[18px] font-medium leading-[22px]">
+            <label
+              htmlFor="option1"
+              className="block my-5 ml-3 text-[#333333] text-[18px] font-medium leading-[22px]"
+            >
               Helping people build skills for their job
             </label>
           </div>
@@ -37,11 +73,19 @@ const CourseForm = (props: any) => {
               min="2"
               max="5"
               className="required:border-red-500 indeterminate:bg-gray-300"
-              id="vehicle1"
-              name="vehicle1"
-              value="Bike"
+              id="option2"
+              name="option"
+              value="Giving a certificate for completing the course"
+              checked={
+                selectedOption ===
+                "Giving a certificate for completing the course"
+              }
+              onChange={handleChange}
             />
-            <label className="block my-5 ml-3 text-[#333333] text-[18px] font-medium leading-[22px]">
+            <label
+              htmlFor="option2"
+              className="block my-5 ml-3 text-[#333333] text-[18px] font-medium leading-[22px]"
+            >
               Giving a certificate for completing the course
             </label>
           </div>
@@ -51,11 +95,18 @@ const CourseForm = (props: any) => {
               min="2"
               max="5"
               className="required:border-red-500 indeterminate:bg-gray-300"
-              id="vehicle1"
-              name="vehicle1"
-              value="Bike"
+              id="option3"
+              name="option"
+              value="Sharing knowledge about a hobby or interest"
+              checked={
+                selectedOption === "Sharing knowledge about a hobby or interest"
+              }
+              onChange={handleChange}
             />
-            <label className="block my-5 ml-3 text-[#333333] text-[18px] font-medium leading-[22px]">
+            <label
+              htmlFor="option3"
+              className="block my-5 ml-3 text-[#333333] text-[18px] font-medium leading-[22px]"
+            >
               Sharing knowledge about a hobby or interest
             </label>
           </div>
@@ -66,11 +117,18 @@ const CourseForm = (props: any) => {
               min="2"
               max="5"
               className="required:border-red-500 indeterminate:bg-gray-300"
-              id="vehicle1"
-              name="vehicle1"
-              value="Bike"
+              id="option4"
+              name="option"
+              value="Teaching new ideas or concepts in a field"
+              checked={
+                selectedOption === "Teaching new ideas or concepts in a field"
+              }
+              onChange={handleChange}
             />
-            <label className="block my-5 ml-3 text-[#333333] text-[18px] font-medium leading-[22px]">
+            <label
+              htmlFor="option4"
+              className="block my-5 ml-3 text-[#333333] text-[18px] font-medium leading-[22px]"
+            >
               Teaching new ideas or concepts in a field
             </label>
           </div>
@@ -78,7 +136,6 @@ const CourseForm = (props: any) => {
 
         <div className="text-center">
           <button
-            onSubmit={handleNext}
             className="bg-[#4A90E2] w-[350px] rounded-xl  py-3 mt-12 mb-44 text-white"
             type="submit"
           >
