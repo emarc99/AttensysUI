@@ -1,17 +1,18 @@
-import React from "react"
-import { IoMdArrowBack } from "@react-icons/all-files/io/IoMdArrowBack"
-import Dropdown from "../Dropdown"
-import Image from "next/image"
-import free from "@/assets/free.svg"
-import paid from "@/assets/paid.svg"
-import CourseSideBar from "./SideBar"
-import { handleCreateCourse } from "@/utils/helpers"
-import { useRouter } from "next/navigation"
+import React, { useState } from "react";
+import { IoMdArrowBack } from "@react-icons/all-files/io/IoMdArrowBack";
+import Dropdown from "../Dropdown";
+import Image from "next/image";
+import free from "@/assets/free.svg";
+import paid from "@/assets/paid.svg";
+import CourseSideBar from "./SideBar";
+import { handleCreateCourse } from "@/utils/helpers";
+import { useRouter } from "next/navigation";
+import Stepper from "@/components/Stepper";
 
 interface ChildComponentProps {
-  courseData: any
-  handleCoursePricing: (event: React.ChangeEvent<HTMLInputElement>) => void
-  handleCoursePromoCode: (event: React.ChangeEvent<HTMLInputElement>) => void
+  courseData: any;
+  handleCoursePricing: (event: string) => void;
+  handleCoursePromoCode: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const MainFormView4: React.FC<ChildComponentProps> = ({
@@ -19,7 +20,10 @@ const MainFormView4: React.FC<ChildComponentProps> = ({
   handleCoursePricing,
   handleCoursePromoCode,
 }) => {
-  const router = useRouter()
+  const router = useRouter();
+  const [selectedPricing, setSelectedPricing] = useState<string | null>(null);
+  const [pricingError, setPricingError] = useState("");
+
   const pricing = [
     {
       sym: free,
@@ -31,35 +35,46 @@ const MainFormView4: React.FC<ChildComponentProps> = ({
       cost: "Paid",
       desc: "Set a price that reflects the value of your content",
     },
-  ]
+  ];
 
-  const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    // Check if an option is selected before navigating
-    if (
-      courseData.coursePricing.trim() !== "" &&
-      courseData.promoAndDiscount.trim() !== ""
-    ) {
-      router.push(`/Course/CreateACourse/courseSetup5`)
-    } else {
-      alert("Please select an option before proceeding.")
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // Reset error
+    setPricingError("");
+
+    // Validate pricing selection
+    if (!courseData.coursePricing) {
+      setPricingError("Please select a pricing option");
+      return;
     }
-  }
+
+    // Proceed to next step
+    handleCreateCourse(e, "courseSetup5", router);
+  };
+
+  const handlePricingSelection = (cost: string) => {
+    setSelectedPricing(cost);
+    setPricingError("");
+  };
 
   return (
     <div className="flex">
-      <div className="hidden sm:block">
+      <div className="hidden lg:block">
         <CourseSideBar courseData={courseData} />
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 w-full">
         <div className="bg-gradient-to-r from-[#4A90E2] to-[#9B51E0]">
-          <p className="text-sm text-white text-center py-2">
+          <p className="text-[13px]/[145%] md:text-sm text-white text-center py-2">
             Your course creation progress saves automatically, but feel free to
             also save your progress manually
           </p>
         </div>
 
+        <div className="lg:hidden w-full flex justify-center mt-[58px] mb-[79px]">
+          <Stepper currentStep={4} />
+        </div>
         <div className="">
           <div className="block sm:flex justify-between py-2 my-5 border-t border-b border-[#d1d1d1] px-5 items-center">
             <div className="flex items-center">
@@ -79,62 +94,63 @@ const MainFormView4: React.FC<ChildComponentProps> = ({
             </button>
           </div>
 
-          <div className="mx-4 sm:ml-24 sm:mr-96 mt-12">
-            <form onSubmit={handleNext}>
+          <div className="mx-4 sm:ml-24 lg:mr-96 mt-12">
+            <form onSubmit={handleSubmit}>
               <div className="my-12">
-                <label
-                  htmlFor=""
-                  className="font-semibold text-[18px] leading-[31px] text-[#333333]"
-                >
+                <label className="font-semibold text-[18px] leading-[31px] text-[#333333]">
                   Course Pricing
                 </label>
-                <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px] my-2">
-                  {`Set a price for your course that reflects the value of the content you’re offering.Pricing your course 
-appropriately can help attract the right audience while providing a fair return on your effort.`}
-                </p>
+                {pricingError && (
+                  <p className="text-red-500 text-sm mt-1">{pricingError}</p>
+                )}
                 <div className="sm:flex my-12">
                   {pricing.map((item, id: number) => (
                     <div
                       key={id}
-                      className="relative border border-3 border-black mr-12 px-5 py-10 rounded-xl sm:my-0 my-8"
+                      className={`relative border mr-12 px-5 py-5 rounded-xl sm:my-0 my-8 cursor-pointer ${
+                        courseData.coursePricing === item.cost
+                          ? "border-2 border-[#4A90E2]"
+                          : "border-[#00000033]"
+                      }`}
+                      onClick={() => handleCoursePricing(item.cost)}
                     >
-                      <div className="fle ">
-                        <div className="flex content-start">
-                          <Image src={item.sym} alt={item.cost} />
-                          <div className="mx-4">
-                            <p className="font-semibold text-[16px] leading-[31px] text-[#333333]">
-                              {item.cost}
-                            </p>
-                            <p className="font-normal text-[13px] text-[#2D3A4B] leading-[21px]">
-                              {item.desc}{" "}
-                            </p>
-                          </div>
+                      <div className="flex content-start">
+                        <div>
+                          <Image src={item.sym} alt={item.cost} width={30} />
                         </div>
-
-                        <div className="p-1 rounded-xl absolute right-4 top-4">
-                          <input
-                            type="checkbox"
-                            name="xxw"
-                            id={item.cost}  // Use item.cost as the id
-                            value={item.cost}
-                            checked={courseData.coursePricing === item.cost}  // Check state
-                            onChange={handleCoursePricing}
-                          />
+                        <div className="mx-4">
+                          <p className="font-semibold text-base leading-[31px] text-[#333333]">
+                            {item.cost}
+                          </p>
+                          <p className="font-normal text-[13px]/[145%] text-[#2D3A4B]">
+                            {item.desc}
+                          </p>
                         </div>
+                      </div>
+                      <div className="p-1 rounded-xl absolute right-5 top-3">
+                        <input
+                          type="radio"
+                          name="pricing"
+                          id={item.cost}
+                          value={item.cost}
+                          checked={courseData.coursePricing === item.cost}
+                          onChange={() => handleCoursePricing(item.cost)}
+                          className="w-4 h-4 text-[#4A90E2]"
+                        />
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="my-16">
+              <div className="mt-[71px]">
                 <label
                   htmlFor=""
                   className="font-semibold text-[18px] leading-[31px] text-[#333333]"
                 >
                   Promo and Discount
                 </label>
-                <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px]">
+                <p className="font-normal text-[13px]/[145%] md:text-[14px] mt-5 text-[#2D3A4B] leading-[21px]">
                   Promotional pricing is a great way to create urgency and
                   increase the visibility of your course, helping you reach a
                   wider audience while rewarding early sign-ups.
@@ -143,11 +159,11 @@ appropriately can help attract the right audience while providing a fair return 
                   <input
                     type="text"
                     placeholder="Create Promo Code"
-                    className="rounded-xl flex-1 mr-4 bg-white text-[#2d3a4b] border-[#c0c0c0] border-[1px] py-2 pl-10"
+                    className="rounded-[5px] flex-1 h-[52px] mr-4 bg-white text-[#2d3a4b] border-[#c0c0c0] border-[1px] py-2 pl-10 w-full md:w-auto"
                     value={courseData.promoAndDiscount}
                     onChange={handleCoursePromoCode}
                   />
-                  <button className="rounded-xl bg-white font-normal text-[13px] text-[#2D3A4B] leading-[21px] border-[#d0d5dd] border-[1px]  py-3 px-6">
+                  <button className="rounded-[5px] bg-white font-normal h-[55px] text-[13px] text-[#2D3A4B] leading-[21px] border-[#d0d5dd] mt-5 sm:mt-0 border-[1px]  py-3 px-6">
                     + Add Promo Code
                   </button>
                 </div>
@@ -156,7 +172,7 @@ appropriately can help attract the right audience while providing a fair return 
               <div className="my-12">
                 <div className="mt-12 mb-24">
                   <button
-                    className="rounded-xl bg-[#4A90E2] px-12 sm:px-48 py-3 text-white"
+                    className="rounded-lg bg-[#4A90E2] px-12 py-3 text-white w-full md:max-w-[350px]"
                     type="submit"
                   >
                     Save and Proceed
@@ -168,7 +184,7 @@ appropriately can help attract the right audience while providing a fair return 
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default MainFormView4
+export default MainFormView4;

@@ -1,26 +1,44 @@
-import React from "react"
-interface CourseDropdownProps {
-  handleCourseCategoryChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
-  selectedValue: string
-  options: any
+import React, { useState } from "react";
+
+interface Props {
+  options: string[];
+  selectedOption: string | null;
+  onSelect: (option: string) => void;
+  required?: boolean;
+  errorMessage?: string;
+  functionToChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
-const Dropdown: React.FC<CourseDropdownProps> = ({
+const Dropdown = ({
   options,
-  selectedValue,
-  handleCourseCategoryChange,
-}) => {
+  selectedOption,
+  onSelect,
+  required,
+  errorMessage,
+  functionToChange,
+}: Props) => {
+  const [selectedValue, setSelectedValue] = useState(selectedOption || "");
+
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const newSelectedValue = event.target.value;
+    setSelectedValue(newSelectedValue);
+    onSelect(newSelectedValue);
+    functionToChange(event);
+  };
+
   return (
     <div className="relative flex-auto h-full">
       <select
-        id="courseCategory"
-        name="courseCategory"
+        name="cars"
+        id="cars"
         value={selectedValue}
-        onChange={handleCourseCategoryChange}
-        required
-        className="w-full h-full sm:w-[100%] px-4 py-2 border border-gray-300 rounded-xl appearance-none focus:outline-none pr-10"
+        onChange={handleChange}
+        className={`w-full h-full sm:w-[100%] px-4 py-2 border ${errorMessage ? "border-red-500" : "border-gray-300"} rounded-xl appearance-none focus:outline-none pr-10`}
       >
-        {options.map((item: any, i: any) => (
-          <option value={item} key={i}>
+        <option value="" disabled={selectedOption !== null}>
+          Select an option
+        </option>
+        {options.map((item, i) => (
+          <option key={i} value={item}>
             {item}
           </option>
         ))}
@@ -41,8 +59,11 @@ const Dropdown: React.FC<CourseDropdownProps> = ({
           />
         </svg>
       </div>
+      {errorMessage && (
+        <p className="text-red-500 text-xs mt-1">{errorMessage}</p>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default Dropdown
+export default Dropdown;

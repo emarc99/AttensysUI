@@ -1,28 +1,32 @@
-import React, { useState } from "react"
-import { IoMdArrowBack } from "@react-icons/all-files/io/IoMdArrowBack"
-import Dropdown from "../Dropdown"
-import video from "@/assets/video.png"
-
-import Image from "next/image"
-import Switch from "react-switch"
-import Lectures from "../Lectures"
-import CourseSideBar from "./SideBar"
-import { MdOutlineDiamond } from "react-icons/md"
-import { pinata } from "../../../../utils/config"
-import { FileObject } from "pinata"
-import { courseInitState } from "@/state/connectedWalletStarknetkitNext"
-import { lectures } from "@/constants/data"
-import { attensysCourseAddress } from "@/deployments/contracts"
-import { attensysCourseAbi } from "@/deployments/abi"
-import { Contract } from "starknet"
+import React, { useState } from "react";
+import { IoMdArrowBack } from "@react-icons/all-files/io/IoMdArrowBack";
+import Dropdown from "../Dropdown";
+import video from "@/assets/video.png";
+import youtube from "@/assets/youtube.svg";
+import podcast from "@/assets/Podcast.svg";
+import rich from "@/assets/Richin2024.svg";
+import Image from "next/image";
+import Switch from "react-switch";
+import Lectures from "../Lectures";
+import CourseSideBar from "./SideBar";
+import { MdOutlineDiamond } from "react-icons/md";
+import { pinata } from "../../../../utils/config";
+import { FileObject } from "pinata";
+import { courseInitState } from "@/state/connectedWalletStarknetkitNext";
+import { lectures } from "@/constants/data";
+import { attensysCourseAddress } from "@/deployments/contracts";
+import { attensysCourseAbi } from "@/deployments/abi";
+import { Contract } from "starknet";
+import { useRouter } from "next/navigation";
+import { handleCreateCourse } from "@/utils/helpers";
 
 interface ChildComponentProps {
-  courseData: any
-  setCourseData: any
-  connectorDataAccount: any
+  courseData: any;
+  setCourseData: any;
+  wallet: any;
   handleCoursePublishWithCert: (
     event: MouseEvent | React.SyntheticEvent<MouseEvent | KeyboardEvent, Event>,
-  ) => void
+  ) => void;
 }
 
 // file setup
@@ -32,13 +36,13 @@ const emptyData: FileObject = {
   size: 0,
   lastModified: 0,
   arrayBuffer: async () => {
-    return new ArrayBuffer(0)
+    return new ArrayBuffer(0);
   },
-}
+};
 interface Lecture {
-  name: string
-  description: string
-  video: File | null
+  name: string;
+  description: string;
+  video: File | null;
 }
 const ResetCourseRegistrationData = {
   primaryGoal: "",
@@ -56,30 +60,29 @@ const ResetCourseRegistrationData = {
   coursePricing: "",
   promoAndDiscount: "",
   publishWithCertificate: false,
-}
+};
 
 const MainFormView5: React.FC<ChildComponentProps> = ({
   courseData,
   setCourseData,
-  connectorDataAccount,
+  wallet,
   handleCoursePublishWithCert,
 }) => {
-  const [isActivated, setIsActivated] = useState(false)
-  const [uploading, setUploading] = useState(false)
-  const [cidToContract, setCidToContract] = useState<string>("")
-  const [cidCourseImage, setcidCourseImage] = useState<string>("")
-
-  console.log(connectorDataAccount)
+  const [isActivated, setIsActivated] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [cidToContract, setCidToContract] = useState<string>("");
+  const [cidCourseImage, setcidCourseImage] = useState<string>("");
+  const router = useRouter();
   const handleSwitch = (
     event: MouseEvent | React.SyntheticEvent<MouseEvent | KeyboardEvent, Event>,
   ) => {
-    setIsActivated(!isActivated)
-    handleCoursePublishWithCert(event)
-  }
+    setIsActivated(!isActivated);
+    handleCoursePublishWithCert(event);
+  };
 
   const handleCourseUpload = async () => {
-    setUploading(true)
-    const courseImgupload = await pinata.upload.file(courseData.courseImage)
+    setUploading(true);
+    const courseImgupload = await pinata.upload.file(courseData.courseImage);
     //  const selectedLectureVideoUpload = await
 
     const dataUpload = await pinata.upload.json({
@@ -93,52 +96,60 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
       studentRequirements: courseData.studentRequirements,
       learningObjectives: courseData.learningObjectives,
       targetAudienceDesc: courseData.targetAudienceDesc,
-      courseImage: courseImgupload.cid,
+      courseImage: courseImgupload.IpfsHash,
       courseCurriculum: courseData.courseCurriculum,
       coursePricing: courseData.coursePricing,
       promoAndDiscount: courseData.promoAndDiscount,
       publishWithCertificate: courseData.publishWithCertificate,
-    })
+    });
 
     if (dataUpload) {
-      console.log("Data upload here", dataUpload)
-      console.log("Cid to send to contract", dataUpload.cid)
-      setCidToContract(dataUpload.cid)
-      setcidCourseImage(courseImgupload.cid)
-      setUploading(false)
+      setCidToContract(dataUpload.IpfsHash);
+      setcidCourseImage(courseImgupload.IpfsHash);
+      setUploading(false);
     }
-  }
+  };
 
-  const courseCreation = async () => {
-    handleCourseUpload()
+  const courseCreation = async (e: any) => {
+    handleCourseUpload();
 
     const courseContract = new Contract(
       attensysCourseAbi,
       attensysCourseAddress,
-      connectorDataAccount,
-    )
+      wallet?.account,
+    );
 
     const create_course_calldata = courseContract.populate("create_course", [
-      connectorDataAccount.address,
+      wallet?.account?.address,
       false,
       cidCourseImage,
       courseData.courseName,
       "XXX",
       cidToContract,
-    ])
-    const res = courseContract.create_course(create_course_calldata)
-    await connectorDataAccount?.provider
-      .waitForTransaction(res.transaction_hash)
+    ]);
+
+    const callCourseContract = await wallet?.account.execute([
+      {
+        contractAddress: attensysCourseAddress,
+        entrypoint: "create_course",
+        calldata: create_course_calldata.calldata,
+      },
+    ]);
+
+    await wallet?.account?.provider
+      .waitForTransaction(callCourseContract.transaction_hash)
       .then(() => {})
       .catch((e: any) => {
-        console.log("Error: ", e)
+        console.log("Error: ", e);
       })
       .finally(() => {
         //Resets all org data input
-        setCourseData(ResetCourseRegistrationData)
-        // router.push(`/Createorganization/${prop}`)
-      })
-  }
+        setCourseData(ResetCourseRegistrationData);
+
+        // Proceed to next step
+        handleCreateCourse(e, "course-landing-page", router);
+      });
+  };
 
   return (
     <div className="sm:flex">
@@ -252,7 +263,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                   <button
                     className="rounded-xl bg-[#4A90E2] px-24 py-3 text-white"
                     type="submit"
-                    onClick={handleCourseUpload}
+                    onClick={courseCreation}
                   >
                     Save and Publish Course
                   </button>
@@ -263,7 +274,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default MainFormView5
+export default MainFormView5;

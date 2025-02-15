@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import React, { FC } from "react";
 
 import {
   Card,
@@ -6,24 +6,24 @@ import {
   CardFooter,
   Typography,
   Button,
-} from "@material-tailwind/react"
-import Image from "next/image"
-import profilePic from "../../assets/profile_pic.png"
-import { IoMdArrowDropdown } from "@react-icons/all-files/io/IoMdArrowDropdown"
-import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark"
-import { BsFillExclamationCircleFill } from "@react-icons/all-files/bs/BsFillExclamationCircleFill"
+} from "@material-tailwind/react";
+import Image from "next/image";
+import profilePic from "../../assets/profile_pic.png";
+import { IoMdArrowDropdown } from "@react-icons/all-files/io/IoMdArrowDropdown";
+import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
+import { BsFillExclamationCircleFill } from "@react-icons/all-files/bs/BsFillExclamationCircleFill";
 import {
   sideProperties,
   coursesProgress,
   certificateEarned,
   certSideProperties,
-} from "@/constants/data"
+} from "@/constants/data";
 
 interface CourseSideBarProps {
-  // page: string // or another type like `number` or a union type
-  // selected: string // Replace with appropriate type
-  // setSelected: (value: string) => void // Function that sets a value
-  courseData: any
+  // page: string; // or another type like `number` or a union type
+  // selected: string; // Replace with appropriate type
+  // setSelected: (value: string) => void; // Function that sets a value
+  courseData: any;
 }
 
 const CourseSideBar: FC<CourseSideBarProps> = ({ courseData }) => {
@@ -53,9 +53,7 @@ const CourseSideBar: FC<CourseSideBarProps> = ({ courseData }) => {
       head: "Review & Publish",
       items: ["Publish course"],
     },
-  ]
-
-  // console.log("Showing from side bar", courseData.courseName)
+  ];
   return (
     <div className="bg-gradient-to-b from-[#9b51e052] to-[#4a90e252] py-8 px-8 h-full">
       <div>
@@ -87,7 +85,7 @@ const CourseSideBar: FC<CourseSideBarProps> = ({ courseData }) => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CourseSideBar
+export default CourseSideBar;

@@ -1,79 +1,92 @@
-import React, { useState, useRef } from "react"
-import upload_other from "@/assets/upload_other.svg"
-import tick_circle from "@/assets/tick-circle.svg"
-import trash from "@/assets/trash.svg"
-import film from "@/assets/film.svg"
-import { Button } from "@headlessui/react"
-import Image from "next/image"
+import React, { useState, useRef } from "react";
+import upload_other from "@/assets/upload_other.svg";
+import tick_circle from "@/assets/tick-circle.svg";
+import trash from "@/assets/trash.svg";
+import film from "@/assets/film.svg";
+import { Button } from "@headlessui/react";
+import Image from "next/image";
 
 interface Lecture {
-  name: string
-  description: string
-  video: File | null
+  name: string;
+  description: string;
+  video: File | null;
+}
+
+interface CourseData {
+  courseCurriculum: Lecture[];
 }
 
 interface LectureProps {
-  courseData: any
-  handleCourseCurriculumChange: (newLecture: any) => void
+  courseData: CourseData;
+  setCourseData: any;
+  handleCourseCurriculumChange: (newLecture: any) => void;
 }
 
 const AddLecture: React.FC<LectureProps> = ({
   courseData,
+  setCourseData,
   handleCourseCurriculumChange,
 }) => {
-  const [lectures, setLectures] = useState<Lecture[]>([]) // State to manage lectures
+  const [lectures, setLectures] = useState<Lecture[]>([]); // State to manage lectures
   const [newLecture, setNewLecture] = useState<Lecture>({
     name: "",
     description: "",
     video: null,
-  })
+  });
 
-  const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const handleBrowsefiles = () => {
-    fileInputRef.current?.click()
-  }
+    fileInputRef.current?.click();
+  };
 
   // Handler for input changes in the new lecture form
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const { name, value } = event.target
+    const { name, value } = event.target;
     setNewLecture((prev) => ({
       ...prev,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
   // Handler for file upload
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files ? event.target.files[0] : null
+    const file = event.target.files ? event.target.files[0] : null;
     setNewLecture((prev) => ({
       ...prev,
       video: file,
-    }))
-  }
+    }));
+  };
 
   // Handler to add new lecture to the array
   const handleAddLecture = (event: React.MouseEvent) => {
-    event.preventDefault()
+    event.preventDefault();
     if (newLecture.name.trim() === "") {
-      alert("Lecture title is required")
-      return
+      return;
     }
-    setLectures([newLecture, ...lectures])
+    setLectures([newLecture, ...lectures]);
 
-    handleCourseCurriculumChange(newLecture)
-    setNewLecture({ name: "", description: "", video: null })
-  }
+    handleCourseCurriculumChange(newLecture);
+    setNewLecture({ name: "", description: "", video: null });
+  };
 
   // Handler to remove a lecture
   const handleRemoveLecture = (
-    event: React.ChangeEvent<HTMLImageElement>,
+    event: React.MouseEvent<HTMLImageElement>,
     index: number,
   ) => {
-    const updatedLectures = lectures.filter((_, i) => i !== index)
-    setLectures(updatedLectures)
-  }
+    const updatedLectures = lectures.filter((_, i) => i !== index);
+    setLectures(updatedLectures);
+
+    // Update the parent state using handleCourseCurriculumChange
+    // handleCourseCurriculumChange(updatedLectures);
+    // Update parent state with the new array (excluding the removed lecture)
+    setCourseData((prevData: CourseData) => ({
+      ...prevData,
+      courseCurriculum: prevData.courseCurriculum.filter((_, i) => i !== index),
+    }));
+  };
 
   return (
     <div>
@@ -208,7 +221,7 @@ const AddLecture: React.FC<LectureProps> = ({
           ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AddLecture
+export default AddLecture;

@@ -1,49 +1,49 @@
-import tester from "@/assets/tester.svg"
-import ramp from "@/assets/ramp.svg"
-import banx from "@/assets/banxa.svg"
+import tester from "@/assets/tester.svg";
+import ramp from "@/assets/ramp.svg";
+import banx from "@/assets/banxa.svg";
 
-import saibat from "@/assets/saiibatu.svg"
+import saibat from "@/assets/saiibatu.svg";
 
-import stunt from "@/assets/stunts.png"
-import social from "@/assets/social.png"
-import grapic from "@/assets/graphics.png"
-import last from "@/assets/last.jpg"
-import Orange from "@/assets/Orange.svg"
-import summer from "@/assets/summer.png"
-import sunder from "@/assets/summer.png"
-import companylogo from "@/assets/companylogo.svg"
-import bootcamp1 from "@/assets/project.svg"
-import bootcamp2 from "@/assets/graphicsdesign.svg"
-import bootcamp3 from "@/assets/flier.svg"
-import bootcamp4 from "@/assets/effects.png"
-import testlogo from "@/assets/testlogo.svg"
-import handshake from "@/assets/handshake.svg"
-import world from "@/assets/world.svg"
-import skip from "@/assets/skipp.svg"
-import pattern from "@/assets/pattern.svg"
-import lolli from "@/assets/lolli.svg"
-import domino from "@/assets/domino.svg"
-import robotimg from "@/assets/roboy.png"
-import courseImg from "@/assets/videoImg.svg"
-import podcast from "@/assets/Podcast.svg"
-import youtube from "@/assets/youtube.svg"
-import classvid from "@/assets/classtsest.svg"
-import noupload from "@/assets/noupload.svg"
+import stunt from "@/assets/stunts.png";
+import social from "@/assets/social.png";
+import grapic from "@/assets/graphics.png";
+import last from "@/assets/last.jpg";
+import Orange from "@/assets/Orange.svg";
+import summer from "@/assets/summer.png";
+import sunder from "@/assets/summer.png";
+import companylogo from "@/assets/companylogo.svg";
+import bootcamp1 from "@/assets/project.svg";
+import bootcamp2 from "@/assets/graphicsdesign.svg";
+import bootcamp3 from "@/assets/flier.svg";
+import bootcamp4 from "@/assets/effects.png";
+import testlogo from "@/assets/testlogo.svg";
+import handshake from "@/assets/handshake.svg";
+import world from "@/assets/world.svg";
+import skip from "@/assets/skipp.svg";
+import pattern from "@/assets/pattern.svg";
+import lolli from "@/assets/lolli.svg";
+import domino from "@/assets/domino.svg";
+import robotimg from "@/assets/roboy.png";
+import courseImg from "@/assets/videoImg.svg";
+import podcast from "@/assets/Podcast.svg";
+import youtube from "@/assets/youtube.svg";
+import classvid from "@/assets/classtsest.svg";
+import noupload from "@/assets/noupload.svg";
 
-import topNotch from "@/assets/topnotch.svg"
-import digital from "@/assets/digital.svg"
-import liveNft from "@/assets/livenft.svg"
-import Swisstaler from "@/assets/Swisstaler.svg"
-import createIcon from "@/assets/create.svg"
-import filled from "@/assets/filled.svg"
-import free_books from "@/assets/free_books.svg"
-import notifications from "@/assets/notifications.svg"
-import f7_tickets from "@/assets/f7_tickets.svg"
-import token from "@/assets/token-branded_nftb.svg"
-import videoHero from "@/assets/video.svg"
-import videoClip from "@/assets/video_clip.svg"
-import certIcon from "@/assets/certificate-outline.svg"
-import rich from "@/assets/Richin2024.svg"
+import topNotch from "@/assets/topnotch.svg";
+import digital from "@/assets/digital.svg";
+import liveNft from "@/assets/livenft.svg";
+import Swisstaler from "@/assets/Swisstaler.svg";
+import createIcon from "@/assets/create.svg";
+import filled from "@/assets/filled.svg";
+import free_books from "@/assets/free_books.svg";
+import notifications from "@/assets/notifications.svg";
+import f7_tickets from "@/assets/f7_tickets.svg";
+import token from "@/assets/token-branded_nftb.svg";
+import videoHero from "@/assets/video.svg";
+import videoClip from "@/assets/video_clip.svg";
+import certIcon from "@/assets/certificate-outline.svg";
+import rich from "@/assets/Richin2024.svg";
 
 export const lectures = [
   {
@@ -64,7 +64,7 @@ export const lectures = [
     desc: "An introduction to the world of web development, covering the basics of how websites...",
     timing: 8,
   },
-]
+];
 
 export const notifCategory = [
   {
@@ -133,7 +133,7 @@ export const notifCategory = [
       },
     ],
   },
-]
+];
 
 export const coursesDetails = [
   {
@@ -146,7 +146,7 @@ export const coursesDetails = [
     url: videoClip,
     certificate: 291,
   },
-]
+];
 
 export const learningDetails = [
   {
@@ -159,7 +159,7 @@ export const learningDetails = [
     url: videoClip,
     certificate: 291,
   },
-]
+];
 
 export const sideProperties = [
   {
@@ -182,7 +182,7 @@ export const sideProperties = [
     title: "Notification",
     url: notifications,
   },
-]
+];
 
 export const coursesProgress = [
   {
@@ -201,7 +201,7 @@ export const coursesProgress = [
     no: 14,
     title: "Created",
   },
-]
+];
 
 export const certificateEarned = [
   {
@@ -214,7 +214,7 @@ export const certificateEarned = [
     title: "Event Certification",
     type: "events",
   },
-]
+];
 
 export const certSideProperties = [
   {
@@ -232,7 +232,7 @@ export const certSideProperties = [
     title: "Event NFTs",
     url: f7_tickets,
   },
-]
+];
 
 export const certContent = [
   {
@@ -321,12 +321,12 @@ export const certContent = [
       },
     ],
   },
-]
+];
 
 export const courseQuestions = [
   "What is the primary goal of your course?",
   "Who is your course for, and what should they know before starting?",
-]
+];
 
 export const skills = [
   "Design",
@@ -338,14 +338,14 @@ export const skills = [
   "Crypto",
   "Artificial Intelligence",
   "Product Management",
-]
+];
 
 export const levelOptions = [
   "Beginner",
   "Intermediate",
   "Advanced",
   "All levels",
-]
+];
 
 export const subLectures = [
   {
@@ -366,7 +366,7 @@ export const subLectures = [
     time: "8 min",
     desc: "An introduction to the world of web development, covering the basics of how websites...",
   },
-]
+];
 
 export const guestdata = [
   {
@@ -579,7 +579,7 @@ export const guestdata = [
     role: "N/A",
     date: "12/25/2024",
   },
-]
+];
 
 export const attendanceData = [
   {
@@ -622,7 +622,7 @@ export const attendanceData = [
     date: "12/25/2024",
     checkstat: true,
   },
-]
+];
 
 export const approvedsponsors = [
   {
@@ -639,7 +639,7 @@ export const approvedsponsors = [
     address: "0x5c956e61...de5232dc11",
     time: "11 OCT, 2024   |  10:25 PM",
   },
-]
+];
 
 export const pendingsponsors = [
   {
@@ -656,7 +656,7 @@ export const pendingsponsors = [
     address: "0x5c956e61...de5232dc11",
     time: "11 OCT, 2024   |  10:25 PM",
   },
-]
+];
 
 export const HighlightData = [
   {
@@ -684,7 +684,7 @@ export const HighlightData = [
     time: "Wed, Oct 30,4pm",
     image: last,
   },
-]
+];
 
 export const allEventData = [
   {
@@ -975,7 +975,7 @@ export const allEventData = [
     fee: "10",
     image: summer,
   },
-]
+];
 
 export const explorerData = [
   {
@@ -1248,7 +1248,7 @@ export const explorerData = [
     timestamp: "11 OCT, 2024   |  10:25 PM",
     category: "Crypto Academy Bootcamp",
   },
-]
+];
 
 export const eventsData = [
   {
@@ -1419,7 +1419,7 @@ export const eventsData = [
     nftImg: "",
     date: "1 mon",
   },
-]
+];
 
 export const gridsData = [
   {
@@ -1720,7 +1720,7 @@ export const gridsData = [
       },
     ],
   },
-]
+];
 
 export const caroselldata = [
   {
@@ -1759,7 +1759,7 @@ export const caroselldata = [
     logo: companylogo,
     flier: bootcamp3,
   },
-]
+];
 
 export const organizationData = [
   {
@@ -1870,7 +1870,7 @@ export const organizationData = [
     logo: testlogo,
     flier: domino,
   },
-]
+];
 
 export const favoriteCourseData = [
   {
@@ -1905,7 +1905,7 @@ export const favoriteCourseData = [
     flier: robotimg,
     stars: 4,
   },
-]
+];
 
 export const mockkdata = [
   {
@@ -2013,7 +2013,7 @@ export const mockkdata = [
   {
     data: "Oxfdf568*** just created an organization",
   },
-]
+];
 
 export const permisiondata = [
   {
@@ -2031,7 +2031,7 @@ export const permisiondata = [
     address: "0x5c956e61...de5232dc11",
     access: ["Instructor"],
   },
-]
+];
 
 export const registereddata = [
   {
@@ -2055,7 +2055,7 @@ export const registereddata = [
     certifications: 3,
     joined: 3,
   },
-]
+];
 
 export const outlineData = [
   {
@@ -2076,7 +2076,7 @@ export const outlineData = [
     totalreg: 210,
     boiler: noupload,
   },
-]
+];
 
 export const regcaroselldata = [
   {
@@ -2085,4 +2085,4 @@ export const regcaroselldata = [
     logo: companylogo,
     flier: bootcamp1,
   },
-]
+];

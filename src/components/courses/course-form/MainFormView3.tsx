@@ -1,65 +1,89 @@
-import React, { useRef, useState } from "react"
-import { IoMdArrowBack } from "@react-icons/all-files/io/IoMdArrowBack"
-import Dropdown from "../Dropdown"
-import Image from "next/image"
-import upload from "@/assets/upload.svg"
-import CourseSideBar from "./SideBar"
-import { handleCreateCourse } from "@/utils/helpers"
-import { useRouter } from "next/navigation"
-import { Button } from "@headlessui/react"
-import AddLecture from "./AddLecture"
+import React, { useRef, useState } from "react";
+import { IoMdArrowBack } from "@react-icons/all-files/io/IoMdArrowBack";
+import Dropdown from "../Dropdown";
+import Image from "next/image";
+import upload from "@/assets/upload.svg";
+import CourseSideBar from "./SideBar";
+import { handleCreateCourse } from "@/utils/helpers";
+import { useRouter } from "next/navigation";
+import { Button } from "@headlessui/react";
+import Stepper from "@/components/Stepper";
+import AddLecture from "./AddLecture";
+
+interface Lecture {
+  id: string;
+  title: string;
+  description: string;
+  file: File | null;
+  titleError: string;
+  fileError: string;
+}
 
 interface ChildComponentProps {
-  imageUrl: any
-  courseData: any
-  handleCourseImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  handleCourseCurriculumChange: (newLecture: any) => void
+  imageUrl: any;
+  courseData: any;
+  setCourseData: any;
+  handleCourseImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleCourseCurriculumChange: (newLecture: any) => void;
 }
 
 const MainFormView3: React.FC<ChildComponentProps> = ({
   imageUrl,
   courseData,
+  setCourseData,
   handleCourseImageChange,
   handleCourseCurriculumChange,
 }) => {
-  const router = useRouter()
+  const router = useRouter();
+  const [lectureTitle, setLectureTitle] = useState("");
+  const [lectureTitleError, setLectureTitleError] = useState("");
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const handleBrowsefiles = () => {
-    fileInputRef.current?.click()
-  }
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    // Check if an option is selected before navigating
-    if (
-      Object.keys(courseData.courseImage.name).length > 0 &&
-      courseData.courseCurriculum.length > 0
-    ) {
-      router.push(`/Course/CreateACourse/courseSetup4`)
-    } else {
-      alert("Please select an option before proceeding.")
+    // Reset errors
+    setLectureTitleError("");
+
+    let hasError = false;
+
+    // Validate lecture title only
+    if (courseData.courseCurriculum.length == 0) {
+      setLectureTitleError("Lecture title is required");
+      hasError = true;
     }
-  }
+
+    if (hasError) return;
+    // console.log("error");
+
+    // Proceed to next step
+    handleCreateCourse(e, "courseSetup4", router);
+  };
+  const handleBrowsefiles = () => {
+    fileInputRef.current?.click();
+  };
 
   return (
     <div className="flex items-stretch">
-      <div className="hidden sm:block">
+      <div className="hidden lg:block">
         <CourseSideBar courseData={courseData} />
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 w-full">
         <div className="bg-gradient-to-r from-[#4A90E2] to-[#9B51E0]">
-          <p className="text-sm text-white text-center py-2">
+          <p className="py-2 text-sm text-center text-white">
             Your course creation progress saves automatically, but feel free to
             also save your progress manually
           </p>
         </div>
 
-        <div className="min-w-full w-[100%] ">
+        <div className="lg:hidden w-full flex justify-center mt-[58px] mb-[79px]">
+          <Stepper currentStep={3} />
+        </div>
+        <div className="w-full">
           <div className="block sm:flex justify-between py-2 my-5 border-t border-b border-[#d1d1d1] px-5 items-center">
             <div className="flex items-center">
-              <div className="px-4 sm:px-8 border-r border-blue-100">
+              <div className="px-4 border-r border-blue-100 sm:px-8">
                 <IoMdArrowBack
                   onClick={() => history.back()}
                   className="cursor-pointer text-[#4A90E2]"
@@ -75,27 +99,27 @@ const MainFormView3: React.FC<ChildComponentProps> = ({
             </button>
           </div>
 
-          <div className="mx-10  mt-12">
-            <form onSubmit={handleNext}>
-              <div className="my-12 w-full">
+          <div className="mx-5 mt-12 md:mx-10">
+            <form onSubmit={handleSubmit}>
+              <div className="w-full my-12">
                 <label
                   htmlFor=""
                   className="font-semibold text-[18px] leading-[31px] text-[#333333]"
                 >
                   Course Image
                 </label>
-                <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px]">
+                <p className="font-normal mt-2 text-[13px]/[145%] md:text-[14px] text-[#2D3A4B] md:leading-[21px]">
                   {`This is the creative section of your course creation. Your course landing page is crucial to your success on Attensys. 
 You want to make sure your creative is very catchy.`}
                 </p>
-                <div className="block sm:flex items-start my-4">
+                <div className="flex-col items-start block my-4 sm:flex lg:flex-row">
                   <div className="bg-[#DCDCDC] flex-1 p-4 sm:p-16 rounded-xl">
                     <div className="bg-white p-2 sm:p-14 text-center border-dotted rounded border-2 border-[#D0D5DD]  content-center text-xs ">
                       <div className="mx-auto w-[15%]">
                         <Image src={upload} alt="uplaod" />
                       </div>
 
-                      <div className="my-3">
+                      <div className="my-3 text-base md:text-sm">
                         <p>
                           <span
                             className="text-[#4A90E2] cursor-pointer"
@@ -105,14 +129,23 @@ You want to make sure your creative is very catchy.`}
                           </span>{" "}
                           or drag and drop
                         </p>
-                        <p>SVG, PNG, JPG or GIF (max. 800x400px)</p>
+                        <p className="text-[13px] text-[#98A2B3]">
+                          SVG, PNG, JPG or GIF (max. 800x400px)
+                        </p>
                       </div>
 
                       <div>
-                        <p>OR</p>
+                        <div className="flex items-center w-full gap-2">
+                          <div className="h-px w-full bg-[#F0F2F5]" />
+                          <p className="text-[10.65px] md:text-[8px]">OR</p>
+                          <div className="h-px w-full bg-[#F0F2F5]" />
+                        </div>
 
-                        <div onClick={handleBrowsefiles}>
-                          <Button className="rounded bg-[#9B51E0] px-12 py-3 text-white my-3">
+                        <div>
+                          <Button
+                            className="rounded-[6px] bg-[#9B51E0] px-4 md:px-12 py-2 md:py-3 text-white my-3"
+                            onClick={handleBrowsefiles}
+                          >
                             Browse Files
                           </Button>
                           <input
@@ -127,30 +160,37 @@ You want to make sure your creative is very catchy.`}
                     </div>
                   </div>
 
-                  <div className="text-sm sm:mx-6 flex-1 ">
-                    <div className="bg-white sm:w-[50%] lg:w-[350px] p-8 text-center border-dotted rounded-xl border-2 border-[#D0D5DD] flex flex-col justify-center content-center">
+                  <div className="flex-1 text-sm sm:mx-6 ">
+                    <p className="font-semibold lg:hidden text-[18px] leading-[31px] text-[#333333] mt-[38px] mb-[18px]">
+                      Upload thumbnail
+                    </p>
+                    <div className="bg-white w-full md:w-[350px] p-8 text-center border-dotted rounded-xl border-2 border-[#D0D5DD] flex flex-col justify-center content-center">
                       {courseData.courseImage.name == "" ? (
                         <div>
-                          <div className="w-[15%] mx-auto">
+                          <div className="w-auto mx-auto">
                             <Image src={upload} alt="uplaod" width={30} />
                           </div>
 
                           <div className="my-4">
-                            <p className="text-[8px]">
+                            <p className="text-xs md:text-[8px]">
                               <span className="text-[#4A90E2]">
                                 Click to upload
-                              </span>{" "}
+                              </span>
                               or drag and drop
                             </p>
-                            <p className="text-[9px]">
+                            <p className="text-[10.6px] md:text-[7.5px] text-[#98A2B3]">
                               SVG, PNG, JPG or GIF (max. 800x400px)
                             </p>
                           </div>
 
                           <div className="my-2">
-                            <p className="text-[8px]">OR</p>
+                            <div className="flex items-center w-full gap-2">
+                              <div className="h-px w-full bg-[#F0F2F5]" />
+                              <p className="text-[10.65px] md:text-[8px]">OR</p>
+                              <div className="h-px w-full bg-[#F0F2F5]" />
+                            </div>
 
-                            <Button className="rounded bg-[#9B51E0] px-4 py-1 my-4 text-white text-[8px]">
+                            <Button className="rounded-[6px] bg-[#9B51E0] px-4 md:px-12 text-xs py-2 md:py-3 text-white my-3">
                               Browse Files
                             </Button>
                           </div>
@@ -162,10 +202,9 @@ You want to make sure your creative is very catchy.`}
                           width={200}
                           height={200}
                         />
-                        // <h1>Hello</h1>
                       )}
                     </div>
-                    <div className="py-5 sm:w-1/2 lg:w-[350px]">
+                    <div className="hidden lg:block py-5 w-full sm:w-1/2 lg:w-[350px]">
                       <p className="font-semibold text-[18px] leading-[31px] text-[#333333] py-3">
                         Upload thumbnail
                       </p>
@@ -193,10 +232,10 @@ You want to make sure your creative is very catchy.`}
                   course.
                 </p>
                 <div className="my-12">
-                  <p className="font-semibold text-[18px] leading-[31px] text-[#333333] my-3">
+                  <p className="font-semibold text-[18px] leading-[31px] text-[#333333] my-3 pl-5">
                     Tips
                   </p>
-                  <ul className="list-disc text-[14px] text-[#2D3A4B] leading-[21px] w-[800px] ml-4">
+                  <ul className="list-disc text-[14px] text-[#2D3A4B] leading-[21px] w-full max-w-[800px] px-8">
                     <li className="py-2">
                       Aim to keep each video between 5 to 10 minutes. Shorter
                       videos are easier for students to follow and help them
@@ -220,31 +259,30 @@ You want to make sure your creative is very catchy.`}
 
               <AddLecture
                 courseData={courseData}
+                setCourseData={setCourseData}
                 handleCourseCurriculumChange={handleCourseCurriculumChange}
               />
 
-              <div className="mt-12 mb-24">
+              <div className="w-full mt-12 mb-4">
                 <button
-                  className="rounded-xl bg-[#4A90E2] px-48 py-3 text-white"
+                  className="rounded-lg bg-[#4A90E2] px-8 py-[15px] text-white w-full md:max-w-[350px]"
                   type="submit"
                 >
-                  Almost there
+                  Almost there!
                 </button>
               </div>
 
-              <div>
-                <div className="mt-6 mb-24">
-                  <button className="block sm:hidden bg-[#c5d322]  text-xs px-12 py-3 rounded text-black">
-                    Save progress
-                  </button>
-                </div>
+              <div className="w-full flex justify-center pb-[74px]">
+                <button className="block sm:hidden bg-[#c5d322] text-sm px-12 py-[15px] rounded-lg text-black">
+                  Save progress
+                </button>
               </div>
             </form>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default MainFormView3
+export default MainFormView3;

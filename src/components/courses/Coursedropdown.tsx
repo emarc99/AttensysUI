@@ -1,14 +1,14 @@
-import React from "react"
-import { coursestatusAtom } from "@/state/connectedWalletStarknetkitNext"
-import { useAtom, useSetAtom } from "jotai"
-import { VscNewFile } from "react-icons/vsc"
-import { handleMyCourse } from "@/utils/helpers"
-import { courseQuestions } from "@/constants/data"
-import { useRouter } from "next/navigation"
+import React from "react";
+import { coursestatusAtom } from "@/state/connectedWalletStarknetkitNext";
+import { useAtom, useSetAtom } from "jotai";
+import { VscNewFile } from "react-icons/vsc";
+import { handleMyCourse } from "@/utils/helpers";
+import { courseQuestions } from "@/constants/data";
+import { useRouter } from "next/navigation";
 
 const Coursedropdown = () => {
-  const [status] = useAtom(coursestatusAtom)
-  const router = useRouter()
+  const [status] = useAtom(coursestatusAtom);
+  const router = useRouter();
   return (
     <>
       {status && (
@@ -33,7 +33,7 @@ const Coursedropdown = () => {
                   </svg>
 
                   <h1 className="text-[16px] font-bold cursor-pointer">
-                    Explore courses
+                    Explore Courses
                   </h1>
                 </div>
               </a>
@@ -55,7 +55,7 @@ const Coursedropdown = () => {
                   </svg>
 
                   <h1 className="text-[16px] font-bold cursor-pointer">
-                    My courses
+                    My Courses
                   </h1>
                 </div>
               </a>
@@ -110,7 +110,7 @@ const Coursedropdown = () => {
         </div>
       )}
     </>
-  )
-}
+  );
+};
 
-export default Coursedropdown
+export default Coursedropdown;

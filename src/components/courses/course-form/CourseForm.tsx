@@ -1,142 +1,194 @@
-import React, { useState } from "react"
-import Previous from "./previous"
-import { useRouter } from "next/navigation"
+import React, { useState } from "react";
+import Previous from "./previous";
+import { useRouter } from "next/navigation";
 
-interface ChildComponentProps {
-  section: any
-  handleCoursePrimaryGoalChange: (e: string) => void
+interface CourseFormProps {
+  section: string;
+  handleCoursePrimaryGoalChange: (e: string) => void;
 }
 
-const CourseForm: React.FC<ChildComponentProps> = ({
+interface FormData {
+  jobSkills: boolean;
+  certificate: boolean;
+  hobby: boolean;
+  newIdeas: boolean;
+}
+
+interface FormErrors {
+  jobSkills: string;
+  certificate: string;
+  hobby: string;
+  newIdeas: string;
+  general: string;
+}
+
+const CourseForm = ({
   section,
   handleCoursePrimaryGoalChange,
-}) => {
-  const [selectedOption, setSelectedOption] = useState<string>("")
-  const router = useRouter()
+}: CourseFormProps) => {
+  const [selectedOption, setSelectedOption] = useState<string>("");
+  const router = useRouter();
+  const [formData, setFormData] = useState<FormData>({
+    jobSkills: false,
+    certificate: false,
+    hobby: false,
+    newIdeas: false,
+  });
 
-  // Handle change event
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedOption(event.target.value)
-  }
+  const [errors, setErrors] = useState<FormErrors>({
+    jobSkills: "",
+    certificate: "",
+    hobby: "",
+    newIdeas: "",
+    general: "",
+  });
 
-  const handleNext = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const handleCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    field: keyof FormData,
+  ): void => {
+    setSelectedOption(event.target.value);
+    setFormData((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
 
-    handleCoursePrimaryGoalChange(selectedOption)
-
-    console.log("Selected Option:", selectedOption)
-
-    // Check if an option is selected before navigating
-    if (selectedOption) {
-      router.push(`/Course/CreateACourse/create-a-course`)
-    } else {
-      alert("Please select an option before proceeding.")
+    if (errors[field]) {
+      setErrors((prev) => ({
+        ...prev,
+        [field]: "",
+      }));
     }
-  }
+    if (errors.general) {
+      setErrors((prev) => ({
+        ...prev,
+        general: "",
+      }));
+    }
+  };
+
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ): Promise<void> => {
+    event.preventDefault();
+    handleCoursePrimaryGoalChange(selectedOption);
+    setErrors({
+      jobSkills: "",
+      certificate: "",
+      hobby: "",
+      newIdeas: "",
+      general: "",
+    });
+
+    const isAnyChecked = Object.values(formData).some((value) => value);
+
+    if (!isAnyChecked) {
+      setErrors((prev) => ({
+        ...prev,
+        general: "Please select at least one goal for your course",
+      }));
+      return;
+    }
+
+    router.push("/Course/CreateACourse/create-a-course");
+  };
 
   return (
-    <div className="relative mx-10 md:mx-auto w-auto md:w-5/12 pt-16 ">
-      <div className="hidden sm:block">
+    <div className="relative mx-10 md:mx-auto w-auto md:w-3/4 lg:w-5/12 pt-16">
+      <div className="hidden lg:block">
         <Previous />
       </div>
-      <div>
-        <h1 className="mb-12 font-semibold text-[26px] text-[#333333] text-center">
+      <div className="flex items-center w-full justify-center">
+        <h1 className="mb-12 font-semibold text-[17px] md:text-[26px] text-[#333333] text-center w-[266px] md:w-full">
           What is the primary goal of your course?
         </h1>
       </div>
-      <form  onSubmit={handleNext}>
-        <div className=" bg-white px-12 py-16 rounded-2xl flex flex-col justify-center w-[524px] mx-auto">
-          <div className="flex">
-            <input
-              type="checkbox"
-              min="2"
-              max="5"
-              className="required:border-red-500 indeterminate:bg-gray-300"
-              id="option1"
-              name="option"
-              value="Helping people build skills for their job"
-              checked={
-                selectedOption === "Helping people build skills for their job"
-              }
-              onChange={handleChange}
-            />
-            <label
-              htmlFor="option1"
-              className="block my-5 ml-3 text-[#333333] text-[18px] font-medium leading-[22px]"
-            >
-              Helping people build skills for their job
-            </label>
-          </div>
-          <div className="flex">
-            <input
-              type="checkbox"
-              min="2"
-              max="5"
-              className="required:border-red-500 indeterminate:bg-gray-300"
-              id="option2"
-              name="option"
-              value="Giving a certificate for completing the course"
-              checked={
-                selectedOption ===
-                "Giving a certificate for completing the course"
-              }
-              onChange={handleChange}
-            />
-            <label
-              htmlFor="option2"
-              className="block my-5 ml-3 text-[#333333] text-[18px] font-medium leading-[22px]"
-            >
-              Giving a certificate for completing the course
-            </label>
-          </div>
-          <div className="flex">
-            <input
-              type="checkbox"
-              min="2"
-              max="5"
-              className="required:border-red-500 indeterminate:bg-gray-300"
-              id="option3"
-              name="option"
-              value="Sharing knowledge about a hobby or interest"
-              checked={
-                selectedOption === "Sharing knowledge about a hobby or interest"
-              }
-              onChange={handleChange}
-            />
-            <label
-              htmlFor="option3"
-              className="block my-5 ml-3 text-[#333333] text-[18px] font-medium leading-[22px]"
-            >
-              Sharing knowledge about a hobby or interest
-            </label>
+      <form onSubmit={handleSubmit} noValidate>
+        <div className="bg-white px-5 md:px-12 py-9 md:py-16 rounded-2xl flex flex-col gap-5 md:gap-6 justify-center w-full max-w-[524px] mx-auto">
+          <div className="flex flex-col">
+            <div className="flex">
+              <input
+                type="checkbox"
+                id="jobSkills"
+                checked={formData.jobSkills}
+                onChange={(e) => handleCheckboxChange(e, "jobSkills")}
+                value={"Helping people build skills for their job"}
+                className="required:border-red-500 indeterminate:bg-gray-300"
+              />
+              <label
+                htmlFor="jobSkills"
+                className="block my-2 md:my-3 ml-3 text-[#333333] text-xs md:text-[18px] font-medium leading-[22px]"
+              >
+                Helping people build skills for their job
+              </label>
+            </div>
           </div>
 
-          <div className="flex">
-            <input
-              type="checkbox"
-              min="2"
-              max="5"
-              className="required:border-red-500 indeterminate:bg-gray-300"
-              id="option4"
-              name="option"
-              value="Teaching new ideas or concepts in a field"
-              checked={
-                selectedOption === "Teaching new ideas or concepts in a field"
-              }
-              onChange={handleChange}
-            />
-            <label
-              htmlFor="option4"
-              className="block my-5 ml-3 text-[#333333] text-[18px] font-medium leading-[22px]"
-            >
-              Teaching new ideas or concepts in a field
-            </label>
+          <div className="flex flex-col">
+            <div className="flex">
+              <input
+                type="checkbox"
+                id="certificate"
+                checked={formData.certificate}
+                onChange={(e) => handleCheckboxChange(e, "certificate")}
+                value={"Giving a certificate for completing the course"}
+                className="required:border-red-500 indeterminate:bg-gray-300"
+              />
+              <label
+                htmlFor="certificate"
+                className="block my-2 md:my-3 ml-3 text-[#333333] text-xs md:text-[18px] font-medium leading-[22px]"
+              >
+                Giving a certificate for completing the course
+              </label>
+            </div>
           </div>
+
+          <div className="flex flex-col">
+            <div className="flex">
+              <input
+                type="checkbox"
+                id="hobby"
+                checked={formData.hobby}
+                onChange={(e) => handleCheckboxChange(e, "hobby")}
+                value={"Sharing knowledge about a hobby or interest"}
+                className="required:border-red-500 indeterminate:bg-gray-300"
+              />
+              <label
+                htmlFor="hobby"
+                className="block my-2 md:my-3 ml-3 text-[#333333] text-xs md:text-[18px] font-medium leading-[22px]"
+              >
+                Sharing knowledge about a hobby or interest
+              </label>
+            </div>
+          </div>
+
+          <div className="flex flex-col">
+            <div className="flex">
+              <input
+                type="checkbox"
+                id="newIdeas"
+                checked={formData.newIdeas}
+                onChange={(e) => handleCheckboxChange(e, "newIdeas")}
+                value={"Teaching new ideas or concepts in a field"}
+                className="required:border-red-500 indeterminate:bg-gray-300"
+              />
+              <label
+                htmlFor="newIdeas"
+                className="block my-2 md:my-3 ml-3 text-[#333333] text-xs md:text-[18px] font-medium leading-[22px]"
+              >
+                Teaching new ideas or concepts in a field
+              </label>
+            </div>
+          </div>
+
+          {errors.general && (
+            <p className="text-red-500 text-sm mt-2">{errors.general}</p>
+          )}
         </div>
 
-        <div className="text-center">
+        <div className="text-center w-full">
           <button
-            className="bg-[#4A90E2] w-[350px] rounded-xl  py-3 mt-12 mb-44 text-white"
+            className="bg-[#4A90E2] w-full max-w-[350px] rounded-xl py-3 mt-12 mb-44 text-white"
             type="submit"
           >
             Next
@@ -144,11 +196,11 @@ const CourseForm: React.FC<ChildComponentProps> = ({
         </div>
       </form>
 
-      <div className="block absolute left-[35%] bottom-36 sm:hidden">
+      <div className="block absolute left-[35%] bottom-36 lg:hidden">
         <Previous />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CourseForm
+export default CourseForm;
