@@ -1,6 +1,6 @@
 echo "Running pre-push hook..."
 
 echo "Running build script..."
-yarn build
+npm run build
 
 echo "Build was successful."
