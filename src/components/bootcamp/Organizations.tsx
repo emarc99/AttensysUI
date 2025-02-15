@@ -69,6 +69,7 @@ const Organizations = (props: any) => {
                 <Organizationcard
                   key={index}
                   orgaddress={data.address_of_org}
+                  org_data={data}
                 />
               </div>
             );

@@ -7,7 +7,7 @@ import drop from "@/assets/droporg.svg";
 import { IoIosArrowDropdown } from "react-icons/io";
 import Carosellcard from "@/components/bootcamp/Carosellcard";
 
-const Ongoingcarousell = () => {
+const Ongoingcarousell = (props: any) => {
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -33,7 +33,7 @@ const Ongoingcarousell = () => {
   };
 
   return (
-    <div className="h-auto w-full px-10 flex flex-col items-center rounded-xl py-8 mt-10">
+    <div className="h-auto w-full px-10 flex flex-col items-center rounded-xl py-8 mt-0">
       <div className="h-[50px] w-full">
         <h1 className="text-xl leading-[31px] text-[#333333] font-semibold">
           Ongoing Bootcamps
@@ -58,16 +58,15 @@ const Ongoingcarousell = () => {
           autoPlay={true} // Enables auto-scrolling
           autoPlaySpeed={3000}
         >
-          {caroselldata.map((data, index) => (
+          {props.allbootcampInfo.map((data: any, index: any) => (
             <Carosellcard
               key={index}
-              name={data.name}
-              time={data.time}
-              flier={data.flier}
-              logo={data.logo}
+              name={data.bootcamp_name}
+              uri={data.bootcamp_ipfs_uri}
               action="Register"
               height="300px"
-              width="90%"
+              width="300px"
+              alldata={data}
             />
           ))}
         </Carousel>

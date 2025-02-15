@@ -15,6 +15,7 @@ import { attensysOrgAddress } from "../../deployments/contracts";
 import { attensysOrgAbi } from "../../deployments/abi";
 import { Contract } from "starknet";
 import plus from "../../../public/plus.svg";
+import { specificOrgRoute } from "@/state/connectedWalletStarknetkitNext";
 
 import { FileObject } from "pinata";
 const emptyData: FileObject = {
@@ -44,6 +45,7 @@ const Addinstructor = (props: any) => {
   const [emailList, setEmailList] = useState<string[]>([]);
   const [AddressList, setAddressList] = useState<string[]>([]);
   const [organizationData, setOrganizationData] = useAtom(organzationInitState);
+  const [specificOrg, setSpecificOrg] = useAtom(specificOrgRoute);
   const [uploading, setUploading] = useState(false);
   // const [cidToContract, setCidToContract] = useState<string>("")
 
@@ -140,6 +142,7 @@ const Addinstructor = (props: any) => {
           console.log("Error: ", e);
         })
         .finally(() => {
+          setSpecificOrg(organizationData.organizationName);
           //Resets all org data input
           setOrganizationData(ResetOrgRegData);
           router.push(`/Createorganization/create-a-bootcamp`);

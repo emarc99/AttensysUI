@@ -4,14 +4,14 @@ import exclaim from "@/assets/exclaim.svg";
 import Logo from "@/assets/Logo.svg";
 import success from "@/assets/succeded.svg";
 
-const RegistrationSuccess = () => {
+const RegistrationSuccess = (prop: any) => {
   return (
     <div className="flex flex-col justify-center items-center space-y-28 h-full">
       <div className="space-y-5 flex flex-col justify-center items-center">
         <Image src={success} alt="success" />
         <h1 className="text-[18px] text-[#5801A9] font-semibold text-center">
           You have successfully Registered for <br />
-          Xcode launch bootcamps
+          {prop.bootcamp_name}
         </h1>
       </div>
 

@@ -61,6 +61,7 @@ const BootcampCarousell = (props: any) => {
               action="Register"
               height="300px"
               width="300px"
+              alldata={data}
             />
           ))}
         </Carousel>

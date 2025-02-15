@@ -9,8 +9,9 @@ import Carosellcard from "./Carosellcard";
 import MobileBootcampCard from "../organization/MobileBootcampCard";
 import { CiSettings } from "react-icons/ci";
 import { FcSettings } from "react-icons/fc";
+import MobilepublicBootcampCard from "./MobilepublicBootcampCard";
 
-const Userbootcamps = () => {
+const Userbootcamps = (props: any) => {
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -62,31 +63,30 @@ const Userbootcamps = () => {
           autoPlay={window.innerWidth >= 464 ? true : false} // Enables auto-scrolling
           autoPlaySpeed={3000}
         >
-          {caroselldata.map((data, index) => (
+          {props?.bootcampinfo?.map((data: any, index: any) => (
             <Carosellcard
               key={index}
-              name={data.name}
-              time={data.time}
-              flier={data.flier}
-              logo={data.logo}
-              action="Ongoing"
-              height={"300px"}
-              width={"300px"}
+              name={data.bootcamp_name}
+              uri={data.bootcamp_ipfs_uri}
+              action="Register"
+              height="300px"
+              width="300px"
+              alldata={data}
             />
           ))}
         </Carousel>
       </div>
       <div className="flex flex-wrap gap-x-3 gap-y-3 justify-start px-3 py-5 items-center sm:hidden">
-        {caroselldata.slice(0, 2).map((data, index) => (
+        {props?.bootcampinfo?.map((data: any, index: any) => (
           <div className="flex flex-col items-center gap-2" key={index}>
-            <MobileBootcampCard
-              name={data.name}
-              time={data.time}
-              flier={data.flier}
-              logo={data.logo}
-              action="Ongoing"
-              height={"150px"}
-              width={"150px"}
+            <MobilepublicBootcampCard
+              key={index}
+              name={data.bootcamp_name}
+              uri={data.bootcamp_ipfs_uri}
+              action="Register"
+              height="150px"
+              width="150px"
+              alldata={data}
             />
             {/* <div className='flex items-center justify-center text-black'>
                 <FcSettings />

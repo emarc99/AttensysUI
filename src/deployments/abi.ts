@@ -1030,6 +1030,10 @@ export const attensysOrgAbi = [
         name: "registered",
         type: "core::bool",
       },
+      {
+        name: "student_details_uri",
+        type: "core::byte_array::ByteArray",
+      },
     ],
   },
   {
@@ -1303,6 +1307,10 @@ export const attensysOrgAbi = [
       {
         name: "bootcamp_id",
         type: "core::integer::u64",
+      },
+      {
+        name: "student_uri",
+        type: "core::byte_array::ByteArray",
       },
     ],
     outputs: [],
