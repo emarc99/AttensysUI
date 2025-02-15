@@ -82,7 +82,7 @@ const Mybootcamp = (props: any) => {
                   height="200px"
                   width='200px'
                   uri={data.bootcamp_ipfs_uri}
-                  onClick={() => handlebootcamproute(data.bootcamp_name, Number(data.bootcamp_id))}
+                  onClick={() => handlebootcamproute(data.bootcamp_name, Number(data.bootcamp_id), data.address_of_org)}
               />
             </div>
           ))}
