@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import story from "@/assets/story.svg";
 import live from "@/assets/live.svg";
@@ -13,12 +13,67 @@ import citymap from "@/assets/citymap.svg";
 import Modal from "./Modal";
 import { modalstatus } from "@/state/connectedWalletStarknetkitNext";
 import { useAtom } from "jotai";
+import { Contract } from "starknet";
+import { attensysEventAbi } from "@/deployments/abi";
+import { attensysEventAddress } from "@/deployments/contracts";
+import { provider } from "@/constants";
+import { useParams } from "next/navigation";
+import { decimalToHexAddress, FormatDateFromUnix } from "@/lib/utils";
+import { EventData } from "../discoverevents/DiscoverLanding";
 
-const Details = () => {
+const Details = (props: any) => {
+  const { connectorDataAccount } = props;
+  const [eventData, seteventData] = useState<EventData | null>(null);
   const [modalstat, setModalstatus] = useAtom(modalstatus);
+  const params = useParams();
+  const formatedParams = decodeURIComponent(params["details"] as string);
+
+  const eventContract = useMemo(
+    () => new Contract(attensysEventAbi, attensysEventAddress, provider),
+    [],
+  );
+
+  const getEventData = useCallback(async () => {
+    try {
+      //This is calling the get_event_details function from the contract using an hardcoded event_identifier value of 1
+      const res = await eventContract.get_event_details(1);
+
+      if (res) {
+        seteventData(res);
+      }
+    } catch (error) {
+      console.error("get_event_details error", error);
+    }
+  }, [eventContract]);
+
+  useEffect(() => {
+    getEventData();
+  }, [getEventData, formatedParams]);
 
   const handleDialog = () => {
     setModalstatus(!modalstat);
+  };
+
+  const handleRegisterEvent = async () => {
+    const eventContract = new Contract(
+      attensysEventAbi,
+      attensysEventAddress,
+      connectorDataAccount,
+    );
+    //This is calling the register_for_event function from the contract using an hardcoded event_identifier value of 1
+    const registerEventCall = eventContract.populate("register_for_event", [1]);
+
+    const result = await eventContract.register_for_event(
+      registerEventCall.calldata,
+    );
+    //@ts-ignore
+    connectorDataAccount?.provider
+      .waitForTransaction(result.transaction_hash)
+      .then(() => {})
+      .catch((e: any) => {
+        console.log("Error: ", e);
+      })
+      .finally(() => {});
   };
 
   return (
@@ -42,7 +97,8 @@ const Details = () => {
                   <Image src={live} alt="story" objectFit="cover" />
                 </div>
                 <h1 className="text-[16px] text-[#FFFFFF] font-semibold leading-[22px] w-full">
-                  Akinbola Kehinde
+                  {decimalToHexAddress(eventData?.event_organizer ?? 0n) ||
+                    "Akinbola Kehinde"}
                 </h1>
               </div>
 
@@ -117,10 +173,15 @@ const Details = () => {
               <Image src={calendar} alt="calendar" />
               <div>
                 <h1 className="text-[#FFFFFF] text-[16px] font-semibold leading-[22px]">
-                  Saturday, October 12
+                  {FormatDateFromUnix(eventData?.time.start_time ?? 0n).date ??
+                    "Saturday, October 12"}
                 </h1>
                 <h1 className="text-[#FFFFFF] text-[16px] font-light leading-[22px]">
-                  8:30 AM - 9:30 AM
+                  {FormatDateFromUnix(eventData?.time.start_time ?? 0n).time ??
+                    "8:30 AM"}{" "}
+                  -{" "}
+                  {FormatDateFromUnix(eventData?.time.end_time ?? 0n).time ??
+                    "10:30 AM"}
                 </h1>
               </div>
             </div>
@@ -140,7 +201,10 @@ const Details = () => {
               <h1 className="text-[#FFFFFF] text-[16px] font-semibold leading-[22px]">
                 Welcome, vladamirockz@gmail.com
               </h1>
-              <Button className="  justify-center flex rounded-lg bg-[#4A90E2] py-2 px-4 h-[50px] items-center  md:w-[422px] text-sm text-[#FFFFFF] data-[hover]:bg-sky-500 data-[active]:bg-sky-700">
+              <Button
+                onClick={handleRegisterEvent}
+                className="justify-center flex rounded-lg bg-[#4A90E2] py-2 px-4 h-[50px] items-center  md:w-[422px] text-sm text-[#FFFFFF] data-[hover]:bg-sky-500 data-[active]:bg-sky-700"
+              >
                 <div>One click to apply</div>
               </Button>
             </div>

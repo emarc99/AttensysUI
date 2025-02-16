@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Coursedropdown from "@/components/courses/Coursedropdown";
 import { useAtom, useSetAtom } from "jotai";
 import {
@@ -38,7 +38,7 @@ const Index = () => {
   useEffect(() => {
     const autoConnect = async () => {
       try {
-        const { wallet: connectedWallet } = await connect({
+        const { wallet: connectedWallet, connector } = await connect({
           //@ts-ignore
           provider,
           modalMode: "neverAsk",

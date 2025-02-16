@@ -1,24 +1,71 @@
 "use client";
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import add from "@/assets/add.svg";
 import calenderimage from "@/assets/calendar.svg";
 import ticket from "@/assets/ticket.svg";
-import Image from "next/image";
-import { Button } from "@headlessui/react";
-import Eventcard from "./Eventcard";
+import { attensysEventAbi, attensysOrgAbi } from "@/deployments/abi";
+import { attensysEventAddress } from "@/deployments/contracts";
 import {
+  createEventClickAtom,
+  createorexplore,
   eventcreatedAtom,
   eventregistedAtom,
   existingeventCreationAtom,
-  createEventClickAtom,
-  createorexplore,
 } from "@/state/connectedWalletStarknetkitNext";
-import { useAtom, useSetAtom } from "jotai";
-import { useRouter } from "next/navigation";
-import { Description, Field, Input, Label } from "@headlessui/react";
+import { Button, Description, Field, Input, Label } from "@headlessui/react";
 import clsx from "clsx";
-import add from "@/assets/add.svg";
+import { useAtom } from "jotai";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { FileObject } from "pinata";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { Contract } from "starknet";
+import { pinata } from "../../../utils/config";
+import Eventcard from "./Eventcard";
+import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest";
+
+interface EventCreationData {
+  eventname: string;
+  startday: string;
+  endday: string;
+  starttime: string;
+  endtime: string;
+  location: string;
+  description: string;
+  nftname: string;
+  nftsymbol: string;
+  eventDesign: FileObject;
+}
+
+const emptyData: FileObject = {
+  name: "",
+  type: "",
+  size: 0,
+  lastModified: 0,
+  arrayBuffer: async () => {
+    return new ArrayBuffer(0);
+  },
+};
 
 const Myevents = (props: any) => {
+  const { connectorDataAccount } = props;
+  const [eventCreationData, setEventCreationData] = useState<EventCreationData>(
+    {
+      eventname: "",
+      startday: "",
+      endday: "",
+      starttime: "",
+      endtime: "",
+      location: "",
+      description: "",
+      nftname: "",
+      nftsymbol: "",
+      eventDesign: emptyData,
+    },
+  );
+
+  const [isSubmitting, setisSubmitting] = useState(false);
+
+  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom);
   const [createdstat, setCreatedStat] = useAtom(eventcreatedAtom);
   const [Regstat, setRegStat] = useAtom(eventregistedAtom);
   const [existingeventStat, setexistingeventStat] = useAtom(
@@ -44,8 +91,11 @@ const Myevents = (props: any) => {
         file.type === "image/png" ||
         file.type === "image/jpg")
     ) {
-      // Process the file
       console.log("Selected file:", file);
+      setEventCreationData({
+        ...eventCreationData,
+        eventDesign: file,
+      });
     } else {
       console.log("Please select a valid image file (JPEG, JPG, or PNG).");
     }
@@ -71,9 +121,91 @@ const Myevents = (props: any) => {
     router.push("/Events/createevent");
   };
 
-  const handleCreateEventButton = () => {
-    //@todo replace sample event with event name
-    router.push("/Overview/sample-event/insight");
+  const convertToUnixTimeStamp = (date: string, time: string) => {
+    // Combine date and time into a single string
+    const datetimeString = `${date}T${time}:00Z`; // Assume UTC
+
+    // Convert to a Unix timestamp (seconds)
+    const unixTimestamp = Math.floor(new Date(datetimeString).getTime() / 1000);
+
+    return unixTimestamp;
+  };
+
+  const handleCreateEventButton = async () => {
+    setisSubmitting(true);
+    console.log({ eventCreationData, connectorDataAccount });
+
+    const eventDesignUpload = await pinata.upload.file(
+      eventCreationData.eventDesign,
+    );
+
+    const Dataupload = await pinata.upload.json({
+      name: eventCreationData.eventname,
+      startday: eventCreationData.startday,
+      endday: eventCreationData.endday,
+      starttime: eventCreationData.starttime,
+      endtime: eventCreationData.endtime,
+      location: eventCreationData.location,
+      nftname: eventCreationData.nftname,
+      nftsymbol: eventCreationData.nftsymbol,
+      description: eventCreationData.description,
+      eventDesign: eventDesignUpload.IpfsHash,
+    });
+    if (Dataupload) {
+      const eventContract = new Contract(
+        attensysEventAbi,
+        attensysEventAddress,
+        connectorDataAccount,
+      );
+
+      const startdateandtime = convertToUnixTimeStamp(
+        eventCreationData.startday,
+        eventCreationData.starttime,
+      );
+
+      const enddateandtime = convertToUnixTimeStamp(
+        eventCreationData.endday,
+        eventCreationData.endtime,
+      );
+
+      const createEventCall = eventContract.populate("create_event", [
+        wallet?.account?.address,
+        eventCreationData.eventname,
+        Dataupload.IpfsHash,
+        eventCreationData.nftname,
+        eventCreationData.nftsymbol,
+        startdateandtime,
+        enddateandtime,
+        true,
+      ]);
+
+      const result = await eventContract.create_event(createEventCall.calldata);
+      //@ts-ignore
+      connectorDataAccount?.provider
+        .waitForTransaction(result.transaction_hash)
+        .then(() => {})
+        .catch((e: any) => {
+          console.log("Error: ", e);
+        })
+        .finally(() => {
+          //Resets all event data input
+          setEventCreationData({
+            eventname: "",
+            startday: "",
+            endday: "",
+            starttime: "",
+            endtime: "",
+            location: "",
+            description: "",
+            nftname: "",
+            nftsymbol: "",
+            eventDesign: emptyData,
+          });
+
+          router.push(`/Overview/${eventCreationData.eventname}/insight`);
+        });
+      setisSubmitting(false);
+    }
   };
 
   const data = [
@@ -186,7 +318,56 @@ const Myevents = (props: any) => {
                       "placeholder-white/50 focus:border-b-4 focus:border-[#ABADBA] focus:outline-none",
                     )}
                     placeholder="Event Name"
+                    value={eventCreationData.eventname}
+                    onChange={(e) =>
+                      setEventCreationData({
+                        ...eventCreationData,
+                        eventname: e.target.value,
+                      })
+                    }
                   />
+                </div>
+                <div className="w-full max-w-lg px-4 mt-4">
+                  <Field>
+                    <Label className="text-sm/6 font-medium text-white">
+                      Start Day
+                    </Label>
+                    <Input
+                      type="date"
+                      value={eventCreationData.startday}
+                      onChange={(e) =>
+                        setEventCreationData({
+                          ...eventCreationData,
+                          startday: e.target.value,
+                        })
+                      }
+                      className={clsx(
+                        "mt-1 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
+                        "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
+                      )}
+                    />
+                  </Field>
+                </div>
+                <div className="w-full max-w-lg px-4 mt-4">
+                  <Field>
+                    <Label className="text-sm/6 font-medium text-white">
+                      End day
+                    </Label>
+                    <Input
+                      type="date"
+                      value={eventCreationData.endday}
+                      onChange={(e) =>
+                        setEventCreationData({
+                          ...eventCreationData,
+                          endday: e.target.value,
+                        })
+                      }
+                      className={clsx(
+                        "mt-1 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
+                        "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
+                      )}
+                    />
+                  </Field>
                 </div>
                 <div className="w-full max-w-lg px-4 mt-4">
                   <Field>
@@ -195,6 +376,13 @@ const Myevents = (props: any) => {
                     </Label>
                     <Input
                       type="time"
+                      value={eventCreationData.starttime}
+                      onChange={(e) =>
+                        setEventCreationData({
+                          ...eventCreationData,
+                          starttime: e.target.value,
+                        })
+                      }
                       className={clsx(
                         "mt-1 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
                         "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
@@ -210,6 +398,13 @@ const Myevents = (props: any) => {
                     </Label>
                     <Input
                       type="time"
+                      value={eventCreationData.endtime}
+                      onChange={(e) =>
+                        setEventCreationData({
+                          ...eventCreationData,
+                          endtime: e.target.value,
+                        })
+                      }
                       className={clsx(
                         "mt-1 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
                         "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
@@ -227,8 +422,62 @@ const Myevents = (props: any) => {
                       Choose Onsite Location or Virtual link{" "}
                     </Description>
                     <textarea
+                      value={eventCreationData.location}
+                      onChange={(e) =>
+                        setEventCreationData({
+                          ...eventCreationData,
+                          location: e.target.value,
+                        })
+                      }
                       className={clsx(
                         "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white h-20",
+                        "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 resize-none",
+                      )}
+                    />
+                  </Field>
+                </div>
+
+                <div className="w-full max-w-lg px-4 mt-4">
+                  <Field>
+                    <Label className="text-sm/6 font-medium text-white">
+                      Add NFT Name
+                    </Label>
+                    <Description className="text-sm/6 text-white/50">
+                      Choose your preferred NFT name
+                    </Description>
+                    <input
+                      value={eventCreationData.nftname}
+                      onChange={(e) =>
+                        setEventCreationData({
+                          ...eventCreationData,
+                          nftname: e.target.value,
+                        })
+                      }
+                      className={clsx(
+                        "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white ",
+                        "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 resize-none",
+                      )}
+                    />
+                  </Field>
+                </div>
+                <div className="w-full max-w-lg px-4 mt-4">
+                  <Field>
+                    <Label className="text-sm/6 font-medium text-white">
+                      Add NFT Symbol
+                    </Label>
+                    <Description className="text-sm/6 text-white/50">
+                      Choose your preferred NFT Symbol
+                    </Description>
+                    <input
+                      value={eventCreationData.nftsymbol}
+                      onChange={(e) =>
+                        setEventCreationData({
+                          ...eventCreationData,
+                          nftsymbol: e.target.value,
+                        })
+                      }
+                      className={clsx(
+                        "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white ",
                         "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 resize-none",
                       )}
                     />
@@ -243,6 +492,13 @@ const Myevents = (props: any) => {
                       A brief description of the event{" "}
                     </Description>
                     <textarea
+                      value={eventCreationData.description}
+                      onChange={(e) =>
+                        setEventCreationData({
+                          ...eventCreationData,
+                          description: e.target.value,
+                        })
+                      }
                       className={clsx(
                         "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white h-36",
                         "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 resize-none",
@@ -280,6 +536,7 @@ const Myevents = (props: any) => {
               </div>
               <Button
                 onClick={handleCreateEventButton}
+                disabled={isSubmitting}
                 className="flex rounded-lg bg-[#4A90E2] py-2 px-4 lg:h-[50px] items-center lg:w-[422px] text-sm text-white data-[hover]:bg-sky-500 data-[active]:bg-sky-700 justify-center md:hidden w-[90%] mt-10 mx-auto"
               >
                 Create an Event

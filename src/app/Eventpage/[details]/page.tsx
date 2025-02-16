@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   coursestatusAtom,
   bootcampdropdownstatus,
@@ -31,6 +31,9 @@ const Index = () => {
   const setConnector = useSetAtom(connectorAtom);
 
   const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom);
+  const [connectorDataAccount, setConnectorDataAccount] = useState<
+    null | any
+  >();
 
   useEffect(() => {
     /* setWalletLatest(RESET) */
@@ -42,7 +45,7 @@ const Index = () => {
   useEffect(() => {
     const autoConnect = async () => {
       try {
-        const { wallet: connectedWallet } = await connect({
+        const { wallet: connectedWallet, connector } = await connect({
           //@ts-ignore
           provider,
           modalMode: "neverAsk",
@@ -55,6 +58,7 @@ const Index = () => {
           },
         });
         setWallet(connectedWallet);
+        setConnectorDataAccount(connector?.wallet?.account);
       } catch (e) {
         console.error(e);
         alert((e as any).message);
@@ -85,7 +89,10 @@ const Index = () => {
       <div onClick={(e) => e.stopPropagation()}>
         <Bootcampdropdown />
       </div>
-      <Detailslanding name={details} />
+      <Detailslanding
+        connectorDataAccount={connectorDataAccount}
+        name={details}
+      />
     </div>
   );
 };

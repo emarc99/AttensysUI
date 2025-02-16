@@ -5,16 +5,19 @@ import clsx from "clsx";
 import AlleventCard from "./AlleventCard";
 import { allEventData } from "@/constants/data";
 import { useRouter } from "next/navigation";
+import { EventData } from "./DiscoverLanding";
+import { FormatDateFromUnix } from "@/lib/utils";
+import Orange from "@/assets/Orange.svg";
 
-const Allevents = () => {
+const Allevents = ({ events }: { events: EventData[] }) => {
   const [visibleEvents, setVisibleEvents] = useState(8); // Number of events to show initially
   const router = useRouter();
 
   const handleSeeMore = () => {
     setVisibleEvents((prev) => prev + 8); // Load more events
   };
-  const handleEventClick = (prop: any) => {
-    router.push(`/Eventpage/${prop.name}`);
+  const handleEventClick = (prop: EventData) => {
+    router.push(`/Eventpage/${prop.event_name}`);
   };
   return (
     <div className="h-[1300px] sm:bg-[#f5f8fa] w-full flex items-center">
@@ -33,18 +36,22 @@ const Allevents = () => {
           </div>
         </div>
         <div className="flex flex-wrap lg:grid lg:grid-cols-2 gap-7">
-          {allEventData.slice(0, visibleEvents).map((data, index) => {
+          {events.slice(0, visibleEvents).map((data, index) => {
             return (
               <AlleventCard
                 onClick={() => handleEventClick(data)}
                 key={index}
-                name={data.name}
-                hall={data.hall}
-                city={data.city}
-                date={data.date}
-                time={data.time}
-                fee={data.fee}
-                image={data.image}
+                name={data.event_name}
+                hall={"Shoprite Ikeja City Mall"} // hardcoded hall
+                city={"Lagos"} //hardcoded city
+                date={FormatDateFromUnix(data.time.start_time).date}
+                time={
+                  FormatDateFromUnix(data.time.start_time).time +
+                  " - " +
+                  FormatDateFromUnix(data.time.end_time).time
+                }
+                fee={"10"} // hardcoded fee
+                image={Orange}
               />
             );
           })}
