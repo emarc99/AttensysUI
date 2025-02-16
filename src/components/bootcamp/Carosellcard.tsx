@@ -27,13 +27,19 @@ const Carosellcard = (props: any) => {
 
   const handleActionClick = (arg: any) => {
     if (arg == "Register") {
-      router.push(`/Register/${props.name}`);
+      router.push(
+        `/Register/${props.name}/?id=${Number(props.alldata.bootcamp_id)}&org=${props.alldata.address_of_org}`,
+      );
     } else if (arg == "Finished") {
-      router.push(`/Register/${props.name}`);
+      router.push(
+        `/Register/${props.name}/?id=${Number(props.alldata.bootcamp_id)}&org=${props.alldata.address_of_org}`,
+      );
     } else if (arg == "Manage") {
       router.push(`/Mybootcamps/${props.name}`);
     }
   };
+
+  // console.log("ongoing data", props)
 
   const obtainCIDdata = async (CID: string) => {
     try {
