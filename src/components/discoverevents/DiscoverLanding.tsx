@@ -17,8 +17,8 @@ export interface EventData {
   registered_attendants: string;
   signature_count: number;
   time: {
-    end_time: BigInt;
-    start_time: BigInt;
+    end_time: bigint;
+    start_time: bigint;
     registeration_open: boolean;
   };
 }

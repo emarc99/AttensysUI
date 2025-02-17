@@ -30,7 +30,7 @@ function decimalToHexAddress(decimalAddress: any) {
   return "0x" + hexAddress;
 }
 
-function FormatDateFromUnix(date: BigInt) {
+function FormatDateFromUnix(date: bigint) {
   // Convert Unix timestamp to JavaScript Date object
   const dateObj = new Date(Number(date) * 1000); // Convert to milliseconds
 
