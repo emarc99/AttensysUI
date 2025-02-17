@@ -45,7 +45,7 @@ const DiscoverLanding = () => {
           },
         };
       });
-      // console.log({ formatedRes });
+      console.log({ formatedRes });
       setEvents(formatedRes);
     } catch (error) {
       console.error("get_all_events error", error);

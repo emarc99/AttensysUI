@@ -1,22 +1,18 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Eventslanding from "@/components/events/Eventslanding";
+import Bootcampdropdown from "@/components/bootcamp/Bootcampdropdown";
 import Coursedropdown from "@/components/courses/Coursedropdown";
-import { useRouter } from "next/router";
-import { useParams } from "next/navigation";
+import Eventslanding from "@/components/events/Eventslanding";
+import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
 import {
-  coursestatusAtom,
   bootcampdropdownstatus,
   connectorAtom,
   connectorDataAtom,
+  coursestatusAtom,
   walletStarknetkitNextAtom,
 } from "@/state/connectedWalletStarknetkitNext";
-import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest";
-import { RESET } from "jotai/utils";
-import { connect, disconnect } from "starknetkit";
-import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
-import Bootcampdropdown from "@/components/bootcamp/Bootcampdropdown";
 import { useAtom, useSetAtom } from "jotai";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 
 const Index = () => {
   const [status, setstatus] = useAtom(coursestatusAtom);
@@ -25,50 +21,12 @@ const Index = () => {
   );
   const params = useParams();
   const section = params.section;
-  const setWalletLatest = useSetAtom(walletStarknetkitLatestAtom);
-  const setWalletNext = useSetAtom(walletStarknetkitNextAtom);
-  const setConnectorData = useSetAtom(connectorDataAtom);
-  const setConnector = useSetAtom(connectorAtom);
 
-  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom);
-  const [connectorDataAccount, setConnectorDataAccount] = useState<
-    null | any
-  >();
+  const [connector] = useAtom(connectorAtom);
 
-  useEffect(() => {
-    /* setWalletLatest(RESET) */
-    setWalletNext(RESET);
-    setConnectorData(RESET);
-    setConnector(RESET);
-  }, []);
-
-  useEffect(() => {
-    const autoConnect = async () => {
-      try {
-        const { wallet: connectedWallet, connector } = await connect({
-          //@ts-ignore
-          provider,
-          modalMode: "neverAsk",
-          webWalletUrl: ARGENT_WEBWALLET_URL,
-          argentMobileOptions: {
-            dappName: "Attensys",
-            url: window.location.hostname,
-            chainId: CHAIN_ID,
-            icons: [],
-          },
-        });
-        setWallet(connectedWallet);
-        setConnectorDataAccount(connector?.wallet?.account);
-      } catch (e) {
-        console.error(e);
-        alert((e as any).message);
-      }
-    };
-
-    if (!wallet) {
-      autoConnect();
-    }
-  }, [wallet]);
+  const [connectorDataAccount] = useState<null | any>(
+    connector?.wallet.account,
+  );
 
   const handlePageClick = () => {
     setbootcampdropstat(false);

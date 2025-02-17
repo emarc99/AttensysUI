@@ -21,51 +21,36 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Contract } from "starknet";
 import { pinata } from "../../../utils/config";
 import Eventcard from "./Eventcard";
-import { walletStarknetkitLatestAtom } from "@/state/connectedWalletStarknetkitLatest";
-
-interface EventCreationData {
-  eventname: string;
-  startday: string;
-  endday: string;
-  starttime: string;
-  endtime: string;
-  location: string;
-  description: string;
-  nftname: string;
-  nftsymbol: string;
-  eventDesign: FileObject;
-}
-
-const emptyData: FileObject = {
-  name: "",
-  type: "",
-  size: 0,
-  lastModified: 0,
-  arrayBuffer: async () => {
-    return new ArrayBuffer(0);
-  },
-};
+import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
 
 const Myevents = (props: any) => {
   const { connectorDataAccount } = props;
-  const [eventCreationData, setEventCreationData] = useState<EventCreationData>(
-    {
-      eventname: "",
-      startday: "",
-      endday: "",
-      starttime: "",
-      endtime: "",
-      location: "",
-      description: "",
-      nftname: "",
-      nftsymbol: "",
-      eventDesign: emptyData,
-    },
-  );
 
   const [isSubmitting, setisSubmitting] = useState(false);
 
-  const [wallet, setWallet] = useAtom(walletStarknetkitLatestAtom);
+  const [wallet, setWallet] = useAtom(walletStarknetkit);
+  const [eventName, setEventName] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [location, setLocation] = useState("");
+  const [nftName, setNftName] = useState("");
+  const [nftSymbol, setNftSymbol] = useState("");
+  const [description, setDescription] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [errors, setErrors] = useState({
+    eventName: "",
+    startDate: "",
+    startTime: "",
+    endDate: "",
+    endTime: "",
+    nftName: "",
+    nftSymbol: "",
+    location: "",
+    description: "",
+    file: "",
+  });
   const [createdstat, setCreatedStat] = useAtom(eventcreatedAtom);
   const [Regstat, setRegStat] = useAtom(eventregistedAtom);
   const [existingeventStat, setexistingeventStat] = useAtom(
@@ -91,13 +76,15 @@ const Myevents = (props: any) => {
         file.type === "image/png" ||
         file.type === "image/jpg")
     ) {
+      setSelectedFile(file);
+      setErrors((prev) => ({ ...prev, file: "" }));
       console.log("Selected file:", file);
-      setEventCreationData({
-        ...eventCreationData,
-        eventDesign: file,
-      });
     } else {
-      console.log("Please select a valid image file (JPEG, JPG, or PNG).");
+      setSelectedFile(null);
+      setErrors((prev) => ({
+        ...prev,
+        file: "Please select a valid image file (JPEG, JPG, or PNG).",
+      }));
     }
   };
 
@@ -132,23 +119,42 @@ const Myevents = (props: any) => {
   };
 
   const handleCreateEventButton = async () => {
-    setisSubmitting(true);
-    console.log({ eventCreationData, connectorDataAccount });
+    const newErrors = {
+      eventName: !eventName.trim() ? "Event name is required" : "",
+      startDate: !startDate ? "Start date is required" : "",
+      startTime: !startTime ? "Start time is required" : "",
+      endDate: !endDate ? "End date is required" : "",
+      endTime: !endTime ? "End time is required" : "",
+      nftName: !nftName ? "Nft name is required" : "",
+      nftSymbol: !nftSymbol ? "Nft symbol is required" : "",
+      location: !location.trim() ? "Location is required" : "",
+      description: !description.trim() ? "Description is required" : "",
+      file: !selectedFile ? "Event image is required" : "",
+    };
 
-    const eventDesignUpload = await pinata.upload.file(
-      eventCreationData.eventDesign,
-    );
+    // Time validation
+    if (startTime && endTime && startTime >= endTime) {
+      newErrors.endTime = "End time must be after start time";
+    }
+
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).some((error) => error)) return;
+
+    setisSubmitting(true);
+
+    const eventDesignUpload = await pinata.upload.file(selectedFile!);
 
     const Dataupload = await pinata.upload.json({
-      name: eventCreationData.eventname,
-      startday: eventCreationData.startday,
-      endday: eventCreationData.endday,
-      starttime: eventCreationData.starttime,
-      endtime: eventCreationData.endtime,
-      location: eventCreationData.location,
-      nftname: eventCreationData.nftname,
-      nftsymbol: eventCreationData.nftsymbol,
-      description: eventCreationData.description,
+      name: eventName,
+      startday: startDate,
+      endday: endDate,
+      starttime: startTime,
+      endtime: endTime,
+      location: location,
+      nftname: nftName,
+      nftsymbol: nftSymbol,
+      description: description,
       eventDesign: eventDesignUpload.IpfsHash,
     });
     if (Dataupload) {
@@ -158,22 +164,16 @@ const Myevents = (props: any) => {
         connectorDataAccount,
       );
 
-      const startdateandtime = convertToUnixTimeStamp(
-        eventCreationData.startday,
-        eventCreationData.starttime,
-      );
+      const startdateandtime = convertToUnixTimeStamp(startDate, startTime);
 
-      const enddateandtime = convertToUnixTimeStamp(
-        eventCreationData.endday,
-        eventCreationData.endtime,
-      );
+      const enddateandtime = convertToUnixTimeStamp(endDate, endTime);
 
       const createEventCall = eventContract.populate("create_event", [
         wallet?.account?.address,
-        eventCreationData.eventname,
+        eventName,
         Dataupload.IpfsHash,
-        eventCreationData.nftname,
-        eventCreationData.nftsymbol,
+        nftName,
+        nftSymbol,
         startdateandtime,
         enddateandtime,
         true,
@@ -189,22 +189,20 @@ const Myevents = (props: any) => {
         })
         .finally(() => {
           //Resets all event data input
-          setEventCreationData({
-            eventname: "",
-            startday: "",
-            endday: "",
-            starttime: "",
-            endtime: "",
-            location: "",
-            description: "",
-            nftname: "",
-            nftsymbol: "",
-            eventDesign: emptyData,
-          });
+          setEventName("");
+          setStartDate("");
+          setStartTime("");
+          setEndDate("");
+          setEndTime("");
+          setLocation("");
+          setNftName("");
+          setNftSymbol("");
+          setDescription("");
+          setSelectedFile(null);
 
-          router.push(`/Overview/${eventCreationData.eventname}/insight`);
+          setisSubmitting(false);
+          router.push(`/Overview/${eventName}/insight`);
         });
-      setisSubmitting(false);
     }
   };
 
@@ -316,16 +314,20 @@ const Myevents = (props: any) => {
                     className={clsx(
                       "mt-3 block w-full border-b-[1px] border-white/50 bg-transparent text-[40px] font-bold leading-[83.53px] text-[#FFFFFF]",
                       "placeholder-white/50 focus:border-b-4 focus:border-[#ABADBA] focus:outline-none",
+                      errors.eventName && "border-red-500",
                     )}
                     placeholder="Event Name"
-                    value={eventCreationData.eventname}
-                    onChange={(e) =>
-                      setEventCreationData({
-                        ...eventCreationData,
-                        eventname: e.target.value,
-                      })
-                    }
+                    value={eventName}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      setEventName(e.target.value);
+                      setErrors((prev) => ({ ...prev, eventName: "" }));
+                    }}
                   />
+                  {errors.eventName && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.eventName}
+                    </p>
+                  )}
                 </div>
                 <div className="w-full max-w-lg px-4 mt-4">
                   <Field>
@@ -334,18 +336,21 @@ const Myevents = (props: any) => {
                     </Label>
                     <Input
                       type="date"
-                      value={eventCreationData.startday}
-                      onChange={(e) =>
-                        setEventCreationData({
-                          ...eventCreationData,
-                          startday: e.target.value,
-                        })
-                      }
+                      value={startDate}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setStartDate(e.target.value);
+                        setErrors((prev) => ({ ...prev, startDate: "" }));
+                      }}
                       className={clsx(
                         "mt-1 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
                         "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
                       )}
                     />
+                    {errors.startDate && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.startDate}
+                      </p>
+                    )}
                   </Field>
                 </div>
                 <div className="w-full max-w-lg px-4 mt-4">
@@ -355,18 +360,21 @@ const Myevents = (props: any) => {
                     </Label>
                     <Input
                       type="date"
-                      value={eventCreationData.endday}
-                      onChange={(e) =>
-                        setEventCreationData({
-                          ...eventCreationData,
-                          endday: e.target.value,
-                        })
-                      }
+                      value={endDate}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setEndDate(e.target.value);
+                        setErrors((prev) => ({ ...prev, endDate: "" }));
+                      }}
                       className={clsx(
                         "mt-1 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
                         "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
                       )}
                     />
+                    {errors.endDate && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.endDate}
+                      </p>
+                    )}
                   </Field>
                 </div>
                 <div className="w-full max-w-lg px-4 mt-4">
@@ -376,18 +384,22 @@ const Myevents = (props: any) => {
                     </Label>
                     <Input
                       type="time"
-                      value={eventCreationData.starttime}
-                      onChange={(e) =>
-                        setEventCreationData({
-                          ...eventCreationData,
-                          starttime: e.target.value,
-                        })
-                      }
                       className={clsx(
                         "mt-1 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
                         "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
+                        errors.startTime && "border border-red-500",
                       )}
+                      value={startTime}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setStartTime(e.target.value);
+                        setErrors((prev) => ({ ...prev, startTime: "" }));
+                      }}
                     />
+                    {errors.startTime && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.startTime}
+                      </p>
+                    )}
                   </Field>
                 </div>
 
@@ -398,18 +410,22 @@ const Myevents = (props: any) => {
                     </Label>
                     <Input
                       type="time"
-                      value={eventCreationData.endtime}
-                      onChange={(e) =>
-                        setEventCreationData({
-                          ...eventCreationData,
-                          endtime: e.target.value,
-                        })
-                      }
                       className={clsx(
                         "mt-1 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
                         "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
+                        errors.endTime && "border border-red-500",
                       )}
+                      value={endTime}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setEndTime(e.target.value);
+                        setErrors((prev) => ({ ...prev, endTime: "" }));
+                      }}
                     />
+                    {errors.endTime && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.endTime}
+                      </p>
+                    )}
                   </Field>
                 </div>
 
@@ -422,18 +438,22 @@ const Myevents = (props: any) => {
                       Choose Onsite Location or Virtual link{" "}
                     </Description>
                     <textarea
-                      value={eventCreationData.location}
-                      onChange={(e) =>
-                        setEventCreationData({
-                          ...eventCreationData,
-                          location: e.target.value,
-                        })
-                      }
                       className={clsx(
                         "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white h-20",
                         "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 resize-none",
+                        errors.location && "border border-red-500",
                       )}
+                      value={location}
+                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                        setLocation(e.target.value);
+                        setErrors((prev) => ({ ...prev, location: "" }));
+                      }}
                     />
+                    {errors.location && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.location}
+                      </p>
+                    )}
                   </Field>
                 </div>
 
@@ -446,18 +466,21 @@ const Myevents = (props: any) => {
                       Choose your preferred NFT name
                     </Description>
                     <input
-                      value={eventCreationData.nftname}
-                      onChange={(e) =>
-                        setEventCreationData({
-                          ...eventCreationData,
-                          nftname: e.target.value,
-                        })
-                      }
+                      value={nftName}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setNftName(e.target.value);
+                        setErrors((prev) => ({ ...prev, nftName: "" }));
+                      }}
                       className={clsx(
                         "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white ",
                         "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 resize-none",
                       )}
                     />
+                    {errors.nftName && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.nftName}
+                      </p>
+                    )}
                   </Field>
                 </div>
                 <div className="w-full max-w-lg px-4 mt-4">
@@ -469,18 +492,21 @@ const Myevents = (props: any) => {
                       Choose your preferred NFT Symbol
                     </Description>
                     <input
-                      value={eventCreationData.nftsymbol}
-                      onChange={(e) =>
-                        setEventCreationData({
-                          ...eventCreationData,
-                          nftsymbol: e.target.value,
-                        })
-                      }
+                      value={nftSymbol}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setNftSymbol(e.target.value);
+                        setErrors((prev) => ({ ...prev, nftSymbol: "" }));
+                      }}
                       className={clsx(
                         "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white ",
                         "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 resize-none",
                       )}
                     />
+                    {errors.nftSymbol && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.nftSymbol}
+                      </p>
+                    )}
                   </Field>
                 </div>
                 <div className="w-full max-w-lg px-4 mt-4">
@@ -492,18 +518,22 @@ const Myevents = (props: any) => {
                       A brief description of the event{" "}
                     </Description>
                     <textarea
-                      value={eventCreationData.description}
-                      onChange={(e) =>
-                        setEventCreationData({
-                          ...eventCreationData,
-                          description: e.target.value,
-                        })
-                      }
                       className={clsx(
                         "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white h-36",
                         "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 resize-none",
+                        errors.description && "border border-red-500",
                       )}
+                      value={description}
+                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                        setDescription(e.target.value);
+                        setErrors((prev) => ({ ...prev, description: "" }));
+                      }}
                     />
+                    {errors.description && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.description}
+                      </p>
+                    )}
                   </Field>
                 </div>
               </div>
@@ -526,6 +556,9 @@ const Myevents = (props: any) => {
                     onChange={handleFileChange}
                     style={{ display: "none" }} // Hide the input
                   />
+                  {errors.file && (
+                    <p className="text-red-500 text-sm mt-1">{errors.file}</p>
+                  )}
                 </div>
                 <Button
                   onClick={handleCreateEventButton}
@@ -539,6 +572,7 @@ const Myevents = (props: any) => {
                 disabled={isSubmitting}
                 className="flex rounded-lg bg-[#4A90E2] py-2 px-4 lg:h-[50px] items-center lg:w-[422px] text-sm text-white data-[hover]:bg-sky-500 data-[active]:bg-sky-700 justify-center md:hidden w-[90%] mt-10 mx-auto"
               >
+                {isSubmitting ? "Creating Event..." : "Create an Event"}
                 Create an Event
               </Button>
             </div>
