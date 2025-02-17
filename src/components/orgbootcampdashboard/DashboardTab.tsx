@@ -19,6 +19,7 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar";
 import { FaPlus } from "react-icons/fa6";
+import { useSearchParams } from "next/navigation";
 
 const DashboardTab = (props: any) => {
   const [outlineClickstat, setOutlineClickstat] = useAtom(outlineclick);
@@ -28,6 +29,9 @@ const DashboardTab = (props: any) => {
     useAtom(certificationsclick);
   const [addClass, setAddclass] = useAtom(addclassmodal);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const org = searchParams.get("org");
+  const id = searchParams.get("id");
 
   const handleAddclass = () => {
     setAddclass((prev) => ({ ...prev, modalstatus: true }));
@@ -39,7 +43,7 @@ const DashboardTab = (props: any) => {
     setcertificationclickstat(false);
 
     //@todo replace sample dashboard with org name
-    router.push(`/Bootcamp/${props.bootcampname}/Outline`);
+    router.push(`/Bootcamp/${props.bootcampname}/Outline/?id=${id}&org=${org}`);
   };
 
   const handlegueslistclick = () => {
@@ -47,14 +51,18 @@ const DashboardTab = (props: any) => {
     setallstudentclickstat(true);
     setcertificationclickstat(false);
     //@todo replace sample dashboard with org name
-    router.push(`/Bootcamp/${props.bootcampname}/Students`);
+    router.push(
+      `/Bootcamp/${props.bootcampname}/Students/?id=${id}&org=${org}`,
+    );
   };
   const handleAttendanceclick = () => {
     setOutlineClickstat(false);
     setallstudentclickstat(false);
     setcertificationclickstat(true);
     //@todo replace sample dashboard with org name
-    router.push(`/Bootcamp/${props.bootcampname}/Certifications`);
+    router.push(
+      `/Bootcamp/${props.bootcampname}/Certifications/?id=${id}&org=${org}`,
+    );
   };
 
   return (
