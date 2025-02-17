@@ -9,7 +9,7 @@ import { Contract } from "starknet";
 import { attensysEventAbi } from "@/deployments/abi";
 import { attensysEventAddress } from "@/deployments/contracts";
 import { provider } from "@/constants";
-import { decimalToHexAddress } from "@/lib/utils";
+import { decimalToHexAddress } from "@/utils/formatAddress";
 
 export interface EventData {
   event_name: string;

@@ -18,8 +18,9 @@ import { attensysEventAbi } from "@/deployments/abi";
 import { attensysEventAddress } from "@/deployments/contracts";
 import { provider } from "@/constants";
 import { useParams } from "next/navigation";
-import { decimalToHexAddress, FormatDateFromUnix } from "@/lib/utils";
+
 import { EventData } from "../discoverevents/DiscoverLanding";
+import { decimalToHexAddress, FormatDateFromUnix } from "@/utils/formatAddress";
 
 const Details = (props: any) => {
   const { connectorDataAccount } = props;

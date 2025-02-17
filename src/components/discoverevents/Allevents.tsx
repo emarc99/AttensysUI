@@ -6,8 +6,8 @@ import AlleventCard from "./AlleventCard";
 import { allEventData } from "@/constants/data";
 import { useRouter } from "next/navigation";
 import { EventData } from "./DiscoverLanding";
-import { FormatDateFromUnix } from "@/lib/utils";
 import Orange from "@/assets/Orange.svg";
+import { FormatDateFromUnix } from "@/utils/formatAddress";
 
 const Allevents = ({ events }: { events: EventData[] }) => {
   const [visibleEvents, setVisibleEvents] = useState(8); // Number of events to show initially
