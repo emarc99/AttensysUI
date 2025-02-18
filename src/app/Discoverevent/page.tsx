@@ -1,19 +1,19 @@
 "use client";
-import React from "react";
-import Coursedropdown from "@/components/courses/Coursedropdown";
-import { useAtom } from "jotai";
-import {
-  coursestatusAtom,
-  bootcampdropdownstatus,
-} from "@/state/connectedWalletStarknetkitNext";
 import Bootcampdropdown from "@/components/bootcamp/Bootcampdropdown";
+import Coursedropdown from "@/components/courses/Coursedropdown";
 import DiscoverLanding from "@/components/discoverevents/DiscoverLanding";
+import {
+  bootcampdropdownstatus,
+  coursestatusAtom,
+} from "@/state/connectedWalletStarknetkitNext";
+import { useAtom } from "jotai";
 
 const Index = () => {
   const [status, setstatus] = useAtom(coursestatusAtom);
   const [bootcampdropstat, setbootcampdropstat] = useAtom(
     bootcampdropdownstatus,
   );
+
   const handlePageClick = () => {
     setbootcampdropstat(false);
     setstatus(false);

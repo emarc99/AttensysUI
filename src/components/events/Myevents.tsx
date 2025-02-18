@@ -1,34 +1,52 @@
 "use client";
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import add from "@/assets/add.svg";
 import calenderimage from "@/assets/calendar.svg";
 import ticket from "@/assets/ticket.svg";
-import Image from "next/image";
-import { Button } from "@headlessui/react";
-import Eventcard from "./Eventcard";
+import { attensysEventAbi, attensysOrgAbi } from "@/deployments/abi";
+import { attensysEventAddress } from "@/deployments/contracts";
 import {
+  createEventClickAtom,
+  createorexplore,
   eventcreatedAtom,
   eventregistedAtom,
   existingeventCreationAtom,
-  createEventClickAtom,
-  createorexplore,
 } from "@/state/connectedWalletStarknetkitNext";
-import { useAtom, useSetAtom } from "jotai";
-import { useRouter } from "next/navigation";
-import { Description, Field, Input, Label } from "@headlessui/react";
+import { Button, Description, Field, Input, Label } from "@headlessui/react";
 import clsx from "clsx";
-import add from "@/assets/add.svg";
+import { useAtom } from "jotai";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { FileObject } from "pinata";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { Contract } from "starknet";
+import { pinata } from "../../../utils/config";
+import Eventcard from "./Eventcard";
+import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
 
 const Myevents = (props: any) => {
+  const { connectorDataAccount } = props;
+
+  const [isSubmitting, setisSubmitting] = useState(false);
+
+  const [wallet, setWallet] = useAtom(walletStarknetkit);
   const [eventName, setEventName] = useState("");
+  const [startDate, setStartDate] = useState("");
   const [startTime, setStartTime] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [endTime, setEndTime] = useState("");
   const [location, setLocation] = useState("");
+  const [nftName, setNftName] = useState("");
+  const [nftSymbol, setNftSymbol] = useState("");
   const [description, setDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [errors, setErrors] = useState({
     eventName: "",
+    startDate: "",
     startTime: "",
+    endDate: "",
     endTime: "",
+    nftName: "",
+    nftSymbol: "",
     location: "",
     description: "",
     file: "",
@@ -60,6 +78,7 @@ const Myevents = (props: any) => {
     ) {
       setSelectedFile(file);
       setErrors((prev) => ({ ...prev, file: "" }));
+      console.log("Selected file:", file);
     } else {
       setSelectedFile(null);
       setErrors((prev) => ({
@@ -89,11 +108,25 @@ const Myevents = (props: any) => {
     router.push("/Events/createevent");
   };
 
-  const handleCreateEventButton = () => {
+  const convertToUnixTimeStamp = (date: string, time: string) => {
+    // Combine date and time into a single string
+    const datetimeString = `${date}T${time}:00Z`; // Assume UTC
+
+    // Convert to a Unix timestamp (seconds)
+    const unixTimestamp = Math.floor(new Date(datetimeString).getTime() / 1000);
+
+    return unixTimestamp;
+  };
+
+  const handleCreateEventButton = async () => {
     const newErrors = {
       eventName: !eventName.trim() ? "Event name is required" : "",
+      startDate: !startDate ? "Start date is required" : "",
       startTime: !startTime ? "Start time is required" : "",
+      endDate: !endDate ? "End date is required" : "",
       endTime: !endTime ? "End time is required" : "",
+      nftName: !nftName ? "Nft name is required" : "",
+      nftSymbol: !nftSymbol ? "Nft symbol is required" : "",
       location: !location.trim() ? "Location is required" : "",
       description: !description.trim() ? "Description is required" : "",
       file: !selectedFile ? "Event image is required" : "",
@@ -108,8 +141,69 @@ const Myevents = (props: any) => {
 
     if (Object.values(newErrors).some((error) => error)) return;
 
-    //@todo replace sample event with event name
-    router.push("/Overview/sample-event/insight");
+    setisSubmitting(true);
+
+    const eventDesignUpload = await pinata.upload.file(selectedFile!);
+
+    const Dataupload = await pinata.upload.json({
+      name: eventName,
+      startday: startDate,
+      endday: endDate,
+      starttime: startTime,
+      endtime: endTime,
+      location: location,
+      nftname: nftName,
+      nftsymbol: nftSymbol,
+      description: description,
+      eventDesign: eventDesignUpload.IpfsHash,
+    });
+    if (Dataupload) {
+      const eventContract = new Contract(
+        attensysEventAbi,
+        attensysEventAddress,
+        connectorDataAccount,
+      );
+
+      const startdateandtime = convertToUnixTimeStamp(startDate, startTime);
+
+      const enddateandtime = convertToUnixTimeStamp(endDate, endTime);
+
+      const createEventCall = eventContract.populate("create_event", [
+        wallet?.account?.address,
+        eventName,
+        Dataupload.IpfsHash,
+        nftName,
+        nftSymbol,
+        startdateandtime,
+        enddateandtime,
+        true,
+      ]);
+
+      const result = await eventContract.create_event(createEventCall.calldata);
+      //@ts-ignore
+      connectorDataAccount?.provider
+        .waitForTransaction(result.transaction_hash)
+        .then(() => {})
+        .catch((e: any) => {
+          console.log("Error: ", e);
+        })
+        .finally(() => {
+          //Resets all event data input
+          setEventName("");
+          setStartDate("");
+          setStartTime("");
+          setEndDate("");
+          setEndTime("");
+          setLocation("");
+          setNftName("");
+          setNftSymbol("");
+          setDescription("");
+          setSelectedFile(null);
+
+          setisSubmitting(false);
+          router.push(`/Overview/${eventName}/insight`);
+        });
+    }
   };
 
   const data = [
@@ -238,6 +332,54 @@ const Myevents = (props: any) => {
                 <div className="w-full max-w-lg px-4 mt-4">
                   <Field>
                     <Label className="text-sm/6 font-medium text-white">
+                      Start Day
+                    </Label>
+                    <Input
+                      type="date"
+                      value={startDate}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setStartDate(e.target.value);
+                        setErrors((prev) => ({ ...prev, startDate: "" }));
+                      }}
+                      className={clsx(
+                        "mt-1 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
+                        "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
+                      )}
+                    />
+                    {errors.startDate && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.startDate}
+                      </p>
+                    )}
+                  </Field>
+                </div>
+                <div className="w-full max-w-lg px-4 mt-4">
+                  <Field>
+                    <Label className="text-sm/6 font-medium text-white">
+                      End day
+                    </Label>
+                    <Input
+                      type="date"
+                      value={endDate}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setEndDate(e.target.value);
+                        setErrors((prev) => ({ ...prev, endDate: "" }));
+                      }}
+                      className={clsx(
+                        "mt-1 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
+                        "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
+                      )}
+                    />
+                    {errors.endDate && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.endDate}
+                      </p>
+                    )}
+                  </Field>
+                </div>
+                <div className="w-full max-w-lg px-4 mt-4">
+                  <Field>
+                    <Label className="text-sm/6 font-medium text-white">
                       Start time
                     </Label>
                     <Input
@@ -314,6 +456,59 @@ const Myevents = (props: any) => {
                     )}
                   </Field>
                 </div>
+
+                <div className="w-full max-w-lg px-4 mt-4">
+                  <Field>
+                    <Label className="text-sm/6 font-medium text-white">
+                      Add NFT Name
+                    </Label>
+                    <Description className="text-sm/6 text-white/50">
+                      Choose your preferred NFT name
+                    </Description>
+                    <input
+                      value={nftName}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setNftName(e.target.value);
+                        setErrors((prev) => ({ ...prev, nftName: "" }));
+                      }}
+                      className={clsx(
+                        "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white ",
+                        "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 resize-none",
+                      )}
+                    />
+                    {errors.nftName && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.nftName}
+                      </p>
+                    )}
+                  </Field>
+                </div>
+                <div className="w-full max-w-lg px-4 mt-4">
+                  <Field>
+                    <Label className="text-sm/6 font-medium text-white">
+                      Add NFT Symbol
+                    </Label>
+                    <Description className="text-sm/6 text-white/50">
+                      Choose your preferred NFT Symbol
+                    </Description>
+                    <input
+                      value={nftSymbol}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setNftSymbol(e.target.value);
+                        setErrors((prev) => ({ ...prev, nftSymbol: "" }));
+                      }}
+                      className={clsx(
+                        "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white ",
+                        "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 resize-none",
+                      )}
+                    />
+                    {errors.nftSymbol && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.nftSymbol}
+                      </p>
+                    )}
+                  </Field>
+                </div>
                 <div className="w-full max-w-lg px-4 mt-4">
                   <Field>
                     <Label className="text-sm/6 font-medium text-white">
@@ -374,8 +569,10 @@ const Myevents = (props: any) => {
               </div>
               <Button
                 onClick={handleCreateEventButton}
+                disabled={isSubmitting}
                 className="flex rounded-lg bg-[#4A90E2] py-2 px-4 lg:h-[50px] items-center lg:w-[422px] text-sm text-white data-[hover]:bg-sky-500 data-[active]:bg-sky-700 justify-center md:hidden w-[90%] mt-10 mx-auto"
               >
+                {isSubmitting ? "Creating Event..." : "Create an Event"}
                 Create an Event
               </Button>
             </div>
