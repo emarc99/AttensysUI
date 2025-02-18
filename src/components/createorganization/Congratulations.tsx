@@ -5,8 +5,12 @@ import Image from "next/image";
 import { Button } from "@headlessui/react";
 import { useRouter } from "next/navigation";
 import rightArr from "../../../public/rightArr.svg";
+import { specificOrgRoute } from "@/state/connectedWalletStarknetkitNext";
+import { useAtom } from "jotai";
 
 const Congratulations = () => {
+  const [specificOrg, setSpecificOrg] = useAtom(specificOrgRoute);
+
   const router = useRouter();
 
   const handlerouting = (prop: string) => {
@@ -23,7 +27,7 @@ const Congratulations = () => {
       <div className="space-y-3 w-full flex flex-col items-center">
         <Button
           onClick={() => {
-            handlerouting("sample-org");
+            handlerouting(specificOrg);
           }}
           className="lg:w-[342px] w-full h-[47px] flex justify-center items-center text-[#FFFFFF] text-[14px] font-bold leading-[16px] bg-[#4A90E2] rounded-xl"
         >

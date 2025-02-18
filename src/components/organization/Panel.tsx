@@ -33,7 +33,7 @@ const Panel = (props: any) => {
           </div>
           <div className="min-h-[fit] md:h-fit lg:min-h-[150px] border-t-[1px] border-b-[1px] border-[#B0B0B0] flex flex-col lg:flex-row justify-center py-4 lg:justify-between text-[11px] md:text-[14px] text-[#333333] leading-[22px] font-medium">
             <div className="w-full lg:w-[33%] lg:border-r-[1px] border-[#B0B0B0] px-8 sm:px-2 lg:px-8 sm:text-[12px] lg:text-[14px] flex flex-col justify-center lg:space-y-4 gap-2 my-2">
-              <div className="flex flex-row lg:flex-col lg:justify-between justify-start gap-2">
+              <div className="flex lg:justify-between justify-start gap-2">
                 <div className="space-x-2 flex items-center">
                   <CiCircleInfo className="text-[18px]" />
                   <h1>Key : </h1>

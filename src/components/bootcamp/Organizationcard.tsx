@@ -47,7 +47,9 @@ const Organizationcard = (props: any) => {
   const [description, setDescription] = useState<string | null>(null);
 
   const handleDetailsRoute = () => {
-    router.push(`/Bootcamps/${props.name}`);
+    router.push(
+      `/Bootcamps/${props?.org_data?.org_name}/?org=${props?.org_data?.address_of_org}`,
+    );
   };
 
   const getPubIpfs = async (CID: string) => {

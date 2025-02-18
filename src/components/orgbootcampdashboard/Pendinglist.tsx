@@ -1,16 +1,108 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import ex from "@/assets/ex.svg";
 import correct from "@/assets/correct.png";
 import Image from "next/image";
+import { pinata } from "../../../utils/config";
+import { useAtom } from "jotai";
+import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
+import { useSearchParams } from "next/navigation";
+import { attensysOrgAbi } from "@/deployments/abi";
+import { attensysOrgAddress } from "@/deployments/contracts";
+import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
+import { Contract } from "starknet";
 
 const Pendinglist = (props: any) => {
+  const [wallet, setWallet] = useAtom(walletStarknetkit);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+
+  const organizationContract = new Contract(
+    attensysOrgAbi,
+    attensysOrgAddress,
+    wallet?.account,
+  );
+
+  const getIpfsData = async () => {
+    try {
+      const data = await pinata.gateways.get(props?.info?.student_details_uri);
+      console.log("student data", data);
+      //@ts-ignore
+      setEmail(data?.data?.student_email);
+      //@ts-ignore
+      setName(data?.data?.student_name);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleApprove = async () => {
+    const approve_calldata = organizationContract.populate(
+      "approve_registration",
+      [props?.info?.address_of_student, id],
+    );
+    const callContract = await wallet?.account.execute([
+      {
+        contractAddress: attensysOrgAddress,
+        entrypoint: "approve_registration",
+        calldata: approve_calldata.calldata,
+      },
+    ]);
+    //@ts-ignore
+    wallet?.account?.provider
+      .waitForTransaction(callContract.transaction_hash)
+      .then(() => {})
+      .catch((e: any) => {
+        console.error("Error: ", e);
+      })
+      .finally(() => {
+        //@todo set loading state here
+      });
+  };
+
+  const handleDecline = async () => {
+    const approve_calldata = organizationContract.populate(
+      "decline_registration",
+      [props?.info?.address_of_student, id],
+    );
+    const callContract = await wallet?.account.execute([
+      {
+        contractAddress: attensysOrgAddress,
+        entrypoint: "decline_registration",
+        calldata: approve_calldata.calldata,
+      },
+    ]);
+    //@ts-ignore
+    wallet?.account?.provider
+      .waitForTransaction(callContract.transaction_hash)
+      .then(() => {})
+      .catch((e: any) => {
+        console.error("Error: ", e);
+      })
+      .finally(() => {
+        //@todo set loading state here
+      });
+  };
+
   const renderButton = (arg: any) => {
     if (arg == "both") {
       return (
         <>
           <div className="flex space-x-3 items-center justify-center">
-            <Image src={ex} alt="cancel" />
-            <Image src={correct} alt="check" />
+            <Image
+              src={ex}
+              alt="cancel"
+              onClick={handleDecline}
+              className=" cursor-pointer"
+            />
+            <Image
+              src={correct}
+              alt="check"
+              onClick={handleApprove}
+              className=" cursor-pointer"
+            />
           </div>
         </>
       );
@@ -18,7 +110,7 @@ const Pendinglist = (props: any) => {
       return (
         <>
           <div className="flex items-center justify-center">
-            <Image src={correct} alt="check" />
+            <Image src={correct} alt="check" className=" cursor-not-allowed" />
           </div>
         </>
       );
@@ -26,12 +118,16 @@ const Pendinglist = (props: any) => {
       return (
         <>
           <div className="flex items-center justify-center">
-            <Image src={ex} alt="cancel" />
+            <Image src={ex} alt="cancel" className=" cursor-not-allowed" />
           </div>
         </>
       );
     }
   };
+
+  useEffect(() => {
+    getIpfsData();
+  }, [wallet]);
 
   const renderStatus = (arg: any) => {
     if (arg == "both") {
@@ -59,10 +155,10 @@ const Pendinglist = (props: any) => {
     <tbody>
       <tr>
         <td className="px-4 py-2 text-center border-b-[#B8B9BA] border-b-[1px] text-[14px] font-medium leading-[23px] text-[#333333]">
-          vladamirocks@gmail.com
+          {email}
         </td>
         <td className="px-4 py-2 text-center border-b-[#B8B9BA] border-b-[1px] text-[14px] font-medium leading-[23px] text-[#333333]">
-          Victor Jegede
+          {name}
         </td>
         <td className="px-4 py-2 text-center border-b-[#B8B9BA] border-b-[1px] font-medium leading-[23px]">
           {renderStatus(props.arg)}

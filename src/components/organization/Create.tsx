@@ -406,7 +406,7 @@ const Create = (props: any) => {
                 </h1>
                 <Field>
                   <Input
-                    value="Orangutan Edu Academy"
+                    value={organizationName}
                     readOnly
                     placeholder="e.g starknet basecamp"
                     className={clsx(

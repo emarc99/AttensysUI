@@ -42,7 +42,7 @@ export default function RegisterModal(prop: any) {
 
       <div className="fixed inset-0 z-10 overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
-          <DialogPanel className="relative h-[690px] w-[663px] transform overflow-hidden rounded-lg bg-white text-left shadow-xl sm:my-8">
+          <DialogPanel className="relative h-[610px] w-[663px] transform overflow-hidden rounded-lg bg-white text-left shadow-xl sm:my-8">
             <div className="px-4 sm:px-8 flex justify-between pt-8 cursor-pointer">
               <h1 className="text-lg font-semibold leading-[31px] text-[#5801A9]">
                 Register
@@ -59,9 +59,16 @@ export default function RegisterModal(prop: any) {
                 }}
               />
             </div>
-            {detailsEntrystatus && <RegistrationDetails />}
+            {detailsEntrystatus && (
+              <RegistrationDetails
+                org_info={prop.org_info}
+                id_info={prop.id_info}
+              />
+            )}
             {detailsEntryLoadingstatus && <DetailsLoading />}
-            {registrationsuccessstatus && <RegistrationSuccess />}
+            {registrationsuccessstatus && (
+              <RegistrationSuccess bootcamp_name={prop.bootcamp_name} />
+            )}
           </DialogPanel>
         </div>
       </div>

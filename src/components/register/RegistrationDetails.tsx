@@ -17,8 +17,14 @@ import {
   Input,
   Label,
 } from "@headlessui/react";
+import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
+import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
+import { Contract } from "starknet";
+import { pinata } from "../../../utils/config";
+import { attensysOrgAbi } from "@/deployments/abi";
+import { attensysOrgAddress } from "@/deployments/contracts";
 
-const RegistrationDetails = () => {
+const RegistrationDetails = (props: any) => {
   const [regModal, setRegModal] = useAtom(registerModal);
   const [inputValue, setInputValue] = useState<number | string>("");
   const [detailsEntrystatus, setDetailsEntryStatus] = useAtom(detailsEntryStat);
@@ -26,6 +32,10 @@ const RegistrationDetails = () => {
     useAtom(detailsEntryLoading);
   const [registrationsuccessstatus, setregistrationsuccessstatus] =
     useAtom(registrationsuccess);
+  const [wallet, setWallet] = useAtom(walletStarknetkit);
+  const [fullname, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -35,14 +45,60 @@ const RegistrationDetails = () => {
     }
   };
 
-  const handlePay = () => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    if (name === "fullname") {
+      setFullName(value);
+    } else if (name === "email") {
+      setEmail(value);
+    }
+  };
+
+  const handlePay = async () => {
     setDetailsEntryStatus(false);
     setDetailsEntryLoadingStatus(true);
+    const studentDataUpload = await pinata.upload.json({
+      student_name: fullname,
+      student_email: email,
+    });
+    if (studentDataUpload) {
+      console.log(studentDataUpload);
+      const organizationContract = new Contract(
+        attensysOrgAbi,
+        attensysOrgAddress,
+        wallet?.account,
+      );
 
-    setTimeout(() => {
-      setDetailsEntryLoadingStatus(false);
-      setregistrationsuccessstatus(true);
-    }, 2000);
+      const register_calldata = organizationContract.populate(
+        "register_for_bootcamp",
+        [props.org_info, props.id_info, studentDataUpload.IpfsHash],
+      );
+      const callContract = await wallet?.account.execute([
+        {
+          contractAddress: attensysOrgAddress,
+          entrypoint: "register_for_bootcamp",
+          calldata: register_calldata.calldata,
+        },
+      ]);
+
+      //@ts-ignore
+      wallet?.account?.provider
+        .waitForTransaction(callContract.transaction_hash)
+        .then(() => {})
+        .catch((e: any) => {
+          console.error("Error: ", e);
+        })
+        .finally(() => {
+          setDetailsEntryLoadingStatus(false);
+          setregistrationsuccessstatus(true);
+        });
+    }
+
+    // setTimeout(() => {
+    //   setDetailsEntryLoadingStatus(false);
+    //   setregistrationsuccessstatus(true);
+    // }, 2000);
   };
 
   return (
@@ -52,6 +108,9 @@ const RegistrationDetails = () => {
         <Field>
           <Input
             placeholder="Enter your name"
+            name="fullname"
+            value={fullname}
+            onChange={handleInputChange}
             className={clsx(
               "h-[55px] border-[2px] border-[#D0D5DD] block w-full rounded-lg bg-white/5 py-1.5 px-3 text-sm/6 text-[#667185]",
               "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
@@ -64,6 +123,10 @@ const RegistrationDetails = () => {
         <Field>
           <Input
             placeholder="Enter your email"
+            type="email"
+            name="email"
+            value={email}
+            onChange={handleInputChange}
             className={clsx(
               "h-[55px] border-[2px] border-[#D0D5DD] block w-full rounded-lg bg-white/5 py-1.5 px-3 text-sm/6 text-[#667185]",
               "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
