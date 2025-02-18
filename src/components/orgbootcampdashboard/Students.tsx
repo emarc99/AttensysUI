@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button, Input } from "@headlessui/react";
 import filter from "@/assets/filter.png";
@@ -7,11 +7,31 @@ import Studentlist from "./Studentlist";
 import Pendinglist from "./Pendinglist";
 import MobileStudentApprovalCard from "./MobileStudentApprovalCard";
 import MobileStudentRegisteredCard from "./MobileStudentRegisteredCard";
+import { BlockNumber, Contract, RpcProvider, Account } from "starknet";
+import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
+import { attensysOrgAbi } from "@/deployments/abi";
+import { attensysOrgAddress } from "@/deployments/contracts";
+import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
+import { pinata } from "../../../utils/config";
+import { useSearchParams } from "next/navigation";
+import { useAtom } from "jotai";
 
 const Students = () => {
   const [pendingclickstat, setPendingclickstat] = useState(true);
   const [registeredclick, setRegisteredClick] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [wallet, setWallet] = useAtom(walletStarknetkit);
+  const [pendingStudent, setPendingStudent] = useState([]);
+  const [pendingStudentStatus, setpendingStudentStatus] = useState(false);
+  const searchParams = useSearchParams();
+  const org = searchParams.get("org");
+  const id = searchParams.get("id");
+
+  const orgContract = new Contract(
+    attensysOrgAbi,
+    attensysOrgAddress,
+    provider,
+  );
 
   const handlependingClick = () => {
     setPendingclickstat(true);
@@ -25,6 +45,22 @@ const Students = () => {
   const handleChange = (event: { target: { value: any } }) => {
     setSearchValue(event.target.value);
   };
+
+  const getPendingApplication = async () => {
+    const pending_info = await orgContract?.get_all_registration_request(org);
+    // const pending_info = [];
+    console.log(pending_info);
+    if (pending_info.length > 0) {
+      setpendingStudentStatus(true);
+      setPendingStudent(pending_info);
+    } else {
+      setpendingStudentStatus(false);
+    }
+  };
+
+  useEffect(() => {
+    getPendingApplication();
+  }, [wallet]);
 
   return (
     <div className="w-[88%] mx-auto">
@@ -75,10 +111,19 @@ const Students = () => {
                 </svg>
               )}
             </div>
-
-            <MobileStudentApprovalCard arg="both" />
-            <MobileStudentApprovalCard arg="check" />
-            <MobileStudentApprovalCard arg="cancel" />
+            {pendingStudentStatus ? (
+              pendingStudent.map((data: any, index: any) => {
+                return (
+                  <MobileStudentApprovalCard
+                    key={index}
+                    arg={data.registered ? "check" : "both"}
+                    info={data}
+                  />
+                );
+              })
+            ) : (
+              <h1>No pending application</h1>
+            )}
           </div>
           <div className="hidden lg:block w-[88%] lg:w-[100%]  mx-auto mt-8 bg-[#FFFFFF] border-[1px] border-[#D9D9D9] rounded-xl h-[600px]">
             <div className=" w-[90%] mx-auto px-16 py-4 border-b-[1px] border-[#B8B9BA]">
@@ -87,35 +132,42 @@ const Students = () => {
               </h1>
             </div>
             <div style={{ maxHeight: "500px", overflowY: "auto" }}>
-              <table className="w-[90%] mx-auto border-separate border-spacing-y-3 ">
-                <thead>
-                  <tr className="h-[60px] text-[14px] leading-[19.79px] text-[#333333]">
-                    <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
-                      Email
-                    </th>
-                    <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
-                      Name
-                    </th>
-                    <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
-                      Registration status
-                    </th>
-                    <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
-                      Registration Date
-                    </th>
-                    <th className="text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
-                      Accept Registration
-                    </th>
-                  </tr>
-                </thead>
-                <Pendinglist arg="both" />
-                <Pendinglist arg="both" />
-                <Pendinglist arg="cancel" />
-                <Pendinglist arg="check" />
-                <Pendinglist arg="check" />
-                <Pendinglist arg="check" />
-                <Pendinglist arg="check" />
-                <Pendinglist arg="cancel" />
-              </table>
+              {pendingStudentStatus && pendingStudent.length > 0 ? (
+                <table className="w-[90%] mx-auto border-separate border-spacing-y-3 ">
+                  <thead>
+                    <tr className="h-[60px] text-[14px] leading-[19.79px] text-[#333333]">
+                      <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
+                        Email
+                      </th>
+                      <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
+                        Name
+                      </th>
+                      <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
+                        Registration status
+                      </th>
+                      <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
+                        Registration Date
+                      </th>
+                      <th className="text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
+                        Accept Registration
+                      </th>
+                    </tr>
+                  </thead>
+                  {pendingStudent.map((data: any, index: number) => (
+                    <Pendinglist
+                      key={index}
+                      arg={data.registered ? "check" : "both"}
+                      info={data}
+                    />
+                  ))}
+                </table>
+              ) : (
+                <div className="flex h-[400px] w-full justify-center items-center">
+                  <h1 className="text-center text-lg font-semibold">
+                    No pending application
+                  </h1>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -208,54 +260,52 @@ const Students = () => {
             </div>
 
             <div style={{ maxHeight: "800px", overflowY: "auto" }}>
-              <table className="w-full border-separate border-spacing-y-3 ">
-                <thead
-                  style={{
-                    position: "sticky",
-                    top: 0,
-                    backgroundColor: "#f9f9f9",
-                    zIndex: 1,
-                  }}
-                >
-                  <tr className="h-[60px] text-[14px] leading-[19.79px] text-[#333333]">
-                    <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
-                      Email
-                    </th>
-                    <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
-                      Full name
-                    </th>
-                    <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
-                      Wallet address
-                    </th>
-                    <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
-                      Admission status
-                    </th>
-                    <th className="text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
-                      Attendance
-                    </th>
-                    <th className="text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
-                      Assignment submission
-                    </th>
-                  </tr>
-                </thead>
-                <Studentlist />
-                <Studentlist />
-                <Studentlist />
-                <Studentlist />
-                <Studentlist />
-                <Studentlist />
-                <Studentlist />
-                <Studentlist />
-                <Studentlist />
-                <Studentlist />
-                <Studentlist />
-                <Studentlist />
-                <Studentlist />
-                <Studentlist />
-                <Studentlist />
-                <Studentlist />
-                <Studentlist />
-              </table>
+              {pendingStudentStatus && pendingStudent.length > 0 ? (
+                <table className="w-full border-separate border-spacing-y-3 ">
+                  <thead
+                    style={{
+                      position: "sticky",
+                      top: 0,
+                      backgroundColor: "#f9f9f9",
+                      zIndex: 1,
+                    }}
+                  >
+                    <tr className="h-[60px] text-[14px] leading-[19.79px] text-[#333333]">
+                      <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
+                        Email
+                      </th>
+                      <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
+                        Full name
+                      </th>
+                      <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
+                        Wallet address
+                      </th>
+                      <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
+                        Admission status
+                      </th>
+                      <th className="text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
+                        Attendance
+                      </th>
+                      <th className="text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
+                        Assignment submission
+                      </th>
+                    </tr>
+                  </thead>
+                  {pendingStudent.map((data: any, index: number) => (
+                    <Studentlist
+                      key={index}
+                      arg={data.registered}
+                      info={data}
+                    />
+                  ))}
+                </table>
+              ) : (
+                <div className="flex h-[400px] w-full justify-center items-center">
+                  <h1 className="text-center text-lg font-semibold">
+                    No pending application
+                  </h1>
+                </div>
+              )}
             </div>
           </div>
         </div>

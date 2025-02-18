@@ -149,7 +149,7 @@ const RegisterLanding = (props: any) => {
         </div>
 
         <div className="h-auto w-full py-4 px-4 lg:px-8 flex flex-col items-start justify-start space-y-8 space-x-0 md:flex-row md:space-x-6 md:space-y-0 md:justify-between md:items-stretch mt-8">
-          <div className="h-auto w-full md:w-[50%] lg:w-[40%] rounded-lg">
+          <div className="h-auto w-full md:w-[50%] lg:w-[40%] rounded-lg border-[1px] border-[#B8B9BA]">
             <Image
               src={Imagesource}
               alt="flier"

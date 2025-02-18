@@ -1027,8 +1027,8 @@ export const attensysOrgAbi = [
         type: "core::integer::u256",
       },
       {
-        name: "registered",
-        type: "core::bool",
+        name: "status",
+        type: "core::integer::u8",
       },
       {
         name: "student_details_uri",
@@ -1319,6 +1319,22 @@ export const attensysOrgAbi = [
   {
     type: "function",
     name: "approve_registration",
+    inputs: [
+      {
+        name: "student_address",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "decline_registration",
     inputs: [
       {
         name: "student_address",
@@ -1906,6 +1922,23 @@ export const attensysOrgAbi = [
   },
   {
     type: "event",
+    name: "attendsys::contracts::AttenSysOrg::AttenSysOrg::RegistrationDeclined",
+    kind: "struct",
+    members: [
+      {
+        name: "student_address",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "data",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+        kind: "data",
+      },
+    ],
+  },
+  {
+    type: "event",
     name: "attendsys::contracts::AttenSysOrg::AttenSysOrg::AttendanceMarked",
     kind: "struct",
     members: [
@@ -2047,6 +2080,11 @@ export const attensysOrgAbi = [
       {
         name: "RegistrationApproved",
         type: "attendsys::contracts::AttenSysOrg::AttenSysOrg::RegistrationApproved",
+        kind: "nested",
+      },
+      {
+        name: "RegistrationDeclined",
+        type: "attendsys::contracts::AttenSysOrg::AttenSysOrg::RegistrationDeclined",
         kind: "nested",
       },
       {
