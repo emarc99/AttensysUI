@@ -62,13 +62,47 @@ const Pendinglist = (props: any) => {
       });
   };
 
+  const handleDecline = async () => {
+    const approve_calldata = organizationContract.populate(
+      "decline_registration",
+      [props?.info?.address_of_student, id],
+    );
+    const callContract = await wallet?.account.execute([
+      {
+        contractAddress: attensysOrgAddress,
+        entrypoint: "decline_registration",
+        calldata: approve_calldata.calldata,
+      },
+    ]);
+    //@ts-ignore
+    wallet?.account?.provider
+      .waitForTransaction(callContract.transaction_hash)
+      .then(() => {})
+      .catch((e: any) => {
+        console.error("Error: ", e);
+      })
+      .finally(() => {
+        //@todo set loading state here
+      });
+  };
+
   const renderButton = (arg: any) => {
     if (arg == "both") {
       return (
         <>
           <div className="flex space-x-3 items-center justify-center">
-            <Image src={ex} alt="cancel" />
-            <Image src={correct} alt="check" onClick={handleApprove} />
+            <Image
+              src={ex}
+              alt="cancel"
+              onClick={handleDecline}
+              className=" cursor-pointer"
+            />
+            <Image
+              src={correct}
+              alt="check"
+              onClick={handleApprove}
+              className=" cursor-pointer"
+            />
           </div>
         </>
       );
@@ -76,7 +110,7 @@ const Pendinglist = (props: any) => {
       return (
         <>
           <div className="flex items-center justify-center">
-            <Image src={correct} alt="check" />
+            <Image src={correct} alt="check" className=" cursor-not-allowed" />
           </div>
         </>
       );
@@ -84,7 +118,7 @@ const Pendinglist = (props: any) => {
       return (
         <>
           <div className="flex items-center justify-center">
-            <Image src={ex} alt="cancel" />
+            <Image src={ex} alt="cancel" className=" cursor-not-allowed" />
           </div>
         </>
       );

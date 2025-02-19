@@ -26,10 +26,23 @@ import { FaPlus } from "react-icons/fa6";
 import cloud from "@/assets/cloud.svg";
 import dividers from "@/assets/Dividers.svg";
 import { RiInformation2Line } from "react-icons/ri";
+import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
+import { attensysOrgAbi } from "@/deployments/abi";
+import { attensysOrgAddress } from "@/deployments/contracts";
+import { BlockNumber, Contract, RpcProvider, Account } from "starknet";
+import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
+import { useSearchParams } from "next/navigation";
+import { pinata } from "../../../utils/config";
 
 export default function Createmeeting(prop: any) {
   const [open, setOpen] = useState(prop.status);
   const [meetingCreation, setMeetingCreation] = useAtom(createMeeting);
+  const [status, setStatus] = useState(false);
+  const [wallet, setWallet] = useAtom(walletStarknetkit);
+  const [link, setLink] = useState("");
+  const searchParams = useSearchParams();
+  const org = searchParams.get("org");
+  const id = searchParams.get("id");
 
   useEffect(() => {
     if (open) {
@@ -39,6 +52,51 @@ export default function Createmeeting(prop: any) {
       });
     }
   }, [open]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLink(event.target.value);
+  };
+
+  const handleUploadActiveMeetLink = async () => {
+    setStatus(true);
+
+    const linkUpload = await pinata.upload.json({
+      meetinglink: link,
+    });
+
+    if (linkUpload) {
+      const organizationContract = new Contract(
+        attensysOrgAbi,
+        attensysOrgAddress,
+        wallet?.account,
+      );
+      const add_active_meet_link_calldata = organizationContract.populate(
+        "add_active_meet_link",
+        //@ts-ignore
+        [linkUpload.IpfsHash, Number(id), true, org],
+      );
+
+      const callContract = await wallet?.account.execute([
+        {
+          contractAddress: attensysOrgAddress,
+          entrypoint: "add_active_meet_link",
+          calldata: add_active_meet_link_calldata.calldata,
+        },
+      ]);
+      //@ts-ignore
+      wallet?.account?.provider
+        .waitForTransaction(callContract.transaction_hash)
+        .then(() => {})
+        .catch((e: any) => {
+          console.error("Error: ", e);
+        })
+        .finally(() => {
+          setOpen(false);
+          setMeetingCreation(false);
+          setStatus(false);
+        });
+    }
+  };
 
   return (
     <Dialog open={open} onClose={setOpen} className="relative z-10">
@@ -79,6 +137,8 @@ export default function Createmeeting(prop: any) {
               <div className="space-y-2 w-[80%] item">
                 <Field>
                   <Input
+                    value={link}
+                    onChange={handleChange}
                     placeholder="paste link here"
                     className={clsx(
                       "h-[55px] border-[2px] border-[#D0D5DD] block w-[100%] rounded-lg bg-white/5 py-1.5 px-3 text-sm/6 text-[#667185]",
@@ -89,14 +149,11 @@ export default function Createmeeting(prop: any) {
               </div>
 
               <div
-                onClick={() => {
-                  setOpen(false);
-                  setMeetingCreation(false);
-                }}
+                onClick={handleUploadActiveMeetLink}
                 className="h-[47px] w-[103px] rounded-xl bg-[#9B51E0] flex items-center justify-center cursor-pointer"
               >
                 <h1 className="text-[#FFFFFF] text-[14px] font-semibold leading-[16px]">
-                  Post link
+                  {status ? "Setting link" : "Post link"}
                 </h1>
               </div>
             </div>

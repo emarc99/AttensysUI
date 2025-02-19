@@ -111,20 +111,32 @@ const Students = () => {
                 </svg>
               )}
             </div>
-            {pendingStudentStatus ? (
-              pendingStudent.map((data: any, index: any) => {
-                return (
-                  <MobileStudentApprovalCard
-                    key={index}
-                    arg={data.registered ? "check" : "both"}
-                    info={data}
-                  />
-                );
-              })
-            ) : (
-              <h1>No pending application</h1>
-            )}
+
+            {pendingStudentStatus && pendingStudent.length > 0 ? (
+              pendingStudent.some((data: any) => Number(data.status) === 0) ? (
+                pendingStudent
+                  .filter((data: any) => Number(data.status) === 0)
+                  .map((data: any, index: number) =>
+                    Number(data.status) === 0 ? (
+                      <MobileStudentApprovalCard
+                        key={index}
+                        arg={
+                          Number(data.status) === 0
+                            ? "both"
+                            : Number(data.status) === 1
+                              ? "check"
+                              : "decline"
+                        }
+                        info={data}
+                      />
+                    ) : null,
+                  )
+              ) : (
+                <h1>No pending application</h1>
+              )
+            ) : null}
           </div>
+
           <div className="hidden lg:block w-[88%] lg:w-[100%]  mx-auto mt-8 bg-[#FFFFFF] border-[1px] border-[#D9D9D9] rounded-xl h-[600px]">
             <div className=" w-[90%] mx-auto px-16 py-4 border-b-[1px] border-[#B8B9BA]">
               <h1 className="text-[18px] leading-[23px] font-semibold  text-[#5801A9] mt-2">
@@ -133,41 +145,55 @@ const Students = () => {
             </div>
             <div style={{ maxHeight: "500px", overflowY: "auto" }}>
               {pendingStudentStatus && pendingStudent.length > 0 ? (
-                <table className="w-[90%] mx-auto border-separate border-spacing-y-3 ">
-                  <thead>
-                    <tr className="h-[60px] text-[14px] leading-[19.79px] text-[#333333]">
-                      <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
-                        Email
-                      </th>
-                      <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
-                        Name
-                      </th>
-                      <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
-                        Registration status
-                      </th>
-                      <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
-                        Registration Date
-                      </th>
-                      <th className="text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
-                        Accept Registration
-                      </th>
-                    </tr>
-                  </thead>
-                  {pendingStudent.map((data: any, index: number) => (
-                    <Pendinglist
-                      key={index}
-                      arg={data.registered ? "check" : "both"}
-                      info={data}
-                    />
-                  ))}
-                </table>
-              ) : (
-                <div className="flex h-[400px] w-full justify-center items-center">
-                  <h1 className="text-center text-lg font-semibold">
-                    No pending application
-                  </h1>
-                </div>
-              )}
+                pendingStudent.some(
+                  (data: any) => Number(data.status) === 0,
+                ) ? (
+                  <table className="w-[90%] mx-auto border-separate border-spacing-y-3 ">
+                    <thead>
+                      <tr className="h-[60px] text-[14px] leading-[19.79px] text-[#333333]">
+                        <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
+                          Email
+                        </th>
+                        <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
+                          Name
+                        </th>
+                        <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
+                          Registration status
+                        </th>
+                        <th className=" text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
+                          Registration Date
+                        </th>
+                        <th className="text-center font-medium border-b-[1px] border-b-[#B8B9BA]">
+                          Accept Registration
+                        </th>
+                      </tr>
+                    </thead>
+                    {pendingStudent
+                      .filter((data: any) => Number(data.status) === 0)
+                      .map((data: any, index: number) =>
+                        Number(data.status) === 0 ? (
+                          <Pendinglist
+                            key={index}
+                            arg={
+                              Number(data.status) === 0
+                                ? "both"
+                                : Number(data.status) === 1
+                                  ? "check"
+                                  : "decline"
+                            }
+                            info={data}
+                          />
+                        ) : null,
+                      )}
+                  </table>
+                ) : (
+                  <div className="flex h-[400px] w-full justify-center items-center">
+                    <h1 className="text-center text-lg font-semibold">
+                      No pending application
+                    </h1>
+                  </div>
+                )
+              ) : null}
             </div>
           </div>
         </div>
@@ -205,10 +231,16 @@ const Students = () => {
                 </svg>
               )}
             </div>
-            <MobileStudentRegisteredCard />
-            <MobileStudentRegisteredCard />
-            <MobileStudentRegisteredCard />
-            <MobileStudentRegisteredCard />
+            {pendingStudent.map(
+              (data: any, index: number) =>
+                (Number(data.status) === 1 || Number(data.status) === 2) && (
+                  <MobileStudentRegisteredCard
+                    key={index}
+                    arg={Number(data.status) === 1 ? "check" : "decline"}
+                    info={data}
+                  />
+                ),
+            )}
           </div>
 
           <div className="hidden lg:block w-[100%] mx-auto mt-8 bg-[#FFFFFF] border-[1px] border-[#D9D9D9] rounded-xl h-[911px]">
@@ -291,13 +323,17 @@ const Students = () => {
                       </th>
                     </tr>
                   </thead>
-                  {pendingStudent.map((data: any, index: number) => (
-                    <Studentlist
-                      key={index}
-                      arg={data.registered}
-                      info={data}
-                    />
-                  ))}
+                  {pendingStudent.map(
+                    (data: any, index: number) =>
+                      (Number(data.status) === 1 ||
+                        Number(data.status) === 2) && (
+                        <Studentlist
+                          key={index}
+                          arg={Number(data.status) === 1 ? "check" : "decline"}
+                          info={data}
+                        />
+                      ),
+                  )}
                 </table>
               ) : (
                 <div className="flex h-[400px] w-full justify-center items-center">

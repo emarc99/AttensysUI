@@ -56,7 +56,7 @@ const Studentlist = (props: any) => {
         <td className="px-4 py-2 text-center border-b-[#B8B9BA] border-b-[1px] text-[14px] font-medium leading-[23px] text-[#9B51E0]">
           {truncateAddress(props?.info?.address_of_student)}
         </td>
-        {props.arg ? (
+        {props.arg === "check" ? (
           <td className="px-4 py-2 text-center border-b-[#B8B9BA] border-b-[1px] font-medium leading-[23px] text-[#115E2C]">
             Approved
           </td>

@@ -135,33 +135,6 @@ const Organizationlanding = (prop: any) => {
         description={description}
       />
       <Organizationtabs bootcampinfo={bootcampDataInfo} />
-      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nulla,
-      voluptatum in? Vero porro quo illo deserunt voluptates ratione natus ad
-      qui cum doloremque, officia officiis libero aperiam, maiores
-      necessitatibus? Modi, architecto at. Porro maxime asperiores
-      exercitationem doloribus quisquam cupiditate, distinctio placeat odit
-      libero optio sit! Iure pariatur eos quibusdam eius cupiditate asperiores
-      explicabo, veniam doloremque magni reiciendis, quam libero consectetur
-      aliquam neque voluptas deleniti quos doloribus, adipisci incidunt earum
-      corrupti totam. In officiis et laborum corrupti excepturi. Quo fugit
-      aperiam cupiditate beatae quia vero repellendus corrupti architecto
-      accusamus minima! Modi doloribus molestiae et error, sit illo beatae
-      blanditiis cupiditate quasi alias minus aut reprehenderit nostrum rem
-      quidem? Cum dignissimos voluptate libero nulla eaque ut. Aliquid enim,
-      saepe facere deleniti aliquam ratione suscipit porro architecto numquam
-      maxime. Recusandae laboriosam numquam nesciunt eum sit dolore repellat
-      optio quae exercitationem ipsa nemo impedit ut autem eos, sunt et est quas
-      quos natus dicta a repudiandae non atque reiciendis. Iusto facere dolorum
-      quidem, facilis corrupti quae eaque recusandae perspiciatis dolorem hic
-      quisquam molestiae, minima voluptate, possimus reiciendis. Eveniet beatae
-      quod eligendi inventore minus? Eius, a! Fugiat officiis assumenda
-      laboriosam molestias possimus iste rem laudantium nostrum ad esse
-      obcaecati fuga id quidem minima sunt doloribus, voluptatem magni dolorum
-      expedita nulla tenetur earum libero! Quam blanditiis doloribus unde
-      dolores? Officia illo, temporibus quam provident natus nam dolor harum
-      corrupti praesentium sunt atque. Minus tempora unde a eaque id quod
-      consequatur consequuntur, cum quos expedita impedit praesentium omnis
-      voluptates dicta natus! Deserunt nesciunt esse velit sunt excepturi.
     </div>
   );
 };

@@ -1,14 +1,15 @@
 "use client";
-import React from "react";
 import {
-  coursestatusAtom,
   bootcampdropdownstatus,
+  connectorAtom,
+  coursestatusAtom,
 } from "@/state/connectedWalletStarknetkitNext";
+import { useState } from "react";
 
 import Bootcampdropdown from "@/components/bootcamp/Bootcampdropdown";
-import { useAtom } from "jotai";
 import Coursedropdown from "@/components/courses/Coursedropdown";
 import Detailslanding from "@/components/eventdetails/Detailslanding";
+import { useAtom } from "jotai";
 import { useParams } from "next/navigation";
 
 const Index = () => {
@@ -18,6 +19,11 @@ const Index = () => {
   );
   const params = useParams();
   const details = params.details;
+  const [connector] = useAtom(connectorAtom);
+
+  const [connectorDataAccount] = useState<null | any>(
+    connector?.wallet.account,
+  );
 
   const handlePageClick = () => {
     setbootcampdropstat(false);
@@ -38,7 +44,10 @@ const Index = () => {
       <div onClick={(e) => e.stopPropagation()}>
         <Bootcampdropdown />
       </div>
-      <Detailslanding name={details} />
+      <Detailslanding
+        connectorDataAccount={connectorDataAccount}
+        name={details}
+      />
     </div>
   );
 };

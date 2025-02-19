@@ -17,7 +17,7 @@ const Lectures = ({ lectures, learningObj }: LectureData) => {
   return (
     <div className="block sm:grid grid-cols-2 gap-4">
       <div className="lg:py-6 sm:py-12  order-last sm:order-first">
-        <h2 className="block sm:hidden">Lectures in this course (2)</h2>
+        <h2 className="block xl:hidden">Lectures in this course (2)</h2>
         {lectures.map((item, id) => (
           <div key={id} className="block sm:flex py-3">
             <Image src={item.img} alt="hero" />
@@ -38,7 +38,7 @@ const Lectures = ({ lectures, learningObj }: LectureData) => {
         ))}
       </div>
 
-      <div className="mt-12">
+      <div className="mt-12 hidden xl:block">
         <div className="  text-[#333333] text-[14px] font-light leading-[22px]">
           <p>{learningObj}</p>
         </div>
