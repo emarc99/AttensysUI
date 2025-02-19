@@ -7,6 +7,7 @@ import Stepper from "@/components/Stepper";
 
 interface ChildComponentProps {
   courseData: any;
+  setCourseData: any;
   handleStudentReqChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleLearningObjChange: (
     event: React.ChangeEvent<HTMLTextAreaElement>,
@@ -18,6 +19,7 @@ interface ChildComponentProps {
 
 const MainFormView2: React.FC<ChildComponentProps> = ({
   courseData,
+  setCourseData,
   handleStudentReqChange,
   handleLearningObjChange,
   handleTADescriptionChange,
@@ -33,11 +35,33 @@ const MainFormView2: React.FC<ChildComponentProps> = ({
 
   const handleAddRequirement = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (requirementInput.trim()) {
-      setRequirements([...requirements, requirementInput.trim()]);
-      setRequirementInput("");
-      setRequirementsError("");
+    // Trim input and check if it's not empty
+    const newRequirement = requirementInput.trim();
+    if (newRequirement === "") {
+      setRequirementsError("Requirement cannot be empty");
+      return;
     }
+
+    // Split current value into items and remove duplicates
+    const currentItems = courseData.studentRequirements
+      .split(",")
+      .map((item) => item.trim())
+      .filter((item) => item); // Remove empty items
+
+    // Add new item if it doesn't already exist
+    if (!currentItems.includes(newRequirement)) {
+      currentItems.push(newRequirement);
+    }
+
+    // Update state with the updated list
+    setCourseData({
+      ...courseData,
+      studentRequirements: currentItems.join(", "),
+    });
+
+    // Clear input field and error
+    setRequirementInput("");
+    setRequirementsError("");
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -77,7 +101,7 @@ const MainFormView2: React.FC<ChildComponentProps> = ({
   return (
     <div className="flex">
       <div className="hidden lg:block">
-        <CourseSideBar courseData />
+        <CourseSideBar courseData={courseData} />
       </div>
 
       <div className="flex-1">
@@ -128,6 +152,12 @@ const MainFormView2: React.FC<ChildComponentProps> = ({
                     className="w-auto sm:w-[70%] h-[55px] py-2 px-6 border border-gray-300 rounded md:rounded-[6px] shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
                     placeholder="e.g A laptop."
                     value={courseData.studentRequirements}
+                    // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    //   handleStudentReqChange(e);
+                    //   setRequirementInput(e.target.value);
+                    //   setRequirementsError("");
+                    // }}
+
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       handleStudentReqChange(e);
                       setRequirementInput(e.target.value);

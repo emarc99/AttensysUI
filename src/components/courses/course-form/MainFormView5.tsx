@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoMdArrowBack } from "@react-icons/all-files/io/IoMdArrowBack";
 import Dropdown from "../Dropdown";
 import video from "@/assets/video.png";
@@ -72,6 +72,8 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
   const [uploading, setUploading] = useState(false);
   const [cidToContract, setCidToContract] = useState<string>("");
   const [cidCourseImage, setcidCourseImage] = useState<string>("");
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+
   const router = useRouter();
   const handleSwitch = (
     event: MouseEvent | React.SyntheticEvent<MouseEvent | KeyboardEvent, Event>,
@@ -144,12 +146,28 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
       })
       .finally(() => {
         //Resets all org data input
-        setCourseData(ResetCourseRegistrationData);
+        // setCourseData(ResetCourseRegistrationData);
 
         // Proceed to next step
         handleCreateCourse(e, "course-landing-page", router);
       });
   };
+
+  console.log(courseData.courseImage);
+
+  useEffect(() => {
+    // Check if file is a valid File object
+    if (courseData.courseImage instanceof File) {
+      // Create a temporary URL for the fetched image
+      const imageUrl = URL.createObjectURL(courseData.courseImage);
+      setImageSrc(imageUrl);
+
+      // Clean up the URL object to free up memory
+      return () => {
+        URL.revokeObjectURL(imageUrl);
+      };
+    }
+  }, [courseData.courseImage]);
 
   return (
     <div className="sm:flex">
@@ -188,11 +206,18 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
             <div className="block sm:grid grid-cols-2 gap-4">
               {/* Course Image */}
               <div className="w-[368px] h-[238px] rounded-xl">
-                <Image
-                  src={video}
-                  alt="hero"
-                  className="h-full w-full object-cover rounded-xl"
-                />
+                {imageSrc ? (
+                  <div className="relative w-[300px] h-[200px] mt-4">
+                    <Image
+                      src={imageSrc as string}
+                      alt="Fetched Image"
+                      layout="fill"
+                      objectFit="cover"
+                    />
+                  </div>
+                ) : (
+                  <p>Loading image...</p>
+                )}
               </div>
 
               {/* Course information */}
@@ -200,19 +225,16 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                 {/* field */}
                 <div className="mb-3 order-first">
                   <p className="text-[#5801A9] text-[16px] font-medium leading-[22px]">
-                    Technology | Web Development
+                    {courseData.courseCategory} | Web Development
                   </p>
                 </div>
 
                 <h4 className="text-[19px] text-[#333333] leading-[34px] font-bold my-2 ">
-                  Introduction to Web Development
+                  {courseData.courseName}
                 </h4>
                 <div className="my-3">
                   <p className="  text-[#333333] text-[14px] font-light leading-[22px]">
-                    {`This course provides a foundational understanding of web
-                development. You'll learn essential skills in HTML and CSS,
-                enabling you to create and style your own web pages. No prior
-                experience is necessary!`}
+                    {courseData.courseDescription}
                   </p>
                 </div>
 
@@ -225,7 +247,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                 <div className="flex space-x-3 items-center">
                   <MdOutlineDiamond color="#333333" />
                   <p className="text-[#333333] text-[14px] font-medium leading-[22px]">
-                    Difficulty level : Elementary
+                    Difficulty level : {courseData.difficultyLevel}
                   </p>
                 </div>
               </div>
@@ -233,7 +255,10 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
 
             <div className="">
               {/* lectures in course */}
-              <Lectures lectures={lectures} />
+              <Lectures
+                lectures={lectures}
+                learningObj={courseData.learningObjectives}
+              />
               {/* course desc & student req */}
 
               <div className="">

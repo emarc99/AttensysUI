@@ -45,6 +45,34 @@ import videoClip from "@/assets/video_clip.svg";
 import certIcon from "@/assets/certificate-outline.svg";
 import rich from "@/assets/Richin2024.svg";
 
+export const courseSetup = [
+  {
+    head: "Course Setup (Basic info)",
+    items: [
+      "Course name",
+      "Course description",
+      "Course category",
+      "Course level",
+    ],
+  },
+  {
+    head: "Learning outcomes",
+    items: ["Student requirements", "Learning objectives", "Target audience"],
+  },
+  {
+    head: "Course & curriculum",
+    items: ["Course creative", "Course Curriculum"],
+  },
+  {
+    head: "Pricing & Discounts",
+    items: ["Course pricing", "Promos and discounts"],
+  },
+  {
+    head: "Review & Publish",
+    items: ["Publish course"],
+  },
+];
+
 export const lectures = [
   {
     img: rich,

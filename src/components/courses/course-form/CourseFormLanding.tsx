@@ -11,7 +11,6 @@ import { courseQuestions } from "@/constants/data";
 import LandingPage from "../LandingPage";
 import {
   courseInitState,
-  lectureData,
   connectorAtom,
 } from "@/state/connectedWalletStarknetkitNext";
 import { useAtom } from "jotai";
@@ -28,7 +27,7 @@ const CourseFormLanding = (prop: any) => {
   );
   const [wallet, setWallet] = useAtom(walletStarknetkit);
 
-  console.log(courseData);
+  // console.log(courseData);
 
   const handleCoursePrimaryGoalChange = (e: string) => {
     setCourseData((prevData) => ({
@@ -110,7 +109,6 @@ const CourseFormLanding = (prop: any) => {
   const handleCourseImageChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    console.log(event.target.files);
     const file = event.target.files?.[0];
     if (
       file &&
@@ -243,6 +241,7 @@ const CourseFormLanding = (prop: any) => {
         <div className="h-auto w-full bg-[#F5F7FA]">
           <MainFormView2
             courseData={courseData}
+            setCourseData={setCourseData}
             handleStudentReqChange={handleStudentReqChange}
             handleLearningObjChange={handleLearningObjChange}
             handleTADescriptionChange={handleTADescriptionChange}
@@ -286,13 +285,7 @@ const CourseFormLanding = (prop: any) => {
     case "course-landing-page":
       return (
         <div className="h-auto w-full bg-[#F5F7FA]">
-          <LandingPage />
-        </div>
-      );
-    case "course-home-landing-page":
-      return (
-        <div className="h-auto w-full bg-[#F5F7FA]">
-          <LandingPage />
+          <LandingPage courseData={courseData} />
         </div>
       );
     default:

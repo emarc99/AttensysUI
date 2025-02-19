@@ -28,8 +28,6 @@ const MainFormView: React.FC<ChildComponentProps> = ({
   handleDifficultyLevelChange,
 }) => {
   const router = useRouter();
-  const [courseName, setCourseName] = useState("");
-  const [courseDescription, setCourseDescription] = useState("");
   const [courseNameError, setCourseNameError] = useState("");
   const [courseDescriptionError, setCourseDescriptionError] = useState("");
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
@@ -132,6 +130,7 @@ const MainFormView: React.FC<ChildComponentProps> = ({
                       handleCourseNameChange(e);
                       setCourseNameError("");
                     }}
+                    maxLength={100}
                   />
                   <input
                     type="checkbox"
@@ -163,6 +162,7 @@ const MainFormView: React.FC<ChildComponentProps> = ({
                       handleCourseDescriptionChange(e);
                       setCourseDescriptionError("");
                     }}
+                    maxLength={500}
                   ></textarea>
                   <input
                     type="checkbox"
