@@ -34,12 +34,12 @@ const Bootcampdropdown = () => {
     const org_info = await orgContract?.get_org_info(
       wallet?.selectedAddress ?? "0x0",
     );
-    console.info(org_info);
+    // console.info(org_info);
 
     if (org_info?.org_name != "") {
       setisRegistered(true);
       setOrgname(org_info.org_name);
-      console.info(org_info.org_name);
+      // console.info(org_info.org_name);
     } else {
       setisRegistered(false);
     }

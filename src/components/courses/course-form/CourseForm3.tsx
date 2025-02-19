@@ -18,7 +18,16 @@ interface FormErrors {
   general: string;
 }
 
-const CourseForm3 = () => {
+interface ChildComponentProps {
+  section: any;
+  handleCoursePlanChange: (e: string) => void;
+}
+
+const CourseForm3 = ({
+  section,
+  handleCoursePlanChange,
+}: ChildComponentProps) => {
+  const [selectedOption, setSelectedOption] = useState<string>("");
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     completePlan: false,
@@ -35,7 +44,12 @@ const CourseForm3 = () => {
     general: "",
   });
 
-  const handleCheckboxChange = (field: keyof FormData): void => {
+  const handleCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    field: keyof FormData,
+  ): void => {
+    setSelectedOption(event.target.value);
+
     setFormData((prev) => ({
       ...prev,
       [field]: !prev[field],
@@ -59,6 +73,8 @@ const CourseForm3 = () => {
     event: React.FormEvent<HTMLFormElement>,
   ): Promise<void> => {
     event.preventDefault();
+
+    handleCoursePlanChange(selectedOption);
 
     setErrors({
       completePlan: "",
@@ -100,9 +116,9 @@ const CourseForm3 = () => {
               className="required:border-red-500 indeterminate:bg-gray-300"
               id="completePlan"
               name="completePlan"
-              value="Bike"
+              value="Yes, I have a complete course plan"
               checked={formData.completePlan}
-              onChange={() => handleCheckboxChange("completePlan")}
+              onChange={(e) => handleCheckboxChange(e, "completePlan")}
             />
             <label
               htmlFor="completePlan"
@@ -119,9 +135,9 @@ const CourseForm3 = () => {
               className="required:border-red-500 indeterminate:bg-gray-300"
               id="roughPlan"
               name="roughPlan"
-              value="Bike"
+              value="I have a rough plan, but it needs work"
               checked={formData.roughPlan}
-              onChange={() => handleCheckboxChange("roughPlan")}
+              onChange={(e) => handleCheckboxChange(e, "roughPlan")}
             />
             <label
               htmlFor="roughPlan"
@@ -138,9 +154,9 @@ const CourseForm3 = () => {
               className="required:border-red-500 indeterminate:bg-gray-300"
               id="clearPlan"
               name="clearPlan"
-              value="Bike"
+              value="I have some ideas but no clear plan yet"
               checked={formData.clearPlan}
-              onChange={() => handleCheckboxChange("clearPlan")}
+              onChange={(e) => handleCheckboxChange(e, "clearPlan")}
             />
             <label
               htmlFor="clearPlan"
@@ -158,9 +174,9 @@ const CourseForm3 = () => {
               className="required:border-red-500 indeterminate:bg-gray-300"
               id="helpOrganizing"
               name="helpOrganizing"
-              value="Bike"
+              value="I need help organizing the course"
               checked={formData.helpOrganizing}
-              onChange={() => handleCheckboxChange("helpOrganizing")}
+              onChange={(e) => handleCheckboxChange(e, "helpOrganizing")}
             />
             <label
               htmlFor="helpOrganizing"

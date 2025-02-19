@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 
 interface CourseFormProps {
   section: string;
+  handleCoursePrimaryGoalChange: (e: string) => void;
 }
 
 interface FormData {
@@ -21,7 +22,11 @@ interface FormErrors {
   general: string;
 }
 
-const CourseForm = ({ section }: CourseFormProps) => {
+const CourseForm = ({
+  section,
+  handleCoursePrimaryGoalChange,
+}: CourseFormProps) => {
+  const [selectedOption, setSelectedOption] = useState<string>("");
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     jobSkills: false,
@@ -38,7 +43,11 @@ const CourseForm = ({ section }: CourseFormProps) => {
     general: "",
   });
 
-  const handleCheckboxChange = (field: keyof FormData): void => {
+  const handleCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    field: keyof FormData,
+  ): void => {
+    setSelectedOption(event.target.value);
     setFormData((prev) => ({
       ...prev,
       [field]: !prev[field],
@@ -62,7 +71,7 @@ const CourseForm = ({ section }: CourseFormProps) => {
     event: React.FormEvent<HTMLFormElement>,
   ): Promise<void> => {
     event.preventDefault();
-
+    handleCoursePrimaryGoalChange(selectedOption);
     setErrors({
       jobSkills: "",
       certificate: "",
@@ -102,7 +111,8 @@ const CourseForm = ({ section }: CourseFormProps) => {
                 type="checkbox"
                 id="jobSkills"
                 checked={formData.jobSkills}
-                onChange={() => handleCheckboxChange("jobSkills")}
+                onChange={(e) => handleCheckboxChange(e, "jobSkills")}
+                value={"Helping people build skills for their job"}
                 className="required:border-red-500 indeterminate:bg-gray-300"
               />
               <label
@@ -120,7 +130,8 @@ const CourseForm = ({ section }: CourseFormProps) => {
                 type="checkbox"
                 id="certificate"
                 checked={formData.certificate}
-                onChange={() => handleCheckboxChange("certificate")}
+                onChange={(e) => handleCheckboxChange(e, "certificate")}
+                value={"Giving a certificate for completing the course"}
                 className="required:border-red-500 indeterminate:bg-gray-300"
               />
               <label
@@ -138,7 +149,8 @@ const CourseForm = ({ section }: CourseFormProps) => {
                 type="checkbox"
                 id="hobby"
                 checked={formData.hobby}
-                onChange={() => handleCheckboxChange("hobby")}
+                onChange={(e) => handleCheckboxChange(e, "hobby")}
+                value={"Sharing knowledge about a hobby or interest"}
                 className="required:border-red-500 indeterminate:bg-gray-300"
               />
               <label
@@ -156,7 +168,8 @@ const CourseForm = ({ section }: CourseFormProps) => {
                 type="checkbox"
                 id="newIdeas"
                 checked={formData.newIdeas}
-                onChange={() => handleCheckboxChange("newIdeas")}
+                onChange={(e) => handleCheckboxChange(e, "newIdeas")}
+                value={"Teaching new ideas or concepts in a field"}
                 className="required:border-red-500 indeterminate:bg-gray-300"
               />
               <label

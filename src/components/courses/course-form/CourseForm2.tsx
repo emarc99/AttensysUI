@@ -18,8 +18,17 @@ interface FormErrors {
   general: string;
 }
 
-const CourseForm2 = () => {
+interface ChildComponentProps {
+  section: any;
+  handleCourseTargetAudienceChange: (e: string) => void;
+}
+
+const CourseForm2 = ({
+  section,
+  handleCourseTargetAudienceChange,
+}: ChildComponentProps) => {
   const router = useRouter();
+  const [selectedOption, setSelectedOption] = useState<string>("");
   const [formData, setFormData] = useState<FormData>({
     beginner: false,
     bitOfKnowledge: false,
@@ -36,7 +45,11 @@ const CourseForm2 = () => {
     general: "",
   });
 
-  const handleCheckboxChange = (field: keyof FormData): void => {
+  const handleCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    field: keyof FormData,
+  ): void => {
+    setSelectedOption(event.target.value);
     setFormData((prev) => ({
       ...prev,
       [field]: !prev[field],
@@ -61,6 +74,7 @@ const CourseForm2 = () => {
   ): Promise<void> => {
     event.preventDefault();
 
+    handleCourseTargetAudienceChange(selectedOption);
     setErrors({
       beginner: "",
       bitOfKnowledge: "",
@@ -102,9 +116,9 @@ const CourseForm2 = () => {
               className="required:border-red-500 indeterminate:bg-gray-300"
               id="beginner"
               name="beginner"
-              value="Bike"
+              value="Beginners with no experience"
               checked={formData.beginner}
-              onChange={() => handleCheckboxChange("beginner")}
+              onChange={(e) => handleCheckboxChange(e, "beginner")}
             />
             <label
               htmlFor="beginner"
@@ -121,9 +135,9 @@ const CourseForm2 = () => {
               className="required:border-red-500 indeterminate:bg-gray-300"
               id="bitOfKnowledge"
               name="bitOfKnowledge"
-              value="Bike"
+              value="People with some basic knowledge"
               checked={formData.bitOfKnowledge}
-              onChange={() => handleCheckboxChange("bitOfKnowledge")}
+              onChange={(e) => handleCheckboxChange(e, "bitOfKnowledge")}
             />
             <label
               htmlFor="bitOfKnowledge"
@@ -140,9 +154,9 @@ const CourseForm2 = () => {
               className="required:border-red-500 indeterminate:bg-gray-300"
               id="intermediate"
               name="intermediate"
-              value="Bike"
+              value="Intermediate learners looking to grow"
               checked={formData.intermediate}
-              onChange={() => handleCheckboxChange("intermediate")}
+              onChange={(e) => handleCheckboxChange(e, "intermediate")}
             />
             <label
               htmlFor="intermediate"
@@ -160,9 +174,9 @@ const CourseForm2 = () => {
               className="required:border-red-500 indeterminate:bg-gray-300"
               id="advanced"
               name="advanced"
-              value="Bike"
+              value="Advanced learners or professionals"
               checked={formData.advanced}
-              onChange={() => handleCheckboxChange("advanced")}
+              onChange={(e) => handleCheckboxChange(e, "advanced")}
             />
             <label
               htmlFor="advanced"
