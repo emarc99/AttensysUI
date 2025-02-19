@@ -45,8 +45,8 @@ const MainFormView2: React.FC<ChildComponentProps> = ({
     // Split current value into items and remove duplicates
     const currentItems = courseData.studentRequirements
       .split(",")
-      .map((item) => item.trim())
-      .filter((item) => item); // Remove empty items
+      .map((item: any) => item.trim())
+      .filter((item: any) => item); // Remove empty items
 
     // Add new item if it doesn't already exist
     if (!currentItems.includes(newRequirement)) {

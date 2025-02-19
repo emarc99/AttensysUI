@@ -281,7 +281,10 @@ const LandingPage: React.FC<ChildComponentProps> = ({ courseData }) => {
       </div>
 
       <div className="px-6 lg:mx-48 sm:mt-4 xl:mt-32 mb-10">
-        <Lectures lectures={lectures} />
+        <Lectures
+          lectures={lectures}
+          learningObj={courseData.learningObjectives}
+        />
       </div>
 
       {/* rating */}
