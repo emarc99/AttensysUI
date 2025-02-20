@@ -7,15 +7,24 @@ import { courseQuestions } from "@/constants/data";
 import { useRouter } from "next/navigation";
 
 const Coursedropdown = () => {
-  const [status] = useAtom(coursestatusAtom);
+  const [status, setcourseStatus] = useAtom(coursestatusAtom);
   const router = useRouter();
+
+  const handleNavigation = (path: string) => {
+    setcourseStatus(false);
+    router.push(path);
+  };
+
   return (
     <>
       {status && (
         <div className=" bg-[#FFFFFF] h-[157px] w-[100%] absolute z-50 shadow-2xl">
           <div className="flex justify-between mx-auto w-[80%] h-[90%] items-center">
             <div className="space-y-4 w-[337px] text-[16px] font-bold">
-              <a href="/Course" className=" cursor-pointer">
+              <a
+                onClick={() => handleNavigation("/Course")}
+                className=" cursor-pointer"
+              >
                 <div className="flex space-x-3  my-3">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +48,9 @@ const Coursedropdown = () => {
               </a>
               <a
                 //@todo replace sample profile with user profile id
-                href={`/mycoursepage/${"sample-profile"}`}
+                onClick={() =>
+                  handleNavigation(`/mycoursepage/${"sample-profile"}`)
+                }
                 className=" cursor-pointer"
               >
                 <div className="flex space-x-3">
@@ -63,7 +74,9 @@ const Coursedropdown = () => {
             <div className="w-[1px] h-[80%] bg-[#B8B9BA]"></div>
             <div className="space-y-2 w-[337px]">
               <a
-                href={`/Certifications/${"sample-profile"}`}
+                onClick={() =>
+                  handleNavigation(`/Certifications/${"sample-profile"}`)
+                }
                 className="cursor-pointer"
               >
                 <div className="flex space-x-3">
@@ -92,7 +105,13 @@ const Coursedropdown = () => {
             <div className="w-[1px] h-[80%] bg-[#B8B9BA]"></div>
 
             <div className="space-y-2 w-[350px]">
-              <a href={`/Course/CreateACourse/${courseQuestions[0]}`}>
+              <a
+                onClick={() =>
+                  handleNavigation(
+                    `/Course/CreateACourse/${courseQuestions[0]}`,
+                  )
+                }
+              >
                 <div className="flex space-x-3">
                   <VscNewFile className="size-6 text-[#9747FF] w-[20px] h-[20px] my-auto" />
 

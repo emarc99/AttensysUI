@@ -85,9 +85,18 @@ const Header = () => {
     handleSubmit(e, searchValue, router);
   };
 
+  const handleDropdownClose = () => {
+    if (coursestatus) {
+      setcourseStatus(false);
+    } else if (bootcampdropstat) {
+      setbootcampdropstat(false);
+    }
+  };
+
   const handleTabClick = (arg: string) => {
     if (arg == "Courses") {
       setcourseStatus(!coursestatus);
+      setbootcampdropstat(false);
     } else if (arg == "Events") {
       setcourseStatus(false);
       setbootcampdropstat(false);
@@ -95,6 +104,7 @@ const Header = () => {
     } else if (arg == "Bootcamps") {
       // e.stopPropagation();
       setbootcampdropstat(!bootcampdropstat);
+      setcourseStatus(false);
     }
   };
   const [isCoursesOpen, setIsCoursesOpen] = useState(false);
@@ -107,6 +117,7 @@ const Header = () => {
     pt-1 relative z-20 overflow-hidden 
     w-[98%] mx-auto 
      lclg:w-[100%] clg:w-[98%] xlg:w-[100%]`}
+        onClick={() => handleDropdownClose()}
       >
         <div className="lg:flex hidden sm:hidden justify-center items-center sm:px-6 lg:px-8 lg:h-[85px] lg:my-auto clg:w-[100%] w-full sm1275:hidden">
           <div className="relative flex h-20 items-center justify-between w-[98%]">
@@ -169,7 +180,7 @@ const Header = () => {
                           : "text-[#333333] hover:bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] hover:text-white",
                         "rounded-md px-3 py-2 font-medium cursor-pointer",
                       )}
-                      onClick={(e) => handleTabClick(item.name)}
+                      onClick={() => handleTabClick(item.name)}
                     >
                       {item.name}{" "}
                       {index !== 1 && (

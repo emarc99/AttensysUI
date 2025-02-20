@@ -20,15 +20,18 @@ import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
 const orgContract = new Contract(attensysOrgAbi, attensysOrgAddress, provider);
 
 const Bootcampdropdown = () => {
-  const [bootcampdropstat] = useAtom(bootcampdropdownstatus);
+  const [bootcampdropstat, setbootcampdropstat] = useAtom(
+    bootcampdropdownstatus,
+  );
   const [wallet, setWallet] = useAtom(walletStarknetkit);
   const [isreg, setisRegistered] = useAtom(isRegisteredatom);
   const [orgname, setOrgname] = useAtom(orgnameatom);
   const router = useRouter();
 
-  // const handleBootcampExplore = () => {
-  //   router.push('')
-  // }
+  const handleNavigation = (path: string) => {
+    setbootcampdropstat(false);
+    router.push(path);
+  };
 
   const getOrgInfo = async () => {
     const org_info = await orgContract?.get_org_info(
@@ -59,7 +62,10 @@ const Bootcampdropdown = () => {
         <div className=" bg-[#FFFFFF] h-[157px] w-[100%] absolute z-50 shadow-2xl">
           <div className="flex justify-between mx-auto w-[80%] h-[90%] items-center">
             <div className="space-y-4 w-[337px] text-[16px]">
-              <a href="/Bootcamps" className="cursor-pointer ">
+              <a
+                onClick={() => handleNavigation("/Bootcamps")}
+                className="cursor-pointer"
+              >
                 <div className="flex my-3 space-x-3">
                   <Image src={bootsearch} alt="search" />
 
@@ -75,7 +81,10 @@ const Bootcampdropdown = () => {
             </div>
             <div className="space-y-2 w-[337px]">
               {isreg ? (
-                <a href={`/Organization/${orgname}`} className="cursor-pointer">
+                <a
+                  onClick={() => handleNavigation(`/Organization/${orgname}`)}
+                  className="cursor-pointer"
+                >
                   <div className="flex space-x-3">
                     <Image src={bootcreate} alt="search" />
                     <h1 className="text-[16px] font-bold cursor-pointer">
@@ -89,7 +98,10 @@ const Bootcampdropdown = () => {
                   </p>
                 </a>
               ) : (
-                <a href="/Createorganization" className="cursor-pointer">
+                <a
+                  onClick={() => handleNavigation("/Createorganization")}
+                  className="cursor-pointer"
+                >
                   <div className="flex space-x-3">
                     <Image src={bootcreate} alt="search" />
                     <h1 className="text-[16px] font-bold cursor-pointer">
@@ -106,7 +118,10 @@ const Bootcampdropdown = () => {
             </div>
 
             <div className="space-y-2 w-[350px]">
-              <a href="/Mybootcamps" className="cursor-pointer">
+              <a
+                onClick={() => handleNavigation("/Mybootcamps")}
+                className="cursor-pointer"
+              >
                 <div className="flex space-x-3">
                   <Image src={people} alt="people" />
                   <h1 className="text-[16px] font-bold cursor-pointer">
