@@ -1,22 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { coursestatusAtom } from "@/state/connectedWalletStarknetkitNext";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { VscNewFile } from "react-icons/vsc";
-import { handleMyCourse } from "@/utils/helpers";
 import { courseQuestions } from "@/constants/data";
 import { useRouter } from "next/navigation";
 
 const Coursedropdown = () => {
   const [status] = useAtom(coursestatusAtom);
   const router = useRouter();
+  const [visible, setVisible] = useState(false);
+
+  // animation controlled here
+  useEffect(() => {
+    if (status) {
+      setVisible(true);
+    } else {
+      setVisible(false);
+    }
+  }, [status]);
+
   return (
     <>
       {status && (
-        <div className=" bg-[#FFFFFF] h-[157px] w-[100%] absolute z-50 shadow-2xl">
+        <div
+          className={`bg-[#FFFFFF] h-[157px] w-[100%] absolute z-50 shadow-2xl transition-all duration-700 ease-out ${
+            visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
           <div className="flex justify-between mx-auto w-[80%] h-[90%] items-center">
             <div className="space-y-4 w-[337px] text-[16px] font-bold">
-              <a href="/Course" className=" cursor-pointer">
-                <div className="flex space-x-3  my-3">
+              <a href="/Course" className="cursor-pointer">
+                <div className="flex space-x-3 my-3">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -40,7 +54,7 @@ const Coursedropdown = () => {
               <a
                 //@todo replace sample profile with user profile id
                 href={`/mycoursepage/${"sample-profile"}`}
-                className=" cursor-pointer"
+                className="cursor-pointer"
               >
                 <div className="flex space-x-3">
                   <svg
