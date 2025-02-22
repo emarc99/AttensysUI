@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   bootcampdropdownstatus,
   isRegisteredatom,
@@ -26,6 +26,7 @@ const Bootcampdropdown = () => {
   const [wallet, setWallet] = useAtom(walletStarknetkit);
   const [isreg, setisRegistered] = useAtom(isRegisteredatom);
   const [orgname, setOrgname] = useAtom(orgnameatom);
+  const [visible, setVisible] = useState(false);
   const router = useRouter();
 
   const handleNavigation = (path: string) => {
@@ -56,10 +57,23 @@ const Bootcampdropdown = () => {
     fetchOrgInfo();
   }, [wallet]);
 
+  // animation controlled here
+  useEffect(() => {
+    if (bootcampdropstat) {
+      setVisible(true);
+    } else {
+      setVisible(false);
+    }
+  }, [bootcampdropstat]);
+
   return (
     <>
       {bootcampdropstat && (
-        <div className=" bg-[#FFFFFF] h-[157px] w-[100%] absolute z-50 shadow-2xl">
+        <div
+          className={`bg-[#FFFFFF] h-[157px] w-[100%] absolute z-50 shadow-2xl transition-all duration-700 ease-out ${
+            visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
           <div className="flex justify-between mx-auto w-[80%] h-[90%] items-center">
             <div className="space-y-4 w-[337px] text-[16px]">
               <a

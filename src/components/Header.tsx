@@ -95,12 +95,12 @@ const Header = () => {
   };
 
   const handleTabClick = (arg: string) => {
+    setcourseStatus(false);
+    setbootcampdropstat(false);
     if (arg == "Courses") {
       setcourseStatus(!coursestatus);
       setbootcampdropstat(false);
     } else if (arg == "Events") {
-      setcourseStatus(false);
-      setbootcampdropstat(false);
       router.push("/Events/events");
     } else if (arg == "Bootcamps") {
       // e.stopPropagation();
