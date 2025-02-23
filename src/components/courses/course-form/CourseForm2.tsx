@@ -2,26 +2,17 @@ import React, { useState } from "react";
 import Previous from "./previous";
 import { useRouter } from "next/navigation";
 
-interface FormData {
-  beginner: boolean;
-  bitOfKnowledge: boolean;
-  intermediate: boolean;
-  advanced: boolean;
-  general: boolean;
-}
-
-interface FormErrors {
-  beginner: string;
-  bitOfKnowledge: string;
-  intermediate: string;
-  advanced: string;
-  general: string;
-}
-
 interface ChildComponentProps {
   section: any;
   handleCourseTargetAudienceChange: (e: string) => void;
 }
+
+const options = [
+  { id: "beginner", label: "Beginners with no experience" },
+  { id: "bitOfKnowledge", label: "People with some basic knowledge" },
+  { id: "intermediate", label: "Intermediate learners looking to grow" },
+  { id: "advanced", label: "Advanced learners or professionals" },
+];
 
 const CourseForm2 = ({
   section,
@@ -29,70 +20,22 @@ const CourseForm2 = ({
 }: ChildComponentProps) => {
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState<string>("");
-  const [formData, setFormData] = useState<FormData>({
-    beginner: false,
-    bitOfKnowledge: false,
-    intermediate: false,
-    advanced: false,
-    general: false,
-  });
+  const [error, setError] = useState<string>("");
 
-  const [errors, setErrors] = useState<FormErrors>({
-    beginner: "",
-    bitOfKnowledge: "",
-    intermediate: "",
-    advanced: "",
-    general: "",
-  });
-
-  const handleCheckboxChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    field: keyof FormData,
-  ): void => {
+  const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedOption(event.target.value);
-    setFormData((prev) => ({
-      ...prev,
-      [field]: !prev[field],
-    }));
-
-    if (errors[field]) {
-      setErrors((prev) => ({
-        ...prev,
-        [field]: "",
-      }));
-    }
-    if (errors.general) {
-      setErrors((prev) => ({
-        ...prev,
-        general: "",
-      }));
-    }
+    setError("");
   };
 
-  const handleSubmit = async (
-    event: React.FormEvent<HTMLFormElement>,
-  ): Promise<void> => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    handleCourseTargetAudienceChange(selectedOption);
-    setErrors({
-      beginner: "",
-      bitOfKnowledge: "",
-      intermediate: "",
-      advanced: "",
-      general: "",
-    });
-
-    const isAnyChecked = Object.values(formData).some((value) => value);
-
-    if (!isAnyChecked) {
-      setErrors((prev) => ({
-        ...prev,
-        general: "Please select at least one goal for your course",
-      }));
+    if (!selectedOption) {
+      setError("Please select an option before proceeding.");
       return;
     }
 
+    handleCourseTargetAudienceChange(selectedOption);
     router.push("/Course/CreateACourse/create-a-course-2");
   };
 
@@ -107,93 +50,32 @@ const CourseForm2 = ({
         </h1>
       </div>
       <form onSubmit={handleSubmit} noValidate>
-        <div className=" bg-white px-5 md:px-12 py-9 md:py-16 rounded-2xl flex flex-col gap-5 md:gap-6 justify-center w-full max-w-[524px] mx-auto">
-          <div className="flex">
-            <input
-              type="checkbox"
-              min="2"
-              max="5"
-              className="required:border-red-500 indeterminate:bg-gray-300"
-              id="beginner"
-              name="beginner"
-              value="Beginners with no experience"
-              checked={formData.beginner}
-              onChange={(e) => handleCheckboxChange(e, "beginner")}
-            />
-            <label
-              htmlFor="beginner"
-              className="block my-2 md:my-3 ml-3  text-[#333333] text-xs md:text-[18px] font-medium md:leading-[22px]"
-            >
-              Beginners with no experience
-            </label>
-          </div>
-          <div className="flex">
-            <input
-              type="checkbox"
-              min="2"
-              max="5"
-              className="required:border-red-500 indeterminate:bg-gray-300"
-              id="bitOfKnowledge"
-              name="bitOfKnowledge"
-              value="People with some basic knowledge"
-              checked={formData.bitOfKnowledge}
-              onChange={(e) => handleCheckboxChange(e, "bitOfKnowledge")}
-            />
-            <label
-              htmlFor="bitOfKnowledge"
-              className="block my-2 md:my-3 ml-3  text-[#333333] text-xs md:text-[18px] font-medium md:leading-[22px]"
-            >
-              People with some basic knowledge
-            </label>
-          </div>
-          <div className="flex">
-            <input
-              type="checkbox"
-              min="2"
-              max="5"
-              className="required:border-red-500 indeterminate:bg-gray-300"
-              id="intermediate"
-              name="intermediate"
-              value="Intermediate learners looking to grow"
-              checked={formData.intermediate}
-              onChange={(e) => handleCheckboxChange(e, "intermediate")}
-            />
-            <label
-              htmlFor="intermediate"
-              className="block my-2 md:my-3 ml-3  text-[#333333] text-xs md:text-[18px] font-medium md:leading-[22px]"
-            >
-              Intermediate learners looking to grow
-            </label>
-          </div>
-
-          <div className="flex">
-            <input
-              type="checkbox"
-              min="2"
-              max="5"
-              className="required:border-red-500 indeterminate:bg-gray-300"
-              id="advanced"
-              name="advanced"
-              value="Advanced learners or professionals"
-              checked={formData.advanced}
-              onChange={(e) => handleCheckboxChange(e, "advanced")}
-            />
-            <label
-              htmlFor="advanced"
-              className="block my-2 md:my-3 ml-3  text-[#333333] text-xs md:text-[18px] font-medium md:leading-[22px]"
-            >
-              Advanced learners or professionals
-            </label>
-          </div>
-          {errors.general && (
-            <p className="text-red-500 text-sm mt-2">{errors.general}</p>
-          )}
+        <div className="bg-white px-5 md:px-12 py-9 md:py-16 rounded-2xl flex flex-col gap-5 md:gap-6 justify-center w-full max-w-[524px] mx-auto">
+          {options.map((option) => (
+            <div key={option.id} className="flex">
+              <input
+                type="radio"
+                id={option.id}
+                name="targetAudience"
+                value={option.label}
+                checked={selectedOption === option.label}
+                onChange={handleOptionChange}
+              />
+              <label
+                htmlFor={option.id}
+                className="block my-2 md:my-3 ml-3 text-[#333333] text-xs md:text-[18px] font-medium md:leading-[22px]"
+              >
+                {option.label}
+              </label>
+            </div>
+          ))}
+          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         </div>
 
         <div className="text-center">
           <button
             type="submit"
-            className=" w-full max-w-[350px] rounded-xl  bg-[#4A90E2] py-3 mt-12 mb-44 text-white"
+            className="w-full max-w-[350px] rounded-xl bg-[#4A90E2] py-3 mt-12 mb-44 text-white"
           >
             Next
           </button>
