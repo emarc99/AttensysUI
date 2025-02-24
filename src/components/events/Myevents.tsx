@@ -682,6 +682,7 @@ const Myevents = (props: any) => {
               <div className="h-[508px] overflow-y-auto ">
                 {events.map((dataitem, index) => (
                   <Link
+                    key={index}
                     href={`/Overview/${dataitem.event_name ?? "sample_event"}/insight`}
                   >
                     <Eventcard
