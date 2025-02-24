@@ -29,7 +29,7 @@ const Insight = (props: any) => {
 
   const handleStartAndEndRegistration = async ({
     start,
-    eventId = 2,
+    eventId = 2, //hardcoded event_identifier value of 2
   }: {
     start: boolean;
     eventId?: number;
@@ -38,14 +38,14 @@ const Insight = (props: any) => {
       alert("Please make sure you are connected to a wallet");
       return;
     }
-    console.log({ address: connectorDataAccount.address });
+
     // setLoading(true);
     const eventContract = new Contract(
       attensysEventAbi,
       attensysEventAddress,
       connectorDataAccount,
     );
-    //This is calling the start_end_reg function from the contract using an hardcoded event_identifier value of 1
+    //This is calling the start_end_reg function from the contract using an hardcoded event_identifier value of 2 as set in the function parameters above
     const startEndRegistrationCall = eventContract.populate("start_end_reg", [
       start,
       eventId,
