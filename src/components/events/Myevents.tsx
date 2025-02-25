@@ -709,8 +709,8 @@ const Myevents = (props: any) => {
   };
 
   useEffect(() => {
-    setexistingeventStat(true);
-    getEvents();
+    setexistingeventStat(false);
+    // getEvents();
   }, []);
 
   useEffect(() => {
