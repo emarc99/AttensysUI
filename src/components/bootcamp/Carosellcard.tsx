@@ -7,6 +7,7 @@ import { useAtom } from "jotai";
 import { pinata } from "../../../utils/config";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { GetCIDResponse } from "pinata";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 // interface CarousellCardProp {
 //   name: string
@@ -24,18 +25,25 @@ const Carosellcard = (props: any) => {
   const [logoImagesource, setLogoImage] = useState<string | StaticImport>("");
   const [NFTImagesource, setNFTLogoImage] = useState<string | StaticImport>("");
   const [date, setDate] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isNavigating, setIsNavigating] = useState(false);
 
-  const handleActionClick = (arg: any) => {
-    if (arg == "Register") {
-      router.push(
-        `/Register/${props.name}/?id=${Number(props.alldata.bootcamp_id)}&org=${props.alldata.address_of_org}`,
-      );
-    } else if (arg == "Finished") {
-      router.push(
-        `/Register/${props.name}/?id=${Number(props.alldata.bootcamp_id)}&org=${props.alldata.address_of_org}`,
-      );
-    } else if (arg == "Manage") {
-      router.push(`/Mybootcamps/${props.name}`);
+  const handleActionClick = async (arg: any) => {
+    setIsNavigating(true);
+    try {
+      if (arg == "Register") {
+        await router.push(
+          `/Register/${props.name}/?id=${Number(props.alldata.bootcamp_id)}&org=${props.alldata.address_of_org}`,
+        );
+      } else if (arg == "Finished") {
+        await router.push(
+          `/Register/${props.name}/?id=${Number(props.alldata.bootcamp_id)}&org=${props.alldata.address_of_org}`,
+        );
+      } else if (arg == "Manage") {
+        await router.push(`/Mybootcamps/${props.name}`);
+      }
+    } finally {
+      setIsNavigating(false);
     }
   };
 
@@ -70,8 +78,27 @@ const Carosellcard = (props: any) => {
   };
 
   useEffect(() => {
-    obtainCIDdata(props.uri);
-  }, [wallet]);
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        await obtainCIDdata(props.uri);
+      } catch (error) {
+        console.error("Error loading bootcamp data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [wallet, props.uri]);
+
+  if (isLoading) {
+    return (
+      <div className="relative rounded-2xl mx-auto overflow-hidden flex items-center justify-center min-h-[300px] bg-white">
+        <LoadingSpinner size="md" colorVariant="primary" />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -89,9 +116,14 @@ const Carosellcard = (props: any) => {
       {/* Action Button */}
       <Button
         onClick={() => handleActionClick(props.action)}
-        className="hidden absolute top-3 right-6 justify-center lg:flex rounded-lg bg-[#9B51E0] text-[#FFFCFC] py-2 px-4 lg:h-[50px] items-center lg:w-[90px] text-sm data-[hover]:bg-sky-500 data-[active]:bg-sky-700"
+        disabled={isNavigating}
+        className="hidden absolute top-3 right-6 justify-center lg:flex rounded-lg bg-[#9B51E0] text-[#FFFCFC] py-2 px-4 lg:h-[50px] items-center lg:w-[90px] text-sm"
       >
-        <div>{props.action}</div>
+        {isNavigating ? (
+          <LoadingSpinner variant="button" size="sm" />
+        ) : (
+          <div>{props.action}</div>
+        )}
       </Button>
 
       {/* Bottom Section with Gradient */}
