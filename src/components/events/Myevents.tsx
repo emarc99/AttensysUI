@@ -180,6 +180,7 @@ const Myevents = (props: any) => {
         startdateandtime,
         enddateandtime,
         true,
+        Dataupload.IpfsHash,
       ]);
 
       const result = await eventContract.create_event(createEventCall.calldata);
