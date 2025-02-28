@@ -557,13 +557,13 @@ const Create = (props: any) => {
                 Bootcamp Time
               </h1>
               <div className="flex flex-col items-start lg:flex-row gap-x-3 gap-y-4">
-                <div className="flex flex-col items-center lg:flex-row gap-y-2 gap-x-3">
+                <div className="flex flex-col items-center lg:flex-col gap-y-2 gap-x-3">
                   {bootcampTimes.map((component, index) => (
                     <BootcampTime key={index} day={index + 1} />
                   ))}
                 </div>
 
-                <div className="flex">
+                <div className="flex ">
                   <div
                     id="add-day"
                     onClick={handleAddDay}
