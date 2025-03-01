@@ -459,7 +459,7 @@ export default function UploadModal(prop: any) {
               <div
                 onClick={!isSaving ? handleSave : undefined}
                 className={`h-[47px] w-[342px] rounded-xl flex items-center justify-center cursor-pointer ${
-                  isSaving ? "bg-gray-400" : "bg-[#9B51E0]"
+                  isSaving ? "bg-[#822DBF]" : "bg-[#9B51E0]"
                 }`}
               >
                 {isSaving ? (
