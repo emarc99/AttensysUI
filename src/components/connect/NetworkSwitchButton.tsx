@@ -2,58 +2,62 @@ import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
 import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
 import { useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { connect } from "starknetkit";
 import { Button } from "@headlessui/react";
 import World from "@/assets/Vector.svg";
 import { useWallet } from "@/hooks/useWallet";
 import { DEFAULT_NETWORK } from "@/config";
 
-type ConnectButtonProps = {
+type NetworkSwitchButtonProps = {
+  isCorrectNetwork: boolean | null;
   setIsCorrectNetwork: Dispatch<SetStateAction<boolean | null>>;
+  connectedWallet: any;
 };
 
-const ConnectButton = ({ setIsCorrectNetwork }: ConnectButtonProps) => {
+const NetworkSwitchButton = ({
+  isCorrectNetwork,
+  setIsCorrectNetwork,
+  connectedWallet,
+}: NetworkSwitchButtonProps) => {
   const setWallet = useSetAtom(walletStarknetkit);
   const navigate = useRouter();
-  const { connectWallet, isConnecting } = useWallet();
+  const [isLoading, setIsLoading] = useState(false);
+  // const { isConnecting } = useWallet();
 
-  const handleConnectWallet = async () => {
-    const res = await connectWallet();
-    // @ts-expect-error not recognizing wallet for some reason
-    const { connectedWallet } = res;
-    setIsCorrectNetwork(connectedWallet?.chainId === DEFAULT_NETWORK);
-  };
-
-  /*   const connectFn = async () => {
+  const handleNetworkSwitch = async () => {
+    if (!connectedWallet) return;
     try {
-      const { wallet } = await connect({
-        provider,
-        modalMode: "alwaysAsk",
-        webWalletUrl: ARGENT_WEBWALLET_URL,
-        argentMobileOptions: {
-          dappName: "Attensys",
-          url: window.location.hostname,
-          chainId: CHAIN_ID,
-          icons: [],
+      setIsLoading(true);
+      await connectedWallet?.request({
+        type: "wallet_switchStarknetChain",
+        params: {
+          chainId: DEFAULT_NETWORK,
         },
       });
-
-      setWallet(wallet);
-    } catch (e) {
-      console.error(e);
-      alert((e as any).message);
+      setIsCorrectNetwork(true);
+    } catch (err) {
+      console.error("Error switching Network: ", err);
+    } finally {
+      setIsLoading(false);
     }
-  }; */
+  };
+
+  useEffect(() => {
+    if (connectedWallet) {
+      const currentNetwork = connectedWallet.chainId === DEFAULT_NETWORK;
+      setIsCorrectNetwork(currentNetwork);
+    }
+  }, [connectedWallet, setIsCorrectNetwork]);
 
   return (
     <div>
       <Button
         onClick={() => {
-          handleConnectWallet();
+          handleNetworkSwitch();
         }}
-        disabled={isConnecting}
-        className="flex rounded-md xl:rounded-lg bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] py-2 px-2 xl:px-3 data-[hover]:bg-sky-500 data-[active]:bg-sky-700"
+        // disabled={isConnecting}
+        className="flex rounded-md xl:rounded-lg bg-red-400 py-2 px-2 xl:px-3 data-[hover]:bg-sky-500 data-[active]:bg-sky-700"
       >
         <div className="flex items-center space-x-2 text-white">
           <svg
@@ -71,10 +75,10 @@ const ConnectButton = ({ setIsCorrectNetwork }: ConnectButtonProps) => {
             />
           </svg>
           <div className="flex flex-row flex-none space-x-1 text-sm font-semibold md:text-md">
-            <span className="flex">
-              {isConnecting ? "Connecting" : "Connect"}
+            <span className="flex">{isLoading ? "Switching..." : "Wrong"}</span>
+            <span className="flex lg:hidden xl:flex">
+              {isLoading ? "" : " Network"}
             </span>
-            <span className="flex lg:hidden xl:flex">Wallet</span>
           </div>
         </div>
       </Button>
@@ -82,4 +86,4 @@ const ConnectButton = ({ setIsCorrectNetwork }: ConnectButtonProps) => {
   );
 };
 
-export { ConnectButton };
+export { NetworkSwitchButton };
