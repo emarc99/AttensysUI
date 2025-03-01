@@ -156,7 +156,7 @@ export const orgowneraddress = atom(null);
 
 export const isRegisteredatom = atom(false);
 export const orgnameatom = atom("none");
-
+export const mybootcampDescription = atom("");
 export const useWalletAccountChange = () => {
   const wallet = useAtomValue(walletStarknetkitNextAtom);
   const setConnectorData = useSetAtom(connectorDataAtom);
