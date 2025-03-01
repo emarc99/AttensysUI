@@ -25,6 +25,7 @@ import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
 import Link from "next/link";
 import { useEvents } from "@/hooks/useEvents";
 import { decimalToHexAddress, FormatDateFromUnix } from "@/utils/formatAddress";
+import LoadingSpinner from "../ui/LoadingSpinner";
 
 const Myevents = (props: any) => {
   const { connectorDataAccount } = props;
@@ -565,19 +566,48 @@ const Myevents = (props: any) => {
                   )}
                 </div>
                 <Button
-                  onClick={handleCreateEventButton}
-                  className="rounded-lg bg-[#4A90E2] py-2 px-4 lg:h-[50px] items-center lg:w-[422px] text-sm text-white data-[hover]:bg-sky-500 data-[active]:bg-sky-700 justify-center hidden md:flex"
+                  onClick={!isSubmitting ? handleCreateEventButton : undefined}
+                  disabled={isSubmitting}
+                  className={`rounded-lg py-2 px-4 lg:h-[50px] items-center lg:w-[422px] text-sm text-white data-[hover]:bg-sky-500 data-[active]:bg-sky-700 justify-center hidden md:flex ${
+                    isSubmitting
+                      ? "bg-[#357ABD] cursor-not-allowed"
+                      : "bg-[#4A90E2]"
+                  }`}
                 >
-                  Create an Event
+                  {isSubmitting ? (
+                    <>
+                      <LoadingSpinner
+                        size="sm"
+                        colorVariant="white"
+                        text="Creating Event"
+                      />
+                    </>
+                  ) : (
+                    "Create an Event"
+                  )}
                 </Button>
               </div>
+
               <Button
-                onClick={handleCreateEventButton}
+                onClick={!isSubmitting ? handleCreateEventButton : undefined}
                 disabled={isSubmitting}
-                className="flex rounded-lg bg-[#4A90E2] py-2 px-4 lg:h-[50px] items-center lg:w-[422px] text-sm text-white data-[hover]:bg-sky-500 data-[active]:bg-sky-700 justify-center md:hidden w-[90%] mt-10 mx-auto"
+                className={`flex rounded-lg py-2 px-4 lg:h-[50px] items-center lg:w-[422px] text-sm text-white data-[hover]:bg-sky-500 data-[active]:bg-sky-700 justify-center md:hidden w-[90%] mt-10 mx-auto ${
+                  isSubmitting
+                    ? "bg-[#357ABD] cursor-not-allowed"
+                    : "bg-[#4A90E2]"
+                }`}
               >
-                {isSubmitting ? "Creating Event..." : "Create an Event"}
-                Create an Event
+                {isSubmitting ? (
+                  <>
+                    <LoadingSpinner
+                      size="sm"
+                      colorVariant="white"
+                      text="Creating Event"
+                    />
+                  </>
+                ) : (
+                  "Create an Event"
+                )}
               </Button>
             </div>
           </>

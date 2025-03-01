@@ -9,7 +9,6 @@ const Coursedropdown = () => {
   const [status, setcourseStatus] = useAtom(coursestatusAtom);
   const router = useRouter();
 
-
   const handleNavigation = (path: string) => {
     setcourseStatus(false);
     router.push(path);
@@ -26,7 +25,6 @@ const Coursedropdown = () => {
     }
   }, [status]);
 
-
   return (
     <>
       {status && (
@@ -37,7 +35,6 @@ const Coursedropdown = () => {
         >
           <div className="flex justify-between mx-auto w-[80%] h-[90%] items-center">
             <div className="space-y-4 w-[337px] text-[16px] font-bold">
-
               <a
                 onClick={() => handleNavigation("/Course")}
                 className=" cursor-pointer"
@@ -69,7 +66,6 @@ const Coursedropdown = () => {
                   handleNavigation(`/mycoursepage/${"sample-profile"}`)
                 }
                 className=" cursor-pointer"
-
               >
                 <div className="flex space-x-3">
                   <svg

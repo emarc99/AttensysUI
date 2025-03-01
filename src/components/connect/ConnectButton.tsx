@@ -7,6 +7,7 @@ import { connect } from "starknetkit";
 import { Button } from "@headlessui/react";
 import World from "@/assets/Vector.svg";
 import { useWallet } from "@/hooks/useWallet";
+import LoadingSpinner from "../ui/LoadingSpinner";
 import { DEFAULT_NETWORK } from "@/config";
 
 type ConnectButtonProps = {
@@ -72,7 +73,15 @@ const ConnectButton = ({ setIsCorrectNetwork }: ConnectButtonProps) => {
           </svg>
           <div className="flex flex-row flex-none space-x-1 text-sm font-semibold md:text-md">
             <span className="flex">
-              {isConnecting ? "Connecting" : "Connect"}
+              {isConnecting ? (
+                <LoadingSpinner
+                  variant="button"
+                  size="sm"
+                  colorVariant="white"
+                />
+              ) : (
+                "Connect"
+              )}
             </span>
             <span className="flex lg:hidden xl:flex">Wallet</span>
           </div>
