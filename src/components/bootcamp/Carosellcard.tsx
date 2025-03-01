@@ -32,15 +32,17 @@ const Carosellcard = (props: any) => {
     setIsNavigating(true);
     try {
       if (arg == "Register") {
-        await router.push(
+        router.push(
           `/Register/${props.name}/?id=${Number(props.alldata.bootcamp_id)}&org=${props.alldata.address_of_org}`,
         );
       } else if (arg == "Finished") {
-        await router.push(
+        router.push(
           `/Register/${props.name}/?id=${Number(props.alldata.bootcamp_id)}&org=${props.alldata.address_of_org}`,
         );
       } else if (arg == "Manage") {
-        await router.push(`/Mybootcamps/${props.name}`);
+        router.push(
+          `/Mybootcamps/${props.name}/?id=${Number(props.alldata.bootcamp_id)}&org=${props.alldata.address_of_org}`,
+        );
       }
     } finally {
       setIsNavigating(false);
