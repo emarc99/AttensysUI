@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import video from "@/assets/video.png";
 import Image from "next/image";
 import Lectures from "./Lectures";
@@ -16,12 +16,52 @@ import { useRouter } from "next/navigation";
 import StarRating from "../bootcamp/StarRating";
 import { HiOutlineCheckBadge } from "react-icons/hi2";
 import { LuBadgeCheck } from "react-icons/lu";
+import { FileObject } from "pinata";
 
 interface ChildComponentProps {
   courseData: any;
+  setCourseData: any;
 }
 
-const LandingPage: React.FC<ChildComponentProps> = ({ courseData }) => {
+// file setup
+const emptyData: FileObject = {
+  name: "",
+  type: "",
+  size: 0,
+  lastModified: 0,
+  arrayBuffer: async () => {
+    return new ArrayBuffer(0);
+  },
+};
+interface Lecture {
+  name: string;
+  description: string;
+  video: File | null;
+}
+
+const ResetCourseRegistrationData = {
+  primaryGoal: "",
+  targetAudience: "",
+  courseArea: "",
+  courseName: "",
+  courseCreator: "",
+  courseDescription: "",
+  courseCategory: "",
+  difficultyLevel: "",
+  studentRequirements: "",
+  learningObjectives: "",
+  targetAudienceDesc: "",
+  courseImage: emptyData,
+  courseCurriculum: [] as Lecture[],
+  coursePricing: "",
+  promoAndDiscount: "",
+  publishWithCertificate: false,
+};
+
+const LandingPage: React.FC<ChildComponentProps> = ({
+  courseData,
+  setCourseData,
+}) => {
   const router = useRouter();
   const lectures = [
     {
@@ -45,6 +85,10 @@ const LandingPage: React.FC<ChildComponentProps> = ({ courseData }) => {
   ];
 
   console.log(courseData);
+  useEffect(() => {
+    // dataRef.current = data;
+    setCourseData(ResetCourseRegistrationData);
+  }, [courseData]);
 
   return (
     <div className="pb-14 bg-[#F5F8FA]">

@@ -75,6 +75,7 @@ const InitCourseRegistrationData = {
   targetAudience: "",
   courseArea: "",
   courseName: "",
+  courseCreator: "",
   courseDescription: "",
   courseCategory: "",
   difficultyLevel: "",

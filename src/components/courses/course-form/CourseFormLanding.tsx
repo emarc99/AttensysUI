@@ -22,9 +22,6 @@ const CourseFormLanding = (prop: any) => {
   const [courseData, setCourseData] = useAtom(courseInitState);
   const [connector] = useAtom(connectorAtom);
 
-  const [connectorDataAccount] = useState<null | any>(
-    connector?.wallet.account,
-  );
   const [wallet, setWallet] = useAtom(walletStarknetkit);
 
   // console.log(courseData);
@@ -54,6 +51,15 @@ const CourseFormLanding = (prop: any) => {
     setCourseData((prevData) => ({
       ...prevData, // Spread existing data to retain untouched fields
       courseName: event.target.value, // Dynamically update the specific field
+    }));
+  };
+
+  const handleCourseCreatorChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setCourseData((prevData) => ({
+      ...prevData, // Spread existing data to retain untouched fields
+      courseCreator: event.target.value, // Dynamically update the specific field
     }));
   };
   const handleCourseDescriptionChange = (
@@ -229,6 +235,7 @@ const CourseFormLanding = (prop: any) => {
           <MainFormView
             courseData={courseData}
             handleCourseNameChange={handleCourseNameChange}
+            handleCourseCreatorChange={handleCourseCreatorChange}
             handleCourseDescriptionChange={handleCourseDescriptionChange}
             handleCourseCategoryChange={handleCourseCategoryChange}
             handleDifficultyLevelChange={handleDifficultyLevelChange}
@@ -285,7 +292,7 @@ const CourseFormLanding = (prop: any) => {
     case "course-landing-page":
       return (
         <div className="h-auto w-full bg-[#F5F7FA]">
-          <LandingPage courseData={courseData} />
+          <LandingPage courseData={courseData} setCourseData={setCourseData} />
         </div>
       );
     default:

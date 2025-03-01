@@ -10,6 +10,9 @@ import Stepper from "@/components/Stepper";
 interface ChildComponentProps {
   courseData: any;
   handleCourseNameChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleCourseCreatorChange: (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => void;
   handleCourseDescriptionChange: (
     event: React.ChangeEvent<HTMLTextAreaElement>,
   ) => void;
@@ -23,12 +26,14 @@ interface ChildComponentProps {
 const MainFormView: React.FC<ChildComponentProps> = ({
   courseData,
   handleCourseNameChange,
+  handleCourseCreatorChange,
   handleCourseDescriptionChange,
   handleCourseCategoryChange,
   handleDifficultyLevelChange,
 }) => {
   const router = useRouter();
   const [courseNameError, setCourseNameError] = useState("");
+  const [courseCreatorError, setCourseCreatorError] = useState("");
   const [courseDescriptionError, setCourseDescriptionError] = useState("");
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
   const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
@@ -39,6 +44,7 @@ const MainFormView: React.FC<ChildComponentProps> = ({
     e.preventDefault();
 
     setCourseNameError("");
+    setCourseCreatorError("");
     setCourseDescriptionError("");
     setSkillError("");
     setLevelError("");
@@ -47,6 +53,10 @@ const MainFormView: React.FC<ChildComponentProps> = ({
 
     if (!courseData.courseName.trim()) {
       setCourseNameError("Course Name is required.");
+      hasError = true;
+    }
+    if (!courseData.courseCreator.trim()) {
+      setCourseCreatorError("Course creator is required.");
       hasError = true;
     }
 
@@ -114,7 +124,7 @@ const MainFormView: React.FC<ChildComponentProps> = ({
                   htmlFor=""
                   className="font-semibold text-[18px] leading-[31px] text-[#333333]"
                 >
-                  Course Name
+                  Course Title
                 </label>
                 <p className="font-normal mt-1 text-xs/[145%] md:text-sm text-[#2D3A4B] md:leading-[21px]">
                   {` If you are unsure of the perfect title now, don't worry—you can
@@ -139,6 +149,41 @@ const MainFormView: React.FC<ChildComponentProps> = ({
                 </div>
                 {courseNameError && (
                   <p className="text-red-500 text-xs mt-1">{courseNameError}</p>
+                )}
+              </div>
+
+              <div className="my-12">
+                <label
+                  htmlFor=""
+                  className="font-semibold text-[18px] leading-[31px] text-[#333333]"
+                >
+                  Course Creator
+                </label>
+                <p className="font-normal mt-1 text-xs/[145%] md:text-sm text-[#2D3A4B] md:leading-[21px]">
+                  {` If you are unsure of the perfect creator name now, don't worry—you can
+                always update it later.`}
+                </p>
+                <div className="flex items-center my-4 space-x-4">
+                  <input
+                    type="input"
+                    className="w-[100%] h-[55px] sm:w-[80%] px-6 border border-gray-300 rounded-[6px] shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
+                    placeholder="Course creator e.g Mike Smith, Trident Academy..."
+                    value={courseData.courseCreator}
+                    onChange={(e) => {
+                      handleCourseCreatorChange(e);
+                      setCourseCreatorError("");
+                    }}
+                    maxLength={100}
+                  />
+                  <input
+                    type="checkbox"
+                    className="appearance-none w-[23px] h-[23px] hidden md:block rounded-full border-[1px] border-[#C5D322] checked:bg-[#C5D322] checked:border-[#C5D322] required:border-red-500 checked:before:content-['✔'] checked:before:absolute checked:before:top-[3px] checked:before:left-[6px] checked:before:text-white checked:before:text-[10px] relative"
+                  />
+                </div>
+                {courseCreatorError && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {courseCreatorError}
+                  </p>
                 )}
               </div>
 

@@ -30,29 +30,17 @@ const CourseForm = ({
     setError("");
   };
 
-  // const handleCheckboxChange = (
-  //   event: React.ChangeEvent<HTMLInputElement>,
-  //   field: keyof FormData,
-  // ): void => {
-  //   setSelectedOption(event.target.value);
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     [field]: !prev[field],
-  //   }));
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  //   if (errors[field]) {
-  //     setErrors((prev) => ({
-  //       ...prev,
-  //       [field]: "",
-  //     }));
-  //   }
-  //   if (errors.general) {
-  //     setErrors((prev) => ({
-  //       ...prev,
-  //       general: "",
-  //     }));
-  //   }
-  // };
+    if (!selectedOption) {
+      setError("Please select an option before proceeding.");
+      return;
+    }
+
+    handleCoursePrimaryGoalChange(selectedOption);
+    router.push("/Course/CreateACourse/create-a-course");
+  };
 
   return (
     <div className="relative mx-10 md:mx-auto w-auto md:w-3/4 lg:w-5/12 pt-16">
@@ -77,9 +65,10 @@ const CourseForm = ({
                 onChange={handleOptionChange}
                 className="required:border-red-500 indeterminate:bg-gray-300"
               />
+
               <label
                 htmlFor={option.id}
-                className="block ml-3 text-[#333333] text-xs md:text-[18px] font-medium leading-[22px]"
+                className="block ml-3 text-[#333333] text-xs md:text-[18px] font-medium md:leading-[22px]"
               >
                 {option.label}
               </label>

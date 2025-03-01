@@ -10,10 +10,11 @@ interface Lecture {
 
 interface LectureData {
   lectures: Lecture[];
+  courseData: any;
   learningObj: string;
 }
 
-const Lectures = ({ lectures, learningObj }: LectureData) => {
+const Lectures = ({ lectures, courseData, learningObj }: LectureData) => {
   return (
     <div className="block sm:grid grid-cols-2 gap-4">
       <div className="lg:py-6 sm:py-12  order-last sm:order-first">
@@ -48,11 +49,14 @@ const Lectures = ({ lectures, learningObj }: LectureData) => {
             Student Requirements
           </h4>
 
-          <ul className="list-disc mx-6 mt-4 text-[#333333] text-[14px] font-light leading-[22px]">
+          {/* <ul className="list-disc mx-6 mt-4 text-[#333333] text-[14px] font-light leading-[22px]">
             <li>A computer with internet access</li>
             <li>Basic computer skills</li>
             <li>Willingness to learn and experiment</li>
-          </ul>
+          </ul> */}
+          <div>
+            <p>{courseData?.studentRequirements}</p>
+          </div>
         </div>
 
         <div className="py-5">
@@ -61,11 +65,14 @@ const Lectures = ({ lectures, learningObj }: LectureData) => {
             Target Audience
           </h4>
 
-          <ul className="list-disc mx-6 mt-4 text-[#333333] text-[14px] font-light leading-[22px]">
+          {/* <ul className="list-disc mx-6 mt-4 text-[#333333] text-[14px] font-light leading-[22px]">
             <li>Beginners interested in web development</li>
             <li>Aspiring web developers looking to start their journey</li>
             <li>Anyone wanting to create their own websites</li>
-          </ul>
+          </ul> */}
+          <div>
+            <p>{courseData?.targetAudience}</p>
+          </div>
         </div>
       </div>
     </div>

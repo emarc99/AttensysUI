@@ -12,7 +12,6 @@ import CourseSideBar from "./SideBar";
 import { MdOutlineDiamond } from "react-icons/md";
 import { IoSearchOutline, IoMenuOutline } from "react-icons/io5";
 import { pinata } from "../../../../utils/config";
-import { FileObject } from "pinata";
 import { courseInitState } from "@/state/connectedWalletStarknetkitNext";
 import { lectures } from "@/constants/data";
 import { attensysCourseAddress } from "@/deployments/contracts";
@@ -29,39 +28,6 @@ interface ChildComponentProps {
     event: MouseEvent | React.SyntheticEvent<MouseEvent | KeyboardEvent, Event>,
   ) => void;
 }
-
-// file setup
-const emptyData: FileObject = {
-  name: "",
-  type: "",
-  size: 0,
-  lastModified: 0,
-  arrayBuffer: async () => {
-    return new ArrayBuffer(0);
-  },
-};
-interface Lecture {
-  name: string;
-  description: string;
-  video: File | null;
-}
-const ResetCourseRegistrationData = {
-  primaryGoal: "",
-  targetAudience: "",
-  courseArea: "",
-  courseName: "",
-  courseDescription: "",
-  courseCategory: "",
-  difficultyLevel: "",
-  studentRequirements: "",
-  learningObjectives: "",
-  targetAudienceDesc: "",
-  courseImage: emptyData,
-  courseCurriculum: [] as Lecture[],
-  coursePricing: "",
-  promoAndDiscount: "",
-  publishWithCertificate: false,
-};
 
 const MainFormView5: React.FC<ChildComponentProps> = ({
   courseData,
@@ -207,25 +173,20 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
             {/* field */}
             <div className="mb-3 order-first block lg:hidden">
               <p className="text-[#5801A9] text-[16px] font-medium leading-[22px]">
-                Technology | Web Development
+                {courseData.courseCategory} | Web Development
               </p>
             </div>
             <div className="block lg:grid lg:grid-cols-2 gap-4">
               {/* Course Image */}
-              <div className="w-full lg:w-[368px] h-[238px] rounded-xl mb-4 lg:mb-0 p-3w-[368px] h-[238px] rounded-xl">
-                <Image
-                  src={video}
-                  alt="hero"
-                  className="h-full w-full object-cover rounded-xl"
-                />
-
+              <div className="relative h-[338px]  w-[338px]">
                 {imageSrc ? (
                   <Image
                     src={(imageSrc as string) || "/placeholder.svg"}
                     alt="Fetched Image"
-                    layout="fill"
-                    objectFit="cover"
-                    className="h-full w-full object-cover rounded-xl border-4 border-[#4A90E2]"
+                    // layout="fill"
+                    width={400} // Explicit width
+                    height={400} // Explicit height
+                    className="object-cover"
                   />
                 ) : (
                   <p>Loading image...</p>
@@ -252,7 +213,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
 
                 <div className="bg-[#5801A9] py-2 text-white w-fit p-2 text-center mt-6 mb-3 lg:w-[50%] rounded-lg">
                   <p className="text-[14px] font-extrabold leading-[22px]">
-                    Tech Innovators Academy
+                    {courseData.courseCreator}
                   </p>
                 </div>
 
@@ -265,12 +226,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
               </div>
             </div>
             <div className="  text-[#333333] text-[14px] font-light leading-[22px]">
-              <p>
-                {`  This course provides a foundational understanding of web
-            development. You'll learn essential skills in HTML and CSS, enabling
-            you to create and style your own web pages. No prior experience is
-            necessary!`}
-              </p>
+              <p>{courseData.targetAudienceDesc}</p>
             </div>
 
             <div className="mt-8">
@@ -279,11 +235,9 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                 <h2 className="font-semibold text-[18px] leading-[31px] text-[#333333] mb-2">
                   Student Requirements
                 </h2>
-                <ul className="text-sm text-[#333333] list-disc pl-5 space-y-1">
-                  <li>A computer with internet access</li>
-                  <li>Basic computer skills</li>
-                  <li>Willingness to learn and experiment</li>
-                </ul>
+                <div>
+                  <p>{courseData.studentRequirements}</p>
+                </div>
               </div>
 
               {/* Target Audience */}
@@ -291,18 +245,20 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                 <h2 className="font-semibold text-[18px] leading-[31px] text-[#333333] mb-2">
                   Target Audience
                 </h2>
-                <ul className="text-sm text-[#333333] list-disc pl-5 space-y-1">
+                {/* <ul className="text-sm text-[#333333] list-disc pl-5 space-y-1">
                   <li>Beginners interested in web development</li>
                   <li>
                     Aspiring web developers looking to start their journey
                   </li>
                   <li>Anyone wanting to create their own websites</li>
-                </ul>
+                </ul> */}
+                {courseData.targetAudience}
               </div>
 
               {/* lectures in course */}
               <Lectures
                 lectures={lectures}
+                courseData={courseData}
                 learningObj={courseData.learningObjectives}
               />
               {/* course desc & student req */}
