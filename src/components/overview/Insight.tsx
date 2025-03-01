@@ -13,11 +13,13 @@ import { attensysEventAbi } from "@/deployments/abi";
 import { attensysEventAddress } from "@/deployments/contracts";
 import { useAtom } from "jotai";
 import { connectorAtom } from "@/state/connectedWalletStarknetkitNext";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 const Insight = (props: any) => {
   const [emailList, setEmailList] = useState<string[]>([]);
   const [connector] = useAtom(connectorAtom);
-  // const [loading, setLoading] = useState(false);
+  const [isStartingReg, setIsStartingReg] = useState(false);
+  const [isEndingReg, setIsEndingReg] = useState(false);
 
   const [connectorDataAccount] = useState<null | any>(
     connector?.wallet.account,
@@ -29,43 +31,43 @@ const Insight = (props: any) => {
 
   const handleStartAndEndRegistration = async ({
     start,
-    eventId = 2, //hardcoded event_identifier value of 2
+    eventId = 2,
   }: {
     start: boolean;
     eventId?: number;
   }) => {
-    if (!connectorDataAccount) {
-      alert("Please make sure you are connected to a wallet");
-      return;
+    const loadingState = start ? setIsStartingReg : setIsEndingReg;
+    loadingState(true);
+
+    try {
+      if (!connectorDataAccount) {
+        alert("Please make sure you are connected to a wallet");
+        return;
+      }
+
+      const eventContract = new Contract(
+        attensysEventAbi,
+        attensysEventAddress,
+        connectorDataAccount,
+      );
+
+      const startEndRegistration = eventContract.populate("start_end_reg", [
+        start,
+        eventId,
+      ]);
+
+      const result = await eventContract.start_end_reg(
+        startEndRegistration.calldata,
+      );
+
+      await connectorDataAccount?.provider.waitForTransaction(
+        result.transaction_hash,
+      );
+    } catch (error) {
+      console.error("Registration state change failed:", error);
+    } finally {
+      loadingState(false);
     }
-
-    // setLoading(true);
-    const eventContract = new Contract(
-      attensysEventAbi,
-      attensysEventAddress,
-      connectorDataAccount,
-    );
-    //This is calling the start_end_reg function from the contract using an hardcoded event_identifier value of 2 as set in the function parameters above
-    const startEndRegistrationCall = eventContract.populate("start_end_reg", [
-      start,
-      eventId,
-    ]);
-
-    const result = await eventContract.start_end_reg(
-      startEndRegistrationCall.calldata,
-    );
-    //@ts-ignore
-    connectorDataAccount?.provider
-      .waitForTransaction(result.transaction_hash)
-      .then(() => {
-        console.log("Success");
-      })
-      .catch((e: any) => {
-        console.log("Error: ", e);
-      })
-      .finally(() => {
-        // setLoading(false);
-      });
   };
 
   return (
@@ -193,18 +195,37 @@ const Insight = (props: any) => {
           </div>
           <div className="flex justify-center md:justify-end w-full gap-4">
             <Button
-              onClick={() => handleStartAndEndRegistration({ start: true })}
-              className="bg-green-500 text-[#FFFFFF] font-normal text-[14px] rounded-lg h-[48px] w-[155px] items-center flex justify-center mt-5"
+              onClick={() =>
+                !isStartingReg && handleStartAndEndRegistration({ start: true })
+              }
+              disabled={isStartingReg}
+              className={`font-normal text-[14px] rounded-lg h-[48px] w-[155px] items-center flex justify-center mt-5 ${
+                isStartingReg
+                  ? "bg-green-400 cursor-not-allowed"
+                  : "bg-green-500"
+              } text-white`}
             >
-              {/* <Image src={del} alt="drop" className="mr-2" /> */}
-              Start Registeration
+              {isStartingReg ? (
+                <LoadingSpinner size="sm" colorVariant="white" />
+              ) : (
+                "Start Registration"
+              )}
             </Button>
+
             <Button
-              onClick={() => handleStartAndEndRegistration({ start: false })}
-              className="bg-red-700 text-white font-normal text-[14px] rounded-lg h-[48px] w-[155px] items-center flex justify-center mt-5"
+              onClick={() =>
+                !isEndingReg && handleStartAndEndRegistration({ start: false })
+              }
+              disabled={isEndingReg}
+              className={`font-normal text-[14px] rounded-lg h-[48px] w-[155px] items-center flex justify-center mt-5 ${
+                isEndingReg ? "bg-red-600 cursor-not-allowed" : "bg-red-700"
+              } text-white`}
             >
-              {/* <Image src={del} alt="drop" className="mr-2" /> */}
-              End Registeration
+              {isEndingReg ? (
+                <LoadingSpinner size="sm" colorVariant="white" />
+              ) : (
+                "End Registration"
+              )}
             </Button>
             <Button className="bg-[#E0515152] text-[#730404] font-normal text-[14px] rounded-lg h-[48px] w-[155px] items-center flex justify-center mt-5">
               <Image src={del} alt="drop" className="mr-2" />

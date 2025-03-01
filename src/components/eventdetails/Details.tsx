@@ -21,11 +21,14 @@ import { useParams } from "next/navigation";
 
 import { EventData } from "../discoverevents/DiscoverLanding";
 import { decimalToHexAddress, FormatDateFromUnix } from "@/utils/formatAddress";
+import LoadingSpinner from "../ui/LoadingSpinner";
 
 const Details = (props: any) => {
   const { connectorDataAccount } = props;
   const [eventData, seteventData] = useState<EventData | null>(null);
   const [modalstat, setModalstatus] = useAtom(modalstatus);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const params = useParams();
   const formatedParams = decodeURIComponent(params["details"] as string);
 
@@ -35,6 +38,8 @@ const Details = (props: any) => {
   );
 
   const getEventData = useCallback(async () => {
+    setIsLoading(true);
+
     try {
       //This is calling the get_event_details function from the contract using an hardcoded event_identifier value of 1
       const res = await eventContract.get_event_details(1);
@@ -44,6 +49,8 @@ const Details = (props: any) => {
       }
     } catch (error) {
       console.error("get_event_details error", error);
+    } finally {
+      setIsLoading(false);
     }
   }, [eventContract]);
 
@@ -56,26 +63,41 @@ const Details = (props: any) => {
   };
 
   const handleRegisterEvent = async () => {
-    const eventContract = new Contract(
-      attensysEventAbi,
-      attensysEventAddress,
-      connectorDataAccount,
-    );
-    //This is calling the register_for_event function from the contract using an hardcoded event_identifier value of 1
-    const registerEventCall = eventContract.populate("register_for_event", [1]);
+    setIsRegistering(true);
 
-    const result = await eventContract.register_for_event(
-      registerEventCall.calldata,
-    );
-    //@ts-ignore
-    connectorDataAccount?.provider
-      .waitForTransaction(result.transaction_hash)
-      .then(() => {})
-      .catch((e: any) => {
-        console.log("Error: ", e);
-      })
-      .finally(() => {});
+    try {
+      const eventContract = new Contract(
+        attensysEventAbi,
+        attensysEventAddress,
+        connectorDataAccount,
+      );
+      //This is calling the register_for_event function from the contract using an hardcoded event_identifier value of 1
+      const registerEventCall = eventContract.populate("register_for_event", [
+        1,
+      ]);
+
+      const result = await eventContract.register_for_event(
+        registerEventCall.calldata,
+      );
+
+      //@ts-ignore
+      await connectorDataAccount?.provider.waitForTransaction(
+        result.transaction_hash,
+      );
+    } catch (error) {
+      console.error("Error registering for event:", error);
+    } finally {
+      setIsRegistering(false);
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div className=" h-full flex items-center justify-center">
+        <LoadingSpinner size="lg" colorVariant="primary" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -203,10 +225,19 @@ const Details = (props: any) => {
                 Welcome, vladamirockz@gmail.com
               </h1>
               <Button
-                onClick={handleRegisterEvent}
-                className="justify-center flex rounded-lg bg-[#4A90E2] py-2 px-4 h-[50px] items-center  md:w-[422px] text-sm text-[#FFFFFF] data-[hover]:bg-sky-500 data-[active]:bg-sky-700"
+                onClick={!isRegistering ? handleRegisterEvent : undefined}
+                disabled={isRegistering}
+                className={`justify-center flex rounded-lg py-2 px-4 h-[50px] items-center  md:w-[422px] text-sm text-[#FFFFFF] data-[hover]:bg-sky-500 data-[active]:bg-sky-700 ${
+                  isRegistering
+                    ? " bg-[#357ABD] cursor-not-allowed"
+                    : "bg-[#4A90E2]"
+                }`}
               >
-                <div>One click to apply</div>
+                {isRegistering ? (
+                  <LoadingSpinner size="sm" colorVariant="white" />
+                ) : (
+                  "One click to apply"
+                )}
               </Button>
             </div>
 

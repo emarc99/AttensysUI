@@ -15,7 +15,6 @@ import {
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { AutoConnect } from "@/components/connect/AutoConnect";
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {

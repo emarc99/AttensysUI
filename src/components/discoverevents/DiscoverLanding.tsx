@@ -11,6 +11,7 @@ import { attensysEventAddress } from "@/deployments/contracts";
 import { provider } from "@/constants";
 import { decimalToHexAddress } from "@/utils/formatAddress";
 import { useEvents } from "@/hooks/useEvents";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export interface EventData {
   event_name: string;
@@ -24,13 +25,25 @@ export interface EventData {
   };
 }
 const DiscoverLanding = () => {
-  const { events, getEvents } = useEvents();
+  const { events, getEvents, loading } = useEvents();
 
   useEffect(() => {
     getEvents();
   }, [getEvents]);
+
+  if (loading) {
+    return (
+      <div className="w-full min-h-screen bg-event-gradient flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <LoadingSpinner size="lg" colorVariant="primary" />
+          <p className="text-white text-lg">Loading events...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className=" w-full bg-event-gradient">
+    <div className="w-full bg-event-gradient">
       <TopdiscoverSection />
       <Backgroundsection />
       <Timesection />
