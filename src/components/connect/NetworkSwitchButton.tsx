@@ -1,12 +1,8 @@
-import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
 import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
 import { useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
-import { connect } from "starknetkit";
 import { Button } from "@headlessui/react";
-import World from "@/assets/Vector.svg";
-import { useWallet } from "@/hooks/useWallet";
 import { DEFAULT_NETWORK } from "@/config";
 
 type NetworkSwitchButtonProps = {
