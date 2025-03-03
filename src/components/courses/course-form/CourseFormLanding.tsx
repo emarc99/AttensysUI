@@ -17,10 +17,12 @@ import { useAtom } from "jotai";
 import { connect } from "starknetkit";
 import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
 import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 const CourseFormLanding = (prop: any) => {
   const [courseData, setCourseData] = useAtom(courseInitState);
   const [connector] = useAtom(connectorAtom);
+  const [isConnecting, setIsConnecting] = useState(false);
 
   const [wallet, setWallet] = useAtom(walletStarknetkit);
 
@@ -171,33 +173,40 @@ const CourseFormLanding = (prop: any) => {
 
   useEffect(() => {
     const autoConnect = async () => {
-      try {
-        const { wallet: connectedWallet, connector } = await connect({
-          //@ts-ignore
-          provider,
-          modalMode: "neverAsk",
-          webWalletUrl: ARGENT_WEBWALLET_URL,
-          argentMobileOptions: {
-            dappName: "Attensys",
-            url: window.location.hostname,
-            chainId: CHAIN_ID,
-            icons: [],
-          },
-        });
-
-        // console.log(connector.wallet.account )
-        // setConnectorDataAccount(connector.wallet.account);
-        setWallet(connectedWallet);
-      } catch (e) {
-        console.error(e);
-        // alert((e as any).message)
+      if (!wallet) {
+        setIsConnecting(true);
+        try {
+          const { wallet: connectedWallet } = await connect({
+            //@ts-ignore
+            provider,
+            modalMode: "neverAsk",
+            webWalletUrl: ARGENT_WEBWALLET_URL,
+            argentMobileOptions: {
+              dappName: "Attensys",
+              url: window.location.hostname,
+              chainId: CHAIN_ID,
+              icons: [],
+            },
+          });
+          setWallet(connectedWallet);
+        } catch (e) {
+          console.error(e);
+        } finally {
+          setIsConnecting(false);
+        }
       }
     };
 
-    if (!wallet) {
-      autoConnect();
-    }
+    autoConnect();
   }, [wallet]);
+
+  if (isConnecting) {
+    return (
+      <div className="h-auto w-full bg-[#F5F7FA] flex items-center justify-center min-h-screen">
+        <LoadingSpinner size="lg" colorVariant="primary" />
+      </div>
+    );
+  }
 
   switch (prop.section) {
     case "What%20is%20the%20primary%20goal%20of%20your%20course":

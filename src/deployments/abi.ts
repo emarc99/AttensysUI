@@ -1661,25 +1661,45 @@ export const attensysOrgAbi = [
         name: "class_id",
         type: "core::integer::u64",
       },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
     ],
     outputs: [],
     state_mutability: "external",
   },
   {
     type: "function",
-    name: "batch_certify_students",
+    name: "single_certify_student",
     inputs: [
       {
         name: "org_",
         type: "core::starknet::contract_address::ContractAddress",
       },
       {
-        name: "class_id",
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "single_certify_student",
+    inputs: [
+      {
+        name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
         type: "core::integer::u64",
       },
       {
         name: "students",
-        type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+        type: "core::starknet::contract_address::ContractAddress",
       },
     ],
     outputs: [],
@@ -2094,6 +2114,134 @@ export const attensysOrgAbi = [
     inputs: [
       {
         name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_registered_bootcamp",
+    inputs: [
+      {
+        name: "student",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::RegisteredBootcamp>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_specific_organization_registered_bootcamp",
+    inputs: [
+      {
+        name: "org",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "student",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::RegisteredBootcamp>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_class_attendance_status",
+    inputs: [
+      {
+        name: "org",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+      {
+        name: "class_id",
+        type: "core::integer::u64",
+      },
+      {
+        name: "student",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_bootcamp_classes",
+    inputs: [
+      {
+        name: "org",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<core::integer::u64>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_certified_student_bootcamp_address",
+    inputs: [
+      {
+        name: "org",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_bootcamp_certification_status",
+    inputs: [
+      {
+        name: "org",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+      {
+        name: "student",
         type: "core::starknet::contract_address::ContractAddress",
       },
     ],

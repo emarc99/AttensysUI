@@ -4,10 +4,10 @@
  */
 
 export const attensysCourseAddress =
-  "0x659985da3a95dff78205f787697e1963ad910ab5ab63c46bba51c7c065b201c";
+  "0x60d51979f5fb47c21ece3f0ebe7ac9559543cdd5f825f4ea0059c04403f4ce6";
 export const attensysEventAddress =
-  "0xd2dbc55ed141765d181de221be99846f4196ac1c81a3686b3b88d1c7462ce5";
+  "0x277f53cb8cd296c579a1744e459af920bca62f1bc0cc2574a815ac3161f36c0";
 export const attensysOrgAddress =
-  "0xb6551f9e1d4fd89094a58af2afc08793dccd7780457ef57c6ca4a426c298f6";
+  "0x7139e03f2578bfa845ec3ead07f3d527d8e3fea1ba6cbde18bdc7683cdc583d";
 export const attensysSponsorAddress =
-  "0x515c7ee5717ecca8d3c6af1491c9ddd006d9b685acd29aeede890b60e5866";
+  "0x6b84c25651cba99ca803f258d20664d2db7b77942d5b186c21e7ffbd3e312eb";
