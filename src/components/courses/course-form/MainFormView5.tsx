@@ -12,6 +12,7 @@ import CourseSideBar from "./SideBar";
 import { MdOutlineDiamond } from "react-icons/md";
 import { IoSearchOutline, IoMenuOutline } from "react-icons/io5";
 import { pinata } from "../../../../utils/config";
+import { FileObject } from "pinata";
 import { courseInitState } from "@/state/connectedWalletStarknetkitNext";
 import { lectures } from "@/constants/data";
 import { attensysCourseAddress } from "@/deployments/contracts";
@@ -49,7 +50,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
     handleCoursePublishWithCert(event);
   };
 
-  const handleCourseUpload = async () => {
+  const handleCourseUpload = async (e: any) => {
     setUploading(true);
     const courseImgupload = await pinata.upload.file(courseData.courseImage);
     //  const selectedLectureVideoUpload = await
@@ -58,6 +59,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
       primaryGoal: courseData.primaryGoal,
       targetAudience: courseData.targetAudience,
       courseArea: courseData.courseArea,
+      courseCreator: courseData.courseCreator,
       courseName: courseData.courseName,
       courseDescription: courseData.courseDescription,
       courseCategory: courseData.courseCategory,
@@ -73,54 +75,57 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
     });
 
     if (dataUpload) {
+      console.log("uploaded to ipfs succesfuuly", dataUpload.IpfsHash);
       setCidToContract(dataUpload.IpfsHash);
       setcidCourseImage(courseImgupload.IpfsHash);
-      setUploading(false);
+      await courseCreation(e);
+      console.log("here now", cidToContract);
     }
   };
 
   const courseCreation = async (e: any) => {
-    handleCourseUpload();
+    try {
+      const courseContract = new Contract(
+        attensysCourseAbi,
+        attensysCourseAddress,
+        wallet?.account,
+      );
+      console.log("reach here courseData", cidToContract);
+      const create_course_calldata = courseContract.populate("create_course", [
+        wallet?.account?.address,
+        false,
+        cidCourseImage,
+        courseData.courseName,
+        "XXX",
+        cidToContract,
+      ]);
 
-    const courseContract = new Contract(
-      attensysCourseAbi,
-      attensysCourseAddress,
-      wallet?.account,
-    );
+      const callCourseContract = await wallet?.account.execute([
+        {
+          contractAddress: attensysCourseAddress,
+          entrypoint: "create_course",
+          calldata: create_course_calldata.calldata,
+        },
+      ]);
 
-    const create_course_calldata = courseContract.populate("create_course", [
-      wallet?.account?.address,
-      false,
-      cidCourseImage,
-      courseData.courseName,
-      "XXX",
-      cidToContract,
-    ]);
+      await wallet?.account?.provider
+        .waitForTransaction(callCourseContract.transaction_hash)
+        .then(() => {})
+        .catch((e: any) => {
+          console.log("Error: ", e);
+        })
+        .finally(() => {
+          console.log("courseData", "Yeah. I am here");
 
-    const callCourseContract = await wallet?.account.execute([
-      {
-        contractAddress: attensysCourseAddress,
-        entrypoint: "create_course",
-        calldata: create_course_calldata.calldata,
-      },
-    ]);
-
-    await wallet?.account?.provider
-      .waitForTransaction(callCourseContract.transaction_hash)
-      .then(() => {})
-      .catch((e: any) => {
-        console.log("Error: ", e);
-      })
-      .finally(() => {
-        //Resets all org data input
-        // setCourseData(ResetCourseRegistrationData);
-
-        // Proceed to next step
-        handleCreateCourse(e, "course-landing-page", router);
-      });
+          setUploading(false);
+          handleCreateCourse(e, "course-landing-page", router);
+        });
+    } catch (error) {
+      console.log("call fail", error);
+    }
   };
 
-  console.log(courseData.courseImage);
+  // console.log(courseData.courseImage);
 
   useEffect(() => {
     // Check if file is a valid File object
@@ -134,7 +139,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
         URL.revokeObjectURL(imageUrl);
       };
     }
-  }, [courseData.courseImage]);
+  }, [courseData.courseImage, cidToContract]);
 
   return (
     <div className="lg:flex">
@@ -291,9 +296,9 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                   <button
                     className="w-full lg:w-auto rounded-xl bg-[#4A90E2] px-8 lg:px-24 py-3 text-white"
                     type="submit"
-                    onClick={courseCreation}
+                    onClick={handleCourseUpload}
                   >
-                    Save and Publish Course
+                    {uploading ? "Uploading..." : "Save and Publish Course"}
                   </button>
                 </div>
               </div>

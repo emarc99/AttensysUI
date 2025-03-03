@@ -18,7 +18,11 @@ import StarRating from "../bootcamp/StarRating";
 import { LuBadgeCheck } from "react-icons/lu";
 import { CardWithLink } from "./Cards";
 
-const Explore = () => {
+interface ChildComponentProps {
+  wallet: any;
+}
+
+const Explore = ({ wallet }: ChildComponentProps) => {
   const router = useRouter();
 
   const responsive = {
@@ -99,13 +103,12 @@ const Explore = () => {
           </div>
 
           {/* cards  */}
-          {/* <div className="mx-12 sm:mx-0"> */}
-          <CarouselComp />
+          <CarouselComp wallet={wallet} />
           <div className="grid grid-cols-1 gap-x-4 sm:grid-cols-2 lg:hidden flex-col w-full">
-            <CardWithLink />
-            <CardWithLink />
-            <CardWithLink />
-            <CardWithLink />
+            <CardWithLink wallet={wallet} />
+            <CardWithLink wallet={wallet} />
+            <CardWithLink wallet={wallet} />
+            <CardWithLink wallet={wallet} />
           </div>
           {/* </div> */}
         </div>
@@ -144,7 +147,7 @@ const Explore = () => {
                     Get this course
                   </button>
                   <h2 className="font-bold lg:text-[32px] leading-5 tracking-tight lg:leading-[1.1] text-[23px] sm:text-4xl text-[#2D3A4B] lg:tracking-tight my-4 cursor-pointer">
-                    Introduction to Web Development
+                    Intro
                   </h2>
                 </div>
                 <p className="text-white items-center font-semibold inline gap-2 text-sm bg-[#5801A9] rounded p-2">

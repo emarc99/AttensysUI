@@ -292,7 +292,11 @@ const CourseFormLanding = (prop: any) => {
     case "course-landing-page":
       return (
         <div className="h-auto w-full bg-[#F5F7FA]">
-          <LandingPage courseData={courseData} setCourseData={setCourseData} />
+          <LandingPage
+            courseData={courseData}
+            setCourseData={setCourseData}
+            wallet={wallet}
+          />
         </div>
       );
     default:

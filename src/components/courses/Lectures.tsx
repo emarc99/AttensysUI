@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import tdesign_video from "../../assets/tdesign_video.svg";
 
 interface Lecture {
   img: string;
@@ -15,24 +16,26 @@ interface LectureData {
 }
 
 const Lectures = ({ lectures, courseData, learningObj }: LectureData) => {
+  // console.log("courseData", courseData?.courseCurriculum);
+
   return (
     <div className="block sm:grid grid-cols-2 gap-4">
       <div className="lg:py-6 sm:py-12  order-last sm:order-first">
         <h2 className="block xl:hidden">Lectures in this course (2)</h2>
-        {lectures.map((item, id) => (
+        {courseData.courseCurriculum?.map((item: any, id: any) => (
           <div key={id} className="block sm:flex py-3">
-            <Image src={item.img} alt="hero" />
+            {item.video && <Image src={tdesign_video} alt="hero" />}
 
             <div className="sm:mx-10 mb-5-">
               <h4 className="font-semibold text-[14px] text-[#333333] leading-[22px] my-2">
-                {item.title}
+                {item.name}
                 <span className="text-[#5801A9] ml-3">
                   ({item.timing} mins)
                 </span>
               </h4>
 
               <p className="font-light text-[14px] text-[#333333] leading-[22px] h-[68px] w-[236px]">
-                {item.desc}
+                {item.description}
               </p>
             </div>
           </div>
@@ -70,6 +73,7 @@ const Lectures = ({ lectures, courseData, learningObj }: LectureData) => {
             <li>Aspiring web developers looking to start their journey</li>
             <li>Anyone wanting to create their own websites</li>
           </ul> */}
+
           <div>
             <p>{courseData?.targetAudience}</p>
           </div>

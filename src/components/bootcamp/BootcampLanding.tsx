@@ -15,12 +15,15 @@ const BootcampLanding = () => {
   const [wallet, setWallet] = useAtom(walletStarknetkit);
   const [bootcampDataInfo, setBootcampdataInfo] = useState([]);
   const [allorgInfo, setAllorgInfo] = useState([]);
+  console.log("all org", allorgInfo);
 
   const orgContract = new Contract(
     attensysOrgAbi,
     attensysOrgAddress,
     provider,
   );
+
+  console.log(provider);
 
   const getAllBootcamps = async () => {
     const bootcamps_info = await orgContract?.get_all_bootcamps_on_platform();
