@@ -1,27 +1,15 @@
+"use client"; // Mark as Client Component
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { Providers } from "./providers";
-/*
-import type { Metadata } from "next";
-import {
-  StarknetConfig,
-  argent,
-  braavos,
-  publicProvider,
-  useInjectedConnectors,
-  voyager,
-} from "@starknet-react/core";
- */
+import { Suspense, useEffect, useState } from "react";
+import Loading from "./Loading";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { AutoConnect } from "@/components/connect/AutoConnect";
+import { RouterHandler } from "@/components/RouterHandler";
 
 const inter = Inter({ subsets: ["latin"] });
-
-export const metadata = {
-  title: "AttenSys",
-  description: "certify and verify",
-};
 
 export default function RootLayout({
   children,
@@ -30,14 +18,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <Providers>
-          <Header />
-          <AutoConnect />
-          {children}
-          <Footer />
-        </Providers>
-      </body>
+      <Suspense fallback={<Loading />}>
+        <body className={inter.className}>
+          <Providers>
+            <Header />
+            <AutoConnect />
+            {/* <RouterHandler> */}
+            {children}
+            {/* </RouterHandler> */}
+            <Footer />
+          </Providers>
+        </body>
+      </Suspense>
     </html>
   );
 }

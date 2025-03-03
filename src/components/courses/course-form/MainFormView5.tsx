@@ -20,6 +20,7 @@ import { attensysCourseAbi } from "@/deployments/abi";
 import { Contract } from "starknet";
 import { useRouter } from "next/navigation";
 import { handleCreateCourse } from "@/utils/helpers";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 interface ChildComponentProps {
   courseData: any;
@@ -70,10 +71,11 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
   handleCoursePublishWithCert,
 }) => {
   const [isActivated, setIsActivated] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const [cidToContract, setCidToContract] = useState<string>("");
   const [cidCourseImage, setcidCourseImage] = useState<string>("");
   const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const router = useRouter();
   const handleSwitch = (
@@ -84,74 +86,78 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
   };
 
   const handleCourseUpload = async () => {
-    setUploading(true);
-    const courseImgupload = await pinata.upload.file(courseData.courseImage);
-    //  const selectedLectureVideoUpload = await
+    setIsUploading(true);
 
-    const dataUpload = await pinata.upload.json({
-      primaryGoal: courseData.primaryGoal,
-      targetAudience: courseData.targetAudience,
-      courseArea: courseData.courseArea,
-      courseName: courseData.courseName,
-      courseDescription: courseData.courseDescription,
-      courseCategory: courseData.courseCategory,
-      difficultyLevel: courseData.difficultyLevel,
-      studentRequirements: courseData.studentRequirements,
-      learningObjectives: courseData.learningObjectives,
-      targetAudienceDesc: courseData.targetAudienceDesc,
-      courseImage: courseImgupload.IpfsHash,
-      courseCurriculum: courseData.courseCurriculum,
-      coursePricing: courseData.coursePricing,
-      promoAndDiscount: courseData.promoAndDiscount,
-      publishWithCertificate: courseData.publishWithCertificate,
-    });
+    try {
+      const courseImgupload = await pinata.upload.file(courseData.courseImage);
+      //  const selectedLectureVideoUpload = await
 
-    if (dataUpload) {
-      setCidToContract(dataUpload.IpfsHash);
-      setcidCourseImage(courseImgupload.IpfsHash);
-      setUploading(false);
+      const dataUpload = await pinata.upload.json({
+        primaryGoal: courseData.primaryGoal,
+        targetAudience: courseData.targetAudience,
+        courseArea: courseData.courseArea,
+        courseName: courseData.courseName,
+        courseDescription: courseData.courseDescription,
+        courseCategory: courseData.courseCategory,
+        difficultyLevel: courseData.difficultyLevel,
+        studentRequirements: courseData.studentRequirements,
+        learningObjectives: courseData.learningObjectives,
+        targetAudienceDesc: courseData.targetAudienceDesc,
+        courseImage: courseImgupload.IpfsHash,
+        courseCurriculum: courseData.courseCurriculum,
+        coursePricing: courseData.coursePricing,
+        promoAndDiscount: courseData.promoAndDiscount,
+        publishWithCertificate: courseData.publishWithCertificate,
+      });
+
+      if (dataUpload) {
+        setCidToContract(dataUpload.IpfsHash);
+        setcidCourseImage(courseImgupload.IpfsHash);
+      }
+    } catch (error) {
+      console.error("Error uploading course:", error);
+    } finally {
+      setIsUploading(false);
     }
   };
 
   const courseCreation = async (e: any) => {
-    handleCourseUpload();
+    setIsSaving(true);
+    try {
+      await handleCourseUpload();
 
-    const courseContract = new Contract(
-      attensysCourseAbi,
-      attensysCourseAddress,
-      wallet?.account,
-    );
+      const courseContract = new Contract(
+        attensysCourseAbi,
+        attensysCourseAddress,
+        wallet?.account,
+      );
 
-    const create_course_calldata = courseContract.populate("create_course", [
-      wallet?.account?.address,
-      false,
-      cidCourseImage,
-      courseData.courseName,
-      "XXX",
-      cidToContract,
-    ]);
+      const create_course_calldata = courseContract.populate("create_course", [
+        wallet?.account?.address,
+        false,
+        cidCourseImage,
+        courseData.courseName,
+        "XXX",
+        cidToContract,
+      ]);
 
-    const callCourseContract = await wallet?.account.execute([
-      {
-        contractAddress: attensysCourseAddress,
-        entrypoint: "create_course",
-        calldata: create_course_calldata.calldata,
-      },
-    ]);
+      const callCourseContract = await wallet?.account.execute([
+        {
+          contractAddress: attensysCourseAddress,
+          entrypoint: "create_course",
+          calldata: create_course_calldata.calldata,
+        },
+      ]);
 
-    await wallet?.account?.provider
-      .waitForTransaction(callCourseContract.transaction_hash)
-      .then(() => {})
-      .catch((e: any) => {
-        console.log("Error: ", e);
-      })
-      .finally(() => {
-        //Resets all org data input
-        // setCourseData(ResetCourseRegistrationData);
-
-        // Proceed to next step
-        handleCreateCourse(e, "course-landing-page", router);
-      });
+      await wallet?.account?.provider.waitForTransaction(
+        callCourseContract.transaction_hash,
+      );
+    } catch (error) {
+      console.error("Course creation failed:", error);
+    } finally {
+      setIsSaving(false);
+      handleCreateCourse(e, "course-landing-page", router);
+    }
   };
 
   console.log(courseData.courseImage);
@@ -198,8 +204,15 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
               </p>
             </div>
 
-            <button className="hidden xl:block bg-[#C5D322] px-7 py-3 rounded text-white">
-              Publish
+            <button
+              className="hidden xl:block bg-[#C5D322] px-7 py-3 rounded text-white"
+              disabled={isUploading}
+            >
+              {isUploading ? (
+                <LoadingSpinner size="sm" colorVariant="white" />
+              ) : (
+                "Publish"
+              )}
             </button>
           </div>
 
@@ -228,7 +241,9 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                     className="h-full w-full object-cover rounded-xl border-4 border-[#4A90E2]"
                   />
                 ) : (
-                  <p>Loading image...</p>
+                  <div className="flex items-center justify-center h-full">
+                    <LoadingSpinner size="md" colorVariant="primary" />
+                  </div>
                 )}
               </div>
 
@@ -333,11 +348,20 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                 </div>
                 <div className="mt-12 mb-24 p-10">
                   <button
-                    className="w-full lg:w-auto rounded-xl bg-[#4A90E2] px-8 lg:px-24 py-3 text-white"
+                    className={`w-full lg:w-auto rounded-xl px-8 lg:px-24 py-3 text-white ${
+                      isSaving
+                        ? " bg-[#357ABD] cursor-not-allowed"
+                        : "bg-[#4A90E2]"
+                    }`}
                     type="submit"
-                    onClick={courseCreation}
+                    onClick={!isSaving ? courseCreation : undefined}
+                    disabled={isSaving}
                   >
-                    Save and Publish Course
+                    {isSaving ? (
+                      <LoadingSpinner size="sm" colorVariant="white" />
+                    ) : (
+                      "Save and Publish Course"
+                    )}
                   </button>
                 </div>
               </div>
