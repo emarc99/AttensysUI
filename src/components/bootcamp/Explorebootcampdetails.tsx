@@ -13,6 +13,7 @@ import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
 import { pinata } from "../../../utils/config";
 import { useSearchParams } from "next/navigation";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import Previous from "../courses/course-form/previous";
 
 const Explorebootcampdetails = () => {
   const [wallet, setWallet] = useAtom(walletStarknetkit);
@@ -27,6 +28,7 @@ const Explorebootcampdetails = () => {
   const [bootcampNumber, setBootcampNumber] = useState<number | null>(null);
   const [description, setDescription] = useState<string | null>(null);
   const [bootcampDataInfo, setBootcampdataInfo] = useState([]);
+  const [RegbootcampDataInfo, setRegBootcampdataInfo] = useState<any>([]);
   const searchParams = useSearchParams();
   const org = searchParams.get("org");
   const [isLoading, setIsLoading] = useState(true);
@@ -89,6 +91,32 @@ const Explorebootcampdetails = () => {
     }
   };
 
+  const getSpecificOrgInfo = async () => {
+    try {
+      const specific_org_info =
+        await orgContract?.get_specific_organization_registered_bootcamp(
+          org,
+          wallet?.selectedAddress,
+        );
+
+      const bootcampInfoArray = await Promise.all(
+        specific_org_info.map(async (data: any) => {
+          return orgContract?.get_bootcamp_info(
+            data.address_of_org,
+            Number(data.bootcamp_id),
+          );
+        }),
+      );
+
+      // Update state once with all data
+      setRegBootcampdataInfo(bootcampInfoArray);
+
+      console.log("Bootcamp info fetched:", bootcampInfoArray);
+    } catch (error) {
+      console.error("Error fetching specific org info:", error);
+    }
+  };
+
   const getAllOrgBootcamp = async () => {
     const org_boot_camp_info = await orgContract?.get_all_org_bootcamps(org);
     setBootcampdataInfo(org_boot_camp_info);
@@ -98,7 +126,11 @@ const Explorebootcampdetails = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        await Promise.all([getOrgInfo(), getAllOrgBootcamp()]);
+        await Promise.all([
+          getOrgInfo(),
+          getAllOrgBootcamp(),
+          getSpecificOrgInfo(),
+        ]);
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
@@ -137,7 +169,7 @@ const Explorebootcampdetails = () => {
         description={description}
       />
       <Userbootcamps bootcampinfo={bootcampDataInfo} />
-      <Registered />
+      <Registered regbootcamp={RegbootcampDataInfo} />
     </div>
   );
 };

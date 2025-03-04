@@ -3,7 +3,10 @@ import Heading from "./Heading";
 import Panel from "./Panel";
 import Organizationtabs from "./Organizationtabs";
 import Create from "./Create";
-import { createbootcampoverlay } from "@/state/connectedWalletStarknetkitNext";
+import {
+  createbootcampoverlay,
+  createbootcampupload,
+} from "@/state/connectedWalletStarknetkitNext";
 import { useAtom } from "jotai";
 import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
 import { BlockNumber, Contract, RpcProvider, Account } from "starknet";
@@ -17,6 +20,7 @@ import LoadingSpinner from "../ui/LoadingSpinner";
 
 const Organizationlanding = (prop: any) => {
   const [createOverlayStat] = useAtom(createbootcampoverlay);
+  const [createbootebootcampstat] = useAtom(createbootcampupload);
   const [orgHeight, setOrgHeight] = useState<number | null>(null); // State to store the height
   const landingRef = useRef<HTMLDivElement>(null); // Ref for OrganizationLanding
   const [wallet, setWallet] = useAtom(walletStarknetkit);
@@ -148,6 +152,17 @@ const Organizationlanding = (prop: any) => {
         </div>
       ) : (
         <>
+          {/* Full screen loading overlay */}
+          {createbootebootcampstat && (
+            <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+              <div className="bg-white p-6 rounded-lg flex flex-col items-center gap-4">
+                <LoadingSpinner size="lg" colorVariant="primary" />
+                <p className="text-gray-700 font-medium">
+                  Publishing bootcamp... Please wait
+                </p>
+              </div>
+            </div>
+          )}
           {createOverlayStat && (
             <Create organizationName={organizationName} height={orgHeight} />
           )}

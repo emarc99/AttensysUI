@@ -1,8 +1,10 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import {
   bootcampdropdownstatus,
   isRegisteredatom,
   orgnameatom,
+  universalloadingstatus,
 } from "@/state/connectedWalletStarknetkitNext";
 import { useAtom, useSetAtom } from "jotai";
 import { VscNewFile } from "react-icons/vsc";
@@ -23,6 +25,7 @@ const Bootcampdropdown = () => {
   const [bootcampdropstat, setbootcampdropstat] = useAtom(
     bootcampdropdownstatus,
   );
+  const [universalLoad, setuniversalLoad] = useAtom(universalloadingstatus);
   const [wallet, setWallet] = useAtom(walletStarknetkit);
   const [isreg, setisRegistered] = useAtom(isRegisteredatom);
   const [orgname, setOrgname] = useAtom(orgnameatom);
@@ -30,6 +33,7 @@ const Bootcampdropdown = () => {
   const router = useRouter();
 
   const handleNavigation = (path: string) => {
+    setuniversalLoad(true);
     setbootcampdropstat(false);
     router.push(path);
   };
