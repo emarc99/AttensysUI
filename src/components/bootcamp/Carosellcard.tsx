@@ -129,8 +129,8 @@ const Carosellcard = (props: any) => {
       </Button>
 
       {/* Bottom Section with Gradient */}
-      <div className="absolute bottom-0 z-20 w-full h-[150px] flex items-center justify-center text-center bg-carousell-gradient rounded-b-2xl">
-        <div className="flex mt-20 space-x-3">
+      <div className="absolute bottom-0 z-20 w-full h-[150px] flex  bg-carousell-gradient rounded-b-2xl px-6">
+        <div className="flex mt-20 space-x-5">
           {/* Logo */}
           <div className="rounded-full h-[41px] w-[41px] overflow-hidden">
             <Image
