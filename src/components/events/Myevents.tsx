@@ -2,7 +2,7 @@
 import add from "@/assets/add.svg";
 import calenderimage from "@/assets/calendar.svg";
 import ticket from "@/assets/ticket.svg";
-import { attensysEventAbi, attensysOrgAbi } from "@/deployments/abi";
+import { attensysEventAbi } from "@/deployments/abi";
 import { attensysEventAddress } from "@/deployments/contracts";
 import {
   createEventClickAtom,
@@ -26,6 +26,30 @@ import Link from "next/link";
 import { useEvents } from "@/hooks/useEvents";
 import { decimalToHexAddress, FormatDateFromUnix } from "@/utils/formatAddress";
 import LoadingSpinner from "../ui/LoadingSpinner";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs, { Dayjs } from "dayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { TextField } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
+
+interface timeProp {
+  day: number;
+}
+
+const StyledTimePicker = styled(TimePicker)(({ theme }) => ({
+  "& .MuiInputBase-root": {
+    minWidth: "100px",
+    width: "150px",
+    [theme.breakpoints.up("lg")]: {
+      minWidth: "200px",
+      width: "200px",
+    },
+  },
+}));
 
 const Myevents = (props: any) => {
   const { connectorDataAccount } = props;
@@ -34,10 +58,11 @@ const Myevents = (props: any) => {
 
   const [wallet, setWallet] = useAtom(walletStarknetkit);
   const [eventName, setEventName] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [startDate, setStartDate] = useState<Dayjs | null>(null);
+
+  const [startTime, setStartTime] = useState<Dayjs | null>(null);
+  const [endDate, setEndDate] = useState<Dayjs | null>(null);
+  const [endTime, setEndTime] = useState<Dayjs | null>(null);
   const [location, setLocation] = useState("");
   const [nftName, setNftName] = useState("");
   const [nftSymbol, setNftSymbol] = useState("");
@@ -64,6 +89,9 @@ const Myevents = (props: any) => {
     useAtom(createEventClickAtom);
   const [CreateorExplorestat, setCreateorExplorestat] =
     useAtom(createorexplore);
+
+  const [EventDays, setEventDays] = useState(0);
+  const [Eventplatform, setEventPlatform] = useState(3);
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -112,17 +140,19 @@ const Myevents = (props: any) => {
     router.push("/Events/createevent");
   };
 
-  const convertToUnixTimeStamp = (date: string, time: string) => {
-    // Combine date and time into a single string
-    const datetimeString = `${date}T${time}:00Z`; // Assume UTC
+  const convertToUnixTimeStamp = (date: Dayjs | null, time: Dayjs | null) => {
+    if (!date || !time) return 0; // Handle null case
 
-    // Convert to a Unix timestamp (seconds)
-    const unixTimestamp = Math.floor(new Date(datetimeString).getTime() / 1000);
+    const formattedDate = date.format("YYYY-MM-DD"); // Convert date to string
+    const formattedTime = time.format("HH:mm:ss"); // Convert time to string
 
-    return unixTimestamp;
+    const datetimeString = `${formattedDate}T${formattedTime}Z`;
+
+    return Math.floor(new Date(datetimeString).getTime() / 1000);
   };
 
   const handleCreateEventButton = async () => {
+    console.log("clicked");
     const newErrors = {
       eventName: !eventName.trim() ? "Event name is required" : "",
       startDate: !startDate ? "Start date is required" : "",
@@ -142,6 +172,7 @@ const Myevents = (props: any) => {
     }
 
     setErrors(newErrors);
+    console.log(newErrors);
 
     if (Object.values(newErrors).some((error) => error)) return;
 
@@ -160,6 +191,8 @@ const Myevents = (props: any) => {
       nftsymbol: nftSymbol,
       description: description,
       eventDesign: eventDesignUpload.IpfsHash,
+      numberofdays: EventDays,
+      eventplatform: Eventplatform,
     });
     if (Dataupload) {
       const eventContract = new Contract(
@@ -182,6 +215,7 @@ const Myevents = (props: any) => {
         enddateandtime,
         true,
         Dataupload.IpfsHash,
+        Eventplatform,
       ]);
 
       const result = await eventContract.create_event(createEventCall.calldata);
@@ -195,16 +229,17 @@ const Myevents = (props: any) => {
         .finally(() => {
           //Resets all event data input
           setEventName("");
-          setStartDate("");
-          setStartTime("");
-          setEndDate("");
-          setEndTime("");
+          setStartDate(null);
+          setStartTime(null);
+          setEndDate(null);
+          setEndTime(null);
           setLocation("");
           setNftName("");
           setNftSymbol("");
           setDescription("");
           setSelectedFile(null);
-
+          setEventPlatform(3);
+          setEventDays(0);
           setisSubmitting(false);
           router.push(`/Overview/${eventName}/insight`);
         });
@@ -236,6 +271,41 @@ const Myevents = (props: any) => {
   ];
 
   const mockeventcreatedData = [
+    {
+      today: "Tue 14 Oct, 2024",
+      time: "9:00 AM",
+      name: "CEX Convention ‘24",
+      host: "Selfless hearts Foundation",
+      location: "Google Meet",
+    },
+    {
+      today: "Tue 14 Oct, 2024",
+      time: "9:00 AM",
+      name: "CEX Convention ‘24",
+      host: "Selfless hearts Foundation",
+      location: "Google Meet",
+    },
+    {
+      today: "Tue 14 Oct, 2024",
+      time: "9:00 AM",
+      name: "CEX Convention ‘24",
+      host: "Selfless hearts Foundation",
+      location: "Google Meet",
+    },
+    {
+      today: "Tue 14 Oct, 2024",
+      time: "9:00 AM",
+      name: "CEX Convention ‘24",
+      host: "Selfless hearts Foundation",
+      location: "Google Meet",
+    },
+    {
+      today: "Tue 14 Oct, 2024",
+      time: "9:00 AM",
+      name: "CEX Convention ‘24",
+      host: "Selfless hearts Foundation",
+      location: "Google Meet",
+    },
     {
       today: "Tue 14 Oct, 2024",
       time: "9:00 AM",
@@ -317,11 +387,11 @@ const Myevents = (props: any) => {
                 <div className="w-full max-w-lg px-4">
                   <Input
                     className={clsx(
-                      "mt-3 block w-full border-b-[1px] border-white/50 bg-transparent text-[40px] font-bold leading-[83.53px] text-[#FFFFFF]",
-                      "placeholder-white/50 focus:border-b-4 focus:border-[#ABADBA] focus:outline-none",
+                      "mt-3 block w-full border-b-[1px] border-white bg-transparent text-[40px] font-bold leading-[83.53px] text-[#FFFFFF]",
+                      "placeholder-white/50 focus:border-b-4 focus:border-white focus:outline-none",
                       errors.eventName && "border-red-500",
                     )}
-                    placeholder="Event Name"
+                    placeholder="Type Event Name Here"
                     value={eventName}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       setEventName(e.target.value);
@@ -337,127 +407,287 @@ const Myevents = (props: any) => {
                 <div className="w-full max-w-lg px-4 mt-4">
                   <Field>
                     <Label className="text-sm/6 font-medium text-white">
-                      Start Day
+                      Select number of days
                     </Label>
-                    <Input
-                      type="date"
-                      value={startDate}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        setStartDate(e.target.value);
-                        setErrors((prev) => ({ ...prev, startDate: "" }));
-                      }}
-                      className={clsx(
-                        "mt-1 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
-                        "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
-                      )}
-                    />
-                    {errors.startDate && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.startDate}
-                      </p>
-                    )}
-                  </Field>
-                </div>
-                <div className="w-full max-w-lg px-4 mt-4">
-                  <Field>
-                    <Label className="text-sm/6 font-medium text-white">
-                      End day
-                    </Label>
-                    <Input
-                      type="date"
-                      value={endDate}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        setEndDate(e.target.value);
-                        setErrors((prev) => ({ ...prev, endDate: "" }));
-                      }}
-                      className={clsx(
-                        "mt-1 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
-                        "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
-                      )}
-                    />
-                    {errors.endDate && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.endDate}
-                      </p>
-                    )}
-                  </Field>
-                </div>
-                <div className="w-full max-w-lg px-4 mt-4">
-                  <Field>
-                    <Label className="text-sm/6 font-medium text-white">
-                      Start time
-                    </Label>
-                    <Input
-                      type="time"
-                      className={clsx(
-                        "mt-1 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
-                        "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
-                        errors.startTime && "border border-red-500",
-                      )}
-                      value={startTime}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        setStartTime(e.target.value);
-                        setErrors((prev) => ({ ...prev, startTime: "" }));
-                      }}
-                    />
-                    {errors.startTime && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.startTime}
-                      </p>
-                    )}
+                    <div className="flex space-x-4 items-center">
+                      <Description className="text-sm/6 text-white/50">
+                        The event will last for how many days?
+                      </Description>
+                      <select
+                        className="w-[90px] px-2 py-1 bg-transparent text-white border border-white rounded-md focus:ring-2"
+                        onChange={(e) => setEventDays(Number(e.target.value))}
+                      >
+                        <option value="" disabled selected>
+                          days
+                        </option>
+                        {[...Array(30)].map((_, i) => (
+                          <option key={i + 1} value={i + 1}>
+                            {i + 1} {i + 1 === 1 ? "day" : "days"}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </Field>
                 </div>
 
-                <div className="w-full max-w-lg px-4 mt-4">
-                  <Field>
-                    <Label className="text-sm/6 font-medium text-white">
-                      End Time
-                    </Label>
-                    <Input
-                      type="time"
-                      className={clsx(
-                        "mt-1 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white",
-                        "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
-                        errors.endTime && "border border-red-500",
+                {/* Show only Start Date if 1 day is selected */}
+                {EventDays === 1 && (
+                  <div className="w-full max-w-lg px-4 mt-4">
+                    <Field>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={["DatePicker"]}>
+                          <DatePicker
+                            label="Date"
+                            onChange={(date) => {
+                              setStartDate(date);
+                              setErrors((prev) => ({ ...prev, startDate: "" }));
+                              setEndDate(date);
+                              setErrors((prev) => ({ ...prev, endDate: "" }));
+                            }}
+                            sx={{
+                              width: "100%",
+                              "& .MuiOutlinedInput-root": {
+                                color: "white",
+                                "& fieldset": { borderColor: "white" },
+                                "&:hover fieldset": { borderColor: "gray" },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "white",
+                                },
+                              },
+                              "& .MuiInputLabel-root": { color: "white" },
+                              "& .MuiSvgIcon-root": { color: "white" },
+                            }}
+                          />
+                        </DemoContainer>
+                      </LocalizationProvider>
+                      {errors.startDate && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.startDate}
+                        </p>
                       )}
-                      value={endTime}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        setEndTime(e.target.value);
-                        setErrors((prev) => ({ ...prev, endTime: "" }));
-                      }}
-                    />
-                    {errors.endTime && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.endTime}
-                      </p>
-                    )}
-                  </Field>
-                </div>
+                    </Field>
+                  </div>
+                )}
+
+                {/* Show Start Date and End Date if more than 1 day is selected */}
+                {EventDays > 1 && (
+                  <>
+                    <div className="w-full max-w-lg px-4 mt-4">
+                      <Field>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DemoContainer components={["DatePicker"]}>
+                            <DatePicker
+                              label="Start date"
+                              onChange={(date) => {
+                                setStartDate(date);
+                                setErrors((prev) => ({
+                                  ...prev,
+                                  startDate: "",
+                                }));
+                              }}
+                              sx={{
+                                width: "100%",
+                                "& .MuiOutlinedInput-root": {
+                                  color: "white",
+                                  "& fieldset": { borderColor: "white" },
+                                  "&:hover fieldset": { borderColor: "gray" },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "white",
+                                  },
+                                },
+                                "& .MuiInputLabel-root": { color: "white" },
+                                "& .MuiSvgIcon-root": { color: "white" },
+                              }}
+                            />
+                          </DemoContainer>
+                        </LocalizationProvider>
+                        {errors.startDate && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors.startDate}
+                          </p>
+                        )}
+                      </Field>
+                    </div>
+
+                    <div className="w-full max-w-lg px-4 mt-4">
+                      <Field>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DemoContainer components={["DatePicker"]}>
+                            <DatePicker
+                              label="End date"
+                              onChange={(date) => {
+                                setEndDate(date);
+                                setErrors((prev) => ({ ...prev, endDate: "" }));
+                              }}
+                              sx={{
+                                width: "100%",
+                                "& .MuiOutlinedInput-root": {
+                                  color: "white",
+                                  "& fieldset": { borderColor: "white" },
+                                  "&:hover fieldset": { borderColor: "gray" },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "white",
+                                  },
+                                },
+                                "& .MuiInputLabel-root": { color: "white" },
+                                "& .MuiSvgIcon-root": { color: "white" },
+                              }}
+                            />
+                          </DemoContainer>
+                        </LocalizationProvider>
+                        {errors.endDate && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors.endDate}
+                          </p>
+                        )}
+                      </Field>
+                    </div>
+                  </>
+                )}
+                {EventDays >= 1 && (
+                  <div className="w-[70%] flex">
+                    <div className="w-full max-w-lg px-4 mt-4">
+                      <Field>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DemoContainer components={["TimePicker"]}>
+                            <StyledTimePicker
+                              label="Start Time"
+                              onChange={(time) => {
+                                setStartTime(time);
+                                setErrors((prev) => ({
+                                  ...prev,
+                                  startTime: "",
+                                }));
+                              }}
+                              sx={{
+                                width: "100%",
+                                "& .MuiOutlinedInput-root": {
+                                  color: "white",
+                                  "& fieldset": { borderColor: "white" },
+                                  "&:hover fieldset": { borderColor: "gray" },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "white",
+                                  },
+                                },
+                                "& .MuiInputLabel-root": { color: "white" },
+                                "& .MuiSvgIcon-root": { color: "white" },
+                              }}
+                              // @ts-expect-error
+                              renderInput={(params) => (
+                                <TextField {...params} />
+                              )}
+                            />
+                          </DemoContainer>
+                        </LocalizationProvider>
+
+                        {errors.startTime && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors.startTime}
+                          </p>
+                        )}
+                      </Field>
+                    </div>
+
+                    <div className="w-full max-w-lg px-4 mt-4">
+                      <Field>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DemoContainer components={["TimePicker"]}>
+                            <StyledTimePicker
+                              label="End Time"
+                              onChange={(time) => {
+                                setEndTime(time);
+                                setErrors((prev) => ({ ...prev, endTime: "" }));
+                              }}
+                              sx={{
+                                width: "100%",
+                                "& .MuiOutlinedInput-root": {
+                                  color: "white",
+                                  "& fieldset": { borderColor: "white" },
+                                  "&:hover fieldset": { borderColor: "gray" },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "white",
+                                  },
+                                },
+                                "& .MuiInputLabel-root": { color: "white" },
+                                "& .MuiSvgIcon-root": { color: "white" },
+                              }}
+                              // @ts-expect-error
+                              renderInput={(params) => (
+                                <TextField {...params} />
+                              )}
+                            />
+                          </DemoContainer>
+                        </LocalizationProvider>
+                        {errors.endTime && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors.endTime}
+                          </p>
+                        )}
+                      </Field>
+                    </div>
+                  </div>
+                )}
 
                 <div className="w-full max-w-lg px-4 mt-4">
                   <Field>
                     <Label className="text-sm/6 font-medium text-white">
                       Add Event Location
                     </Label>
-                    <Description className="text-sm/6 text-white/50">
-                      Choose Onsite Location or Virtual link{" "}
-                    </Description>
-                    <textarea
-                      className={clsx(
-                        "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white h-20",
-                        "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 resize-none",
-                        errors.location && "border border-red-500",
-                      )}
-                      value={location}
-                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                        setLocation(e.target.value);
-                        setErrors((prev) => ({ ...prev, location: "" }));
-                      }}
-                    />
+                    <div className="flex space-x-4 items-center">
+                      <Description className="text-sm/6 text-white/50">
+                        Choose Onsite Location type{" "}
+                      </Description>
+                      <div className="flex space-x-4 items-center mt-2">
+                        <select
+                          className="w-[90px] px-2 py-1 bg-transparent text-white border border-white rounded-md focus:ring-2"
+                          onChange={(e) =>
+                            setEventPlatform(Number(e.target.value))
+                          }
+                        >
+                          <option value="" disabled selected>
+                            Select location type
+                          </option>
+                          <option value="0">Online</option>
+                          <option value="1">Physical</option>
+                        </select>
+                      </div>
+                    </div>
                     {errors.location && (
                       <p className="text-red-500 text-sm mt-1">
                         {errors.location}
                       </p>
+                    )}
+                    {(Eventplatform === 1 || Eventplatform === 0) && (
+                      <>
+                        {Eventplatform === 1 ? (
+                          <Description className="text-sm/6 text-white/50">
+                            Paste physical Location address{" "}
+                          </Description>
+                        ) : (
+                          <Description className="text-sm/6 text-white/50">
+                            Paste Virtual Link{" "}
+                          </Description>
+                        )}
+                        <textarea
+                          className={clsx(
+                            "mt-3 block w-full rounded-lg border-none bg-white/5 py-1.5 px-3 text-sm/6 text-white h-20",
+                            "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 resize-none",
+                            errors.location && "border border-red-500",
+                          )}
+                          value={location}
+                          onChange={(
+                            e: React.ChangeEvent<HTMLTextAreaElement>,
+                          ) => {
+                            setLocation(e.target.value);
+                            setErrors((prev) => ({ ...prev, location: "" }));
+                          }}
+                        />
+                        {errors.location && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors.location}
+                          </p>
+                        )}
+                      </>
                     )}
                   </Field>
                 </div>
@@ -566,7 +796,7 @@ const Myevents = (props: any) => {
                   )}
                 </div>
                 <Button
-                  onClick={!isSubmitting ? handleCreateEventButton : undefined}
+                  onClick={handleCreateEventButton}
                   disabled={isSubmitting}
                   className={`rounded-lg py-2 px-4 lg:h-[50px] items-center lg:w-[422px] text-sm text-white data-[hover]:bg-sky-500 data-[active]:bg-sky-700 justify-center hidden md:flex ${
                     isSubmitting
@@ -589,7 +819,7 @@ const Myevents = (props: any) => {
               </div>
 
               <Button
-                onClick={!isSubmitting ? handleCreateEventButton : undefined}
+                onClick={handleCreateEventButton}
                 disabled={isSubmitting}
                 className={`flex rounded-lg py-2 px-4 lg:h-[50px] items-center lg:w-[422px] text-sm text-white data-[hover]:bg-sky-500 data-[active]:bg-sky-700 justify-center md:hidden w-[90%] mt-10 mx-auto ${
                   isSubmitting
@@ -641,20 +871,22 @@ const Myevents = (props: any) => {
                 </Button>
               </div>
             )}
-            {existingeventStat && (
-              <div className="h-[508px] overflow-y-auto ">
-                {mockeventcreatedData.map((dataitem, index) => (
-                  <Eventcard
-                    key={index}
-                    todaydate={dataitem.today}
-                    time={dataitem.time}
-                    eventname={dataitem.name}
-                    host={dataitem.host}
-                    location={dataitem.location}
-                  />
-                ))}
-              </div>
-            )}
+            <div className="sm:h-[650px] sm:overflow-y-auto md:px-24">
+              {existingeventStat && (
+                <div className="h-[650px] overflow-y-auto">
+                  {mockeventcreatedData.map((dataitem, index) => (
+                    <Eventcard
+                      key={index}
+                      todaydate={dataitem.today}
+                      time={dataitem.time}
+                      eventname={dataitem.name}
+                      host={dataitem.host}
+                      location={dataitem.location}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           </>
         );
       case "registeredevent":
@@ -666,7 +898,7 @@ const Myevents = (props: any) => {
         return (
           <>
             {boiler()};
-            <div className="sm:h-[508px] sm:overflow-y-auto md:px-24">
+            <div className="sm:h-[650px] sm:overflow-y-auto md:px-24">
               {data.map((dataitem, index) => (
                 <Eventcard
                   key={index}
@@ -739,8 +971,21 @@ const Myevents = (props: any) => {
     }
   };
 
+  const eventContract = new Contract(
+    attensysEventAbi,
+    attensysEventAddress,
+    provider,
+  );
+  const getCreatedEvent = async () => {
+    const my_created_event = await eventContract.get_all_created_events(
+      wallet?.selectedAddress,
+    );
+    console.log(my_created_event);
+  };
+
   useEffect(() => {
-    setexistingeventStat(false);
+    setexistingeventStat(true);
+    getCreatedEvent();
     // getEvents();
   }, []);
 
@@ -757,7 +1002,7 @@ const Myevents = (props: any) => {
   return (
     <div
       // style={{ height }}
-      className="w-[100%] bg-event-gradient my-8 "
+      className="w-[100%] bg-event-gradient my-8 h-auto"
     >
       {renderContent()}
     </div>

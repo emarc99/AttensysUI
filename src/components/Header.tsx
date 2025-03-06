@@ -110,7 +110,7 @@ const Header = () => {
       setcourseStatus(!coursestatus);
       setbootcampdropstat(false);
     } else if (arg == "Events") {
-      router.push("/Events/events");
+      router.push("/Discoverevent");
     } else if (arg == "Bootcamps") {
       // e.stopPropagation();
       setbootcampdropstat(!bootcampdropstat);

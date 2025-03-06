@@ -29,6 +29,8 @@ export const useEvents = () => {
             start_time: data.time.start_time,
             registeration_open: data.time.registeration_open,
           },
+          event_uri: data.event_uri,
+          suspension_status: data.is_suspended,
         };
       });
       console.log({ formatedRes });
