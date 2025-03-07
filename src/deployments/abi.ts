@@ -718,6 +718,18 @@ export const attensysEventAbi = [
         name: "is_suspended",
         type: "core::bool",
       },
+      {
+        name: "event_id",
+        type: "core::integer::u256",
+      },
+      {
+        name: "location",
+        type: "core::integer::u8",
+      },
+      {
+        name: "canceled",
+        type: "core::bool",
+      },
     ],
   },
   {
@@ -760,6 +772,10 @@ export const attensysEventAbi = [
         name: "event_uri",
         type: "core::byte_array::ByteArray",
       },
+      {
+        name: "event_location",
+        type: "core::integer::u8",
+      },
     ],
     outputs: [
       {
@@ -800,6 +816,10 @@ export const attensysEventAbi = [
         name: "event_identifier",
         type: "core::integer::u256",
       },
+      {
+        name: "attendee_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
     ],
     outputs: [],
     state_mutability: "external",
@@ -814,6 +834,22 @@ export const attensysEventAbi = [
       },
     ],
     outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "get_registered_users",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+      },
+    ],
     state_mutability: "external",
   },
   {
@@ -864,6 +900,22 @@ export const attensysEventAbi = [
     outputs: [
       {
         type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::UserAttendedEventStruct>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_created_events",
+    inputs: [
+      {
+        name: "organizer",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::EventStruct>",
       },
     ],
     state_mutability: "view",
@@ -1059,6 +1111,34 @@ export const attensysEventAbi = [
       },
     ],
     state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_attendace_marked",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "cancel_event",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
   },
   {
     type: "constructor",

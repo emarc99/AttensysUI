@@ -1,6 +1,9 @@
 import React, { ChangeEvent, useRef, useState, useEffect } from "react";
 import { IoIosInformationCircleOutline, IoMdClose } from "react-icons/io";
-import { createbootcampoverlay } from "@/state/connectedWalletStarknetkitNext";
+import {
+  createbootcampoverlay,
+  createbootcampupload,
+} from "@/state/connectedWalletStarknetkitNext";
 import { useAtom } from "jotai";
 import { Button, Field, Input, Label } from "@headlessui/react";
 import clsx from "clsx";
@@ -79,6 +82,10 @@ const Create = (props: any) => {
   const [createOverlayStat, setCreateOverlayStat] = useAtom(
     createbootcampoverlay,
   );
+
+  const [createbootcampStat, setcreatebootcampStat] =
+    useAtom(createbootcampupload);
+
   const [value, onChange] = useState<Value>(new Date());
   const [startdateStat, SetStartDateStatus] = React.useState<Dayjs | null>(
     dayjs(),
@@ -212,7 +219,8 @@ const Create = (props: any) => {
   };
 
   const handlePublishButton = async () => {
-    setUploading(true);
+    setCreateOverlayStat(false);
+    setcreatebootcampStat(true);
     //@ts-ignore
     const bootcamplogo = await pinata.upload.file(bootcampData.BootcampLogo);
     //@ts-ignore
@@ -293,10 +301,9 @@ const Create = (props: any) => {
           console.error("Error: ", e);
         })
         .finally(() => {
-          setUploading(false);
+          setcreatebootcampStat(false);
           //@ts-ignore
           // router.push(`/Bootcamp/${bootcampData.bootcampName}/Outline`);
-          setCreateOverlayStat(false);
           //@ts-ignore
           setBootcampData(ResetBootcampData);
         });
@@ -386,18 +393,6 @@ const Create = (props: any) => {
 
   return (
     <div className="relative">
-      {/* Full screen loading overlay */}
-      {uploading && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg flex flex-col items-center gap-4">
-            <LoadingSpinner size="lg" colorVariant="primary" />
-            <p className="text-gray-700 font-medium">
-              Publishing bootcamp... Please wait
-            </p>
-          </div>
-        </div>
-      )}
-
       <div
         className="absolute z-[999] h-auto w-full"
         style={{

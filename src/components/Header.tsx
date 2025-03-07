@@ -45,6 +45,8 @@ import LupaPurple from "@/assets/LupaPurple.png";
 import organizationHeader from "@/assets/organizationHeader.png";
 import { courseQuestions } from "@/constants/data";
 import { useWallet } from "@/hooks/useWallet";
+import { NetworkSwitchButton } from "./connect/NetworkSwitchButton";
+import { connectWallet } from "@/utils/connectWallet";
 
 const navigation = [
   { name: "Courses", href: "#", current: false },
@@ -65,7 +67,14 @@ const Header = () => {
   const [bootcampdropstat, setbootcampdropstat] = useAtom(
     bootcampdropdownstatus,
   );
-  const { disconnectWallet } = useWallet();
+  const {
+    disconnectWallet,
+    isCorrectNetwork,
+    setIsCorrectNetwork,
+    wallet: hookWallet,
+    isConnecting,
+  } = useWallet();
+  // const [networkCorrect, setNetworkCorrect] = useState(isCorrectNetwork)
   const [isBootcampsOpen, setIsBootcampsOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -101,7 +110,7 @@ const Header = () => {
       setcourseStatus(!coursestatus);
       setbootcampdropstat(false);
     } else if (arg == "Events") {
-      router.push("/Events/events");
+      router.push("/Discoverevent");
     } else if (arg == "Bootcamps") {
       // e.stopPropagation();
       setbootcampdropstat(!bootcampdropstat);
@@ -109,6 +118,10 @@ const Header = () => {
     }
   };
   const [isCoursesOpen, setIsCoursesOpen] = useState(false);
+
+  useEffect(() => {
+    setIsCorrectNetwork(isCorrectNetwork);
+  }, [isCorrectNetwork, hookWallet, wallet]);
 
   const handleMobileNavClick = () => {
     setIsOpen(false);
@@ -208,16 +221,26 @@ const Header = () => {
                 </div>
                 <div className="absolute inset-y-0 right-0 items-center hidden md:hidden lg:flex sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                   {wallet ? (
-                    <>
-                      <DisconnectButton
-                        disconnectFn={disconnect}
-                        resetFn={() => {
-                          disconnectWallet();
-                        }}
-                      />
-                    </>
+                    !isCorrectNetwork ? (
+                      <>
+                        <NetworkSwitchButton
+                          isCorrectNetwork={isCorrectNetwork}
+                          setIsCorrectNetwork={setIsCorrectNetwork}
+                          connectedWallet={wallet}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <DisconnectButton
+                          disconnectFn={disconnect}
+                          resetFn={() => {
+                            disconnectWallet();
+                          }}
+                        />
+                      </>
+                    )
                   ) : (
-                    <ConnectButton />
+                    <ConnectButton setIsCorrectNetwork={setIsCorrectNetwork} />
                   )}
                 </div>
               </div>
@@ -492,31 +515,41 @@ const Header = () => {
 
                 <div className="px-4 py-3">
                   {wallet ? (
-                    <button
-                      onClick={() => {
-                        disconnectWallet();
-                        close();
-                      }}
-                      className="w-full bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] text-white py-2 rounded-md flex items-center justify-center space-x-2"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25V9m-4.5 0h12m-9 0v9a2.25 2.25 0 0 0 2.25 2.25h3A2.25 2.25 0 0 0 15 18V9m-6 0h6"
+                    !isCorrectNetwork ? (
+                      <>
+                        <NetworkSwitchButton
+                          isCorrectNetwork={isCorrectNetwork}
+                          setIsCorrectNetwork={setIsCorrectNetwork}
+                          connectedWallet={wallet}
                         />
-                      </svg>
-                      <span>Disconnect Wallet</span>
-                    </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          disconnectWallet();
+                          close();
+                        }}
+                        className="w-full bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] text-white py-2 rounded-md flex items-center justify-center space-x-2"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          className="w-5 h-5"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25V9m-4.5 0h12m-9 0v9a2.25 2.25 0 0 0 2.25 2.25h3A2.25 2.25 0 0 0 15 18V9m-6 0h6"
+                          />
+                        </svg>
+                        <span>Disconnect Wallet</span>
+                      </button>
+                    )
                   ) : (
-                    <ConnectButton />
+                    <ConnectButton setIsCorrectNetwork={setIsCorrectNetwork} />
                   )}
                 </div>
               </div>

@@ -23,11 +23,15 @@ import Explore from "@/components/courses/Explore";
 */
 import Landing from "@/components/homepage/Landing";
 import { useWallet } from "@/hooks/useWallet";
-import { walletStarknetkitNextAtom } from "@/state/connectedWalletStarknetkitNext";
+import {
+  walletStarknetkitNextAtom,
+  universalloadingstatus,
+} from "@/state/connectedWalletStarknetkitNext";
 
 export default function Home() {
   const [wallet, setWallet] = useAtom(walletStarknetkitNextAtom);
   const { autoConnectWallet } = useWallet();
+  const [universalLoad, setuniversalLoad] = useAtom(universalloadingstatus);
 
   useEffect(() => {
     if (wallet) return;
@@ -41,6 +45,10 @@ export default function Home() {
       });
     }
   }, []);
+
+  useEffect(() => {
+    setuniversalLoad(false);
+  });
 
   return (
     <div>

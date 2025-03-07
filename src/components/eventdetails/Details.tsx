@@ -99,6 +99,11 @@ const Details = (props: any) => {
     );
   }
 
+  const shortenAddress = (address: string) => {
+    if (!address) return "unavailable";
+    return `${address.slice(0, 8)}...${address.slice(-10)}`;
+  };
+
   return (
     <>
       {modalstat && <Modal status={modalstat} />}
@@ -115,14 +120,20 @@ const Details = (props: any) => {
                 This event is hosted by :
               </h1>
 
-              <div className="mt-4 flex space-x-5 justify-center items-center">
+              <div className="mt-4 flex space-x-5 items-center">
                 <div className="w-[49px] h-[49px] rounded-[100%]">
                   <Image src={live} alt="story" objectFit="cover" />
                 </div>
-                <h1 className="text-[16px] text-[#FFFFFF] font-semibold leading-[22px] w-full">
-                  {decimalToHexAddress(eventData?.event_organizer ?? 0n) ||
-                    "Akinbola Kehinde"}
-                </h1>
+                <div className="relative group cursor-pointer">
+                  <span className="text-white">
+                    {shortenAddress(
+                      decimalToHexAddress(eventData?.event_organizer ?? 0n),
+                    )}
+                  </span>
+                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-3 py-1 text-xs text-white bg-gray-900 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    {decimalToHexAddress(eventData?.event_organizer ?? 0n)}
+                  </span>
+                </div>
               </div>
 
               <h1 className="text-[18px]  text-[#FFFFFF] font-semibold leading-[22px] mt-8">
