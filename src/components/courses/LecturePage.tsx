@@ -499,7 +499,7 @@ const LecturePage = (props: any) => {
         <div className="hidden xl:block w-[30%] h-[1020px]">
           <h1>Courses you might like</h1>
           <div className="space-y-10">
-            <CardWithLink />
+            {/* <CardWithLink /> */}
             {/* <CardWithLink />
             <CardWithLink /> */}
           </div>
