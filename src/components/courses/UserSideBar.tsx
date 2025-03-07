@@ -104,13 +104,6 @@ const UserSideBar = ({
     return `${firstName} ${lastName}`;
   }
 
-  // Example usage
-  console.log(generateDummyName());
-
-  console.log("User", courseData.length);
-  console.log("User string", typeof wallet?.account?.address);
-  console.log("User string", shortHex(wallet?.account?.address));
-
   useEffect(() => {}, [wallet]);
 
   return (

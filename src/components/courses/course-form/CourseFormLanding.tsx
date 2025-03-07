@@ -309,7 +309,7 @@ const CourseFormLanding = (prop: any) => {
         </div>
       );
     default:
-      return <>hey</>;
+      return;
   }
 };
 

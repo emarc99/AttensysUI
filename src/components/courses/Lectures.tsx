@@ -24,9 +24,18 @@ const Lectures = ({ lectures, courseData, learningObj }: LectureData) => {
         <h2 className="block xl:hidden">Lectures in this course (2)</h2>
         {courseData.courseCurriculum?.map((item: any, id: any) => (
           <div key={id} className="block sm:flex py-3">
-            {item.video && <Image src={tdesign_video} alt="hero" />}
+            <div className="flex-3">
+              {item.video && (
+                <Image
+                  src={tdesign_video}
+                  alt="hero"
+                  height={100}
+                  width={100}
+                />
+              )}
+            </div>
 
-            <div className="sm:mx-10 mb-5-">
+            <div className="sm:mx-10 mb-5 flex-1">
               <h4 className="font-semibold text-[14px] text-[#333333] leading-[22px] my-2">
                 {item.name}
                 <span className="text-[#5801A9] ml-3">
@@ -34,7 +43,7 @@ const Lectures = ({ lectures, courseData, learningObj }: LectureData) => {
                 </span>
               </h4>
 
-              <p className="font-light text-[14px] text-[#333333] leading-[22px] h-[68px] w-[236px]">
+              <p className="font-light text-[14px] text-[#333333] leading-[22px] h-[68px] ">
                 {item.description}
               </p>
             </div>

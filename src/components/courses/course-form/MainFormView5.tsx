@@ -31,6 +31,42 @@ interface ChildComponentProps {
   ) => void;
 }
 
+// file setup
+const emptyData: FileObject = {
+  name: "",
+  type: "",
+  size: 0,
+  lastModified: 0,
+  arrayBuffer: async () => {
+    return new ArrayBuffer(0);
+  },
+};
+interface Lecture {
+  name: string;
+  description: string;
+  video: File | null;
+}
+
+const ResetCourseRegistrationData = {
+  primaryGoal: "",
+  targetAudience: "",
+  courseArea: "",
+  courseIdentifier: "",
+  courseName: "",
+  courseCreator: "",
+  courseDescription: "",
+  courseCategory: "",
+  difficultyLevel: "",
+  studentRequirements: "",
+  learningObjectives: "",
+  targetAudienceDesc: "",
+  courseImage: emptyData,
+  courseCurriculum: [] as Lecture[],
+  coursePricing: "",
+  promoAndDiscount: "",
+  publishWithCertificate: false,
+};
+
 const MainFormView5: React.FC<ChildComponentProps> = ({
   courseData,
   setCourseData,
@@ -52,48 +88,34 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
     handleCoursePublishWithCert(event);
   };
 
-  const handleCourseUpload = async () => {
+  const handleCourseUpload = async (e: any) => {
     setIsUploading(true);
-
-    try {
-      const courseImgupload = await pinata.upload.file(courseData.courseImage);
-      //  const selectedLectureVideoUpload = await
-
-      const dataUpload = await pinata.upload.json({
-        primaryGoal: courseData.primaryGoal,
-        targetAudience: courseData.targetAudience,
-        courseArea: courseData.courseArea,
-        courseCreator: courseData.courseCreator,
-        courseName: courseData.courseName,
-        courseDescription: courseData.courseDescription,
-        courseCategory: courseData.courseCategory,
-        difficultyLevel: courseData.difficultyLevel,
-        studentRequirements: courseData.studentRequirements,
-        learningObjectives: courseData.learningObjectives,
-        targetAudienceDesc: courseData.targetAudienceDesc,
-        courseImage: courseImgupload.IpfsHash,
-        courseCurriculum: courseData.courseCurriculum,
-        coursePricing: courseData.coursePricing,
-        promoAndDiscount: courseData.promoAndDiscount,
-        publishWithCertificate: courseData.publishWithCertificate,
-      });
-
-      if (dataUpload) {
-        setCidToContract(dataUpload.IpfsHash);
-        setcidCourseImage(courseImgupload.IpfsHash);
-      }
-    } catch (error) {
-      console.error("Error uploading course:", error);
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  const courseCreation = async (e: any) => {
     setIsSaving(true);
-    try {
-      await handleCourseUpload();
 
+    const courseImgupload = await pinata.upload.file(courseData.courseImage);
+    //  const selectedLectureVideoUpload = await
+
+    const dataUpload = await pinata.upload.json({
+      primaryGoal: courseData.primaryGoal,
+      targetAudience: courseData.targetAudience,
+      courseArea: courseData.courseArea,
+      courseIdentifier: "",
+      courseCreator: courseData.courseCreator,
+      courseName: courseData.courseName,
+      courseDescription: courseData.courseDescription,
+      courseCategory: courseData.courseCategory,
+      difficultyLevel: courseData.difficultyLevel,
+      studentRequirements: courseData.studentRequirements,
+      learningObjectives: courseData.learningObjectives,
+      targetAudienceDesc: courseData.targetAudienceDesc,
+      courseImage: courseImgupload.IpfsHash,
+      courseCurriculum: courseData.courseCurriculum,
+      coursePricing: courseData.coursePricing,
+      promoAndDiscount: courseData.promoAndDiscount,
+      publishWithCertificate: courseData.publishWithCertificate,
+    });
+
+    if (dataUpload) {
       const courseContract = new Contract(
         attensysCourseAbi,
         attensysCourseAddress,
@@ -103,10 +125,10 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
       const create_course_calldata = courseContract.populate("create_course", [
         wallet?.account?.address,
         false,
-        cidCourseImage,
+        courseImgupload.IpfsHash,
         courseData.courseName,
         "XXX",
-        cidToContract,
+        dataUpload.IpfsHash,
       ]);
 
       const callCourseContract = await wallet?.account.execute([
@@ -117,18 +139,22 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
         },
       ]);
 
-      await wallet?.account?.provider.waitForTransaction(
-        callCourseContract.transaction_hash,
-      );
-    } catch (error) {
-      console.error("Course creation failed:", error);
-    } finally {
-      setIsSaving(false);
-      handleCreateCourse(e, "course-landing-page", router);
+      console.log("call data value", callCourseContract);
+
+      await wallet?.account?.provider
+        .waitForTransaction(callCourseContract.transaction_hash)
+        .then(() => {})
+        .catch((e: any) => {
+          console.error("Error: ", e);
+        })
+        .finally(() => {
+          setIsUploading(false);
+          setIsSaving(false);
+          handleCreateCourse(e, "course-landing-page", router);
+          // setCourseData(ResetCourseRegistrationData);
+        });
     }
   };
-
-  // console.log(courseData.courseImage);
 
   useEffect(() => {
     // Check if file is a valid File object
@@ -193,14 +219,13 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
             </div>
             <div className="block lg:grid lg:grid-cols-2 gap-4">
               {/* Course Image */}
-              <div className="relative h-[338px]  w-[338px]">
+              <div className="relative h-[350px]  w-[500px]">
                 {imageSrc ? (
                   <Image
                     src={(imageSrc as string) || "/placeholder.svg"}
                     alt="Fetched Image"
-                    // layout="fill"
-                    width={400} // Explicit width
-                    height={400} // Explicit height
+                    width={500} // Explicit width
+                    height={500} // Explicit height
                     className="object-cover"
                   />
                 ) : (
@@ -312,7 +337,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                         : "bg-[#4A90E2]"
                     }`}
                     type="submit"
-                    onClick={!isSaving ? courseCreation : undefined}
+                    onClick={!isSaving ? handleCourseUpload : undefined}
                     disabled={isSaving}
                   >
                     {isSaving ? (

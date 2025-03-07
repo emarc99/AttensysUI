@@ -107,7 +107,6 @@ const MyCourses = (props: any) => {
     const validCourses = resolvedCourses.filter(
       (course): course is any => course !== null,
     );
-    console.log("valid here:", validCourses);
 
     // Remove duplicates before updating state
     setCourseData((prevCourses) => {

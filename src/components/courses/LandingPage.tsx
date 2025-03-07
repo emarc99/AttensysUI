@@ -149,7 +149,7 @@ const LandingPage: React.FC<ChildComponentProps> = ({
             </div>
 
             <h4
-              className="text-[39px] leading-[39px] w-[393px] h-[78px] my-5 font-bold text-black xl:text-white cursor-pointer"
+              className="text-[39px] leading-[39px] h-[78px] my-5 font-bold text-black xl:text-white cursor-pointer"
               onClick={(e) =>
                 handleCourse(e, e.currentTarget.textContent, router)
               }

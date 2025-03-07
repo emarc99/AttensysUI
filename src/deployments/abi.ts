@@ -148,7 +148,7 @@ export const attensysCourseAbi = [
     ],
     outputs: [
       {
-        type: "core::starknet::contract_address::ContractAddress",
+        type: "(core::starknet::contract_address::ContractAddress, core::integer::u256)",
       },
     ],
     state_mutability: "external",
@@ -172,6 +172,18 @@ export const attensysCourseAbi = [
       {
         name: "new_course_uri_b",
         type: "core::felt252",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "acquire_a_course",
+    inputs: [
+      {
+        name: "course_identifier",
+        type: "core::integer::u256",
       },
     ],
     outputs: [],
@@ -216,6 +228,22 @@ export const attensysCourseAbi = [
       {
         name: "course_identifiers",
         type: "core::array::Array::<core::integer::u256>",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysCourse::AttenSysCourse::Course>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_taken_courses",
+    inputs: [
+      {
+        name: "user",
+        type: "core::starknet::contract_address::ContractAddress",
       },
     ],
     outputs: [
@@ -945,8 +973,8 @@ export const attensysEventAbi = [
     name: "sponsor_event",
     inputs: [
       {
-        name: "event",
-        type: "core::starknet::contract_address::ContractAddress",
+        name: "event_identifier",
+        type: "core::integer::u256",
       },
       {
         name: "amt",
@@ -971,6 +999,34 @@ export const attensysEventAbi = [
     ],
     outputs: [],
     state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "set_sponsorship_contract",
+    inputs: [
+      {
+        name: "sponsor_contract_address",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "get_event_sponsorship_balance",
+    inputs: [
+      {
+        name: "event",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::integer::u256",
+      },
+    ],
+    state_mutability: "view",
   },
   {
     type: "function",
@@ -1466,6 +1522,28 @@ export const attensysOrgAbi = [
     ],
   },
   {
+    type: "struct",
+    name: "attendsys::contracts::AttenSysOrg::AttenSysOrg::RegisteredBootcamp",
+    members: [
+      {
+        name: "address_of_org",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "student",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "acceptance_status",
+        type: "core::bool",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+    ],
+  },
+  {
     type: "function",
     name: "create_org_profile",
     inputs: [
@@ -1671,7 +1749,7 @@ export const attensysOrgAbi = [
   },
   {
     type: "function",
-    name: "single_certify_student",
+    name: "batch_certify_students",
     inputs: [
       {
         name: "org_",
