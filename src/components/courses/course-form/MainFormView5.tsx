@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { IoMdArrowBack } from "@react-icons/all-files/io/IoMdArrowBack";
 import video from "@/assets/video.png";
 import youtube from "@/assets/youtube.svg";
@@ -41,6 +41,7 @@ const emptyData: FileObject = {
     return new ArrayBuffer(0);
   },
 };
+
 interface Lecture {
   name: string;
   description: string;
@@ -74,8 +75,6 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
   handleCoursePublishWithCert,
 }) => {
   const [isActivated, setIsActivated] = useState(false);
-  const [cidToContract, setCidToContract] = useState<string>("");
-  const [cidCourseImage, setcidCourseImage] = useState<string>("");
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -88,12 +87,13 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
     handleCoursePublishWithCert(event);
   };
 
+  const [receiptData, setReceiptData] = useState<any>(null);
+
   const handleCourseUpload = async (e: any) => {
     setIsUploading(true);
     setIsSaving(true);
 
     const courseImgupload = await pinata.upload.file(courseData.courseImage);
-    //  const selectedLectureVideoUpload = await
 
     const dataUpload = await pinata.upload.json({
       primaryGoal: courseData.primaryGoal,
@@ -131,6 +131,8 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
         dataUpload.IpfsHash,
       ]);
 
+      console.log("call data value populate", create_course_calldata);
+
       const callCourseContract = await wallet?.account.execute([
         {
           contractAddress: attensysCourseAddress,
@@ -139,17 +141,19 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
         },
       ]);
 
-      console.log("call data value", callCourseContract);
-
-      await wallet?.account?.provider
+      const receipt = await wallet?.account?.provider
         .waitForTransaction(callCourseContract.transaction_hash)
-        .then(() => {})
+        .then((res: any) => {
+          console.log("what is ", res);
+          setReceiptData(res);
+        })
         .catch((e: any) => {
           console.error("Error: ", e);
         })
         .finally(() => {
           setIsUploading(false);
           setIsSaving(false);
+
           handleCreateCourse(e, "course-landing-page", router);
           // setCourseData(ResetCourseRegistrationData);
         });
@@ -168,7 +172,9 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
         URL.revokeObjectURL(imageUrl);
       };
     }
-  }, [courseData.courseImage, cidToContract]);
+  }, [courseData.courseImage]);
+
+  useEffect(() => {}, [receiptData]);
 
   return (
     <div className="lg:flex">

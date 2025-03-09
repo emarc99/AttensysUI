@@ -68,7 +68,6 @@ const MyCourses = (props: any) => {
     const res: CourseType[] = await courseContract?.get_all_creator_courses(
       wallet?.selectedAddress,
     );
-    console.log("nothing???", res);
     setCourses(res);
   };
 

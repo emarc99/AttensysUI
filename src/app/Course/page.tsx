@@ -43,7 +43,6 @@ const Index = () => {
 
   const getAllCourses = async () => {
     const res: CourseType[] = await getAllCoursesInfo();
-    console.log("nothing???", res);
     setCourses(res);
   };
 
