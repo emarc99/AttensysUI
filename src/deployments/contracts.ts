@@ -3,8 +3,10 @@
  * You should not edit it manually or your changes might be overwritten.
  */
 
+// export const attensysCourseAddress =
+//   "0x1a721bd08928bdaff88d5d8f4573990f3aa494c2f94116ce87d5d24fe0297f6";
 export const attensysCourseAddress =
-  "0x1a721bd08928bdaff88d5d8f4573990f3aa494c2f94116ce87d5d24fe0297f6";
+  "0xaafcc3ee843d67439d087d379d0f8f8b95aa98106d198bb33b691201901fff";
 export const attensysEventAddress =
   "0x4578d670d0596dc3b48c3a4576aa6da4607617c737909bc50e08489cd1241ab";
 export const attensysOrgAddress =
