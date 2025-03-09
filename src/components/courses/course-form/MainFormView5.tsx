@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { IoMdArrowBack } from "@react-icons/all-files/io/IoMdArrowBack";
 import video from "@/assets/video.png";
 import youtube from "@/assets/youtube.svg";
@@ -41,16 +41,20 @@ const emptyData: FileObject = {
     return new ArrayBuffer(0);
   },
 };
+
 interface Lecture {
   name: string;
   description: string;
   video: File | null;
 }
+
 const ResetCourseRegistrationData = {
   primaryGoal: "",
   targetAudience: "",
   courseArea: "",
+  courseIdentifier: "",
   courseName: "",
+  courseCreator: "",
   courseDescription: "",
   courseCategory: "",
   difficultyLevel: "",
@@ -71,8 +75,6 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
   handleCoursePublishWithCert,
 }) => {
   const [isActivated, setIsActivated] = useState(false);
-  const [cidToContract, setCidToContract] = useState<string>("");
-  const [cidCourseImage, setcidCourseImage] = useState<string>("");
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -85,47 +87,35 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
     handleCoursePublishWithCert(event);
   };
 
-  const handleCourseUpload = async () => {
+  const [receiptData, setReceiptData] = useState<any>(null);
+
+  const handleCourseUpload = async (e: any) => {
     setIsUploading(true);
-
-    try {
-      const courseImgupload = await pinata.upload.file(courseData.courseImage);
-      //  const selectedLectureVideoUpload = await
-
-      const dataUpload = await pinata.upload.json({
-        primaryGoal: courseData.primaryGoal,
-        targetAudience: courseData.targetAudience,
-        courseArea: courseData.courseArea,
-        courseName: courseData.courseName,
-        courseDescription: courseData.courseDescription,
-        courseCategory: courseData.courseCategory,
-        difficultyLevel: courseData.difficultyLevel,
-        studentRequirements: courseData.studentRequirements,
-        learningObjectives: courseData.learningObjectives,
-        targetAudienceDesc: courseData.targetAudienceDesc,
-        courseImage: courseImgupload.IpfsHash,
-        courseCurriculum: courseData.courseCurriculum,
-        coursePricing: courseData.coursePricing,
-        promoAndDiscount: courseData.promoAndDiscount,
-        publishWithCertificate: courseData.publishWithCertificate,
-      });
-
-      if (dataUpload) {
-        setCidToContract(dataUpload.IpfsHash);
-        setcidCourseImage(courseImgupload.IpfsHash);
-      }
-    } catch (error) {
-      console.error("Error uploading course:", error);
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  const courseCreation = async (e: any) => {
     setIsSaving(true);
-    try {
-      await handleCourseUpload();
 
+    const courseImgupload = await pinata.upload.file(courseData.courseImage);
+
+    const dataUpload = await pinata.upload.json({
+      primaryGoal: courseData.primaryGoal,
+      targetAudience: courseData.targetAudience,
+      courseArea: courseData.courseArea,
+      courseIdentifier: "",
+      courseCreator: courseData.courseCreator,
+      courseName: courseData.courseName,
+      courseDescription: courseData.courseDescription,
+      courseCategory: courseData.courseCategory,
+      difficultyLevel: courseData.difficultyLevel,
+      studentRequirements: courseData.studentRequirements,
+      learningObjectives: courseData.learningObjectives,
+      targetAudienceDesc: courseData.targetAudienceDesc,
+      courseImage: courseImgupload.IpfsHash,
+      courseCurriculum: courseData.courseCurriculum,
+      coursePricing: courseData.coursePricing,
+      promoAndDiscount: courseData.promoAndDiscount,
+      publishWithCertificate: courseData.publishWithCertificate,
+    });
+
+    if (dataUpload) {
       const courseContract = new Contract(
         attensysCourseAbi,
         attensysCourseAddress,
@@ -135,11 +125,13 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
       const create_course_calldata = courseContract.populate("create_course", [
         wallet?.account?.address,
         false,
-        cidCourseImage,
+        courseImgupload.IpfsHash,
         courseData.courseName,
         "XXX",
-        cidToContract,
+        dataUpload.IpfsHash,
       ]);
+
+      console.log("call data value populate", create_course_calldata);
 
       const callCourseContract = await wallet?.account.execute([
         {
@@ -149,18 +141,24 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
         },
       ]);
 
-      await wallet?.account?.provider.waitForTransaction(
-        callCourseContract.transaction_hash,
-      );
-    } catch (error) {
-      console.error("Course creation failed:", error);
-    } finally {
-      setIsSaving(false);
-      handleCreateCourse(e, "course-landing-page", router);
+      const receipt = await wallet?.account?.provider
+        .waitForTransaction(callCourseContract.transaction_hash)
+        .then((res: any) => {
+          console.log("what is ", res);
+          setReceiptData(res);
+        })
+        .catch((e: any) => {
+          console.error("Error: ", e);
+        })
+        .finally(() => {
+          setIsUploading(false);
+          setIsSaving(false);
+
+          handleCreateCourse(e, "course-landing-page", router);
+          // setCourseData(ResetCourseRegistrationData);
+        });
     }
   };
-
-  console.log(courseData.courseImage);
 
   useEffect(() => {
     // Check if file is a valid File object
@@ -175,6 +173,8 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
       };
     }
   }, [courseData.courseImage]);
+
+  useEffect(() => {}, [receiptData]);
 
   return (
     <div className="lg:flex">
@@ -220,25 +220,19 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
             {/* field */}
             <div className="mb-3 order-first block lg:hidden">
               <p className="text-[#5801A9] text-[16px] font-medium leading-[22px]">
-                Technology | Web Development
+                {courseData.courseCategory} | Web Development
               </p>
             </div>
             <div className="block lg:grid lg:grid-cols-2 gap-4">
               {/* Course Image */}
-              <div className="w-full lg:w-[368px] h-[238px] rounded-xl mb-4 lg:mb-0 p-3w-[368px] h-[238px] rounded-xl">
-                <Image
-                  src={video}
-                  alt="hero"
-                  className="h-full w-full object-cover rounded-xl"
-                />
-
+              <div className="relative h-[350px]  w-[500px]">
                 {imageSrc ? (
                   <Image
                     src={(imageSrc as string) || "/placeholder.svg"}
                     alt="Fetched Image"
-                    layout="fill"
-                    objectFit="cover"
-                    className="h-full w-full object-cover rounded-xl border-4 border-[#4A90E2]"
+                    width={500} // Explicit width
+                    height={500} // Explicit height
+                    className="object-cover"
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full">
@@ -267,7 +261,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
 
                 <div className="bg-[#5801A9] py-2 text-white w-fit p-2 text-center mt-6 mb-3 lg:w-[50%] rounded-lg">
                   <p className="text-[14px] font-extrabold leading-[22px]">
-                    Tech Innovators Academy
+                    {courseData.courseCreator}
                   </p>
                 </div>
 
@@ -280,12 +274,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
               </div>
             </div>
             <div className="  text-[#333333] text-[14px] font-light leading-[22px]">
-              <p>
-                {`  This course provides a foundational understanding of web
-            development. You'll learn essential skills in HTML and CSS, enabling
-            you to create and style your own web pages. No prior experience is
-            necessary!`}
-              </p>
+              <p>{courseData.targetAudienceDesc}</p>
             </div>
 
             <div className="mt-8">
@@ -294,11 +283,9 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                 <h2 className="font-semibold text-[18px] leading-[31px] text-[#333333] mb-2">
                   Student Requirements
                 </h2>
-                <ul className="text-sm text-[#333333] list-disc pl-5 space-y-1">
-                  <li>A computer with internet access</li>
-                  <li>Basic computer skills</li>
-                  <li>Willingness to learn and experiment</li>
-                </ul>
+                <div>
+                  <p>{courseData.studentRequirements}</p>
+                </div>
               </div>
 
               {/* Target Audience */}
@@ -306,18 +293,20 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                 <h2 className="font-semibold text-[18px] leading-[31px] text-[#333333] mb-2">
                   Target Audience
                 </h2>
-                <ul className="text-sm text-[#333333] list-disc pl-5 space-y-1">
+                {/* <ul className="text-sm text-[#333333] list-disc pl-5 space-y-1">
                   <li>Beginners interested in web development</li>
                   <li>
                     Aspiring web developers looking to start their journey
                   </li>
                   <li>Anyone wanting to create their own websites</li>
-                </ul>
+                </ul> */}
+                {courseData.targetAudience}
               </div>
 
               {/* lectures in course */}
               <Lectures
                 lectures={lectures}
+                courseData={courseData}
                 learningObj={courseData.learningObjectives}
               />
               {/* course desc & student req */}
@@ -354,7 +343,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                         : "bg-[#4A90E2]"
                     }`}
                     type="submit"
-                    onClick={!isSaving ? courseCreation : undefined}
+                    onClick={!isSaving ? handleCourseUpload : undefined}
                     disabled={isSaving}
                   >
                     {isSaving ? (

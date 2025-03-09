@@ -13,6 +13,20 @@ import MyCertifications from "@/components/certifications/MyCertifications";
 import { useRouter, useSearchParams } from "next/navigation";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
+interface CourseType {
+  data: any;
+  owner: string;
+  course_identifier: number;
+  accessment: boolean;
+  uri: Uri;
+  course_ipfs_uri: string;
+  is_suspended: boolean;
+}
+
+interface Uri {
+  first: string;
+  second: string;
+}
 const Index = () => {
   const [status, setstatus] = useAtom(coursestatusAtom);
   const [bootcampdropstat, setbootcampdropstat] = useAtom(
@@ -28,13 +42,9 @@ const Index = () => {
   // const userId = searchParams.get('userId');
   const search = searchParams.get("userId");
 
-  // This will be logged on the server during the initial render
-  // and on the client on subsequent navigations.
-  console.info(search);
-
-  // Now you can use the userId
-  console.info(searchParams);
-  // console.log(router)
+  const [wallet] = useAtom(walletStarknetkit);
+  const [courses, setCourses] = useState<CourseType[]>([]);
+  const [courseData, setCourseData] = useState<CourseType[]>([]);
 
   const handlePageClick = () => {
     setbootcampdropstat(false);
@@ -92,7 +102,7 @@ const Index = () => {
         <Bootcampdropdown />
       </div>
 
-      <MyCertifications />
+      <MyCertifications wallet={wallet} courseData={courseData} />
     </div>
   );
 };

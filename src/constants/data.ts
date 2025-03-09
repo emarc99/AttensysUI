@@ -712,6 +712,81 @@ export const HighlightData = [
     time: "Wed, Oct 30,4pm",
     image: last,
   },
+  {
+    name: "The Ari Experience",
+    time: "Wed, Oct 30,4pm",
+    image: saibat,
+  },
+  {
+    name: "The Ari Experience",
+    time: "Wed, Oct 30,4pm",
+    image: stunt,
+  },
+  {
+    name: "The Ari Experience",
+    time: "Wed, Oct 30,4pm",
+    image: social,
+  },
+  {
+    name: "The Ari Experience",
+    time: "Wed, Oct 30,4pm",
+    image: grapic,
+  },
+  {
+    name: "The Ari Experience",
+    time: "Wed, Oct 30,4pm",
+    image: last,
+  },
+  {
+    name: "The Ari Experience",
+    time: "Wed, Oct 30,4pm",
+    image: saibat,
+  },
+  {
+    name: "The Ari Experience",
+    time: "Wed, Oct 30,4pm",
+    image: stunt,
+  },
+  {
+    name: "The Ari Experience",
+    time: "Wed, Oct 30,4pm",
+    image: social,
+  },
+  {
+    name: "The Ari Experience",
+    time: "Wed, Oct 30,4pm",
+    image: grapic,
+  },
+  {
+    name: "The Ari Experience",
+    time: "Wed, Oct 30,4pm",
+    image: last,
+  },
+  {
+    name: "The Ari Experience",
+    time: "Wed, Oct 30,4pm",
+    image: saibat,
+  },
+  {
+    name: "The Ari Experience",
+    time: "Wed, Oct 30,4pm",
+    image: stunt,
+  },
+  {
+    name: "The Ari Experience",
+    time: "Wed, Oct 30,4pm",
+    image: social,
+  },
+  {
+    name: "The Ari Experience",
+    time: "Wed, Oct 30,4pm",
+    image: grapic,
+  },
+  {
+    name: "The Ari Experience",
+    time: "Wed, Oct 30,4pm",
+    image: last,
+  },
 ];
 
 export const allEventData = [

@@ -299,6 +299,7 @@ const Create = (props: any) => {
         .then(() => {})
         .catch((e: any) => {
           console.error("Error: ", e);
+          setcreatebootcampStat(false);
         })
         .finally(() => {
           setcreatebootcampStat(false);

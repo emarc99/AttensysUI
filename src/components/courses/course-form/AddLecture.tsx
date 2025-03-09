@@ -1,15 +1,17 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import upload_other from "@/assets/upload_other.svg";
 import tick_circle from "@/assets/tick-circle.svg";
 import trash from "@/assets/trash.svg";
 import film from "@/assets/film.svg";
 import { Button } from "@headlessui/react";
 import Image from "next/image";
+import axios from "axios";
 
 interface Lecture {
   name: string;
   description: string;
-  video: File | null;
+  video: string;
+  fileProp: File | null;
 }
 
 interface CourseData {
@@ -22,6 +24,21 @@ interface LectureProps {
   handleCourseCurriculumChange: (newLecture: any) => void;
 }
 
+interface FormData {
+  topic: string;
+  description: string;
+  assignment: string;
+  videoUrl: string;
+  thumbnailUrl: string;
+}
+
+interface UploadStatus {
+  success: boolean;
+  error: string | null;
+  showMessage: boolean;
+  progress: number;
+}
+
 const AddLecture: React.FC<LectureProps> = ({
   courseData,
   setCourseData,
@@ -31,8 +48,33 @@ const AddLecture: React.FC<LectureProps> = ({
   const [newLecture, setNewLecture] = useState<Lecture>({
     name: "",
     description: "",
-    video: null,
+    video: "",
+    fileProp: null,
   });
+  const [uploadStatus, setUploadStatus] = useState({
+    video: {
+      success: false,
+      error: null,
+      showMessage: false,
+      progress: 0,
+    } as UploadStatus,
+    thumbnail: {
+      success: false,
+      error: null,
+      showMessage: false,
+      progress: 0,
+    } as UploadStatus,
+  });
+  const [formData, setFormData] = useState<FormData>({
+    topic: "",
+    description: "",
+    assignment: "",
+    videoUrl: "",
+    thumbnailUrl: "",
+  });
+  const videoInputRef = useRef<HTMLInputElement>(null);
+  const thumbnailInputRef = useRef<HTMLInputElement>(null);
+  const [uploadhash, setUploadHash] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const handleBrowsefiles = () => {
@@ -51,13 +93,7 @@ const AddLecture: React.FC<LectureProps> = ({
   };
 
   // Handler for file upload
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files ? event.target.files[0] : null;
-    setNewLecture((prev) => ({
-      ...prev,
-      video: file,
-    }));
-  };
+  console.log("new lecture", newLecture);
 
   // Handler to add new lecture to the array
   const handleAddLecture = (event: React.MouseEvent) => {
@@ -68,7 +104,7 @@ const AddLecture: React.FC<LectureProps> = ({
     setLectures([newLecture, ...lectures]);
 
     handleCourseCurriculumChange(newLecture);
-    setNewLecture({ name: "", description: "", video: null });
+    setNewLecture({ name: "", description: "", video: "", fileProp: null });
   };
 
   // Handler to remove a lecture
@@ -88,15 +124,151 @@ const AddLecture: React.FC<LectureProps> = ({
     }));
   };
 
+  const handleFileUpload = async (file: File, type: "video" | "thumbnail") => {
+    if (!file) return;
+
+    try {
+      setUploadStatus((prev) => ({
+        ...prev,
+        [type]: { ...prev[type], progress: 0 },
+      }));
+
+      setNewLecture((prev) => ({
+        ...prev,
+        fileProp: file,
+      }));
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await axios.post(
+        "https://api.pinata.cloud/pinning/pinFileToIPFS",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
+          },
+          onUploadProgress: (progressEvent) => {
+            const progress = progressEvent.total
+              ? Math.round((progressEvent.loaded / progressEvent.total) * 100)
+              : 0;
+            setUploadStatus((prev) => ({
+              ...prev,
+              [type]: { ...prev[type], progress },
+            }));
+          },
+        },
+      );
+
+      const ipfsHash = response.data.IpfsHash;
+      const url = `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${ipfsHash}`;
+
+      setUploadStatus((prev) => ({
+        ...prev,
+        [type]: {
+          success: true,
+          error: null,
+          showMessage: true,
+          progress: 100,
+        },
+      }));
+
+      // setFormData((prev) => ({
+      //   ...prev,
+      //   [type === "video" ? "videoUrl" : "thumbnailUrl"]: url,
+      // }));
+
+      setNewLecture((prev) => ({
+        ...prev,
+        [type === "video" ? "video" : "thumbnail"]: url,
+      }));
+
+      setTimeout(() => {
+        setUploadStatus((prev) => ({
+          ...prev,
+          [type]: { ...prev[type], showMessage: false },
+        }));
+      }, 5000);
+
+      if (ipfsHash) {
+        console.info(ipfsHash);
+        setUploadHash(ipfsHash);
+      }
+    } catch (error: any) {
+      console.error("Upload error:", error);
+      setUploadStatus((prev) => ({
+        ...prev,
+        [type]: {
+          success: false,
+          error: error.message,
+          showMessage: true,
+          progress: 0,
+        },
+      }));
+
+      setTimeout(() => {
+        setUploadStatus((prev) => ({
+          ...prev,
+          [type]: { ...prev[type], showMessage: false },
+        }));
+      }, 5000);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent, type: "video" | "thumbnail") => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (type === "video" && !file.type.includes("video")) {
+      alert("Please upload a valid video file");
+      return;
+    }
+    if (type === "thumbnail" && !file.type.includes("image")) {
+      alert("Please upload a valid image file");
+      return;
+    }
+    handleFileUpload(file, type);
+  };
+
+  const handleFileSelect = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: "video" | "thumbnail",
+  ) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleFileUpload(file, type);
+    }
+  };
+
+  useEffect(() => {}, [newLecture]);
+
   return (
     <div>
       <div className="my-12">
         <Button
           className="rounded-xl bg-[#9b51e052] px-12 py-4  text-[#2d3a4b]"
           onClick={handleAddLecture}
+          disabled={
+            uploadStatus.video.progress > 0 && uploadStatus.video.progress < 100
+          }
         >
-          + Add New Lecture
+          {uploadStatus.video.progress > 0 && uploadStatus.video.progress < 100
+            ? `Uploading (${uploadStatus.video.progress}%)`
+            : " + Add New Lecture"}
         </Button>
+
+        <div>
+          {uploadStatus.video.progress > 0 &&
+            uploadStatus.video.progress < 100 && (
+              <div className="w-[90%]  bg-gray-200 rounded-full h-2.5 mt-2">
+                <div
+                  className="bg-green-600 h-2.5 rounded-full"
+                  style={{
+                    width: `${uploadStatus.video.progress}%`,
+                  }}
+                ></div>
+              </div>
+            )}
+        </div>
 
         {/* Render new lecture forms dynamically */}
         {/* {lectures.map((lecture, index) => ( */}
@@ -109,6 +281,7 @@ const AddLecture: React.FC<LectureProps> = ({
               value={newLecture.name}
               onChange={handleChange}
               className="w-[90%]"
+              maxLength={70}
             />
           </div>
           <div className="flex bg-white p-5 rounded-xl my-3">
@@ -119,6 +292,7 @@ const AddLecture: React.FC<LectureProps> = ({
               value={newLecture.description}
               onChange={handleChange}
               className="w-[100%]"
+              maxLength={200}
             ></textarea>
           </div>
           <div className="bg-white p-5 rounded-xl my-3 text-center content-center w-[100%] flex flex-col justify-center">
@@ -129,6 +303,8 @@ const AddLecture: React.FC<LectureProps> = ({
               <span
                 className="text-[#A020F0] cursor-pointer"
                 onClick={handleBrowsefiles}
+                onDrop={(e) => handleDrop(e, "video")}
+                onDragOver={(e) => e.preventDefault()}
               >
                 Click to upload
               </span>{" "}
@@ -143,7 +319,7 @@ const AddLecture: React.FC<LectureProps> = ({
                 type="file"
                 accept="video/*"
                 ref={fileInputRef}
-                onChange={handleFileChange}
+                onChange={(e) => handleFileSelect(e, "video")}
                 className="mt-3"
                 style={{ display: "none" }}
               />
@@ -199,10 +375,10 @@ const AddLecture: React.FC<LectureProps> = ({
                       </div>
                       <div className="mx-3">
                         <p className="text-[16px] font-medium text-[#353535] leading-[20px]">
-                          {lecture.video.name}
+                          {lecture.fileProp.name}
                         </p>
                         <p className="text-[11px] font-normal text-[#353535] leading-[20px]">
-                          {`${Math.round(lecture.video.size / 1024)} KB`}
+                          {`${Math.round(lecture.fileProp.size / 1024)} KB`}
                         </p>
                       </div>
                     </div>

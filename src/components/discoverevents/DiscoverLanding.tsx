@@ -23,6 +23,8 @@ export interface EventData {
     start_time: bigint;
     registeration_open: boolean;
   };
+  event_uri: string;
+  suspension_status: boolean;
 }
 const DiscoverLanding = () => {
   const { events, getEvents, loading } = useEvents();
@@ -42,13 +44,15 @@ const DiscoverLanding = () => {
     );
   }
 
+  console.log("this is all events data", events);
+
   return (
     <div className="w-full bg-event-gradient">
       <TopdiscoverSection />
       <Backgroundsection />
       <Timesection />
-      <Highlight />
-      <Allevents events={events} />
+      <Highlight events={events} />
+      {/* <Allevents events={events} /> */}
     </div>
   );
 };

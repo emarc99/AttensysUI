@@ -46,6 +46,8 @@ const CourseForm3 = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    handleCoursePlanChange(selectedOption);
+
     if (!selectedOption) {
       setErrors({ general: "Please select one option." });
       return;

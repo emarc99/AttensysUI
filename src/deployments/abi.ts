@@ -148,7 +148,7 @@ export const attensysCourseAbi = [
     ],
     outputs: [
       {
-        type: "core::starknet::contract_address::ContractAddress",
+        type: "(core::starknet::contract_address::ContractAddress, core::integer::u256)",
       },
     ],
     state_mutability: "external",
@@ -172,6 +172,18 @@ export const attensysCourseAbi = [
       {
         name: "new_course_uri_b",
         type: "core::felt252",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "acquire_a_course",
+    inputs: [
+      {
+        name: "course_identifier",
+        type: "core::integer::u256",
       },
     ],
     outputs: [],
@@ -216,6 +228,22 @@ export const attensysCourseAbi = [
       {
         name: "course_identifiers",
         type: "core::array::Array::<core::integer::u256>",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysCourse::AttenSysCourse::Course>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_taken_courses",
+    inputs: [
+      {
+        name: "user",
+        type: "core::starknet::contract_address::ContractAddress",
       },
     ],
     outputs: [
@@ -624,25 +652,11 @@ export const attensysEventAbi = [
   },
   {
     type: "struct",
-    name: "attendsys::contracts::AttenSysEvent::AttenSysEvent::UserAttendedEventStruct",
-    members: [
-      {
-        name: "event_name",
-        type: "core::byte_array::ByteArray",
-      },
-      {
-        name: "time",
-        type: "core::integer::u256",
-      },
-    ],
-  },
-  {
-    type: "struct",
     name: "attendsys::contracts::AttenSysEvent::AttenSysEvent::Time",
     members: [
       {
         name: "registration_open",
-        type: "core::bool",
+        type: "core::integer::u8",
       },
       {
         name: "start_time",
@@ -651,6 +665,32 @@ export const attensysEventAbi = [
       {
         name: "end_time",
         type: "core::integer::u256",
+      },
+    ],
+  },
+  {
+    type: "struct",
+    name: "attendsys::contracts::AttenSysEvent::AttenSysEvent::UserAttendedEventStruct",
+    members: [
+      {
+        name: "event_name",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "time",
+        type: "attendsys::contracts::AttenSysEvent::AttenSysEvent::Time",
+      },
+      {
+        name: "event_organizer",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "event_id",
+        type: "core::integer::u256",
+      },
+      {
+        name: "event_uri",
+        type: "core::byte_array::ByteArray",
       },
     ],
   },
@@ -690,6 +730,18 @@ export const attensysEventAbi = [
         name: "is_suspended",
         type: "core::bool",
       },
+      {
+        name: "event_id",
+        type: "core::integer::u256",
+      },
+      {
+        name: "location",
+        type: "core::integer::u8",
+      },
+      {
+        name: "canceled",
+        type: "core::bool",
+      },
     ],
   },
   {
@@ -726,11 +778,15 @@ export const attensysEventAbi = [
       },
       {
         name: "reg_status",
-        type: "core::bool",
+        type: "core::integer::u8",
       },
       {
         name: "event_uri",
         type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "event_location",
+        type: "core::integer::u8",
       },
     ],
     outputs: [
@@ -772,6 +828,10 @@ export const attensysEventAbi = [
         name: "event_identifier",
         type: "core::integer::u256",
       },
+      {
+        name: "attendee_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
     ],
     outputs: [],
     state_mutability: "external",
@@ -786,6 +846,22 @@ export const attensysEventAbi = [
       },
     ],
     outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "get_registered_users",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+      },
+    ],
     state_mutability: "external",
   },
   {
@@ -842,11 +918,27 @@ export const attensysEventAbi = [
   },
   {
     type: "function",
+    name: "get_all_created_events",
+    inputs: [
+      {
+        name: "organizer",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::EventStruct>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
     name: "start_end_reg",
     inputs: [
       {
         name: "reg_stat",
-        type: "core::bool",
+        type: "core::integer::u8",
       },
       {
         name: "event_identifier",
@@ -945,8 +1037,8 @@ export const attensysEventAbi = [
     name: "sponsor_event",
     inputs: [
       {
-        name: "event",
-        type: "core::starknet::contract_address::ContractAddress",
+        name: "event_identifier",
+        type: "core::integer::u256",
       },
       {
         name: "amt",
@@ -971,6 +1063,34 @@ export const attensysEventAbi = [
     ],
     outputs: [],
     state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "set_sponsorship_contract",
+    inputs: [
+      {
+        name: "sponsor_contract_address",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "get_event_sponsorship_balance",
+    inputs: [
+      {
+        name: "event",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::integer::u256",
+      },
+    ],
+    state_mutability: "view",
   },
   {
     type: "function",
@@ -1003,6 +1123,34 @@ export const attensysEventAbi = [
       },
     ],
     state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_attendace_marked",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "cancel_event",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
   },
   {
     type: "constructor",
@@ -1150,7 +1298,7 @@ export const attensysEventAbi = [
       },
       {
         name: "registration_open",
-        type: "core::bool",
+        type: "core::integer::u8",
         kind: "data",
       },
     ],
