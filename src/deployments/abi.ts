@@ -624,25 +624,11 @@ export const attensysEventAbi = [
   },
   {
     type: "struct",
-    name: "attendsys::contracts::AttenSysEvent::AttenSysEvent::UserAttendedEventStruct",
-    members: [
-      {
-        name: "event_name",
-        type: "core::byte_array::ByteArray",
-      },
-      {
-        name: "time",
-        type: "core::integer::u256",
-      },
-    ],
-  },
-  {
-    type: "struct",
     name: "attendsys::contracts::AttenSysEvent::AttenSysEvent::Time",
     members: [
       {
         name: "registration_open",
-        type: "core::bool",
+        type: "core::integer::u8",
       },
       {
         name: "start_time",
@@ -651,6 +637,32 @@ export const attensysEventAbi = [
       {
         name: "end_time",
         type: "core::integer::u256",
+      },
+    ],
+  },
+  {
+    type: "struct",
+    name: "attendsys::contracts::AttenSysEvent::AttenSysEvent::UserAttendedEventStruct",
+    members: [
+      {
+        name: "event_name",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "time",
+        type: "attendsys::contracts::AttenSysEvent::AttenSysEvent::Time",
+      },
+      {
+        name: "event_organizer",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "event_id",
+        type: "core::integer::u256",
+      },
+      {
+        name: "event_uri",
+        type: "core::byte_array::ByteArray",
       },
     ],
   },
@@ -738,7 +750,7 @@ export const attensysEventAbi = [
       },
       {
         name: "reg_status",
-        type: "core::bool",
+        type: "core::integer::u8",
       },
       {
         name: "event_uri",
@@ -898,7 +910,7 @@ export const attensysEventAbi = [
     inputs: [
       {
         name: "reg_stat",
-        type: "core::bool",
+        type: "core::integer::u8",
       },
       {
         name: "event_identifier",
@@ -1258,7 +1270,7 @@ export const attensysEventAbi = [
       },
       {
         name: "registration_open",
-        type: "core::bool",
+        type: "core::integer::u8",
         kind: "data",
       },
     ],

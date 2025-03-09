@@ -82,11 +82,11 @@ const Eventcard = (props: any) => {
           <h3> {readableDate(props.time.start_time)}</h3>
           <h2 className="font-bold text-xl">{props.eventname}</h2>
           <div className="flex items-center gap-2">
-            <Image src={eventlog} alt="avater" className="rounded-2xl w-5" />
+            <Image src={eventlog} alt="avater" className="rounded-2xl w-7" />
             <h3>{shortenAddress(props.organizers) ?? "0x00"}</h3>
           </div>
-          <div className="flex items-center gap-2">
-            <CiLocationOn className="w-5" />
+          <div className="flex items-center gap-2 w-[400px]">
+            <CiLocationOn className="w-7 h-7" />
             <span>{location ?? "unavailable"}</span>
           </div>
         </div>

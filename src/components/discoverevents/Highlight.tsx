@@ -9,8 +9,8 @@ const Highlight = ({ events }: { events: EventData[] }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
 
-  const handleEventClick = (prop: EventData) => {
-    router.push(`/Eventpage/${prop.event_name}/?id=${1}`);
+  const handleEventClick = (prop: any, eventID: any) => {
+    router.push(`/Eventpage/${prop.event_name}/?id=${Number(eventID)}`);
   };
 
   const itemsPerPage = 12;
@@ -66,13 +66,14 @@ const Highlight = ({ events }: { events: EventData[] }) => {
 
   return (
     <>
-      <div className="mt-24 min-:h-[400px] sm:w-[87%] mx-auto justify-items-center flex flex-wrap items-center mb-20 gap-20">
+      <div className="mt-24 min-:h-[400px] sm:w-[87%] mx-auto justify-items-center flex flex-wrap items-center mb-20 gap-28">
         {currentItems.map((data, index) => {
           return (
             <Highlightcard
-              onClick={() => handleEventClick(data)}
+              onClick={() => handleEventClick(data, index + 1)}
               key={index}
               uri_data={data.event_uri}
+              time={data.time}
             />
           );
         })}

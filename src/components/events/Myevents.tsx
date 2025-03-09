@@ -145,12 +145,11 @@ const Myevents = (props: any) => {
   const convertToUnixTimeStamp = (date: Dayjs | null, time: Dayjs | null) => {
     if (!date || !time) return 0; // Handle null case
 
-    const formattedDate = date.format("YYYY-MM-DD"); // Convert date to string
-    const formattedTime = time.format("HH:mm:ss"); // Convert time to string
+    // Merge date and time correctly (UTC)
+    const dateTime = date.hour(time.hour()).minute(time.minute()).second(0);
 
-    const datetimeString = `${formattedDate}T${formattedTime}Z`;
-
-    return Math.floor(new Date(datetimeString).getTime() / 1000);
+    // Convert to Unix timestamp
+    return dateTime.unix();
   };
 
   const handleCreateEventButton = async () => {
@@ -215,7 +214,7 @@ const Myevents = (props: any) => {
         nftSymbol,
         startdateandtime,
         enddateandtime,
-        true,
+        1,
         Dataupload.IpfsHash,
         Eventplatform,
       ]);
@@ -247,75 +246,6 @@ const Myevents = (props: any) => {
         });
     }
   };
-
-  const data = [
-    {
-      today: "Today, Fri 11 Oct, 2024",
-      time: "9:00 AM",
-      name: "CEX Convention ‘24",
-      host: "Selfless hearts Foundation",
-      location: "Google Meet",
-    },
-    {
-      today: "Sat 12 Oct, 2024",
-      time: "9:00 AM",
-      name: "CEX Convention ‘24",
-      host: "Selfless hearts Foundation",
-      location: "Google Meet",
-    },
-    {
-      today: "Tue 14 Oct, 2024",
-      time: "9:00 AM",
-      name: "CEX Convention ‘24",
-      host: "Selfless hearts Foundation",
-      location: "Google Meet",
-    },
-  ];
-
-  const mockeventcreatedData = [
-    {
-      today: "Tue 14 Oct, 2024",
-      time: "9:00 AM",
-      name: "CEX Convention ‘24",
-      host: "Selfless hearts Foundation",
-      location: "Google Meet",
-    },
-    {
-      today: "Tue 14 Oct, 2024",
-      time: "9:00 AM",
-      name: "CEX Convention ‘24",
-      host: "Selfless hearts Foundation",
-      location: "Google Meet",
-    },
-    {
-      today: "Tue 14 Oct, 2024",
-      time: "9:00 AM",
-      name: "CEX Convention ‘24",
-      host: "Selfless hearts Foundation",
-      location: "Google Meet",
-    },
-    {
-      today: "Tue 14 Oct, 2024",
-      time: "9:00 AM",
-      name: "CEX Convention ‘24",
-      host: "Selfless hearts Foundation",
-      location: "Google Meet",
-    },
-    {
-      today: "Tue 14 Oct, 2024",
-      time: "9:00 AM",
-      name: "CEX Convention ‘24",
-      host: "Selfless hearts Foundation",
-      location: "Google Meet",
-    },
-    {
-      today: "Tue 14 Oct, 2024",
-      time: "9:00 AM",
-      name: "CEX Convention ‘24",
-      host: "Selfless hearts Foundation",
-      location: "Google Meet",
-    },
-  ];
 
   const handleCreatedEventCardclick = (eventname: any, eventid: any) => {
     router.push(`/Overview/${eventname}/insight/?id=${eventid}`);
