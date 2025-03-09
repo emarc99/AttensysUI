@@ -13,8 +13,8 @@ const Eventdetailsdiscover = (props: any) => {
   };
 
   return (
-    <div className="h-[100px] clg:h-[80px] lg:[70px] lclg:[60px] flex justify-between w-[90%] mx-auto items-center">
-      <div className="flex w-[400px] clg:w-[380px] lclg:w-[400px] space-x-8 items-center">
+    <div className="h-[70px] clg:h-[80px] lg:[70px] lclg:[60px] flex justify-between w-[90%] mx-auto items-center">
+      <div className="flex w-[700px] clg:w-[380px] lclg:w-[400px] space-x-8 items-center">
         <div
           onClick={handleDiscover}
           className="flex space-x-3 items-center cursor-pointer"
@@ -23,7 +23,7 @@ const Eventdetailsdiscover = (props: any) => {
           <h1>Discover</h1>
         </div>
         <div className="w-[1px] h-[24px] bg-[#9B51E0]"></div>
-        <div className="flex space-x-3 items-center cursor-pointer">
+        <div className="flex space-x-3 items-center cursor-pointer w-[500px]">
           <Image src={purple} alt="moon" />
           <h1 className="text-[#5801A9]">{decodeURIComponent(props.name)}</h1>
         </div>

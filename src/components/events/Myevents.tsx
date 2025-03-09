@@ -92,6 +92,8 @@ const Myevents = (props: any) => {
 
   const [EventDays, setEventDays] = useState(0);
   const [Eventplatform, setEventPlatform] = useState(3);
+  const [allusercreatedevent, setallusercreatedevent] = useState([]);
+  const [alluserRegisterevent, setalluserRegisterevent] = useState([]);
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -143,12 +145,11 @@ const Myevents = (props: any) => {
   const convertToUnixTimeStamp = (date: Dayjs | null, time: Dayjs | null) => {
     if (!date || !time) return 0; // Handle null case
 
-    const formattedDate = date.format("YYYY-MM-DD"); // Convert date to string
-    const formattedTime = time.format("HH:mm:ss"); // Convert time to string
+    // Merge date and time correctly (UTC)
+    const dateTime = date.hour(time.hour()).minute(time.minute()).second(0);
 
-    const datetimeString = `${formattedDate}T${formattedTime}Z`;
-
-    return Math.floor(new Date(datetimeString).getTime() / 1000);
+    // Convert to Unix timestamp
+    return dateTime.unix();
   };
 
   const handleCreateEventButton = async () => {
@@ -213,7 +214,7 @@ const Myevents = (props: any) => {
         nftSymbol,
         startdateandtime,
         enddateandtime,
-        true,
+        1,
         Dataupload.IpfsHash,
         Eventplatform,
       ]);
@@ -241,79 +242,14 @@ const Myevents = (props: any) => {
           setEventPlatform(3);
           setEventDays(0);
           setisSubmitting(false);
-          router.push(`/Overview/${eventName}/insight`);
+          router.push("/Events/createdevent");
         });
     }
   };
 
-  const data = [
-    {
-      today: "Today, Fri 11 Oct, 2024",
-      time: "9:00 AM",
-      name: "CEX Convention ‘24",
-      host: "Selfless hearts Foundation",
-      location: "Google Meet",
-    },
-    {
-      today: "Sat 12 Oct, 2024",
-      time: "9:00 AM",
-      name: "CEX Convention ‘24",
-      host: "Selfless hearts Foundation",
-      location: "Google Meet",
-    },
-    {
-      today: "Tue 14 Oct, 2024",
-      time: "9:00 AM",
-      name: "CEX Convention ‘24",
-      host: "Selfless hearts Foundation",
-      location: "Google Meet",
-    },
-  ];
-
-  const mockeventcreatedData = [
-    {
-      today: "Tue 14 Oct, 2024",
-      time: "9:00 AM",
-      name: "CEX Convention ‘24",
-      host: "Selfless hearts Foundation",
-      location: "Google Meet",
-    },
-    {
-      today: "Tue 14 Oct, 2024",
-      time: "9:00 AM",
-      name: "CEX Convention ‘24",
-      host: "Selfless hearts Foundation",
-      location: "Google Meet",
-    },
-    {
-      today: "Tue 14 Oct, 2024",
-      time: "9:00 AM",
-      name: "CEX Convention ‘24",
-      host: "Selfless hearts Foundation",
-      location: "Google Meet",
-    },
-    {
-      today: "Tue 14 Oct, 2024",
-      time: "9:00 AM",
-      name: "CEX Convention ‘24",
-      host: "Selfless hearts Foundation",
-      location: "Google Meet",
-    },
-    {
-      today: "Tue 14 Oct, 2024",
-      time: "9:00 AM",
-      name: "CEX Convention ‘24",
-      host: "Selfless hearts Foundation",
-      location: "Google Meet",
-    },
-    {
-      today: "Tue 14 Oct, 2024",
-      time: "9:00 AM",
-      name: "CEX Convention ‘24",
-      host: "Selfless hearts Foundation",
-      location: "Google Meet",
-    },
-  ];
+  const handleCreatedEventCardclick = (eventname: any, eventid: any) => {
+    router.push(`/Overview/${eventname}/insight/?id=${eventid}`);
+  };
 
   const boiler = () => {
     return (
@@ -346,9 +282,6 @@ const Myevents = (props: any) => {
   const renderContent = () => {
     switch (props.section) {
       case "createevent":
-        {
-          setCreateorExplorestat(true);
-        }
         return (
           <>
             <div className="h-full sm:w-[85%] mx-auto flex justify-between py-16 flex-col md:flex-row">
@@ -843,16 +776,11 @@ const Myevents = (props: any) => {
           </>
         );
       case "createdevent":
-        {
-          setCreatedStat(true);
-          setRegStat(false);
-          setCreateorExplorestat(false);
-        }
         return (
           <>
             {boiler()};
-            {!Regstat && !existingeventStat && (
-              <div className="h-[400px] w-[70%] flex flex-col mx-auto items-center justify-center mt-5">
+            {allusercreatedevent?.length === 0 ? (
+              <div className="h-[500px] pb-10 mb-12 w-[70%] flex flex-col mx-auto items-center justify-center mt-5">
                 <Image src={calenderimage} alt="calendar" className="mb-10" />
                 <p className="mb-10 text-[16px] text-[#FFFFFF] leading-[22px] font-light w-[320px] text-center">
                   You have not created an event.{" "}
@@ -870,54 +798,59 @@ const Myevents = (props: any) => {
                   <div>Create an Event</div>
                 </Button>
               </div>
-            )}
-            <div className="sm:h-[650px] sm:overflow-y-auto md:px-24">
-              {existingeventStat && (
+            ) : (
+              <div className="sm:h-[650px] sm:overflow-y-auto md:px-24">
                 <div className="h-[650px] overflow-y-auto">
-                  {mockeventcreatedData.map((dataitem, index) => (
+                  {allusercreatedevent.map((dataitem: any, index: any) => (
                     <Eventcard
                       key={index}
-                      todaydate={dataitem.today}
                       time={dataitem.time}
-                      eventname={dataitem.name}
-                      host={dataitem.host}
-                      location={dataitem.location}
+                      eventname={dataitem.event_name}
+                      host={dataitem.event_organizer}
+                      uri={dataitem.event_uri}
+                      eventid={dataitem.event_id}
+                      organizers={dataitem.event_organizer}
+                      property="createdevent"
+                      onClick={() =>
+                        handleCreatedEventCardclick(
+                          dataitem.event_name,
+                          dataitem.event_id,
+                        )
+                      }
                     />
                   ))}
                 </div>
+              </div>
+            )}
+          </>
+        );
+      case "registeredevent":
+        return (
+          <>
+            {boiler()};
+            <div className="sm:h-[600px] sm:overflow-y-auto md:px-24">
+              {alluserRegisterevent?.length === 0 ? (
+                <div className="w-full h-full flex items-center justify-center text-[20px] leading-[39px] font-bold text-[#FFFFFF]">
+                  No registered events
+                </div>
+              ) : (
+                alluserRegisterevent.map((dataitem: any, index: number) => (
+                  <Eventcard
+                    key={index}
+                    time={dataitem.time}
+                    eventname={dataitem.event_name}
+                    host={dataitem.event_organizer}
+                    uri={dataitem.event_uri}
+                    eventid={dataitem.event_id}
+                    organizers={dataitem.event_organizer}
+                    property="registeredevent"
+                  />
+                ))
               )}
             </div>
           </>
         );
-      case "registeredevent":
-        {
-          setCreatedStat(false);
-          setRegStat(true);
-          setCreateorExplorestat(false);
-        }
-        return (
-          <>
-            {boiler()};
-            <div className="sm:h-[650px] sm:overflow-y-auto md:px-24">
-              {data.map((dataitem, index) => (
-                <Eventcard
-                  key={index}
-                  todaydate={dataitem.today}
-                  time={dataitem.time}
-                  eventname={dataitem.name}
-                  host={dataitem.host}
-                  location={dataitem.location}
-                />
-              ))}
-            </div>
-          </>
-        );
       case "events":
-        {
-          setCreatedStat(true);
-          setRegStat(false);
-          setCreateorExplorestat(false);
-        }
         return (
           <>
             {boiler()};
@@ -971,23 +904,66 @@ const Myevents = (props: any) => {
     }
   };
 
-  const eventContract = new Contract(
-    attensysEventAbi,
-    attensysEventAddress,
-    provider,
-  );
-  const getCreatedEvent = async () => {
-    const my_created_event = await eventContract.get_all_created_events(
+  useEffect(() => {
+    switch (props.section) {
+      case "createevent":
+        setCreateorExplorestat(true);
+        break;
+      case "createdevent":
+        setCreatedStat(true);
+        setRegStat(false);
+        setCreateorExplorestat(false);
+        break;
+      case "registeredevent":
+        setCreatedStat(false);
+        setRegStat(true);
+        setCreateorExplorestat(false);
+        break;
+      case "events":
+        setCreatedStat(true);
+        setRegStat(false);
+        setCreateorExplorestat(false);
+        break;
+      default:
+        break;
+    }
+  }, [props.section]);
+
+  const altfetchCreatedEvent = async () => {
+    const eventContract = new Contract(
+      attensysEventAbi,
+      attensysEventAddress,
+      provider,
+    );
+    const res = await eventContract.get_all_created_events(
       wallet?.selectedAddress,
     );
-    console.log(my_created_event);
+    setallusercreatedevent(res);
+  };
+
+  const altfetchUserRegisteredEvent = async () => {
+    const eventContract = new Contract(
+      attensysEventAbi,
+      attensysEventAddress,
+      provider,
+    );
+    const res = await eventContract.get_all_list_registered_events(
+      wallet?.selectedAddress,
+    );
+    setalluserRegisterevent(res);
   };
 
   useEffect(() => {
-    setexistingeventStat(true);
-    getCreatedEvent();
-    // getEvents();
-  }, []);
+    const fetchEvents = async () => {
+      try {
+        altfetchCreatedEvent();
+        altfetchUserRegisteredEvent();
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
+    fetchEvents();
+  }, [wallet]);
 
   useEffect(() => {
     const scrollY = sessionStorage.getItem("scrollPosition");

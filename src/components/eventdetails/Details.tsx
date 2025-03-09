@@ -17,35 +17,69 @@ import { Contract } from "starknet";
 import { attensysEventAbi } from "@/deployments/abi";
 import { attensysEventAddress } from "@/deployments/contracts";
 import { provider } from "@/constants";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
 import { EventData } from "../discoverevents/DiscoverLanding";
 import { decimalToHexAddress, FormatDateFromUnix } from "@/utils/formatAddress";
 import LoadingSpinner from "../ui/LoadingSpinner";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import { pinata } from "../../../utils/config";
 
 const Details = (props: any) => {
   const { connectorDataAccount } = props;
-  const [eventData, seteventData] = useState<EventData | null>(null);
+  const [eventData, seteventData] = useState<any | null>(null);
   const [modalstat, setModalstatus] = useAtom(modalstatus);
   const [isRegistering, setIsRegistering] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [logoImagesource, setLogoImage] = useState<string | StaticImport>("");
+  const [description, setDescription] = useState("");
+  const [address, setAddress] = useState("");
+
   const params = useParams();
   const formatedParams = decodeURIComponent(params["details"] as string);
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
 
   const eventContract = useMemo(
     () => new Contract(attensysEventAbi, attensysEventAddress, provider),
     [],
   );
 
+  const obtainCIDdata = async (CID: string) => {
+    try {
+      //@ts-ignore
+      const data = await pinata.gateways.get(CID);
+      console.log("fetched CID event details", data);
+      //@ts-ignore
+      const logoData: GetCIDResponse = await pinata.gateways.get(
+        //@ts-ignore
+        data?.data?.eventDesign,
+      );
+      const objectURL = URL.createObjectURL(logoData.data as Blob);
+      setLogoImage(objectURL);
+
+      //@ts-ignore
+      setDescription(data?.data?.description);
+
+      //@ts-ignore
+      setAddress(data?.data?.location);
+    } catch (error) {
+      console.error("Error fetching IPFS content:", error);
+      throw error;
+    }
+  };
+
   const getEventData = useCallback(async () => {
     setIsLoading(true);
 
     try {
       //This is calling the get_event_details function from the contract using an hardcoded event_identifier value of 1
-      const res = await eventContract.get_event_details(1);
+      const res = await eventContract.get_event_details(Number(id));
 
       if (res) {
         seteventData(res);
+        console.log("reponse here", res);
+        obtainCIDdata(res.event_uri);
       }
     } catch (error) {
       console.error("get_event_details error", error);
@@ -71,9 +105,9 @@ const Details = (props: any) => {
         attensysEventAddress,
         connectorDataAccount,
       );
-      //This is calling the register_for_event function from the contract using an hardcoded event_identifier value of 1
+
       const registerEventCall = eventContract.populate("register_for_event", [
-        1,
+        Number(id),
       ]);
 
       const result = await eventContract.register_for_event(
@@ -104,18 +138,38 @@ const Details = (props: any) => {
     return `${address.slice(0, 8)}...${address.slice(-10)}`;
   };
 
+  const splitAddress = (address: string) => {
+    const parts = address.split(", ");
+    if (parts.length < 3) {
+      return { mainAddress: address, city: "" }; // If no proper split, return full as mainAddress
+    }
+    // Extract last two segments as the city/state
+    const city = parts.slice(-2).join(", ");
+    // Everything before the last two segments is the main address
+    const mainAddress = parts.slice(0, -2).join(", ");
+    return { mainAddress, city };
+  };
+
   return (
     <>
       {modalstat && <Modal status={modalstat} />}
 
-      <div className="h-full w-full  bg-event-gradient flex items-center mx-auto  justify-center md:pt-[5%] md:pb-[10%] py-[15%]">
-        <div className="h-full w-[95%] mx-auto justify-center  lg:w-[80%] md:w-[80%] flex  lg:flex-row flex-col gap-12 ">
+      <div className="h-full w-full  bg-event-gradient flex items-center mx-auto  justify-between md:pt-[5%] md:pb-[10%] py-[15%]">
+        <div className="h-full w-[100%] mx-auto justify-between  lg:w-[80%] md:w-[80%] flex  lg:flex-row flex-col gap-28 ">
           <div className="flex flex-col justify-center">
             <div className=" w-[100%]  lg:w-[380px] h-[350.44px] rounded-lg overflow-hidden relative md:mx-0 mx-auto">
-              <Image src={story} alt="story" objectFit="cover" layout="fill" />
+              <Image
+                src={logoImagesource}
+                alt="story"
+                objectFit="cover"
+                layout="fill"
+              />
             </div>
+            <h1 className="mt-4 text-[30px] font-bold leading-[40.53px] text-[#FFFFFF] ">
+              {eventData?.event_name ?? "unavailable"}{" "}
+            </h1>
             <div className=" w-[351px] mx-auto md:w-auto md:mx-0">
-              <div className="w-full  h-[2px] border border-[#FFFFFF3D] mt-16"></div>
+              <div className="w-full  h-[2px] border border-[#FFFFFF3D]"></div>
               <h1 className="mt-8  text-[18px] text-[#FFFFFF] font-semibold leading-[22px]">
                 This event is hosted by :
               </h1>
@@ -173,8 +227,8 @@ const Details = (props: any) => {
             </div>
           </div>
 
-          <div className="space-y-8   ">
-            <div className="md:w-[720px] w-[95%] mx-auto md:mx-0 h-[222px] md:h-[94px] md:flex-row flex-col bg-details-gradient rounded-xl flex  justify-center items-center px-6 lg:mt-0 mt-[10%] gap-4  ">
+          <div className="space-y-8  pl-14 ">
+            <div className="md:w-[720px] w-[95%] mx-auto md:mx-0 h-[222px] md:h-[94px] md:flex-row flex-col bg-details-gradient rounded-xl flex  justify-end items-center px-6 lg:mt-0 mt-[10%] gap-4  ">
               <div className="flex gap-4 ">
                 <Image src={key} alt="key" />
                 <div>
@@ -191,14 +245,14 @@ const Details = (props: any) => {
               </Button>
             </div>
 
-            <div className="flex space-x-4 lg:px-6 ">
+            <div className="flex space-x-4 lg:px-6 items-center">
               <Image src={location} alt="location" />
               <div>
                 <h1 className="text-[#FFFFFF] text-[16px] font-semibold leading-[22px]">
-                  Shoprite Ikeja City Mall
+                  {splitAddress(address).mainAddress}
                 </h1>
                 <h1 className="text-[#FFFFFF] text-[16px] font-light leading-[22px]">
-                  Ikeja, Lagos
+                  {splitAddress(address).city}
                 </h1>
               </div>
             </div>
@@ -208,14 +262,14 @@ const Details = (props: any) => {
               <div>
                 <h1 className="text-[#FFFFFF] text-[16px] font-semibold leading-[22px]">
                   {FormatDateFromUnix(eventData?.time.start_time ?? 0n).date ??
-                    "Saturday, October 12"}
+                    "unavailable"}
                 </h1>
                 <h1 className="text-[#FFFFFF] text-[16px] font-light leading-[22px]">
                   {FormatDateFromUnix(eventData?.time.start_time ?? 0n).time ??
-                    "8:30 AM"}{" "}
+                    "unavailable AM"}{" "}
                   -{" "}
                   {FormatDateFromUnix(eventData?.time.end_time ?? 0n).time ??
-                    "10:30 AM"}
+                    "unavailable AM"}
                 </h1>
               </div>
             </div>
@@ -257,10 +311,7 @@ const Details = (props: any) => {
                 About this Event
               </h1>
               <p className="text-[#FFFFFF] text-[16px] font-light leading-[22px]">
-                With a diverse range of courses in areas such as smart contract
-                development, NFT creation, and decentralized finance (DeFi),
-                Blockchain Academy Pro is the go-to platform for both beginners
-                and advanced learners.
+                {description}
               </p>
             </div>
 
@@ -268,10 +319,10 @@ const Details = (props: any) => {
 
             <div className="md:w-full w-[95%] mx-auto md:mx-0">
               <h1 className="text-[#FFFFFF] text-[16px] font-semibold leading-[22px]">
-                Shoprite Ikeja City Mall
+                {splitAddress(address).mainAddress}
               </h1>
               <p className="text-[#FFFFFF] text-[16px] font-light leading-[22px]">
-                Ikeja, Lagos
+                {splitAddress(address).city}
               </p>
             </div>
 

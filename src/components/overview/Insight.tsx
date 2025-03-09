@@ -14,12 +14,15 @@ import { attensysEventAddress } from "@/deployments/contracts";
 import { useAtom } from "jotai";
 import { connectorAtom } from "@/state/connectedWalletStarknetkitNext";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import { useSearchParams } from "next/navigation";
 
 const Insight = (props: any) => {
   const [emailList, setEmailList] = useState<string[]>([]);
   const [connector] = useAtom(connectorAtom);
   const [isStartingReg, setIsStartingReg] = useState(false);
   const [isEndingReg, setIsEndingReg] = useState(false);
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
 
   const [connectorDataAccount] = useState<null | any>(
     connector?.wallet.account,
@@ -31,7 +34,7 @@ const Insight = (props: any) => {
 
   const handleStartAndEndRegistration = async ({
     start,
-    eventId = 2,
+    eventId = Number(id),
   }: {
     start: boolean;
     eventId?: number;
