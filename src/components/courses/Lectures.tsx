@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import tdesign_video from "../../assets/tdesign_video.svg";
+import ReactPlayer from "react-player";
 
 interface Lecture {
   img: string;
@@ -16,7 +17,16 @@ interface LectureData {
 }
 
 const Lectures = ({ lectures, courseData, learningObj }: LectureData) => {
-  // console.log("courseData", courseData?.courseCurriculum);
+  console.log("courseData", courseData?.courseCurriculum);
+  const [durations, setDurations] = useState<{ [key: number]: number }>({});
+
+  const handleDuration = (id: number, duration: number) => {
+    // Set the duration for the specific video ID
+    setDurations((prevDurations) => ({
+      ...prevDurations,
+      [id]: duration,
+    }));
+  };
 
   return (
     <div className="block sm:grid grid-cols-2 gap-4">
@@ -26,11 +36,14 @@ const Lectures = ({ lectures, courseData, learningObj }: LectureData) => {
           <div key={id} className="block sm:flex py-3">
             <div className="flex-3">
               {item.video && (
-                <Image
-                  src={tdesign_video}
-                  alt="hero"
-                  height={100}
-                  width={100}
+                <ReactPlayer
+                  url={`https://${item.video}`}
+                  controls
+                  playing={false} // Auto-play next video
+                  // onEnded={handleVideoEnd} // Trigger when video ends
+                  width="100%"
+                  height="100px"
+                  onDuration={(duration) => handleDuration(id, duration)}
                 />
               )}
             </div>
@@ -39,7 +52,7 @@ const Lectures = ({ lectures, courseData, learningObj }: LectureData) => {
               <h4 className="font-semibold text-[14px] text-[#333333] leading-[22px] my-2">
                 {item.name}
                 <span className="text-[#5801A9] ml-3">
-                  ({item.timing} mins)
+                  ({durations[id]?.toFixed(2)} mins)
                 </span>
               </h4>
 

@@ -11,7 +11,6 @@ const courseContract = new Contract(
 
 export const getAllCoursesInfo = async () => {
   const callCourseContract = await courseContract?.get_all_courses_info();
-  console.log("callCourseContract", callCourseContract);
   return callCourseContract;
 };
 export const getUserCoursesInfo = async (user: string) => {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ReactPlayer from "react-player/lazy";
 import { CardWithLink } from "./Cards";
 import { Button } from "@material-tailwind/react";
@@ -18,6 +18,24 @@ import StarRating from "../bootcamp/StarRating";
 import { Contract, wallet } from "starknet";
 import { attensysCourseAbi } from "@/deployments/abi";
 import { attensysCourseAddress } from "@/deployments/contracts";
+import { getAllCoursesInfo } from "@/utils/helpers";
+import { provider } from "@/constants";
+import { pinata } from "../../../utils/config";
+
+interface CourseType {
+  data: any;
+  owner: string;
+  course_identifier: number;
+  accessment: boolean;
+  uri: Uri;
+  course_ipfs_uri: string;
+  is_suspended: boolean;
+}
+
+interface Uri {
+  first: string;
+  second: string;
+}
 
 const LecturePage = (props: any) => {
   const lectures = [
@@ -52,42 +70,144 @@ const LecturePage = (props: any) => {
       timing: 8,
     },
   ];
+  const [courses, setCourses] = useState<CourseType[]>([]);
+  const [courseData, setCourseData] = useState<CourseType[]>([]);
+  const [durations, setDurations] = useState<{ [key: number]: number }>({});
+  const [courseId, setCourseId] = useState<number>();
 
-  props.data.data.courseCurriculum.map((item: any) => {
-    console.log("courseImgupload", item.video);
-  });
-
-  // console.log("props", props.data.data.courseCurriculum);
-
-  const handleTakeCourse = () => {
-    // const courseContract = new Contract(
-    //   attensysCourseAbi,
-    //   attensysCourseAddress,
-    //   wallet?.account,
-    // );
-    //  const create_course_calldata = courseContract.populate("acquire_a_course", [
-    //         data
-    //       ]);
-    //       const callCourseContract = await wallet?.account.execute([
-    //         {
-    //           contractAddress: attensysCourseAddress,
-    //           entrypoint: "create_course",
-    //           calldata: create_course_calldata.calldata,
-    //         },
-    //       ]);
-    //       await wallet?.account?.provider
-    //         .waitForTransaction(callCourseContract.transaction_hash)
-    //         .then(() => {})
-    //         .catch((e: any) => {
-    //           console.error("Error: ", e);
-    //         })
-    //         .finally(() => {
-    //           setIsUploading(false);
-    //           setIsSaving(false);
-    //           handleCreateCourse(e, "course-landing-page", router);
-    //           // setCourseData(ResetCourseRegistrationData);
-    //         });
+  const handleDuration = (id: number, duration: number) => {
+    // Set the duration for the specific video ID
+    setDurations((prevDurations) => ({
+      ...prevDurations,
+      [id]: duration,
+    }));
   };
+
+  // Get all courses with CourseType from contract
+  const getAllCourses = async () => {
+    const res: CourseType[] = await getAllCoursesInfo();
+    setCourses(res);
+  };
+
+  const getPubIpfs = async (CID: string) => {
+    try {
+      //@ts-ignore
+      const data = await pinata.gateways.get(CID);
+
+      return data;
+    } catch (error) {
+      console.error("Error fetching IPFS content:", error);
+    }
+  };
+
+  // Extract courses and informmation
+  const getCourse = async () => {
+    const resolvedCourses = await Promise.all(
+      courses.map(async (course: CourseType) => {
+        if (!course.course_ipfs_uri) {
+          console.warn(`Skipping invalid IPFS URL: ${course.course_ipfs_uri}`);
+          return null; // Skip invalid URLs
+        }
+
+        try {
+          return await getPubIpfs(course.course_ipfs_uri);
+        } catch (error) {
+          console.error("Error fetching from IPFS:", error);
+          return null; // Skip on failure
+        }
+      }),
+    );
+
+    // Filter out null values before updating state
+    const validCourses = resolvedCourses.filter(
+      (course): course is any => course !== null,
+    );
+
+    // Remove duplicates before updating state
+    setCourseData((prevCourses) => {
+      const uniqueCourses = [
+        ...prevCourses,
+        ...validCourses.filter(
+          (newCourse) =>
+            !prevCourses.some(
+              (prev) => prev.data.courseName === newCourse.data.courseName,
+            ),
+        ),
+      ];
+      return uniqueCourses;
+    });
+  };
+
+  // handle take a course after the course identifier is known
+  const handleTakeCourse = async () => {
+    const courseContract = new Contract(
+      attensysCourseAbi,
+      attensysCourseAddress,
+      props?.wallet?.account,
+    );
+    const take_course_calldata = courseContract.populate("acquire_a_course", [
+      Number(courseId),
+    ]);
+
+    const callCourseContract = await props.wallet?.account.execute([
+      {
+        contractAddress: attensysCourseAddress,
+        entrypoint: "acquire_a_course",
+        calldata: take_course_calldata.calldata,
+      },
+    ]);
+
+    await props.wallet?.account?.provider
+      .waitForTransaction(callCourseContract.transaction_hash)
+      .then(() => {})
+      .catch((e: any) => {
+        console.error("Error: ", e);
+      })
+      .finally(() => {});
+  };
+
+  useEffect(() => {
+    getAllCourses();
+  }, [provider]);
+
+  useEffect(() => {
+    getCourse();
+  }, [courses]);
+
+  useEffect(() => {
+    const foundCourse = courses.find((course, index) => {
+      return (
+        props?.data?.data?.courseImage === courseData[index]?.data?.courseImage
+      );
+    });
+
+    if (foundCourse) {
+      console.log("The needed", foundCourse.course_identifier);
+      setCourseId(foundCourse.course_identifier);
+    }
+  }, [courses, courseData, props?.data?.data?.courseImage]);
+
+  useEffect(() => {
+    const find = async () => {
+      const courseContract = new Contract(
+        attensysCourseAbi,
+        attensysCourseAddress,
+        provider,
+      );
+      const taken_courses = await courseContract?.get_all_taken_courses(
+        props.wallet?.selectedAddress,
+      );
+      return taken_courses;
+    };
+
+    const course_taken = find();
+
+    const foundCourse = courses.find((course, index) => {
+      return (
+        props?.data?.data?.courseImage === courseData[index]?.data?.courseImage
+      );
+    });
+  }, []);
 
   return (
     <div className="pt-6  pb-36 w-full">
@@ -105,7 +225,7 @@ const LecturePage = (props: any) => {
         </div>
         <p className="text-[16px] text-[#2D3A4B] leading-[19px] font-semibold">
           <span className="mr-2 text-[#9B51E0]">|</span>{" "}
-          {props.data.data.courseName}
+          {props?.data?.data?.courseName}
         </p>
       </div>
 
@@ -126,30 +246,26 @@ const LecturePage = (props: any) => {
             <p>Attensys Certified Course</p>
           </div>
           <h1 className="text-[16px] text-[#2D3A4B] leading-[22px] font-semibold">
-            Lecture ({props.data?.data.courseCurriculum.length})
+            Lecture ({props.data?.data?.courseCurriculum.length})
           </h1>
 
           <div className="h-[440px] w-[100%] bg-[#FFFFFF] border-[1px] border-[#D9D9D9] rounded-xl overflow-scroll scrollbar-hide">
-            {props.data?.data.courseCurriculum.map((item: any, i: any) => (
+            {props.data?.data?.courseCurriculum.map((item: any, i: any) => (
               <div
                 key={i}
-                className="flex w-full space-y-1 items-center p-3 space-x-6 justify-center"
+                className="flex w-full space-y-1 items-center p-3 space-x-8 justify-center"
               >
                 <p className="font-bold text-[#5801a9]">{i + 1}</p>
-                <div className="w-[131px] h-[84px] rounded-xl">
-                  {/* <Image
-                    src={item.img}
-                    alt={item.title}
-                    className="w-full h-full object-cover rounded-xl"
-                  /> */}
+                <div className="w-[150px] h-[84px] rounded-xl">
                   <ReactPlayer
                     // url={videos[currentIndex]}
-                    url={`https://ipfs.io/ipfs/${item.video}`}
+                    url={`https://${item.video}`}
                     controls
-                    playing={true} // Auto-play next video
+                    playing={false}
                     // onEnded={handleVideoEnd} // Trigger when video ends
                     width="100%"
                     height="100px"
+                    onDuration={(duration) => handleDuration(i, duration)}
                   />
                 </div>
                 <div className="space-y-1">
@@ -159,8 +275,10 @@ const LecturePage = (props: any) => {
                   <h1 className="text-[8px] text-[#333333] leading-[14px] font-medium">
                     Creator address
                   </h1>
-                  <div className="rounded-lg bg-[#9B51E052] w-[40%] flex items-center justify-center">
-                    <p className="text-xs px-4 py-1">{item.timing}: 01</p>
+                  <div className="rounded-lg bg-[#9B51E052] w-[60%] flex items-center justify-center">
+                    <p className="text-xs px-7 py-1">
+                      {durations[i]?.toFixed(2)}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -176,12 +294,12 @@ const LecturePage = (props: any) => {
         >
           <div className="flex space-x-14 justify-between">
             <h1 className="font-bold text-[24px] text-[#2D3A4B] leading-[31px]">
-              {props.data.data.courseName}
+              {props?.data?.data?.courseName}
             </h1>
             <div className="hidden xl:flex sm:ml-5 space-x-2 items-center">
               <GrDiamond color="#2D3A4B" className="h-[20px] w-[20px]" />
               <p className="text-[14px] text-[#2D3A4B] leading-[22px] font-medium">
-                Difficulty level: {props.data.data.difficultyLevel}
+                Difficulty level: {props?.data?.data?.difficultyLevel}
               </p>
             </div>
             <div className="hidden xl:flex space-x-2 items-center">
@@ -195,7 +313,10 @@ const LecturePage = (props: any) => {
             <div className="hidden xl:flex space-x-2 items-center">
               <div></div>
               <div>
-                <button className="hidden sm:block bg-[#9b51e0] px-7 py-2 rounded text-[#fff] font-bold">
+                <button
+                  className="hidden sm:block bg-[#9b51e0] px-7 py-2 rounded text-[#fff] font-bold"
+                  onClick={handleTakeCourse}
+                >
                   Take course
                 </button>
               </div>
@@ -205,7 +326,7 @@ const LecturePage = (props: any) => {
             <p className="text-[14px] text-[#2D3A4B] leading-[18px] font-medium">
               Created by{" "}
               <span className="underline text-[#5801A9]">
-                {props.data.data.courseCreator}
+                {props?.data?.data?.courseCreator}
               </span>
             </p>
           </div>
@@ -224,7 +345,7 @@ const LecturePage = (props: any) => {
                 About this course
               </p>
               <p className="text-[14px] text-[#333333] leading-[22px] font-light">
-                {props.data.data.courseDescription}
+                {props?.data?.data?.courseDescription}
               </p>
             </div>
             <div className="py-4">
@@ -236,7 +357,7 @@ const LecturePage = (props: any) => {
                 {/* <li>A computer with internet access</li>
                 <li>Basic computer skills</li>
                 <li>Willingness to learn and experiment</li> */}
-                {props.data.data.studentRequirements}
+                {props?.data?.data?.studentRequirements}
               </ul>
             </div>
             <div className="py-6">
@@ -246,9 +367,9 @@ const LecturePage = (props: any) => {
               </p>
 
               <div>
-                <p>{props.data.data.targetAudience}</p>
+                <p>{props?.data?.data?.targetAudience}</p>
 
-                <p>{props.data.data.targetAudienceDesc}</p>
+                <p>{props?.data?.data?.targetAudienceDesc}</p>
               </div>
             </div>
           </div>
@@ -326,16 +447,10 @@ const LecturePage = (props: any) => {
                   placeholder="What do you think about this course?"
                   className="w-[75%] h-[45px] border shadow-dm p-6 rounded-xl text-[14px] font-medium leading-[16px]"
                 />
-                <Button
-                  size="md"
-                  variant="text"
-                  className="bg-[#9b51e0] text-white"
-                  placeholder={undefined}
-                  onPointerEnterCapture={undefined}
-                  onPointerLeaveCapture={undefined}
-                >
+
+                <button className="hidden sm:block bg-[#9b51e0] px-7 py-2 rounded text-[#fff] font-bold">
                   Send review
-                </Button>
+                </button>
               </div>
 
               <div className="px-10 mt-10 space-y-10 h-[380px] overflow-y-scroll pb-10 ">
@@ -481,16 +596,9 @@ const LecturePage = (props: any) => {
                     placeholder="What do you think about this course?"
                     className="w-full h-[45px] border shadow-dm p-6 rounded-xl text-[14px] font-medium leading-[16px]"
                   />
-                  <Button
-                    size="md"
-                    variant="text"
-                    className="bg-[#9b51e0] text-white w-fit"
-                    placeholder={undefined}
-                    onPointerEnterCapture={undefined}
-                    onPointerLeaveCapture={undefined}
-                  >
+                  <button className="hidden sm:block bg-[#9b51e0] px-7 py-2 rounded text-[#fff] font-bold">
                     Send review
-                  </Button>
+                  </button>
                 </div>
               </div>
             </div>
@@ -498,7 +606,12 @@ const LecturePage = (props: any) => {
         </div>
         <div className="hidden xl:block w-[30%] h-[1020px]">
           <h1>Courses you might like</h1>
-          <div className="space-y-10">
+          <div className="space-y-10 overflow-x-auto max-h-[1020px] overflow-y-auto">
+            {courseData.map((item: any, id: any) => (
+              <div key={id}>
+                <CardWithLink wallet={props.wallet} data={item} />
+              </div>
+            ))}
             {/* <CardWithLink /> */}
             {/* <CardWithLink />
             <CardWithLink /> */}

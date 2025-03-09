@@ -39,7 +39,7 @@ export function CardWithLink({ wallet, data }: ChildComponentProps) {
         <div className="w-full h-28 rounded-t-xl">
           <Image
             className="object-cover h-full w-full rounded-t-xl"
-            alt="robot"
+            alt={data?.data.courseImage}
             src={`https://ipfs.io/ipfs/${data?.data.courseImage}`}
             width={200}
             height={200}
@@ -75,7 +75,7 @@ export function CardWithLink({ wallet, data }: ChildComponentProps) {
         <div></div>
         <p className="mt-2 text-[14px] text-[#2D3A4B] leading-[19px] font-light">
           Created by{" "}
-          {/* <span className="underline ">{data.data.courseCreator}</span> */}
+          <span className="underline ">{data?.data.courseCreator}</span>
         </p>
       </div>
       <div />

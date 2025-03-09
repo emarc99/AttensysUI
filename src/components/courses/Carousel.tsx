@@ -87,9 +87,6 @@ const CarouselComp: React.FC<ChildComponentProps> = ({ wallet }) => {
   };
 
   const getCourse = async () => {
-    // if (courses.length < 1) return; // Prevent running on empty `courses`
-    // console.log("This guy", courses);
-
     const resolvedCourses = await Promise.all(
       courses.map(async (course: CourseType) => {
         if (!course.course_ipfs_uri) {
