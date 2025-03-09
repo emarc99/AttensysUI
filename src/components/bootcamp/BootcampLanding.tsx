@@ -24,6 +24,8 @@ const BootcampLanding = () => {
     provider,
   );
 
+  console.log(provider);
+
   const getAllBootcamps = async () => {
     const bootcamps_info = await orgContract?.get_all_bootcamps_on_platform();
     setBootcampdataInfo(bootcamps_info);

@@ -148,7 +148,7 @@ export const attensysCourseAbi = [
     ],
     outputs: [
       {
-        type: "core::starknet::contract_address::ContractAddress",
+        type: "(core::starknet::contract_address::ContractAddress, core::integer::u256)",
       },
     ],
     state_mutability: "external",
@@ -172,6 +172,18 @@ export const attensysCourseAbi = [
       {
         name: "new_course_uri_b",
         type: "core::felt252",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "acquire_a_course",
+    inputs: [
+      {
+        name: "course_identifier",
+        type: "core::integer::u256",
       },
     ],
     outputs: [],
@@ -216,6 +228,22 @@ export const attensysCourseAbi = [
       {
         name: "course_identifiers",
         type: "core::array::Array::<core::integer::u256>",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysCourse::AttenSysCourse::Course>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_taken_courses",
+    inputs: [
+      {
+        name: "user",
+        type: "core::starknet::contract_address::ContractAddress",
       },
     ],
     outputs: [

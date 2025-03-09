@@ -34,7 +34,7 @@ const CourseForm = ({
     event.preventDefault();
 
     if (!selectedOption) {
-      setError("Please select a goal for your course");
+      setError("Please select an option before proceeding.");
       return;
     }
 
@@ -65,9 +65,10 @@ const CourseForm = ({
                 onChange={handleOptionChange}
                 className="required:border-red-500 indeterminate:bg-gray-300"
               />
+
               <label
                 htmlFor={option.id}
-                className="block ml-3 text-[#333333] text-xs md:text-[18px] font-medium leading-[22px]"
+                className="block ml-3 text-[#333333] text-xs md:text-[18px] font-medium md:leading-[22px]"
               >
                 {option.label}
               </label>

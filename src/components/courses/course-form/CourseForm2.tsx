@@ -60,6 +60,7 @@ const CourseForm2 = ({
                 value={option.label}
                 checked={selectedOption === option.label}
                 onChange={handleOptionChange}
+                className="required:border-red-500 indeterminate:bg-gray-300"
               />
               <label
                 htmlFor={option.id}
