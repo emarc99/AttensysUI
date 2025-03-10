@@ -3,13 +3,11 @@
  * You should not edit it manually or your changes might be overwritten.
  */
 
-// export const attensysCourseAddress =
-//   "0x1a721bd08928bdaff88d5d8f4573990f3aa494c2f94116ce87d5d24fe0297f6";
 export const attensysCourseAddress =
-  "0xaafcc3ee843d67439d087d379d0f8f8b95aa98106d198bb33b691201901fff";
+  "0x3d82403c11c5397ea3faa3cd5255a5cf5fe94fa07c061664292c3a93ff6ca25";
 export const attensysEventAddress =
-  "0x4578d670d0596dc3b48c3a4576aa6da4607617c737909bc50e08489cd1241ab";
+  "0x594a29483f36e096d3a020d4edf7bac8c827223f309393408d87596444e0fe0";
 export const attensysOrgAddress =
-  "0x25cf75b900844c8873332f21f8863a5e6ad0573da22928015d9d576ba934e73";
+  "0x29232fcaed22ab905efe09c83fd28959c05fbb09a67dbe496f0f8027f5dd6e7";
 export const attensysSponsorAddress =
-  "0x2e7eb41ef9b45c29d893ebf7a50720e1d0e0dfe447a52e37e96ea27622ba752";
+  "0x5ce70be6688646b33131bb5563ee60aa9b4ebcb4efcf848998defa14afe8893";
