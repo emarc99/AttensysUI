@@ -96,9 +96,9 @@ const Insight = (props: any) => {
             </div>
             <div className="lg:basis-5/12 md:basis-1/2 md:w-1/2">
               <div className="flex flex-col gap-4 justify-between items-end md:flex-1 md:basis-1/3">
-                <Button className="bg-[#2D3A4B91] text-[#FFFFFF] font-light text-[14px] rounded-lg h-[39px] w-[155px] items-center flex justify-center">
+                <Button className="bg-[#2D3A4B91] text-[#FFFFFF] font-light text-[14px] rounded-lg h-[39px] w-[110px] items-center flex justify-center">
                   <Image src={drop} alt="drop" className="mr-2" />
-                  Past Week
+                  All time
                 </Button>
 
                 <div className="w-full md:w-full h-[272px] bg-[#2D3A4B] rounded-lg shadow-sm">
@@ -113,7 +113,7 @@ const Insight = (props: any) => {
                     </div>
                     <div className="space-y-3">
                       <h1 className="text-[#FFFFFF] text-[13.2px] font-light leading-[18.15px]">
-                        Highest Daily Reg
+                        Suspension status
                       </h1>
                       <h1 className="text-[#FFFFFF] font-semibold text-[19.8px] leading-[18.15px]">
                         Saturday
@@ -124,7 +124,7 @@ const Insight = (props: any) => {
                   <div className="flex justify-between px-14 pb-6">
                     <div className="space-y-3">
                       <h1 className="text-[#FFFFFF] text-[13.2px] font-light leading-[18.15px]">
-                        Event Managers/hosts
+                        Cancelation status
                       </h1>
                       <h1 className="text-[#FFFFFF] font-semibold text-[19.8px] leading-[18.15px]">
                         5
@@ -132,7 +132,7 @@ const Insight = (props: any) => {
                     </div>
                     <div className="space-y-3">
                       <h1 className="text-[#FFFFFF] text-[13.2px] font-light leading-[18.15px]">
-                        Approvals Granted
+                        Registration Status
                       </h1>
                       <h1 className="text-[#FFFFFF] font-semibold text-[19.8px] leading-[18.15px]">
                         31
@@ -142,7 +142,7 @@ const Insight = (props: any) => {
                   <div className="flex justify-between px-14 pb-4">
                     <div className="space-y-3">
                       <h1 className="text-[#FFFFFF] text-[13.2px] font-light leading-[18.15px]">
-                        Disapprovals
+                        Event Date
                       </h1>
                       <h1 className="text-[#FFFFFF] font-semibold text-[19.8px] leading-[18.15px]">
                         3
