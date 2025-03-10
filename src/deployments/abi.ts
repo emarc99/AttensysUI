@@ -239,6 +239,26 @@ export const attensysCourseAbi = [
   },
   {
     type: "function",
+    name: "is_user_taking_course",
+    inputs: [
+      {
+        name: "user",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "course_id",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
     name: "get_all_taken_courses",
     inputs: [
       {
