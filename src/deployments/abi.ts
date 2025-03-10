@@ -657,6 +657,20 @@ export const attensysEventAbi = [
     ],
   },
   {
+    type: "struct",
+    name: "attendsys::contracts::AttenSysEvent::AttenSysEvent::AttendeeInfo",
+    members: [
+      {
+        name: "attendee_address",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "attendee_uri",
+        type: "core::byte_array::ByteArray",
+      },
+    ],
+  },
+  {
     type: "enum",
     name: "core::bool",
     variants: [
@@ -864,6 +878,10 @@ export const attensysEventAbi = [
         name: "event_identifier",
         type: "core::integer::u256",
       },
+      {
+        name: "user_uri",
+        type: "core::byte_array::ByteArray",
+      },
     ],
     outputs: [],
     state_mutability: "external",
@@ -879,10 +897,10 @@ export const attensysEventAbi = [
     ],
     outputs: [
       {
-        type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+        type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::AttendeeInfo>",
       },
     ],
-    state_mutability: "external",
+    state_mutability: "view",
   },
   {
     type: "function",
@@ -1171,6 +1189,38 @@ export const attensysEventAbi = [
     ],
     outputs: [],
     state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "get_cancelation_status",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_if_registration_is_open",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::integer::u8",
+      },
+    ],
+    state_mutability: "view",
   },
   {
     type: "constructor",
