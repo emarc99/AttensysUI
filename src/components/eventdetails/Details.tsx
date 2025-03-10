@@ -3,7 +3,7 @@ import Image from "next/image";
 import story from "@/assets/story.svg";
 import live from "@/assets/live.svg";
 import { approvedsponsors } from "@/constants/data";
-import { Button } from "@headlessui/react";
+import { Button, Field, Input } from "@headlessui/react";
 import key from "@/assets/key.svg";
 import location from "@/assets/locationn.svg";
 import calendar from "@/assets/calendarr.svg";
@@ -24,6 +24,7 @@ import { decimalToHexAddress, FormatDateFromUnix } from "@/utils/formatAddress";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { pinata } from "../../../utils/config";
+import clsx from "clsx";
 
 const Details = (props: any) => {
   const { connectorDataAccount } = props;
@@ -34,6 +35,10 @@ const Details = (props: any) => {
   const [logoImagesource, setLogoImage] = useState<string | StaticImport>("");
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
+  const [fullname, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [nameError, setNameError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
 
   const params = useParams();
   const formatedParams = decodeURIComponent(params["details"] as string);
@@ -97,31 +102,46 @@ const Details = (props: any) => {
   };
 
   const handleRegisterEvent = async () => {
-    setIsRegistering(true);
+    if (fullname == "") {
+      setNameError(true);
+    }
+    if (email == "") {
+      setEmailError(true);
+    }
 
-    try {
-      const eventContract = new Contract(
-        attensysEventAbi,
-        attensysEventAddress,
-        connectorDataAccount,
-      );
+    if (fullname != "" && email != "") {
+      setIsRegistering(true);
+      const attendeeDataUpload = await pinata.upload.json({
+        student_name: fullname,
+        student_email: email,
+      });
+      if (attendeeDataUpload) {
+        try {
+          const eventContract = new Contract(
+            attensysEventAbi,
+            attensysEventAddress,
+            connectorDataAccount,
+          );
 
-      const registerEventCall = eventContract.populate("register_for_event", [
-        Number(id),
-      ]);
+          const registerEventCall = eventContract.populate(
+            "register_for_event",
+            [Number(id), attendeeDataUpload.IpfsHash],
+          );
 
-      const result = await eventContract.register_for_event(
-        registerEventCall.calldata,
-      );
+          const result = await eventContract.register_for_event(
+            registerEventCall.calldata,
+          );
 
-      //@ts-ignore
-      await connectorDataAccount?.provider.waitForTransaction(
-        result.transaction_hash,
-      );
-    } catch (error) {
-      console.error("Error registering for event:", error);
-    } finally {
-      setIsRegistering(false);
+          //@ts-ignore
+          await connectorDataAccount?.provider.waitForTransaction(
+            result.transaction_hash,
+          );
+        } catch (error) {
+          console.error("Error registering for event:", error);
+        } finally {
+          setIsRegistering(false);
+        }
+      }
     }
   };
 
@@ -148,6 +168,18 @@ const Details = (props: any) => {
     // Everything before the last two segments is the main address
     const mainAddress = parts.slice(0, -2).join(", ");
     return { mainAddress, city };
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    if (name === "fullname") {
+      setNameError(false);
+      setFullName(value);
+    } else if (name === "email") {
+      setEmailError(false);
+      setEmail(value);
+    }
   };
 
   return (
@@ -274,21 +306,67 @@ const Details = (props: any) => {
               </div>
             </div>
 
-            <div className="md:w-[720px] w-[95%] mx-auto md:mx-0 h-[328px] md:h-[213px] bg-oneclick-gradient rounded-xl flex flex-col justify-center px-6 space-y-4 border-[#FFFFFF7D] border-[1px]">
+            <div className="md:w-[720px] w-[95%] mx-auto md:mx-0 h-[628px] md:h-[413px] bg-oneclick-gradient rounded-xl flex flex-col justify-center px-6 space-y-4 border-[#FFFFFF7D] border-[1px]">
               <div className="space-y-2 flex justify-between">
                 <div>
                   <h1 className="text-[#FFFFFF] text-[16px] font-semibold leading-[22px]">
                     Register for this event
                   </h1>
                   <p className="text-[#FFFFFF] text-[16px] font-light leading-[22px]">
-                    Your registration requires host approval. Sit tight!!
+                    After registration confirmation email will be sent to your
+                    inbox. Sit tight!!
                   </p>
                 </div>
                 <Image src={top} alt="moon" />
               </div>
-              <h1 className="text-[#FFFFFF] text-[16px] font-semibold leading-[22px]">
-                Welcome, vladamirockz@gmail.com
-              </h1>
+
+              <div className="space-y-3">
+                <div className="space-y-1.5">
+                  <h1 className="text-md text-[#FFFFFF] font-light">
+                    Full name
+                  </h1>
+                  <Field>
+                    <Input
+                      placeholder="Enter your name"
+                      name="fullname"
+                      value={fullname}
+                      onChange={handleInputChange}
+                      className={clsx(
+                        "h-[55px] border-[2px] border-[#D0D5DD] block w-full rounded-lg bg-white/5 py-1.5 px-3 text-sm/6 text-white",
+                        "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/100",
+                      )}
+                    />
+                  </Field>
+                  {nameError && (
+                    <h1 className="text-red-700 text-[13px] font-light leading-[22px] ml-4">
+                      Name cannot be empty
+                    </h1>
+                  )}
+                </div>
+                <div className="space-y-1.5">
+                  <h1 className="text-md text-[#FFFFFF] font-light">
+                    Email Address
+                  </h1>
+                  <Field>
+                    <Input
+                      placeholder="Enter your email"
+                      type="email"
+                      name="email"
+                      value={email}
+                      onChange={handleInputChange}
+                      className={clsx(
+                        "h-[55px] border-[2px] border-[#D0D5DD] block w-full rounded-lg bg-white/5 py-1.5 px-3 text-sm/6 text-white",
+                        "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/100",
+                      )}
+                    />
+                  </Field>
+                  {emailError && (
+                    <h1 className="text-red-700 text-[13px] font-light leading-[22px] ml-4">
+                      email cannot be empty
+                    </h1>
+                  )}
+                </div>
+              </div>
               <Button
                 onClick={!isRegistering ? handleRegisterEvent : undefined}
                 disabled={isRegistering}
