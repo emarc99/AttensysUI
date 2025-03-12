@@ -57,20 +57,6 @@ export const attensysCourseAbi = [
   },
   {
     type: "struct",
-    name: "attendsys::contracts::AttenSysCourse::AttenSysCourse::Uri",
-    members: [
-      {
-        name: "first",
-        type: "core::felt252",
-      },
-      {
-        name: "second",
-        type: "core::felt252",
-      },
-    ],
-  },
-  {
-    type: "struct",
     name: "attendsys::contracts::AttenSysCourse::AttenSysCourse::Course",
     members: [
       {
@@ -87,7 +73,7 @@ export const attensysCourseAbi = [
       },
       {
         name: "uri",
-        type: "attendsys::contracts::AttenSysCourse::AttenSysCourse::Uri",
+        type: "core::byte_array::ByteArray",
       },
       {
         name: "course_ipfs_uri",
@@ -166,12 +152,8 @@ export const attensysCourseAbi = [
         type: "core::starknet::contract_address::ContractAddress",
       },
       {
-        name: "new_course_uri_a",
-        type: "core::felt252",
-      },
-      {
-        name: "new_course_uri_b",
-        type: "core::felt252",
+        name: "new_course_uri",
+        type: "core::byte_array::ByteArray",
       },
     ],
     outputs: [],
@@ -516,13 +498,8 @@ export const attensysCourseAbi = [
         kind: "data",
       },
       {
-        name: "new_course_uri_a",
-        type: "core::felt252",
-        kind: "data",
-      },
-      {
-        name: "new_course_uri_b",
-        type: "core::felt252",
+        name: "new_course_uri",
+        type: "core::byte_array::ByteArray",
         kind: "data",
       },
     ],

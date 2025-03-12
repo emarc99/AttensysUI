@@ -25,6 +25,7 @@ import LoadingSpinner from "../ui/LoadingSpinner";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { pinata } from "../../../utils/config";
 import clsx from "clsx";
+import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
 
 const Details = (props: any) => {
   const { connectorDataAccount } = props;
@@ -37,8 +38,14 @@ const Details = (props: any) => {
   const [address, setAddress] = useState("");
   const [fullname, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [eventName, setEventName] = useState("");
   const [nameError, setNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
+  const [ifsuccess, setifsuccess] = useState(false);
+  const [wallet, setWallet] = useAtom(walletStarknetkit);
+  const [walletAddress, setWalletAddress] = useState<string | undefined>("");
+
+  setEventName;
 
   const params = useParams();
   const formatedParams = decodeURIComponent(params["details"] as string);
@@ -49,6 +56,8 @@ const Details = (props: any) => {
     () => new Contract(attensysEventAbi, attensysEventAddress, provider),
     [],
   );
+
+  console.log("account connected", connectorDataAccount);
 
   const obtainCIDdata = async (CID: string) => {
     try {
@@ -83,6 +92,7 @@ const Details = (props: any) => {
 
       if (res) {
         seteventData(res);
+        setEventName(res?.event_name);
         console.log("reponse here", res);
         obtainCIDdata(res.event_uri);
       }
@@ -96,6 +106,10 @@ const Details = (props: any) => {
   useEffect(() => {
     getEventData();
   }, [getEventData, formatedParams]);
+
+  useEffect(() => {
+    setWalletAddress(wallet?.selectedAddress);
+  }, [wallet]);
 
   const handleDialog = () => {
     setModalstatus(!modalstat);
@@ -136,7 +150,28 @@ const Details = (props: any) => {
           await connectorDataAccount?.provider.waitForTransaction(
             result.transaction_hash,
           );
+
+          try {
+            const response = await fetch("http://localhost:3000/api/register", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email, walletAddress, id, eventName }),
+            });
+
+            console.log(response);
+            if (response.ok) {
+              setifsuccess(true);
+            } else {
+              alert("Registration failed. Please try again.");
+            }
+          } catch (err) {
+            console.error("Error during registration:", err);
+            alert("An error occurred. Please try again.");
+          }
         } catch (error) {
+          setIsRegistering(false);
           console.error("Error registering for event:", error);
         } finally {
           setIsRegistering(false);
@@ -307,81 +342,90 @@ const Details = (props: any) => {
             </div>
 
             <div className="md:w-[720px] w-[95%] mx-auto md:mx-0 h-[628px] md:h-[413px] bg-oneclick-gradient rounded-xl flex flex-col justify-center px-6 space-y-4 border-[#FFFFFF7D] border-[1px]">
-              <div className="space-y-2 flex justify-between">
+              {!ifsuccess ? (
                 <div>
-                  <h1 className="text-[#FFFFFF] text-[16px] font-semibold leading-[22px]">
-                    Register for this event
-                  </h1>
-                  <p className="text-[#FFFFFF] text-[16px] font-light leading-[22px]">
-                    After registration confirmation email will be sent to your
-                    inbox. Sit tight!!
-                  </p>
-                </div>
-                <Image src={top} alt="moon" />
-              </div>
+                  <div className="space-y-2 flex justify-between">
+                    <div>
+                      <h1 className="text-[#FFFFFF] text-[16px] font-semibold leading-[22px]">
+                        Register for this event
+                      </h1>
+                      <p className="text-[#FFFFFF] text-[16px] font-light leading-[22px]">
+                        After registration confirmation email will be sent to
+                        your inbox. Sit tight!!
+                      </p>
+                    </div>
+                    <Image src={top} alt="moon" />
+                  </div>
 
-              <div className="space-y-3">
-                <div className="space-y-1.5">
-                  <h1 className="text-md text-[#FFFFFF] font-light">
-                    Full name
-                  </h1>
-                  <Field>
-                    <Input
-                      placeholder="Enter your name"
-                      name="fullname"
-                      value={fullname}
-                      onChange={handleInputChange}
-                      className={clsx(
-                        "h-[55px] border-[2px] border-[#D0D5DD] block w-full rounded-lg bg-white/5 py-1.5 px-3 text-sm/6 text-white",
-                        "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/100",
+                  <div className="space-y-3">
+                    <div className="space-y-1.5">
+                      <h1 className="text-md text-[#FFFFFF] font-light">
+                        Full name
+                      </h1>
+                      <Field>
+                        <Input
+                          placeholder="Enter your name"
+                          name="fullname"
+                          value={fullname}
+                          onChange={handleInputChange}
+                          className={clsx(
+                            "h-[55px] border-[2px] border-[#D0D5DD] block w-full rounded-lg bg-white/5 py-1.5 px-3 text-sm/6 text-white",
+                            "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/100",
+                          )}
+                        />
+                      </Field>
+                      {nameError && (
+                        <h1 className="text-red-700 text-[13px] font-light leading-[22px] ml-4">
+                          Name cannot be empty
+                        </h1>
                       )}
-                    />
-                  </Field>
-                  {nameError && (
-                    <h1 className="text-red-700 text-[13px] font-light leading-[22px] ml-4">
-                      Name cannot be empty
-                    </h1>
-                  )}
-                </div>
-                <div className="space-y-1.5">
-                  <h1 className="text-md text-[#FFFFFF] font-light">
-                    Email Address
-                  </h1>
-                  <Field>
-                    <Input
-                      placeholder="Enter your email"
-                      type="email"
-                      name="email"
-                      value={email}
-                      onChange={handleInputChange}
-                      className={clsx(
-                        "h-[55px] border-[2px] border-[#D0D5DD] block w-full rounded-lg bg-white/5 py-1.5 px-3 text-sm/6 text-white",
-                        "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/100",
+                    </div>
+                    <div className="space-y-1.5">
+                      <h1 className="text-md text-[#FFFFFF] font-light">
+                        Email Address
+                      </h1>
+                      <Field>
+                        <Input
+                          placeholder="Enter your email"
+                          type="email"
+                          name="email"
+                          value={email}
+                          onChange={handleInputChange}
+                          className={clsx(
+                            "h-[55px] border-[2px] border-[#D0D5DD] block w-full rounded-lg bg-white/5 py-1.5 px-3 text-sm/6 text-white",
+                            "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/100",
+                          )}
+                        />
+                      </Field>
+                      {emailError && (
+                        <h1 className="text-red-700 text-[13px] font-light leading-[22px] ml-4">
+                          email cannot be empty
+                        </h1>
                       )}
-                    />
-                  </Field>
-                  {emailError && (
-                    <h1 className="text-red-700 text-[13px] font-light leading-[22px] ml-4">
-                      email cannot be empty
-                    </h1>
-                  )}
+                    </div>
+                  </div>
+                  <Button
+                    onClick={!isRegistering ? handleRegisterEvent : undefined}
+                    disabled={isRegistering}
+                    className={`justify-center mt-4 flex rounded-lg py-2 px-4 h-[50px] items-center  md:w-[422px] text-sm text-[#FFFFFF] data-[hover]:bg-sky-500 data-[active]:bg-sky-700 ${
+                      isRegistering
+                        ? " bg-[#357ABD] cursor-not-allowed"
+                        : "bg-[#4A90E2]"
+                    }`}
+                  >
+                    {isRegistering ? (
+                      <LoadingSpinner size="sm" colorVariant="white" />
+                    ) : (
+                      "One click to apply"
+                    )}
+                  </Button>
                 </div>
-              </div>
-              <Button
-                onClick={!isRegistering ? handleRegisterEvent : undefined}
-                disabled={isRegistering}
-                className={`justify-center flex rounded-lg py-2 px-4 h-[50px] items-center  md:w-[422px] text-sm text-[#FFFFFF] data-[hover]:bg-sky-500 data-[active]:bg-sky-700 ${
-                  isRegistering
-                    ? " bg-[#357ABD] cursor-not-allowed"
-                    : "bg-[#4A90E2]"
-                }`}
-              >
-                {isRegistering ? (
-                  <LoadingSpinner size="sm" colorVariant="white" />
-                ) : (
-                  "One click to apply"
-                )}
-              </Button>
+              ) : (
+                <div>
+                  <h2>Thank you for registering!</h2>
+                  <p>Check your email for the confirmation QR code.</p>
+                </div>
+              )}
             </div>
 
             <div className=" w-[90%] mx-auto md:mx-0">
