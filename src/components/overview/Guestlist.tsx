@@ -18,9 +18,9 @@ import LoadingSpinner from "../ui/LoadingSpinner";
 import List from "./List";
 
 interface IParticipants {
-  student_name: string;
-  student_email: string;
-  student_address: string;
+  guest_name: string;
+  guest_email: string;
+  guest_address: string;
 }
 const Guestlist = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -44,7 +44,7 @@ const Guestlist = () => {
       let eventParticipantsIpfsData = [];
       for (const participant of eventParticipantsUriData) {
         const userData = await obtainCIDdata(participant.attendee_uri);
-
+        console.log({ userData });
         const participantDetails = {
           //@ts-ignore
           ...userData,
@@ -53,7 +53,13 @@ const Guestlist = () => {
         eventParticipantsIpfsData.push(participantDetails);
       }
       setEventParticipants(
-        eventParticipantsIpfsData as unknown as IParticipants[],
+        eventParticipantsIpfsData.map((participant) => {
+          return {
+            guest_name: participant.student_name,
+            guest_email: participant.student_email,
+            guest_address: formatTruncatedAddress(participant.student_address),
+          };
+        }),
       );
     } catch (error) {
       console.error("Error fetching registered users:", error);
@@ -263,8 +269,8 @@ const Guestlist = () => {
                 return (
                   <List
                     key={index}
-                    name={data.student_name}
-                    address={formatTruncatedAddress(data.student_address)}
+                    name={data.guest_name}
+                    address={formatTruncatedAddress(data.guest_address)}
                     status="Approved"
                     role="N/A"
                     regdate="12/25/2024"
