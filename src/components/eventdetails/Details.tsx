@@ -44,8 +44,7 @@ const Details = (props: any) => {
   const [ifsuccess, setifsuccess] = useState(false);
   const [wallet, setWallet] = useAtom(walletStarknetkit);
   const [walletAddress, setWalletAddress] = useState<string | undefined>("");
-
-  setEventName;
+  const [alluserRegisterevent, setalluserRegisterevent] = useState([]);
 
   const params = useParams();
   const formatedParams = decodeURIComponent(params["details"] as string);
@@ -57,7 +56,24 @@ const Details = (props: any) => {
     [],
   );
 
-  console.log("account connected", connectorDataAccount);
+  const altfetchUserRegisteredEvent = async () => {
+    const eventContract = new Contract(
+      attensysEventAbi,
+      attensysEventAddress,
+      provider,
+    );
+    const res = await eventContract.get_all_list_registered_events(
+      wallet?.selectedAddress,
+    );
+    // setalluserRegisterevent(res);
+    res.map((data: any, index: any) => {
+      if (Number(data.event_id) == Number(id)) {
+        setifsuccess(true);
+      } else {
+        setifsuccess(false);
+      }
+    });
+  };
 
   const obtainCIDdata = async (CID: string) => {
     try {
@@ -102,6 +118,17 @@ const Details = (props: any) => {
       setIsLoading(false);
     }
   }, [eventContract]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        altfetchUserRegisteredEvent();
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
+    fetchEvents();
+  }, [wallet]);
 
   useEffect(() => {
     getEventData();
@@ -152,13 +179,16 @@ const Details = (props: any) => {
           );
 
           try {
-            const response = await fetch("http://localhost:3000/api/register", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
+            const response = await fetch(
+              "https://attensys-1a184d8bebe7.herokuapp.com/api/register",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, walletAddress, id, eventName }),
               },
-              body: JSON.stringify({ email, walletAddress, id, eventName }),
-            });
+            );
 
             console.log(response);
             if (response.ok) {
@@ -223,7 +253,7 @@ const Details = (props: any) => {
 
       <div className="h-full w-full  bg-event-gradient flex items-center mx-auto  justify-between md:pt-[5%] md:pb-[10%] py-[15%]">
         <div className="h-full w-[100%] mx-auto justify-between  lg:w-[80%] md:w-[80%] flex  lg:flex-row flex-col gap-28 ">
-          <div className="flex flex-col justify-center">
+          <div className="flex flex-col">
             <div className=" w-[100%]  lg:w-[380px] h-[350.44px] rounded-lg overflow-hidden relative md:mx-0 mx-auto">
               <Image
                 src={logoImagesource}
@@ -232,11 +262,11 @@ const Details = (props: any) => {
                 layout="fill"
               />
             </div>
-            <h1 className="mt-4 text-[30px] font-bold leading-[40.53px] text-[#FFFFFF] ">
+            <h1 className="mt-4 text-[30px] font-bold leading-[40.53px] text-[#FFFFFF] px-4 ">
               {eventData?.event_name ?? "unavailable"}{" "}
             </h1>
             <div className=" w-[351px] mx-auto md:w-auto md:mx-0">
-              <div className="w-full  h-[2px] border border-[#FFFFFF3D]"></div>
+              <div className="w-[90%]  h-[2px] border border-[#FFFFFF3D]"></div>
               <h1 className="mt-8  text-[18px] text-[#FFFFFF] font-semibold leading-[22px]">
                 This event is hosted by :
               </h1>
@@ -294,7 +324,7 @@ const Details = (props: any) => {
             </div>
           </div>
 
-          <div className="space-y-8  pl-14 ">
+          <div className="space-y-8  lg:pl-14 ">
             <div className="md:w-[720px] w-[95%] mx-auto md:mx-0 h-[222px] md:h-[94px] md:flex-row flex-col bg-details-gradient rounded-xl flex  justify-end items-center px-6 lg:mt-0 mt-[10%] gap-4  ">
               <div className="flex gap-4 ">
                 <Image src={key} alt="key" />
@@ -421,9 +451,13 @@ const Details = (props: any) => {
                   </Button>
                 </div>
               ) : (
-                <div>
-                  <h2>Thank you for registering!</h2>
-                  <p>Check your email for the confirmation QR code.</p>
+                <div className="space-y-3 flex flex-col items-center justify-center">
+                  <h2 className="text-[#FFFFFF] text-[16px] font-semibold leading-[22px]">
+                    Thank you for registering!
+                  </h2>
+                  <p className="text-[#FFFFFF] text-[16px] font-light leading-[22px]">
+                    Check your email for the confirmation QR code.
+                  </p>
                 </div>
               )}
             </div>
