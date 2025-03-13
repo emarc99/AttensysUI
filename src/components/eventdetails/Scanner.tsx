@@ -63,9 +63,19 @@ const Scanner = ({ eventId }: QrScannerComponentProps) => {
   }, [eventId]);
 
   return (
-    <div>
-      <h1>Scan a QR Code</h1>
-      <div id="qr-reader" style={{ width: "300px" }}></div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      <h1 className="text-2xl font-bold text-blue-600 mb-6">Scan a QR Code</h1>
+      <div
+        id="qr-reader"
+        style={{
+          width: "400px",
+          height: "400px",
+          border: "2px solid #4A90E2",
+          borderRadius: "10px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+          backgroundColor: "#ffffff",
+        }}
+      ></div>
     </div>
   );
 };
