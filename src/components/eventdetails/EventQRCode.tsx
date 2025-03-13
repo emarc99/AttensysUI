@@ -40,7 +40,10 @@ const EventQRCode = ({ eventId }: { eventId: string }) => {
       // Generate the scanner URL with session ID and WebSocket URL
       const url = new URL(`http://attensys.xyz/scanner/${eventId}`);
       url.searchParams.set("sessionId", data.sessionId);
-      url.searchParams.set("wsUrl", data.wsUrl);
+      url.searchParams.set(
+        "wsUrl",
+        "wss://https://attensys-1a184d8bebe7.herokuapp.com",
+      );
       setScannerUrl(url.toString());
     } catch (error) {
       console.error("Error fetching master QR code:", error);
