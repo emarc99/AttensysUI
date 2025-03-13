@@ -68,7 +68,7 @@ const Guestlist = () => {
   }, [id]);
 
   // Calculate total pages
-  const totalPages = Math.ceil(guestdata.length / itemsPerPage);
+  const totalPages = Math.ceil(eventParticipants.length / itemsPerPage);
 
   // Get current page items
   const currentItems = guestdata.slice(
@@ -185,7 +185,7 @@ const Guestlist = () => {
         <div className="relative">
           {/* Group 1: Header */}
           <div className="flex justify-between items-center h-12 mb-4">
-            <h1 className="text-[18px] lg:w-1/12 font-medium leading-[22px] text-[#333333]">
+            <h1 className="text-[18px] lg:w-[100px] font-medium leading-[22px] text-[#333333] w-[100px]">
               Guest list
             </h1>
             {/* Group 3: Buttons */}
