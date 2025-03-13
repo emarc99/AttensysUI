@@ -44,7 +44,6 @@ const Guestlist = () => {
       let eventParticipantsIpfsData = [];
       for (const participant of eventParticipantsUriData) {
         const userData = await obtainCIDdata(participant.attendee_uri);
-        console.log({ userData });
         const participantDetails = {
           //@ts-ignore
           ...userData,
