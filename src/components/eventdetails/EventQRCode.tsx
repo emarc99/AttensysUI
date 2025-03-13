@@ -12,11 +12,11 @@ const EventQRCode = ({ eventId }: { eventId: string }) => {
         "https://attensys-1a184d8bebe7.herokuapp.com/api/generate-master-qr",
       );
       const data = await response.json();
-      console.log("check data here");
+      console.log("check data here", data);
       setQrUrl(data.qrCodeDataUrl);
 
       // Connect to the WebSocket server
-      const ws = new WebSocket(data.wsUrl);
+      const ws = new WebSocket("wss://attensys-1a184d8bebe7.herokuapp.com");
 
       ws.onopen = () => {
         // Register the laptop with the session ID
@@ -33,7 +33,7 @@ const EventQRCode = ({ eventId }: { eventId: string }) => {
         if (message.type === "action") {
           // Trigger action based on scanned data
           console.log("Scanned data:", message.data);
-          alert(`Action triggered with data: ${message.data}`);
+          // alert(`Action triggered with data: ${message.data}`);
         }
       };
 
@@ -42,7 +42,7 @@ const EventQRCode = ({ eventId }: { eventId: string }) => {
       url.searchParams.set("sessionId", data.sessionId);
       url.searchParams.set(
         "wsUrl",
-        "wss://https://attensys-1a184d8bebe7.herokuapp.com",
+        "wss://attensys-1a184d8bebe7.herokuapp.com",
       );
       setScannerUrl(url.toString());
     } catch (error) {
