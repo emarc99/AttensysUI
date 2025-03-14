@@ -8,6 +8,8 @@ import {
 import { attensysEventAbi } from "@/deployments/abi";
 import { attensysEventAddress } from "@/deployments/contracts";
 import { Contract } from "starknet";
+import { walletStarknetkitNextAtom } from "@/state/connectedWalletStarknetkitNext";
+import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
 
 const EventQRCode = ({ eventId }: { eventId: string }) => {
   const [scannerUrl, setScannerUrl] = useState("");
@@ -15,6 +17,8 @@ const EventQRCode = ({ eventId }: { eventId: string }) => {
   const [attendanceOverlayStat, setattendanceOverlayStat] =
     useAtom(attendancesuccess);
   const [connector] = useAtom(connectorAtom);
+
+  const [wallet] = useAtom(walletStarknetkit);
 
   const [connectorDataAccount] = useState<null | any>(
     connector?.wallet.account,
@@ -55,7 +59,8 @@ const EventQRCode = ({ eventId }: { eventId: string }) => {
           const eventContract = new Contract(
             attensysEventAbi,
             attensysEventAddress,
-            connectorDataAccount,
+            //@ts-ignore
+            wallet?.account,
           );
           const createEventCall = eventContract.populate("mark_attendance", [
             Number(data.eventId),
@@ -64,7 +69,8 @@ const EventQRCode = ({ eventId }: { eventId: string }) => {
           const result = await eventContract.mark_attendance(
             createEventCall.calldata,
           );
-          connectorDataAccount?.provider
+          //@ts-ignore
+          wallet?.account?.provider
             .waitForTransaction(result.transaction_hash)
             .then(() => {})
             .catch((e: any) => {
