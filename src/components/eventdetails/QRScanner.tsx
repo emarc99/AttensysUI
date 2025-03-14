@@ -54,7 +54,9 @@ const QrScannerComponent = ({ eventId }: QrScannerComponentProps) => {
       // Send scanned data to the WebSocket server
       ws.send(JSON.stringify({ type: "scan", sessionId, scannedData }));
       if (scannedData) {
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       }
     }
   };
