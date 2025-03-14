@@ -12,6 +12,7 @@ const QrScannerComponent = ({ eventId }: QrScannerComponentProps) => {
   const [isScannerLoading, setIsScannerLoading] = useState(true);
   const [isNavigating, setIsNavigating] = useState(false);
   const [ws, setWs] = useState<WebSocket | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   useEffect(() => {
     // Extract session ID and WebSocket URL from the query parameters
@@ -23,6 +24,9 @@ const QrScannerComponent = ({ eventId }: QrScannerComponentProps) => {
       console.error("Session ID or WebSocket URL is missing");
       return;
     }
+
+    // Store the session ID in state
+    setSessionId(sessionId);
 
     // Connect to the WebSocket server
     const websocket = new WebSocket(wsUrl);
@@ -41,14 +45,17 @@ const QrScannerComponent = ({ eventId }: QrScannerComponentProps) => {
     };
   }, []);
 
-  const handleScan = (data: string | null) => {
-    if (data && ws) {
-      console.info("Scanned QR Code:", data);
+  const handleScan = (detectedCodes: { rawValue: string }[]) => {
+    if (detectedCodes.length > 0 && ws && sessionId) {
+      const scannedData = detectedCodes[0].rawValue; // Get the first detected code
+      console.info("Scanned QR Code:", scannedData);
+      console.log("session id", sessionId);
 
       // Send scanned data to the WebSocket server
-      ws.send(
-        JSON.stringify({ type: "scan", sessionId: eventId, scannedData: data }),
-      );
+      ws.send(JSON.stringify({ type: "scan", sessionId, scannedData }));
+      if (scannedData) {
+        window.location.reload();
+      }
     }
   };
 
@@ -65,13 +72,12 @@ const QrScannerComponent = ({ eventId }: QrScannerComponentProps) => {
       )}
 
       <Scanner
-        //@ts-ignore
         onScan={handleScan}
         onError={handleError}
         classNames={{
           video: "absolute top-0 left-0 w-full h-full object-cover",
         }}
-        videoStyle={{ width: "100%", height: "100%", objectFit: "cover" }}
+        //@ts-ignore
         onLoad={() => setIsScannerLoading(false)}
       />
 
