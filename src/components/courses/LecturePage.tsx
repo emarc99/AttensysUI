@@ -363,39 +363,39 @@ const LecturePage = (props: any) => {
 
           <div className="h-[440px] w-[100%] bg-[#FFFFFF] border-[1px] border-[#D9D9D9] rounded-xl overflow-scroll scrollbar-hide">
             {props?.data?.courseCurriculum.map((item: any, i: any) => {
-              <div
-                key={i}
-                className="flex w-full space-y-1 items-center p-3 space-x-8 justify-center"
-                onClick={() => handleVideoClick(item)}
-              >
-                <p className="font-bold text-[#5801a9]">{i + 1}</p>
-                <div className="w-[150px] h-[120px] rounded-xl border-4 border ">
-                  <ReactPlayer
-                    // url={videos[currentIndex]}
-                    light={true}
-                    url={`https://${item.video}`}
-                    controls
-                    playing={false}
-                    // onEnded={handleVideoEnd} // Trigger when video ends
-                    width="100%"
-                    height="100px"
-                    onDuration={(duration) => handleDuration(i, duration)}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <p className="text-[14px] font-semibold leading-[30px] text-[#333333]">
-                    {item.name}
-                  </p>
-                  <h1 className="text-[8px] text-[#333333] leading-[14px] font-medium">
-                    Creator address
-                  </h1>
-                  <div className="rounded-lg bg-[#9B51E052] w-[60%] flex items-center justify-center">
-                    <p className="text-xs px-7 py-1">
-                      {durations[i]?.toFixed(2)}
+              return (
+                <div
+                  key={i}
+                  className="flex w-full space-y-1 items-center p-3 space-x-8 justify-center"
+                  onClick={() => handleVideoClick(item)}
+                >
+                  <p className="font-bold text-[#5801a9]">{i + 1}</p>
+                  <div className="w-[150px] h-[120px] rounded-xl border-4 border ">
+                    <ReactPlayer
+                      light={true}
+                      url={`https://${item.video}`}
+                      controls
+                      playing={false}
+                      width="100%"
+                      height="100px"
+                      onDuration={(duration) => handleDuration(i, duration)}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[14px] font-semibold leading-[30px] text-[#333333]">
+                      {item.name}
                     </p>
+                    <h1 className="text-[8px] text-[#333333] leading-[14px] font-medium">
+                      Creator address
+                    </h1>
+                    <div className="rounded-lg bg-[#9B51E052] w-[60%] flex items-center justify-center">
+                      <p className="text-xs px-7 py-1">
+                        {durations[i]?.toFixed(2)}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>;
+              );
             })}
           </div>
         </div>
