@@ -110,6 +110,7 @@ const MainFormView: React.FC<ChildComponentProps> = ({
         } catch (e) {
           console.error(e);
         } finally {
+          console.log("show");
         }
       }
     };
