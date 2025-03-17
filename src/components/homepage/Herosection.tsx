@@ -1,24 +1,17 @@
 import React from "react";
 import Image from "next/image";
 import { Button } from "@headlessui/react";
-
-// Image imports
-import combinedHero from "@/assets/combined-hero.png";
 import combinedHeroBig from "@/assets/combined-heroBig.png";
 import line from "@/assets/line.svg";
-
-import model from "@/assets/model.svg";
-import rectangle from "@/assets/rectangle.svg";
-import bg from "@/assets/bg.svg";
-import star from "@/assets/star.svg";
-import circle from "@/assets/circle.svg";
-import leftrectangle from "@/assets/leftrectangle.svg";
-import ship from "@/assets/ship.svg";
-import kite from "@/assets/kite.svg";
-import splitline from "@/assets/splitline.svg";
 import bluesplit from "@/assets/bluesplit.svg";
+import { useRouter } from "next/navigation";
 
 const Herosection = () => {
+  const router = useRouter();
+
+  const handleVerifyButton = () => {
+    router.push("/Explorer");
+  };
   return (
     <div className="lg:flex h-auto sm:w-[80%] mx-auto pt-6 items-center justify-between relative">
       {/* 📌 Text Container */}
@@ -57,6 +50,7 @@ const Herosection = () => {
         {/* 📌 Responsive Buttons */}
         <div className="flex space-x-3 sm:w-[60%] md:w-[70%] lg:w-[75%] xl:w-[70%]">
           <Button
+            onClick={handleVerifyButton}
             className="flex rounded-lg bg-[#2D3A4B] py-2 px-4 h-[45px] sm:h-[50px] 
                               md:h-[52px] lg:h-[50px] items-center 
                               w-[150px] md:w-[180px] lg:w-[160px] 
@@ -71,7 +65,7 @@ const Herosection = () => {
                               h-[45px] sm:h-[50px] md:h-[52px] lg:h-[50px] items-center 
                               w-[180px] md:w-[220px] lg:w-[210px] 
                               text-xs sm:text-sm md:text-md 
-                              text-[#2D3A4B] hover:bg-[#F5F5F5]"
+                              text-[#2D3A4B] hover:bg-[#F5F5F5] cursor-default"
           >
             Get Started on Attensys
           </Button>
