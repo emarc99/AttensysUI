@@ -12,6 +12,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@argent/invisible-sdk": "^1.0.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@googlemaps/extended-component-library": "^0.6.13",
@@ -112,5 +113,6 @@
   "lint-staged": {
     "*": "prettier --ignore-unknown --write",
     "*.{ts,tsx}": "eslint --cache --fix"
-  }
+  },
+  "packageManager": "yarn@4.7.0"
 }
