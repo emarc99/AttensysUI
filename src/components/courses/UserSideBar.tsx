@@ -1,12 +1,4 @@
-import React, { useEffect, useMemo } from "react";
-
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  Typography,
-  Button,
-} from "@material-tailwind/react";
+import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import profilePic from "../../assets/profile_pic.png";
 import { IoMdArrowDropdown } from "@react-icons/all-files/io/IoMdArrowDropdown";
@@ -25,6 +17,10 @@ import LearningJourney from "./LearningJourney";
 import Notification from "./Notification";
 import CreateACourse from "./CreateACourse";
 import { shortHex } from "@/utils/helpers";
+import filled from "@/assets/filled.svg";
+import free_books from "@/assets/free_books.svg";
+import notifications from "@/assets/notifications.svg";
+import createIcon from "@/assets/create.svg";
 
 interface UserSideBarProps {
   wallet: any;
@@ -46,11 +42,35 @@ const UserSideBar = ({
   selected,
   setSelected,
 }: UserSideBarProps) => {
+  const [sideProperties, setSideProperties] = useState([
+    {
+      no: 0,
+      title: "Courses created",
+      url: filled,
+    },
+    {
+      no: 0,
+      title: "My Learning Journey",
+      url: free_books,
+    },
+    {
+      no: 0,
+      title: "Create a course",
+      url: createIcon,
+    },
+    {
+      no: 0,
+      title: "Notification",
+      url: notifications,
+    },
+  ]);
+
   const renderItem = (arg: argprop) => {
     if (arg.title == "Courses") {
       return (
         <div className="text-[12px] ">
-          <span>{arg.no}</span> Course{arg.no > 1 ? "(s)" : ""}
+          <span>{takenCoursesData.length + courseData.length}</span> Course
+          {arg.no > 1 ? "(s)" : ""}
         </div>
       );
     } else if (arg.title == "Completed courses") {
@@ -117,6 +137,24 @@ const UserSideBar = ({
     }
     return "No User";
   }, [wallet?.selectedAddress]);
+
+  useEffect(() => {
+    if (wallet?.selectedAddress != undefined) {
+      setSideProperties((prev) =>
+        prev.map((item) => {
+          if (item.title === "Notification") {
+            return { ...item, no: 0 };
+          } else if (item.title === "My Learning Journey") {
+            return { ...item, no: takenCoursesData?.length };
+          } else if (item.title === "Courses created") {
+            return { ...item, no: courseData?.length };
+          } else {
+            return { ...item, no: 0 };
+          }
+        }),
+      );
+    }
+  }, [wallet?.selectedAddress, courseData, takenCoursesData]);
 
   return (
     <>
