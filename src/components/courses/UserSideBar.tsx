@@ -65,6 +65,8 @@ const UserSideBar = ({
     },
   ]);
 
+  const [isFilterModalOpen, setFilterModalOpen] = useState(false); // State for filter modal
+
   const renderItem = (arg: argprop) => {
     if (arg.title == "Courses") {
       return (
@@ -155,6 +157,12 @@ const UserSideBar = ({
       );
     }
   }, [wallet?.selectedAddress, courseData, takenCoursesData]);
+
+  // Function to handle filter selection
+  const handleFilterSelection = (filter: string) => {
+    setSelected(filter);
+    setFilterModalOpen(false); // Close the modal after selection
+  };
 
   return (
     <>
@@ -309,31 +317,67 @@ const UserSideBar = ({
             </div>
           ))}
 
-        {/* Mobile */}
-        {page == "myCourse" ? null : (
-          <div className="flex sm:hidden justify-between mt-10 border-b-2 p-3">
-            <div>
-              <p>All NFts</p>
-            </div>
+        {/* Mobile Filter Section */}
+        {page == "myCertificate" && (
+          <div className="sm:hidden">
+            <div className="flex justify-between mt-10 border-b-2 p-3">
+              <div>
+                <p>All NFTs</p>
+              </div>
 
-            <div className="flex">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="size-6"
+              <div
+                className="flex cursor-pointer"
+                onClick={() => setFilterModalOpen(true)}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 13.5V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 9.75V10.5"
-                />
-              </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 13.5V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 9.75V10.5"
+                  />
+                </svg>
 
-              <h4 className="underline font-bold">Filter</h4>
+                <h4 className="underline font-bold">Filter</h4>
+              </div>
             </div>
+
+            {/* Filter Modal */}
+            {isFilterModalOpen && (
+              <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
+                <div className="bg-white p-6 rounded-lg w-[90%] max-w-[300px]">
+                  <h2 className="text-lg font-bold mb-4">
+                    Filter Certificates
+                  </h2>
+                  {certSideProperties.map((item, i) => (
+                    <div
+                      key={i}
+                      className={`flex justify-between items-center p-3 my-2 rounded-lg cursor-pointer hover:bg-gray-100 ${
+                        selected === item.title ? "bg-violet-100" : ""
+                      }`}
+                      onClick={() => handleFilterSelection(item.title)}
+                    >
+                      <p className="text-sm">{item.title}</p>
+                      {selected === item.title && (
+                        <IoMdCheckmark color="green" size={20} />
+                      )}
+                    </div>
+                  ))}
+                  <button
+                    className="mt-4 w-full bg-violet-600 text-white py-2 rounded-lg"
+                    onClick={() => setFilterModalOpen(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
