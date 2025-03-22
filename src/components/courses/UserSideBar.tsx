@@ -351,26 +351,39 @@ const UserSideBar = ({
             {/* Filter Modal */}
             {isFilterModalOpen && (
               <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
-                <div className="bg-white p-6 rounded-lg w-[90%] max-w-[300px]">
+                <div className="bg-white p-6 rounded-lg w-[90%] max-w-full">
                   <h2 className="text-lg font-bold mb-4">
                     Filter Certificates
                   </h2>
                   {certSideProperties.map((item, i) => (
                     <div
+                      className={`border-[1px] border-[#BCBCBC] bg-[#FFFFFF] rounded-xl my-3 h-[62px] xl:w-[400px] px-6 flex items-center cursor-pointer hover:bg-violet-600 active:bg-violet-700 ${selected == item.title ? "focus:outline-none focus:ring focus:ring-violet-300" : ""} `}
                       key={i}
-                      className={`flex justify-between items-center p-3 my-2 rounded-lg cursor-pointer hover:bg-gray-100 ${
-                        selected === item.title ? "bg-violet-100" : ""
-                      }`}
-                      onClick={() => handleFilterSelection(item.title)}
+                      onClick={() => setFilterModalOpen(false)}
                     >
-                      <p className="text-sm">{item.title}</p>
-                      {selected === item.title && (
-                        <IoMdCheckmark color="green" size={20} />
-                      )}
+                      <div
+                        className="flex justify-between text-sm items-center w-full"
+                        onClick={() => {
+                          setSelected(item.title);
+                        }}
+                      >
+                        <div className="flex items-center">
+                          <Image src={item.url} alt={item.title} />
+                          <p className="ml-3 font-bold text-[14px] leading-[19px] text-[#2D3A4B]">
+                            {item.title}{" "}
+                          </p>
+                        </div>
+
+                        <div>
+                          {selected == item.title ? (
+                            <IoMdCheckmark color="green" size={20} />
+                          ) : null}
+                        </div>
+                      </div>
                     </div>
                   ))}
                   <button
-                    className="mt-4 w-full bg-violet-600 text-white py-2 rounded-lg"
+                    className="mt-4 w-full bg-violet-600 text-gray-900 py-2 rounded-lg"
                     onClick={() => setFilterModalOpen(false)}
                   >
                     Close
