@@ -62,9 +62,12 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
       </div>
 
       {/* skills  */}
-      <div className="ml-6 lg:mx-12 overflow-x-scroll xl:overflow-auto my-16 hidden xl:flex flex-row lg:justify-center">
+      <div className="ml-6 lg:mx-12 overflow-x-scroll xl:overflow-auto my-16 hidden xl:flex flex-row space-x-4 lg:justify-center">
         {skills.map((item, index) => (
-          <p className="bg-[#2D3A4B] p-6 text-white" key={index}>
+          <p
+            className="bg-[#2D3A4B] px-6 py-3.5 rounded-lg text-white flex flex-none items-center justify-center"
+            key={index}
+          >
             {item}
           </p>
         ))}
@@ -74,7 +77,7 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
         <Carousel responsive={responsive}>
           {skills.map((item, index) => (
             <p
-              className="bg-[#2D3A4B] rounded-[8px] xl:rounded-none p-6 text-white"
+              className="bg-[#2D3A4B] rounded-[8px] xl:rounded-none py-3.5 text-white mr-4"
               key={index}
             >
               {item}
