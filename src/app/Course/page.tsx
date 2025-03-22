@@ -62,7 +62,6 @@ const Index = () => {
     }
   };
 
-
   const getCourse = async () => {
     // if (courses.length < 1) return; // Prevent running on empty `courses`
     // console.log("This guy", courses);
