@@ -2,13 +2,23 @@ import { useCallback, useEffect, useState } from "react";
 import { ArgentWebWallet, SessionAccountInterface } from "@argent/invisible-sdk";
 import { provider } from "@/constants";
 import { atom, useAtom } from "jotai";
+import { attensysCourseAddress } from "@/deployments/contracts";
+
+
+const allowedMethods = [
+  // Course contract methods
+  {
+    "contract": attensysCourseAddress,
+    selector: "acquire_a_course",
+  },
+  {
+    "contract": attensysCourseAddress,
+    selector: "finish_course_claim_certification",
+  },
+];
 
 // Atom to store the account state
 export const argentInvisibleAccountAtom = atom<SessionAccountInterface | undefined>(undefined);
-
-// Contract constants
-const ATTENSYS_CONTRACT_ADDRESS = "0x049D36570D4e46f48e99674bd3fcc84644DdD6b96F7C741B1562B82f9e004dC7";
-const ATTENSYS_CONTRACT_ENTRYPOINT = "increase_number";
 
 export type ConnectStatus = "Connect" | "Disconnect" | "Connecting";
 
@@ -23,12 +33,7 @@ export const useArgentInvisible = () => {
     appName: "AttensysUI",
     environment: "sepolia",
     sessionParams: {
-      allowedMethods: [
-        {
-          contract: ATTENSYS_CONTRACT_ADDRESS,
-          selector: ATTENSYS_CONTRACT_ENTRYPOINT,
-        },
-      ],
+      allowedMethods: allowedMethods,
       validityDays: Number("15") || undefined, // DEFAULT 30 DAYS VALIDITY
     },
   });
@@ -89,7 +94,7 @@ export const useArgentInvisible = () => {
             tokenAddress: "0x049D36570D4e46f48e99674bd3fcc84644DdD6b96F7C741B1562B82f9e004dC7",
             amount: BigInt("100000000000000000").toString(),
             // Attensys dapp contract address should be here
-            spender: "0x7e00d496e324876bbc8531f2d9a82bf154d1a04a50218ee74cdd372f75a551a",
+            spender: attensysCourseAddress,
           },
         ],
       });

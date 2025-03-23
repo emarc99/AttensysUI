@@ -49,6 +49,7 @@ import { NetworkSwitchButton } from "./connect/NetworkSwitchButton";
 import { connectWallet } from "@/utils/connectWallet";
 import { ArgentInvisibleButton } from "./connect/ArgentInvisibleButton";
 import { useArgentInvisible } from "@/hooks/useArgentInvisible";
+import { SessionKeyManager } from "./session/SessionKeyManager";
 
 const navigation = [
   { name: "Courses", href: "#", current: false },
@@ -234,16 +235,20 @@ const Header = () => {
                       </>
                     ) : (
                       <>
-                        <DisconnectButton
-                          disconnectFn={disconnect}
-                          resetFn={() => {
-                            disconnectWallet();
-                          }}
-                        />
+                        <div className="flex items-center space-x-3">
+                          <SessionKeyManager compact={true} />
+                          <DisconnectButton
+                            disconnectFn={disconnect}
+                            resetFn={() => {
+                              disconnectWallet();
+                            }}
+                          />
+                        </div>
                       </>
                     )
                   ) : argentAccount ? (
                     <div className="flex items-center space-x-3">
+                      <SessionKeyManager compact={true} />
                       <ArgentInvisibleButton />
                     </div>
                   ) : (
@@ -634,11 +639,21 @@ const Header = () => {
                         <span>Dashboard</span>
                       </a>
                       <ArgentInvisibleButton className="w-full" />
+                      {wallet && (
+                        <div className="mt-3">
+                          <SessionKeyManager containerClassName="w-full" />
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="space-y-3">
                       <ConnectButton setIsCorrectNetwork={setIsCorrectNetwork} />
                       <ArgentInvisibleButton className="w-full" />
+                      {wallet && (
+                        <div className="mt-3">
+                          <SessionKeyManager containerClassName="w-full" />
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

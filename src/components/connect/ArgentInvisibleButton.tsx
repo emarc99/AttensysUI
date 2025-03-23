@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import { FC, useState } from "react";
 import { useArgentInvisible } from "@/hooks/useArgentInvisible";
 
 interface ArgentInvisibleButtonProps {
   className?: string;
 }
 
-export const ArgentInvisibleButton: React.FC<ArgentInvisibleButtonProps> = ({ className }) => {
+export const ArgentInvisibleButton: FC<ArgentInvisibleButtonProps> = ({ className }) => {
   const { account, connectStatus, connect, disconnect } = useArgentInvisible();
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -29,7 +29,7 @@ export const ArgentInvisibleButton: React.FC<ArgentInvisibleButtonProps> = ({ cl
     <div>
       {!isConnected ? (
         <button
-          className={`bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] text-white px-2 py-2 rounded-md flex items-center justify-center space-x-2 ${className}`}
+          className={`bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] text-white text-sm leading-4 px-2 py-2 rounded-md flex items-center justify-center space-x-1 ${className}`}
           onClick={handleConnect}
           disabled={isConnecting}
         >
@@ -78,7 +78,7 @@ export const ArgentInvisibleButton: React.FC<ArgentInvisibleButtonProps> = ({ cl
               </svg>
             </a>
             {showTooltip && (
-              <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-10">
+              <div className="absolute top-5 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-10">
                 Open Wallet Dashboard
                 <div className="absolute bottom-[-6px] left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-t-[6px] border-t-gray-800 border-r-[6px] border-r-transparent"></div>
               </div>
@@ -86,7 +86,7 @@ export const ArgentInvisibleButton: React.FC<ArgentInvisibleButtonProps> = ({ cl
           </div>
           <button
             onClick={handleDisconnect}
-            className={`bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] text-white px-2 py-2 rounded-md flex items-center justify-center space-x-2 ${className}`}
+            className={`bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] text-sm leading-4 text-white px-2 py-2 rounded-md flex items-center justify-center space-x-1 ${className}`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
