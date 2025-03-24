@@ -24,7 +24,7 @@ const Backgroundsection = () => {
         </h1>
         <Button
           onClick={handlerouting}
-          className="Webflex rounded-lg bg-[#A01B9B] py-2 px-4 lg:h-[50px] items-center lg:w-[170px] text-sm text-white data-[hover]:bg-sky-500 data-[active]:bg-sky-700"
+          className="flex rounded-lg flex-none bg-[#A01B9B] py-2 px-4 lg:h-[50px] items-center lg:w-[170px] text-sm text-white data-[hover]:bg-sky-500 data-[active]:bg-sky-700"
         >
           <div className="flex space-x-4 items-center font-semibold text-[16px]">
             <Image src={ticket} alt="ticket" className="mr-2" />
