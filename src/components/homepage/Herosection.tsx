@@ -73,13 +73,13 @@ const Herosection = () => {
       </div>
 
       {/* 📌 Grouped Image for Small and Medium Screens */}
-      <div className="block md:block lg:hidden mt-6">
+      <div className="block md:block lg:hidden mt-6 overflow-hidden">
         <Image
           alt="Combined Hero"
           src={combinedHeroBig}
-          className="mx-auto"
+          className="mx-auto px-4"
           width={400} // 🔹 Adjusting the width slightly for md
-          height={320}
+          height={360}
         />
       </div>
 
@@ -88,7 +88,7 @@ const Herosection = () => {
         <Image
           alt="Combined Hero Big"
           src={combinedHeroBig}
-          className="max-w-[500px] xl:max-w-[600px] 2xl:max-w-[700px] mr-[-30px]"
+          className="max-w-[400px] xl:max-w-[500px] 2xl:max-w-[600px] mr-[10px]"
           width={600}
           height={500}
         />
