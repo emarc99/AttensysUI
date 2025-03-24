@@ -317,7 +317,7 @@ const LecturePage = (props: any) => {
         </div>
         <p className="text-[16px] text-[#2D3A4B] leading-[19px] font-semibold">
           <span className="mr-2 text-[#9B51E0]">|</span>{" "}
-          {props?.data?.courseName}
+          <span className="truncate">{props?.data?.courseName}</span>
         </p>
       </div>
 
