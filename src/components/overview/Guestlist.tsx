@@ -3,6 +3,7 @@ import downlaod from "@/assets/download.svg";
 import filter from "@/assets/filter.png";
 import { guestdata } from "@/constants/data";
 import { useEvents } from "@/hooks/useEvents";
+import { useFetchCID } from "@/hooks/useFetchCID";
 import {
   decimalToHexAddress,
   downloadCSV,
@@ -13,7 +14,6 @@ import Image from "next/image";
 import { useParams, useSearchParams } from "next/navigation";
 import Papa from "papaparse";
 import { useEffect, useState } from "react";
-import { pinata } from "../../../utils/config";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import List from "./List";
 
@@ -32,6 +32,11 @@ const Guestlist = () => {
   const { events, getEventsRegiseredUsers } = useEvents();
   const searchParams = useSearchParams();
   const params = useParams();
+  const {
+    fetchCIDContent,
+    getError,
+    isLoading: isCIDFetchLoading,
+  } = useFetchCID();
   const eventName = decodeURIComponent((params.event as string) ?? "");
   const id = searchParams.get("id");
   const itemsPerPage = 10;
@@ -128,7 +133,7 @@ const Guestlist = () => {
   const obtainCIDdata = async (CID: string) => {
     try {
       //@ts-ignore
-      const data = await pinata.gateways.get(CID);
+      const data = await fetchCIDContent(CID);
 
       return data?.data;
     } catch (error) {
