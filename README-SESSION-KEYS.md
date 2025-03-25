@@ -55,13 +55,13 @@ A reusable component for session key management that provides:
 
 2. **Demo Page**: The `/session-demo` route provides a complete demonstration of session key functionality.
 
-3. **Wallet Connection**: Session keys work with the existing wallet connection flow using Argent X.
+3. **Wallet Connection**: Session keys work with the existing wallet connection flow using Argent X smart account, Argent Mobile or Web wallet.
 
 ## Usage Instructions
 
 ### For Users
 
-1. Connect your Argent X wallet
+1. Connect your Argent X smart account, Argent Mobile or Web wallet 
 2. Create a session by clicking the "Create Session" button
 3. Approve the session creation transaction in your wallet
 4. Once active, the session allows the application to execute transactions without additional signatures
@@ -76,7 +76,7 @@ A reusable component for session key management that provides:
 
 ## Limitations
 
-- Only compatible with Argent X wallet
+- Only compatible with Argent X smart account, Argent Mobile and Web wallet (Argent X standard account is not supported)
 - Limited to specific contract functions defined in the session policy
 - Maximum transaction value is constrained by session policy
 
@@ -90,3 +90,5 @@ A reusable component for session key management that provides:
 ---
 
 For technical details about the implementation, refer to the source code in `src/utils/sessionKeys.ts`, `src/hooks/useSessionKeys.ts`, and `src/components/session/SessionKeyManager.tsx`. 
+
+More info available at [Argent official docs](https://docs.argent.xyz/aa-use-cases/session-keys).
