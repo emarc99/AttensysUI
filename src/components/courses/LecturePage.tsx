@@ -296,19 +296,17 @@ const LecturePage = (props: any) => {
   return (
     <div className="pt-6  pb-36 w-full">
       {/* Video and Title */}
-      <div className="flex text-sm space-x-3 items-center px-12">
-        <div className="flex space-x-2 items-center">
+      <div className="flex flex-none w-full text-sm space-x-3 items-center px-12">
+        <div className="flex flex-none space-x-2 items-center">
           <Image
             src={graduate}
             className="h-[25px] w-[25px]"
             alt="stream_video"
           />
-          <p className="text-[16px] text-[#2D3A4B] leading-[19px] font-semibold">
-            My Courses
-          </p>
+          <p className="text-[16px] text-[#2D3A4B] font-semibold">My Courses</p>
         </div>
-        <p className="text-[16px] text-[#2D3A4B] leading-[19px] font-semibold">
-          <span className="mr-2 text-[#9B51E0]">|</span>{" "}
+        <span className="text-[#9B51E0]">|</span>{" "}
+        <p className="w-full truncate text-[16px] text-[#2D3A4B] font-semibold">
           {props?.data?.courseName}
         </p>
       </div>

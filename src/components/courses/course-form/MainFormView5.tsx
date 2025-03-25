@@ -197,7 +197,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
         <CourseSideBar courseData={courseData} />
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 w-full">
         <div className="bg-gradient-to-r from-[#4A90E2] to-[#9B51E0]">
           <p className="text-sm text-white text-center py-2">
             Your course creation progress saves automatically, but feel free to
@@ -240,7 +240,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
             </div>
             <div className="block lg:grid lg:grid-cols-2 gap-4">
               {/* Course Image */}
-              <div className="relative h-[350px]  w-[500px]">
+              <div className="relative h-[350px] w-auto max-w-[500px]">
                 {imageSrc ? (
                   <Image
                     src={(imageSrc as string) || "/placeholder.svg"}

@@ -141,7 +141,7 @@ const MainFormView: React.FC<ChildComponentProps> = ({
         <CourseSideBar courseData={courseData} />
       </div>
 
-      <div className="mb-10 flex-1">
+      <div className="mb-10 flex-1 w-full">
         <div className="bg-gradient-to-r from-[#4A90E2] to-[#9B51E0]">
           <p className="text-xs sm:text-sm text-white text-center py-2">
             Your course creation progress saves automatically, but feel free to
@@ -318,9 +318,9 @@ const MainFormView: React.FC<ChildComponentProps> = ({
                   />
                 </div>
 
-                <div className="mt-12 mb-5 w-full">
+                <div className="mt-12 mb-5 w-full mx-auto flex justify-center md:justify-start">
                   <button
-                    className="bg-[#4A90E2] px-48 rounded-lg py-[15px] text-white w-full max-w-[350px]"
+                    className="bg-[#4A90E2] rounded-lg py-[15px] text-white w-[190px] md:w-[350px]"
                     type="submit"
                   >
                     Next
@@ -328,7 +328,10 @@ const MainFormView: React.FC<ChildComponentProps> = ({
                 </div>
 
                 <div className="w-full flex justify-center pb-[74px]">
-                  <button className="block sm:hidden bg-[#c5d322] text-sm px-12 py-[15px] rounded-lg text-black">
+                  <button
+                    type="button"
+                    className="block sm:hidden bg-[#c5d322] text-sm px-12 py-[15px] rounded-lg text-black"
+                  >
                     Save progress
                   </button>
                 </div>
