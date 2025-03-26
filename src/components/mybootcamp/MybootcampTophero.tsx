@@ -1,6 +1,7 @@
 import { provider } from "@/constants";
 import { attensysOrgAbi } from "@/deployments/abi";
 import { attensysOrgAddress } from "@/deployments/contracts";
+import { useFetchCID } from "@/hooks/useFetchCID";
 import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
 import { mybootcampDescription } from "@/state/connectedWalletStarknetkitNext";
 import { Button } from "@headlessui/react";
@@ -26,7 +27,7 @@ const MybootcampTophero = (props: any) => {
   const [Imagesource, setImageSource] = useState<string | StaticImport>("");
   const [bootcampDate, setDate] = useState<string | null>(null);
   const [Description, setBootcampDescription] = useAtom(mybootcampDescription);
-
+  const { fetchCIDContent } = useFetchCID();
   const router = useRouter();
 
   const handleroute = () => {

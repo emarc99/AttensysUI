@@ -11,7 +11,22 @@ import { useCallback, useState } from "react";
  *
  * Features:
  * - Server-side caching via Next.js unstable_cache
- * - Automatic base64 to Blob conversion for binary data
+ * - Automatic base64 to Blob conversion for binary data if  if  if (retryCount < maxRetries) {
+          await new Promise((resolve) =>
+            setTimeout(resolve, RETRY_DELAY * (retryCount + 1)),
+          );
+          return fetchWithRetry(CID, retryCount + 1, maxRetries);
+        }(retryCount < maxRetries) {
+          await new Promise((resolve) =>
+            setTimeout(resolve, RETRY_DELAY * (retryCount + 1)),
+          );
+          return fetchWithRetry(CID, retryCount + 1, maxRetries);
+        }(retryCount < maxRetries) {
+          await new Promise((resolve) =>
+            setTimeout(resolve, RETRY_DELAY * (retryCount + 1)),
+          );
+          return fetchWithRetry(CID, retryCount + 1, maxRetries);
+        }
  * - Automatic retries on failed requests
  * - Status tracking per CID (loading state, errors, last updated timestamp)
  * - Batch fetching support for multiple CIDs

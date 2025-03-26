@@ -100,7 +100,7 @@ const Organizationlanding = (prop: any) => {
       setStudentNumber(Number(org_info.number_of_students));
       setBootcampNumber(Number(org_info.number_of_all_bootcamps));
       console.info(org_info);
-      const ipfsdata = getPubIpfs(org_info.org_ipfs_uri);
+      const ipfsdata = await getPubIpfs(org_info.org_ipfs_uri);
       console.info(ipfsdata);
     } catch (error) {
       console.error("Error fetching org info:", error);
