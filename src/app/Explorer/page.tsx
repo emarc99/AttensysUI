@@ -15,21 +15,61 @@ import {
 } from "@tanstack/react-query";
 import { gql, request } from "graphql-request";
 
-const query = gql`
+const orgquery = gql`
   {
-    myEntities(first: 5) {
-      id
-    }
-    organizationProfiles(first: 5) {
-      id
+    organizationProfiles {
       org_name
-      org_ipfs_uri
+    }
+    bootCampCreateds {
+      bootcamp_name
+      org_name
+    }
+    bootcampRegistrations {
+      bootcamp_id
+      org_address
+    }
+    instructorAddedToOrgs {
+      instructors
+      org_name
+    }
+    instructorRemovedFromOrgs {
+      instructor_addr
+      org_owner
+    }
+    registrationApproveds {
+      bootcamp_id
+      student_address
+    }
+    registrationDeclineds {
+      bootcamp_id
+      student_address
     }
   }
 `;
-const url =
+const coursequery = gql`
+  {
+    adminTransferreds {
+      new_admin
+    }
+    courseCertClaimeds {
+      candidate
+    }
+    courseCreateds {
+      owner_
+      course_ipfs_uri
+    }
+    courseReplaceds {
+      owner_
+      new_course_uri
+    }
+  }
+`;
+const orgurl =
   "https://api.studio.thegraph.com/query/107628/orgsubgraph/version/latest";
 const headers = { Authorization: "Bearer {api-key}" };
+
+const courseurl =
+  "https://api.studio.thegraph.com/query/107628/coursesubgraph/version/latest";
 
 const Index = () => {
   const [status, setStatus] = useAtom(coursestatusAtom);
@@ -37,16 +77,25 @@ const Index = () => {
     bootcampdropdownstatus,
   );
   const queryClient = new QueryClient();
+  const otherqueryClient = new QueryClient();
 
   const handlesub = async () => {
     await queryClient.prefetchQuery({
       queryKey: ["data"],
       async queryFn() {
-        return await request(url, query, {}, headers);
+        return await request(orgurl, orgquery, {}, headers);
       },
     });
   };
 
+  const handleothersub = async () => {
+    await otherqueryClient.prefetchQuery({
+      queryKey: ["data"],
+      async queryFn() {
+        return await request(courseurl, coursequery, {}, headers);
+      },
+    });
+  };
   const handlePageClick = () => {
     setbootcampdropstat(false);
     setStatus(false);
@@ -54,7 +103,8 @@ const Index = () => {
 
   useEffect(() => {
     handlesub();
-  }, [queryClient]);
+    handleothersub();
+  }, [queryClient, otherqueryClient]);
 
   return (
     <div onClick={handlePageClick}>
@@ -72,7 +122,9 @@ const Index = () => {
       </div>
 
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <ExplorePage />
+        <HydrationBoundary state={dehydrate(otherqueryClient)}>
+          <ExplorePage />
+        </HydrationBoundary>
       </HydrationBoundary>
     </div>
   );
