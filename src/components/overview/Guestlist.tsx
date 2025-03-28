@@ -49,6 +49,7 @@ const Guestlist = () => {
       let eventParticipantsIpfsData = [];
       for (const participant of eventParticipantsUriData) {
         const userData = await obtainCIDdata(participant.attendee_uri);
+
         const participantDetails = {
           //@ts-ignore
           ...userData,
@@ -274,7 +275,7 @@ const Guestlist = () => {
                   <List
                     key={index}
                     name={data.guest_name}
-                    address={formatTruncatedAddress(data.guest_address)}
+                    address={data.guest_address}
                     status="Approved"
                     role="N/A"
                     regdate="12/25/2024"
