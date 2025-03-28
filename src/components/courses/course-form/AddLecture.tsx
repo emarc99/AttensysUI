@@ -195,7 +195,6 @@ const AddLecture: React.FC<LectureProps> = ({
         setUploadHash(ipfsHash);
       }
     } catch (error: any) {
-      
       setUploadStatus((prev) => ({
         ...prev,
         [type]: {

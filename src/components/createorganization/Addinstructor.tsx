@@ -70,95 +70,94 @@ const Addinstructor = (props: any) => {
   // function to handle multicall of create_org and add_instructor functions from contract
   const handle_multicall_routing = async () => {
     setUploading(true);
-    const OrgBannerupload = await pinata.upload.file(
-      organizationData.organizationBanner,
-    );
-    const OrgLogoUpload = await pinata.upload.file(
-      organizationData.organizationLogo,
-    );
-    console.log("org data here", organizationData);
-    const Dataupload = await pinata.upload.json({
-      OrganizationName: organizationData.organizationName,
-      OrganizationDescription: organizationData.organizationDescription,
-      OrganizationBannerCID: OrgBannerupload.IpfsHash,
-      OrganizationLogoCID: OrgLogoUpload.IpfsHash,
-      OrganizationCategory: organizationData.organizationCategory,
-      OrganizationAdminName: organizationData.organizationAdminfullname,
-      OrganizationAdminEmail: organizationData.organizationAminEmail,
-      OrganizationAminWalletAddress: organizationData.organizationAdminWallet,
-      OrganizationInstructorEmails:
-        organizationData.organizationInstructorEmails,
-      OrganizationInstructorWalletAddresses:
-        organizationData.organizationInstructorsWalletAddresses,
-    });
-    //@todo reset all data field after pinata data upload is successful
-    if (Dataupload) {
-      console.log("Data upload here", Dataupload);
-      console.log("Cid to send to contract", Dataupload.IpfsHash);
-      //initialize provider with a Sepolia Testnet node
-      const organizationContract = new Contract(
-        attensysOrgAbi,
-        attensysOrgAddress,
-        connectorDataAccount,
+    try {
+      const OrgBannerupload = await pinata.upload.file(
+        organizationData.organizationBanner,
       );
-
-      const create_org_calldata = organizationContract.populate(
-        "create_org_profile",
-        [
-          organizationData.organizationName,
-          // @ts-ignore
-          Dataupload.IpfsHash,
-        ],
+      const OrgLogoUpload = await pinata.upload.file(
+        organizationData.organizationLogo,
       );
-
-      const add_instructor_calldata = organizationContract.populate(
-        "add_instructor_to_org",
-        [
+      console.log("org data here", organizationData);
+      const Dataupload = await pinata.upload.json({
+        OrganizationName: organizationData.organizationName,
+        OrganizationDescription: organizationData.organizationDescription,
+        OrganizationBannerCID: OrgBannerupload.IpfsHash,
+        OrganizationLogoCID: OrgLogoUpload.IpfsHash,
+        OrganizationCategory: organizationData.organizationCategory,
+        OrganizationAdminName: organizationData.organizationAdminfullname,
+        OrganizationAdminEmail: organizationData.organizationAminEmail,
+        OrganizationAminWalletAddress: organizationData.organizationAdminWallet,
+        OrganizationInstructorEmails:
+          organizationData.organizationInstructorEmails,
+        OrganizationInstructorWalletAddresses:
           organizationData.organizationInstructorsWalletAddresses,
-          organizationData.organizationName,
-        ],
-      );
+      });
+      //@todo reset all data field after pinata data upload is successful
+      if (Dataupload) {
+        console.log("Data upload here", Dataupload);
+        console.log("Cid to send to contract", Dataupload.IpfsHash);
+        //initialize provider with a Sepolia Testnet node
+        const organizationContract = new Contract(
+          attensysOrgAbi,
+          attensysOrgAddress,
+          connectorDataAccount,
+        );
 
-      //@ts-ignore
-      const multiCall = await connectorDataAccount.execute([
-        {
-          contractAddress: attensysOrgAddress,
-          entrypoint: "create_org_profile",
-          calldata: create_org_calldata.calldata,
-        },
-        {
-          contractAddress: attensysOrgAddress,
-          entrypoint: "add_instructor_to_org",
-          calldata: add_instructor_calldata.calldata,
-        },
-      ]);
+        const create_org_calldata = organizationContract.populate(
+          "create_org_profile",
+          [
+            organizationData.organizationName,
+            // @ts-ignore
+            Dataupload.IpfsHash,
+          ],
+        );
 
-      //@ts-ignore
-      connectorDataAccount?.provider
-        .waitForTransaction(multiCall.transaction_hash)
-        .then(() => {})
-        .catch((e: any) => {
-          console.log("Error: ", e);
-        })
-        .finally(() => {
-          setSpecificOrg(organizationData.organizationName);
-          //Resets all org data input
-          setOrganizationData(ResetOrgRegData);
-          router.push(`/Createorganization/create-a-bootcamp`);
-        });
+        const add_instructor_calldata = organizationContract.populate(
+          "add_instructor_to_org",
+          [
+            organizationData.organizationInstructorsWalletAddresses,
+            organizationData.organizationName,
+          ],
+        );
+
+        //@ts-ignore
+        const multiCall = await connectorDataAccount.execute([
+          {
+            contractAddress: attensysOrgAddress,
+            entrypoint: "create_org_profile",
+            calldata: create_org_calldata.calldata,
+          },
+          {
+            contractAddress: attensysOrgAddress,
+            entrypoint: "add_instructor_to_org",
+            calldata: add_instructor_calldata.calldata,
+          },
+        ]);
+
+        //@ts-ignore
+        await connectorDataAccount?.provider.waitForTransaction(
+          multiCall.transaction_hash,
+        );
+        console.log("Done Submitting");
+        setUploading(false);
+        setOrganizationData(ResetOrgRegData);
+        setSpecificOrg(organizationData.organizationName);
+        router.push(`/Createorganization/create-a-bootcamp`);
+      }
+    } catch (error) {
       setUploading(false);
+      console.error("An error occured: ", error);
     }
-    setUploading(false);
   };
 
   return (
-    <div className="lg:h-[500px] w-full flex flex-col items-center space-y-8 py-3">
-      <div className="mx-auto w-full lg:w-auto pt-12">
+    <div className="lg:h-auto w-full flex flex-col mx-auto items-center space-y-8 py-3">
+      <div className="mx-auto pt-12">
         <h1 className="text-[16px] text-[#2D3A4B] font-light leading-[23px]">
           Use commas (,) to seperate instructor emails
         </h1>
-        <div className="flex flex-col w-full lg:flex-row justify-center  space-x-3 items-center">
-          <div className="lg:w-[590px] lg:h-[60px] w-full border-[2px] rounded-2xl mt-5">
+        <div className="flex flex-col w-full lg:flex-row justify-center space-x-3 items-center">
+          <div className="w-full md:w-[600px] h-[60px] border-[2px] rounded-2xl mt-5">
             <Emailinput onEmailsChange={handleEmailsChange} />
           </div>
         </div>
@@ -168,7 +167,7 @@ const Addinstructor = (props: any) => {
           Use commas (,) to seperate wallet addresses
         </h1>
         <div className="flex space-x-3 items-center">
-          <div className="w-[590px] h-[60px] border-[2px] rounded-2xl mt-5">
+          <div className="w-full md:w-[600px] h-[60px] border-[2px] rounded-2xl mt-5">
             <Addressinput onAddressChange={handleAddresssChange} />
           </div>
           {/* <Button className='bg-[#4A90E21F] text-[#5801A9] font-normal text-[14px] rounded-lg h-[48px] w-[155px] items-center flex justify-center mt-5'>
@@ -181,7 +180,7 @@ const Addinstructor = (props: any) => {
           handle_multicall_routing();
         }}
         disabled={uploading}
-        className={`w-[342px] h-[47px] mt-8 flex justify-center items-center text-[#FFFFFF] text-[14px] font-bold leading-[16px]  rounded-xl ${
+        className={`mx-auto w-auto px-16 md:w-[600px] h-[60px] mt-8 flex justify-center items-center text-[#FFFFFF] text-[14px] font-bold leading-[16px] rounded-xl ${
           uploading ? "bg-[#357ABD] cursor-not-allowed" : "bg-[#4A90E2]"
         }`}
       >
