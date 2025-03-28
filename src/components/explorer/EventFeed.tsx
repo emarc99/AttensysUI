@@ -52,6 +52,23 @@ interface CourseReplaced {
   new_course_uri: string;
 }
 
+interface EventCreated {
+  event_name: string[];
+  event_organizer: string;
+}
+
+interface AttendanceMarked {
+  attendee: string;
+}
+
+interface RegisteredForEvent {
+  attendee: string;
+}
+
+interface RegistrationStatusChanged {
+  registration_open: number;
+}
+
 interface OrganizationEvents {
   organizationProfiles?: OrganizationProfile[];
   bootCampCreateds?: BootCampCreated[];
@@ -69,9 +86,19 @@ interface CourseEvents {
   courseReplaceds?: CourseReplaced[];
 }
 
+interface EventEvents {
+  eventCreateds?: EventCreated[];
+  adminOwnershipClaimeds?: any[];
+  adminTransferreds?: any[];
+  attendanceMarkeds?: AttendanceMarked[];
+  registeredForEvents?: RegisteredForEvent[];
+  registrationStatusChangeds?: RegistrationStatusChanged[];
+}
+
 interface EventData {
   organizations?: OrganizationEvents;
   courses?: CourseEvents;
+  events?: EventEvents;
 }
 
 interface EventItem {
@@ -89,11 +116,17 @@ const EventFeed = ({ data }: { data: EventData }) => {
     type: T,
     field: keyof (T extends "organizations"
       ? OrganizationEvents
-      : CourseEvents),
+      : T extends "courses"
+        ? CourseEvents
+        : EventEvents),
     item: any,
   ): boolean => {
     const currentTypeData = previousDataRef.current?.[type] as
-      | (T extends "organizations" ? OrganizationEvents : CourseEvents)
+      | (T extends "organizations"
+          ? OrganizationEvents
+          : T extends "courses"
+            ? CourseEvents
+            : EventEvents)
       | undefined;
 
     if (!currentTypeData) return true;
@@ -232,6 +265,49 @@ const EventFeed = ({ data }: { data: EventData }) => {
       });
     }
 
+    // Process event-related events
+    if (data.events) {
+      data.events.eventCreateds?.forEach((event) => {
+        if (isNewItem("events", "eventCreateds", event)) {
+          newEvents.push({
+            id: `${event.event_name[0]}-created-${now}`,
+            message: `${truncateAddress(event.event_organizer)} created event: ${event.event_name[0]}`,
+            timestamp: now,
+          });
+        }
+      });
+
+      data.events.attendanceMarkeds?.forEach((attendance) => {
+        if (isNewItem("events", "attendanceMarkeds", attendance)) {
+          newEvents.push({
+            id: `${attendance.attendee}-attended-${now}`,
+            message: `${truncateAddress(attendance.attendee)} attended an event`,
+            timestamp: now,
+          });
+        }
+      });
+
+      data.events.registeredForEvents?.forEach((registration) => {
+        if (isNewItem("events", "registeredForEvents", registration)) {
+          newEvents.push({
+            id: `${registration.attendee}-registered-${now}`,
+            message: `${truncateAddress(registration.attendee)} registered for an event`,
+            timestamp: now,
+          });
+        }
+      });
+
+      data.events.registrationStatusChangeds?.forEach((statusChange) => {
+        if (isNewItem("events", "registrationStatusChangeds", statusChange)) {
+          newEvents.push({
+            id: `status-change-${now}`,
+            message: `Registration status was updated for an event`,
+            timestamp: now,
+          });
+        }
+      });
+    }
+
     if (newEvents.length > 0) {
       setEvents((prev) => [...newEvents, ...prev]);
     }
@@ -261,9 +337,9 @@ const EventFeed = ({ data }: { data: EventData }) => {
             No recent activity
           </p>
         ) : (
-          events.map((event) => (
+          events.map((event, index) => (
             <div
-              key={event.id}
+              key={index}
               className="p-3 bg-gray-50 dark:bg-gray-700 rounded-md border-l-4 border-blue-500 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
             >
               <p className="text-gray-800 dark:text-gray-200">

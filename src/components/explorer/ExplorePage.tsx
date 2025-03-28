@@ -62,12 +62,39 @@ const coursequery = gql`
   }
 `;
 
+const eventquery = gql`
+  {
+    eventCreateds {
+      event_name
+      event_organizer
+    }
+    adminOwnershipClaimeds {
+      new_admin
+    }
+    adminTransferreds {
+      new_admin
+    }
+    attendanceMarkeds {
+      attendee
+    }
+    registeredForEvents {
+      attendee
+    }
+    registrationStatusChangeds {
+      registration_open
+    }
+  }
+`;
+
 const orgurl =
   "https://api.studio.thegraph.com/query/107628/orgsubgraph/version/latest";
 const headers = { Authorization: "Bearer {api-key}" };
 
 const courseurl =
   "https://api.studio.thegraph.com/query/107628/coursesubgraph/version/latest";
+
+const eventurl =
+  "https://api.studio.thegraph.com/query/107628/eventsubgraph/version/latest";
 
 const ExplorePage = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -92,10 +119,20 @@ const ExplorePage = () => {
     refetchInterval: 10000,
   });
 
+  const { data: eventdata } = useQuery({
+    queryKey: ["eventdata"],
+    async queryFn() {
+      return await request(eventurl, eventquery, {}, headers);
+    },
+    refetchInterval: 10000,
+  });
+  // console.log(JSON.stringify(eventdata, null, 2));
+
   const eventData = React.useMemo(
     () => ({
       organizations: data ?? {},
       courses: coursedata ?? {},
+      events: eventdata ?? {},
     }),
     [data, coursedata],
   );

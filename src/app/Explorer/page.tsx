@@ -64,12 +64,38 @@ const coursequery = gql`
     }
   }
 `;
+const eventquery = gql`
+  {
+    eventCreateds {
+      event_name
+      event_organizer
+    }
+    adminOwnershipClaimeds {
+      new_admin
+    }
+    adminTransferreds {
+      new_admin
+    }
+    attendanceMarkeds {
+      attendee
+    }
+    registeredForEvents {
+      attendee
+    }
+    registrationStatusChangeds {
+      registration_open
+    }
+  }
+`;
 const orgurl =
   "https://api.studio.thegraph.com/query/107628/orgsubgraph/version/latest";
 const headers = { Authorization: "Bearer {api-key}" };
 
 const courseurl =
   "https://api.studio.thegraph.com/query/107628/coursesubgraph/version/latest";
+
+const eventurl =
+  "https://api.studio.thegraph.com/query/107628/eventsubgraph/version/latest";
 
 const Index = () => {
   const [status, setStatus] = useAtom(coursestatusAtom);
@@ -78,6 +104,7 @@ const Index = () => {
   );
   const queryClient = new QueryClient();
   const otherqueryClient = new QueryClient();
+  const eventqueryClient = new QueryClient();
 
   const handlesub = async () => {
     await queryClient.prefetchQuery({
@@ -96,6 +123,14 @@ const Index = () => {
       },
     });
   };
+  const handleeventsub = async () => {
+    await eventqueryClient.prefetchQuery({
+      queryKey: ["data"],
+      async queryFn() {
+        return await request(eventurl, eventquery, {}, headers);
+      },
+    });
+  };
   const handlePageClick = () => {
     setbootcampdropstat(false);
     setStatus(false);
@@ -104,7 +139,8 @@ const Index = () => {
   useEffect(() => {
     handlesub();
     handleothersub();
-  }, [queryClient, otherqueryClient]);
+    handleeventsub();
+  }, [queryClient, otherqueryClient, eventqueryClient]);
 
   return (
     <div onClick={handlePageClick}>
@@ -120,10 +156,11 @@ const Index = () => {
       <div onClick={(e) => e.stopPropagation()}>
         <Bootcampdropdown />
       </div>
-
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <HydrationBoundary state={dehydrate(otherqueryClient)}>
-          <ExplorePage />
+      <HydrationBoundary state={dehydrate(eventqueryClient)}>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <HydrationBoundary state={dehydrate(otherqueryClient)}>
+            <ExplorePage />
+          </HydrationBoundary>
         </HydrationBoundary>
       </HydrationBoundary>
     </div>
