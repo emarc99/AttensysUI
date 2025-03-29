@@ -208,7 +208,7 @@ const MyCourses = (props: any) => {
 
         <div>
           {selected == "" || selected == "Notification" ? (
-            <Notification />
+            <Notification wallet={wallet} />
           ) : null}
         </div>
       </div>
