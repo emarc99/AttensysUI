@@ -113,6 +113,24 @@ const eventquery = gql`
   }
 `;
 
+// Add interface for the event data structure
+interface EventData {
+  organizations: {
+    bootcampRegistrations?: any[];
+    instructorAddedToOrgs?: any[];
+    instructorRemovedFromOrgs?: any[];
+  };
+  courses: {
+    courseCreateds?: any[];
+    courseCertClaimeds?: any[];
+  };
+  events: {
+    attendanceMarkeds?: any[];
+    eventCreateds?: any[];
+    registeredForEvents?: any[];
+  };
+}
+
 const orgurl =
   "https://api.studio.thegraph.com/query/107628/orgsubgraph/version/latest";
 const headers = { Authorization: "Bearer {api-key}" };
@@ -151,7 +169,7 @@ const Notification = (props: any) => {
     refetchInterval: 10000,
   });
 
-  const eventData = React.useMemo(
+  const eventData: EventData = React.useMemo(
     () => ({
       organizations: data ?? {},
       courses: coursedata ?? {},
@@ -184,39 +202,43 @@ const Notification = (props: any) => {
         // });
 
         // Check bootcamp registrations
-        eventData.organizations?.bootcampRegistrations.forEach((event: any) => {
-          if (
-            formatAddress(event.org_address.toLowerCase()) ===
-            address.toLowerCase()
-          ) {
-            notifications.push({
-              type: "BOOTCAMP_REGISTRATION",
-              bootcampId: event.bootcamp_id,
-              timestamp: event.block_timestamp,
-              blockNumber: event.block_number,
-            });
-          }
-        });
-
-        // Check instructor additions
-        eventData.organizations?.instructorAddedToOrgs.forEach((event: any) => {
-          for (let i = 0; i < event.instructors.length; i++) {
+        eventData.organizations?.bootcampRegistrations?.forEach(
+          (event: any) => {
             if (
-              formatAddress(event.instructors[i].toLowerCase()) ===
+              formatAddress(event.org_address.toLowerCase()) ===
               address.toLowerCase()
             ) {
               notifications.push({
-                type: "INSTRUCTOR_ADDED",
-                orgName: event.org_name,
+                type: "BOOTCAMP_REGISTRATION",
+                bootcampId: event.bootcamp_id,
                 timestamp: event.block_timestamp,
                 blockNumber: event.block_number,
               });
             }
-          }
-        });
+          },
+        );
+
+        // Check instructor additions
+        eventData.organizations?.instructorAddedToOrgs?.forEach(
+          (event: any) => {
+            for (let i = 0; i < event.instructors.length; i++) {
+              if (
+                formatAddress(event.instructors[i].toLowerCase()) ===
+                address.toLowerCase()
+              ) {
+                notifications.push({
+                  type: "INSTRUCTOR_ADDED",
+                  orgName: event.org_name,
+                  timestamp: event.block_timestamp,
+                  blockNumber: event.block_number,
+                });
+              }
+            }
+          },
+        );
 
         // Check instructor removed
-        eventData.organizations?.instructorRemovedFromOrgs.forEach(
+        eventData.organizations?.instructorRemovedFromOrgs?.forEach(
           (event: any) => {
             if (
               formatAddress(event.org_address.toLowerCase()) ===
@@ -281,7 +303,7 @@ const Notification = (props: any) => {
       // Filter course-related notifications
       if (Object.keys(eventData.courses).length != 0) {
         // Check course creations
-        eventData.courses?.courseCreateds.forEach((event: any) => {
+        eventData.courses?.courseCreateds?.forEach((event: any) => {
           if (
             formatAddress(event.owner_.toLowerCase()) === address.toLowerCase()
           ) {
@@ -296,7 +318,7 @@ const Notification = (props: any) => {
         });
 
         // Check certificate claims
-        eventData.courses?.courseCertClaimeds.forEach((event: any) => {
+        eventData.courses?.courseCertClaimeds?.forEach((event: any) => {
           if (
             formatAddress(event.candidate.toLowerCase()) ===
             address.toLowerCase()
@@ -350,7 +372,7 @@ const Notification = (props: any) => {
         });
 
         // Check event registrations
-        eventData.events?.registeredForEvents.forEach((event: any) => {
+        eventData.events?.registeredForEvents?.forEach((event: any) => {
           if (
             formatAddress(event.attendee.toLowerCase()) ===
             address.toLowerCase()

@@ -125,6 +125,24 @@ const eventquery = gql`
   }
 `;
 
+// Add interface for the event data structure
+interface EventData {
+  organizations: {
+    bootcampRegistrations?: any[];
+    instructorAddedToOrgs?: any[];
+    instructorRemovedFromOrgs?: any[];
+  };
+  courses: {
+    courseCreateds?: any[];
+    courseCertClaimeds?: any[];
+  };
+  events: {
+    attendanceMarkeds?: any[];
+    eventCreateds?: any[];
+    registeredForEvents?: any[];
+  };
+}
+
 const orgurl =
   "https://api.studio.thegraph.com/query/107628/orgsubgraph/version/latest";
 const headers = { Authorization: "Bearer {api-key}" };
@@ -198,7 +216,7 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
     refetchInterval: 10000,
   });
 
-  const eventData = React.useMemo(
+  const eventData: EventData = React.useMemo(
     () => ({
       organizations: data ?? {},
       courses: coursedata ?? {},
@@ -232,39 +250,43 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
         // });
 
         // Check bootcamp registrations
-        eventData.organizations?.bootcampRegistrations.forEach((event: any) => {
-          if (
-            formatAddress(event.org_address.toLowerCase()) ===
-            address.toLowerCase()
-          ) {
-            notifications.push({
-              type: "BOOTCAMP_REGISTRATION",
-              bootcampId: event.bootcamp_id,
-              timestamp: event.block_timestamp,
-              blockNumber: event.block_number,
-            });
-          }
-        });
-
-        // Check instructor additions
-        eventData.organizations?.instructorAddedToOrgs.forEach((event: any) => {
-          for (let i = 0; i < event.instructors.length; i++) {
+        eventData.organizations?.bootcampRegistrations?.forEach(
+          (event: any) => {
             if (
-              formatAddress(event.instructors[i].toLowerCase()) ===
+              formatAddress(event.org_address.toLowerCase()) ===
               address.toLowerCase()
             ) {
               notifications.push({
-                type: "INSTRUCTOR_ADDED",
-                orgName: event.org_name,
+                type: "BOOTCAMP_REGISTRATION",
+                bootcampId: event.bootcamp_id,
                 timestamp: event.block_timestamp,
                 blockNumber: event.block_number,
               });
             }
-          }
-        });
+          },
+        );
+
+        // Check instructor additions
+        eventData.organizations?.instructorAddedToOrgs?.forEach(
+          (event: any) => {
+            for (let i = 0; i < event.instructors.length; i++) {
+              if (
+                formatAddress(event.instructors[i].toLowerCase()) ===
+                address.toLowerCase()
+              ) {
+                notifications.push({
+                  type: "INSTRUCTOR_ADDED",
+                  orgName: event.org_name,
+                  timestamp: event.block_timestamp,
+                  blockNumber: event.block_number,
+                });
+              }
+            }
+          },
+        );
 
         // Check instructor removed
-        eventData.organizations?.instructorRemovedFromOrgs.forEach(
+        eventData.organizations?.instructorRemovedFromOrgs?.forEach(
           (event: any) => {
             if (
               formatAddress(event.org_address.toLowerCase()) ===
@@ -329,7 +351,7 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
       // Filter course-related notifications
       if (Object.keys(eventData.courses).length != 0) {
         // Check course creations
-        eventData.courses?.courseCreateds.forEach((event: any) => {
+        eventData.courses?.courseCreateds?.forEach((event: any) => {
           if (
             formatAddress(event.owner_.toLowerCase()) === address.toLowerCase()
           ) {
@@ -344,7 +366,7 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
         });
 
         // Check certificate claims
-        eventData.courses?.courseCertClaimeds.forEach((event: any) => {
+        eventData.courses?.courseCertClaimeds?.forEach((event: any) => {
           if (
             formatAddress(event.candidate.toLowerCase()) ===
             address.toLowerCase()
@@ -368,7 +390,7 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
         //TODO: check for admin transfer
 
         // Check attendance marks
-        eventData.events?.attendanceMarkeds.forEach((event: any) => {
+        eventData.events?.attendanceMarkeds?.forEach((event: any) => {
           if (
             formatAddress(event.attendee.toLowerCase()) ===
             address.toLowerCase()
@@ -383,7 +405,7 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
         });
 
         // Check event created
-        eventData.events?.eventCreateds.forEach((event: any) => {
+        eventData.events?.eventCreateds?.forEach((event: any) => {
           if (
             formatAddress(event.event_organizer.toLowerCase()) ===
             address.toLowerCase()
@@ -399,7 +421,7 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
         });
 
         // Check event registrations
-        eventData.events?.registeredForEvents.forEach((event: any) => {
+        eventData.events?.registeredForEvents?.forEach((event: any) => {
           if (
             formatAddress(event.attendee.toLowerCase()) ===
             address.toLowerCase()
@@ -497,8 +519,8 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
       console.log("the grid", grid);
 
       switch (grid.name) {
-        case "Event":
-          const eventData = mappedResultData.filter((item) =>
+        case "Event": {
+          const eventData = mappedResultData.filter((item: any) =>
             [
               "EVENT_REGISTRATION",
               "ATTENDANCE_MARKED",
@@ -510,9 +532,10 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
             ...grid,
             eventsData: [...grid.eventsData, ...eventData],
           };
+        }
 
-        case "Courses":
-          const courseData = mappedResultData.filter((item) =>
+        case "Courses": {
+          const courseData = mappedResultData.filter((item: any) =>
             ["COURSE_CREATED"].includes(item.type),
           );
           console.log("Filtered Course Data:", courseData);
@@ -520,9 +543,10 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
             ...grid,
             eventsData: [...grid.eventsData, ...courseData],
           };
+        }
 
-        case "Certifications":
-          const certData = mappedResultData.filter((item) =>
+        case "Certifications": {
+          const certData = mappedResultData.filter((item: any) =>
             ["CERT_CLAIMED"].includes(item.type),
           );
           console.log("Filtered Cert Data:", certData);
@@ -530,6 +554,7 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
             ...grid,
             eventsData: [...grid.eventsData, ...certData],
           };
+        }
 
         default:
           return grid;
@@ -623,7 +648,7 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
 
       {/* Grid Results */}
       <div className="mx-4 lg:mx-36">
-        {updatedGridsData.map((item, i) => (
+        {updatedGridsData.map((item: any, i: any) => (
           <ResultGrid
             key={i}
             item={item}

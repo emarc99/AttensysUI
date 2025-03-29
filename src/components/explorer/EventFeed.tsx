@@ -178,6 +178,8 @@ const EventFeed = ({ data }: { data: EventData }) => {
   useEffect(() => {
     if (!data) return;
 
+    console.log("recovery data", data);
+
     const newEvents: EventItem[] = [];
 
     // Process organization events
@@ -376,6 +378,7 @@ const EventFeed = ({ data }: { data: EventData }) => {
       const sortedEvents = [...newEvents, ...events].sort(
         (a, b) => b.blockNumber - a.blockNumber,
       );
+      console.log("the sorted events", sortedEvents);
       setEvents(sortedEvents);
     }
 
@@ -401,6 +404,8 @@ const EventFeed = ({ data }: { data: EventData }) => {
 
     return format(date, "MMM dd, yyyy HH:mm:ss");
   };
+
+  console.log("The events is lost in betwwen", events);
 
   return (
     <div className="w-[90%] mx-auto p-4">

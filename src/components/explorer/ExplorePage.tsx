@@ -103,26 +103,6 @@ const ExplorePage = () => {
   const itemsPerPage = 10;
   const router = useRouter();
 
-  const GET_EVENTS_BLOCK = gql`
-    query GetEvents {
-      events(first: 5, orderBy: blockNumber, orderDirection: desc) {
-        id
-        blockNumber
-        transactionHash
-      }
-    }
-  `;
-
-  const { data: blockdata } = useQuery({
-    queryKey: ["eventsBlock"],
-    async queryFn() {
-      return await request(eventurl, GET_EVENTS_BLOCK, {}, headers);
-    },
-    refetchInterval: 10000,
-  });
-
-  console.log("the block", blockdata);
-
   const { data } = useQuery({
     queryKey: ["data"],
     async queryFn() {
@@ -146,7 +126,6 @@ const ExplorePage = () => {
     },
     refetchInterval: 10000,
   });
-  // console.log(JSON.stringify(eventdata, null, 2));
 
   const eventData = React.useMemo(
     () => ({
@@ -156,10 +135,6 @@ const ExplorePage = () => {
     }),
     [data, coursedata],
   );
-
-  console.log("org data", data);
-  console.log("course data", coursedata);
-  console.log("event data", eventdata);
 
   useEffect(() => {
     const handleResize = () => {
