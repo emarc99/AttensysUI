@@ -396,6 +396,9 @@ const EventFeed = ({ data }: { data: EventData }) => {
   const formatTimestamp = (timestamp: number) => {
     // Convert from seconds to milliseconds if needed
     const date = new Date(timestamp * 1000);
+    console.log("timestamp", timestamp);
+    if (isNaN(date.getTime())) return "Invalid date"; // Handle invalid Date objects
+
     return format(date, "MMM dd, yyyy HH:mm:ss");
   };
 
