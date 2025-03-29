@@ -15,44 +15,30 @@ const orgquery = gql`
   {
     organizationProfiles {
       org_name
-      block_number
-      block_timestamp
     }
     bootCampCreateds {
       bootcamp_name
       org_name
-      block_number
-      block_timestamp
     }
     bootcampRegistrations {
       bootcamp_id
       org_address
-      block_number
-      block_timestamp
     }
     instructorAddedToOrgs {
       instructors
       org_name
-      block_number
-      block_timestamp
     }
     instructorRemovedFromOrgs {
       instructor_addr
       org_owner
-      block_number
-      block_timestamp
     }
     registrationApproveds {
       bootcamp_id
       student_address
-      block_number
-      block_timestamp
     }
     registrationDeclineds {
       bootcamp_id
       student_address
-      block_number
-      block_timestamp
     }
   }
 `;
@@ -61,25 +47,17 @@ const coursequery = gql`
   {
     adminTransferreds {
       new_admin
-      block_number
-      block_timestamp
     }
     courseCertClaimeds {
       candidate
-      block_number
-      block_timestamp
     }
     courseCreateds {
       owner_
       course_ipfs_uri
-      block_number
-      block_timestamp
     }
     courseReplaceds {
       owner_
       new_course_uri
-      block_number
-      block_timestamp
     }
   }
 `;
@@ -89,33 +67,21 @@ const eventquery = gql`
     eventCreateds {
       event_name
       event_organizer
-      block_number
-      block_timestamp
     }
     adminOwnershipClaimeds {
       new_admin
-      block_number
-      block_timestamp
     }
     adminTransferreds {
       new_admin
-      block_number
-      block_timestamp
     }
     attendanceMarkeds {
       attendee
-      block_number
-      block_timestamp
     }
     registeredForEvents {
       attendee
-      block_number
-      block_timestamp
     }
     registrationStatusChangeds {
       registration_open
-      block_number
-      block_timestamp
     }
   }
 `;
