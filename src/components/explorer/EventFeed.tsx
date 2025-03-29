@@ -1,72 +1,104 @@
 import { useEffect, useRef, useState } from "react";
+import { format } from "date-fns";
 
+// Updated interfaces to include block information
 interface OrganizationProfile {
   org_name: string;
+  block_number: number;
+  block_timestamp: number;
 }
 
 interface BootCampCreated {
   bootcamp_name: string;
   org_name: string;
+  block_number: number;
+  block_timestamp: number;
 }
 
 interface BootcampRegistration {
   bootcamp_id: string;
   org_address: string;
+  block_number: number;
+  block_timestamp: number;
 }
 
 interface InstructorAddedToOrg {
   instructors: string[];
   org_name: string;
+  block_number: number;
+  block_timestamp: number;
 }
 
 interface InstructorRemovedFromOrg {
   instructor_addr: string;
   org_owner: string;
+  block_number: number;
+  block_timestamp: number;
 }
 
 interface RegistrationApproved {
   bootcamp_id: string;
   student_address: string;
+  block_number: number;
+  block_timestamp: number;
 }
 
 interface RegistrationDeclined {
   bootcamp_id: string;
   student_address: string;
+  block_number: number;
+  block_timestamp: number;
 }
 
 interface AdminTransferred {
   new_admin: string;
+  block_number: number;
+  block_timestamp: number;
 }
 
 interface CourseCertClaimed {
   candidate: string;
+  block_number: number;
+  block_timestamp: number;
 }
 
 interface CourseCreated {
   owner_: string;
   course_ipfs_uri: string[];
+  block_number: number;
+  block_timestamp: number;
 }
 
 interface CourseReplaced {
   owner_: string;
   new_course_uri: string;
+  block_number: number;
+  block_timestamp: number;
 }
 
 interface EventCreated {
   event_name: string[];
   event_organizer: string;
+  block_number: number;
+  block_timestamp: number;
 }
 
 interface AttendanceMarked {
   attendee: string;
+  block_number: number;
+  block_timestamp: number;
 }
 
 interface RegisteredForEvent {
   attendee: string;
+  block_number: number;
+  block_timestamp: number;
 }
 
 interface RegistrationStatusChanged {
   registration_open: number;
+  block_number: number;
+  block_timestamp: number;
 }
 
 interface OrganizationEvents {
@@ -104,7 +136,9 @@ interface EventData {
 interface EventItem {
   id: string;
   message: string;
+  blockNumber: number;
   timestamp: number;
+  type: string;
 }
 
 const EventFeed = ({ data }: { data: EventData }) => {
@@ -145,16 +179,17 @@ const EventFeed = ({ data }: { data: EventData }) => {
     if (!data) return;
 
     const newEvents: EventItem[] = [];
-    const now = Date.now();
 
     // Process organization events
     if (data.organizations) {
       data.organizations.organizationProfiles?.forEach((org) => {
         if (isNewItem("organizations", "organizationProfiles", org)) {
           newEvents.push({
-            id: `${org.org_name}-profile-${now}`,
+            id: `${org.org_name}-profile-${org.block_number}`,
             message: `${org.org_name} created a profile`,
-            timestamp: now,
+            blockNumber: org.block_number,
+            timestamp: org.block_timestamp,
+            type: "organizationProfile",
           });
         }
       });
@@ -162,9 +197,11 @@ const EventFeed = ({ data }: { data: EventData }) => {
       data.organizations.bootCampCreateds?.forEach((bootcamp) => {
         if (isNewItem("organizations", "bootCampCreateds", bootcamp)) {
           newEvents.push({
-            id: `${bootcamp.bootcamp_name}-created-${now}`,
+            id: `${bootcamp.bootcamp_name}-created-${bootcamp.block_number}`,
             message: `${bootcamp.org_name} created a bootcamp: ${bootcamp.bootcamp_name}`,
-            timestamp: now,
+            blockNumber: bootcamp.block_number,
+            timestamp: bootcamp.block_timestamp,
+            type: "bootcampCreated",
           });
         }
       });
@@ -172,9 +209,11 @@ const EventFeed = ({ data }: { data: EventData }) => {
       data.organizations.bootcampRegistrations?.forEach((reg) => {
         if (isNewItem("organizations", "bootcampRegistrations", reg)) {
           newEvents.push({
-            id: `${reg.bootcamp_id}-reg-${now}`,
+            id: `${reg.bootcamp_id}-reg-${reg.block_number}`,
             message: `${truncateAddress(reg.org_address)} got a new registration for bootcamp with id ${reg.bootcamp_id}`,
-            timestamp: now,
+            blockNumber: reg.block_number,
+            timestamp: reg.block_timestamp,
+            type: "bootcampRegistration",
           });
         }
       });
@@ -182,9 +221,11 @@ const EventFeed = ({ data }: { data: EventData }) => {
       data.organizations.instructorAddedToOrgs?.forEach((instructor) => {
         if (isNewItem("organizations", "instructorAddedToOrgs", instructor)) {
           newEvents.push({
-            id: `${instructor.org_name}-instructor-add-${now}`,
+            id: `${instructor.org_name}-instructor-add-${instructor.block_number}`,
             message: `${instructor.org_name} added instructors`,
-            timestamp: now,
+            blockNumber: instructor.block_number,
+            timestamp: instructor.block_timestamp,
+            type: "instructorAdded",
           });
         }
       });
@@ -194,9 +235,11 @@ const EventFeed = ({ data }: { data: EventData }) => {
           isNewItem("organizations", "instructorRemovedFromOrgs", instructor)
         ) {
           newEvents.push({
-            id: `${instructor.org_owner}-instructor-remove-${now}`,
+            id: `${instructor.org_owner}-instructor-remove-${instructor.block_number}`,
             message: `${truncateAddress(instructor.org_owner)} removed an instructor`,
-            timestamp: now,
+            blockNumber: instructor.block_number,
+            timestamp: instructor.block_timestamp,
+            type: "instructorRemoved",
           });
         }
       });
@@ -204,9 +247,11 @@ const EventFeed = ({ data }: { data: EventData }) => {
       data.organizations.registrationApproveds?.forEach((approval) => {
         if (isNewItem("organizations", "registrationApproveds", approval)) {
           newEvents.push({
-            id: `${approval.bootcamp_id}-approval-${now}`,
+            id: `${approval.bootcamp_id}-approval-${approval.block_number}`,
             message: `${truncateAddress(approval.student_address)} was approved for bootcamp with id ${approval.bootcamp_id}`,
-            timestamp: now,
+            blockNumber: approval.block_number,
+            timestamp: approval.block_timestamp,
+            type: "registrationApproved",
           });
         }
       });
@@ -214,9 +259,11 @@ const EventFeed = ({ data }: { data: EventData }) => {
       data.organizations.registrationDeclineds?.forEach((declined) => {
         if (isNewItem("organizations", "registrationDeclineds", declined)) {
           newEvents.push({
-            id: `${declined.bootcamp_id}-declined-${now}`,
+            id: `${declined.bootcamp_id}-declined-${declined.block_number}`,
             message: `${truncateAddress(declined.student_address)} was declined for bootcamp with id ${declined.bootcamp_id}`,
-            timestamp: now,
+            blockNumber: declined.block_number,
+            timestamp: declined.block_timestamp,
+            type: "registrationDeclined",
           });
         }
       });
@@ -227,9 +274,11 @@ const EventFeed = ({ data }: { data: EventData }) => {
       data.courses.adminTransferreds?.forEach((transfer) => {
         if (isNewItem("courses", "adminTransferreds", transfer)) {
           newEvents.push({
-            id: `${transfer.new_admin}-admin-${now}`,
+            id: `${transfer.new_admin}-admin-${transfer.block_number}`,
             message: `${truncateAddress(transfer.new_admin)} became an admin`,
-            timestamp: now,
+            blockNumber: transfer.block_number,
+            timestamp: transfer.block_timestamp,
+            type: "adminTransferred",
           });
         }
       });
@@ -237,9 +286,11 @@ const EventFeed = ({ data }: { data: EventData }) => {
       data.courses.courseCertClaimeds?.forEach((cert) => {
         if (isNewItem("courses", "courseCertClaimeds", cert)) {
           newEvents.push({
-            id: `${cert.candidate}-cert-${now}`,
+            id: `${cert.candidate}-cert-${cert.block_number}`,
             message: `${truncateAddress(cert.candidate)} claimed a course`,
-            timestamp: now,
+            blockNumber: cert.block_number,
+            timestamp: cert.block_timestamp,
+            type: "courseCertClaimed",
           });
         }
       });
@@ -247,9 +298,11 @@ const EventFeed = ({ data }: { data: EventData }) => {
       data.courses.courseCreateds?.forEach((course) => {
         if (isNewItem("courses", "courseCreateds", course)) {
           newEvents.push({
-            id: `${course.owner_}-create-${now}`,
+            id: `${course.owner_}-create-${course.block_number}`,
             message: `${truncateAddress(course.owner_)} created a course`,
-            timestamp: now,
+            blockNumber: course.block_number,
+            timestamp: course.block_timestamp,
+            type: "courseCreated",
           });
         }
       });
@@ -257,9 +310,11 @@ const EventFeed = ({ data }: { data: EventData }) => {
       data.courses.courseReplaceds?.forEach((course) => {
         if (isNewItem("courses", "courseReplaceds", course)) {
           newEvents.push({
-            id: `${course.owner_}-update-${now}`,
+            id: `${course.owner_}-update-${course.block_number}`,
             message: `${truncateAddress(course.owner_)} updated a course`,
-            timestamp: now,
+            blockNumber: course.block_number,
+            timestamp: course.block_timestamp,
+            type: "courseReplaced",
           });
         }
       });
@@ -270,9 +325,11 @@ const EventFeed = ({ data }: { data: EventData }) => {
       data.events.eventCreateds?.forEach((event) => {
         if (isNewItem("events", "eventCreateds", event)) {
           newEvents.push({
-            id: `${event.event_name[0]}-created-${now}`,
+            id: `${event.event_name[0]}-created-${event.block_number}`,
             message: `${truncateAddress(event.event_organizer)} created event: ${event.event_name[0]}`,
-            timestamp: now,
+            blockNumber: event.block_number,
+            timestamp: event.block_timestamp,
+            type: "eventCreated",
           });
         }
       });
@@ -280,9 +337,11 @@ const EventFeed = ({ data }: { data: EventData }) => {
       data.events.attendanceMarkeds?.forEach((attendance) => {
         if (isNewItem("events", "attendanceMarkeds", attendance)) {
           newEvents.push({
-            id: `${attendance.attendee}-attended-${now}`,
+            id: `${attendance.attendee}-attended-${attendance.block_number}`,
             message: `${truncateAddress(attendance.attendee)} attended an event`,
-            timestamp: now,
+            blockNumber: attendance.block_number,
+            timestamp: attendance.block_timestamp,
+            type: "attendanceMarked",
           });
         }
       });
@@ -290,9 +349,11 @@ const EventFeed = ({ data }: { data: EventData }) => {
       data.events.registeredForEvents?.forEach((registration) => {
         if (isNewItem("events", "registeredForEvents", registration)) {
           newEvents.push({
-            id: `${registration.attendee}-registered-${now}`,
+            id: `${registration.attendee}-registered-${registration.block_number}`,
             message: `${truncateAddress(registration.attendee)} registered for an event`,
-            timestamp: now,
+            blockNumber: registration.block_number,
+            timestamp: registration.block_timestamp,
+            type: "registeredForEvent",
           });
         }
       });
@@ -300,16 +361,22 @@ const EventFeed = ({ data }: { data: EventData }) => {
       data.events.registrationStatusChangeds?.forEach((statusChange) => {
         if (isNewItem("events", "registrationStatusChangeds", statusChange)) {
           newEvents.push({
-            id: `status-change-${now}`,
+            id: `status-change-${statusChange.block_number}`,
             message: `Registration status was updated for an event`,
-            timestamp: now,
+            blockNumber: statusChange.block_number,
+            timestamp: statusChange.block_timestamp,
+            type: "registrationStatusChanged",
           });
         }
       });
     }
 
     if (newEvents.length > 0) {
-      setEvents((prev) => [...newEvents, ...prev]);
+      // Sort all events by block number in descending order
+      const sortedEvents = [...newEvents, ...events].sort(
+        (a, b) => b.blockNumber - a.blockNumber,
+      );
+      setEvents(sortedEvents);
     }
 
     previousDataRef.current = data;
@@ -323,7 +390,13 @@ const EventFeed = ({ data }: { data: EventData }) => {
 
   const truncateAddress = (address: string) => {
     if (!address) return "Unknown";
-    return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+    return `${address.substring(0, 10)}...${address.substring(address.length - 4)}`;
+  };
+
+  const formatTimestamp = (timestamp: number) => {
+    // Convert from seconds to milliseconds if needed
+    const date = new Date(timestamp * 1000);
+    return format(date, "MMM dd, yyyy HH:mm:ss");
   };
 
   return (
@@ -339,14 +412,19 @@ const EventFeed = ({ data }: { data: EventData }) => {
         ) : (
           events.map((event, index) => (
             <div
-              key={index}
+              key={`${event.id}-${index}`}
               className="p-3 bg-gray-50 dark:bg-gray-700 rounded-md border-l-4 border-blue-500 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
             >
-              <p className="text-gray-800 dark:text-gray-200">
-                {event.message}
-              </p>
+              <div className="flex justify-between items-start">
+                <p className="text-gray-800 dark:text-gray-200">
+                  {event.message}
+                </p>
+                <span className="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">
+                  Block #{event.blockNumber}
+                </span>
+              </div>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                {new Date(event.timestamp).toLocaleTimeString()}
+                {formatTimestamp(event.timestamp)}
               </p>
             </div>
           ))
