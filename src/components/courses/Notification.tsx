@@ -111,14 +111,7 @@ const Notification = (props: any) => {
     };
 
     setNotifications(filterNotificationsByAddress(wallet?.selectedAddress));
-
-    console.log(
-      "what does it return",
-      filterNotificationsByAddress(wallet?.selectedAddress),
-    );
   }, [coursedata]);
-
-  console.log("The real notifications", notifications);
 
   // Add this helper function
   const formatAddress = (addr: string) => {
