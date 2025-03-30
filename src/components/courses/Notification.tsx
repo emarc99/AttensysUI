@@ -4,52 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { gql, request } from "graphql-request";
 import { format } from "date-fns";
 
-const orgquery = gql`
-  {
-    organizationProfiles {
-      org_name
-      block_number
-      block_timestamp
-    }
-    bootCampCreateds {
-      bootcamp_name
-      org_name
-      block_number
-      block_timestamp
-    }
-    bootcampRegistrations {
-      bootcamp_id
-      org_address
-      block_number
-      block_timestamp
-    }
-    instructorAddedToOrgs {
-      instructors
-      org_name
-      block_number
-      block_timestamp
-    }
-    instructorRemovedFromOrgs {
-      instructor_addr
-      org_owner
-      block_number
-      block_timestamp
-    }
-    registrationApproveds {
-      bootcamp_id
-      student_address
-      block_number
-      block_timestamp
-    }
-    registrationDeclineds {
-      bootcamp_id
-      student_address
-      block_number
-      block_timestamp
-    }
-  }
-`;
-
 const coursequery = gql`
   {
     adminTransferreds {
@@ -77,81 +31,22 @@ const coursequery = gql`
   }
 `;
 
-const eventquery = gql`
-  {
-    eventCreateds {
-      event_name
-      event_organizer
-      block_number
-      block_timestamp
-    }
-    adminOwnershipClaimeds {
-      new_admin
-      block_number
-      block_timestamp
-    }
-    adminTransferreds {
-      new_admin
-      block_number
-      block_timestamp
-    }
-    attendanceMarkeds {
-      attendee
-      block_number
-      block_timestamp
-    }
-    registeredForEvents {
-      attendee
-      block_number
-      block_timestamp
-    }
-    registrationStatusChangeds {
-      registration_open
-      block_number
-      block_timestamp
-    }
-  }
-`;
-
 // Add interface for the event data structure
 interface EventData {
-  organizations: {
-    bootcampRegistrations?: any[];
-    instructorAddedToOrgs?: any[];
-    instructorRemovedFromOrgs?: any[];
-  };
   courses: {
     courseCreateds?: any[];
     courseCertClaimeds?: any[];
   };
-  events: {
-    attendanceMarkeds?: any[];
-    eventCreateds?: any[];
-    registeredForEvents?: any[];
-  };
 }
 
-const orgurl =
-  "https://api.studio.thegraph.com/query/107628/orgsubgraph/version/latest";
 const headers = { Authorization: "Bearer {api-key}" };
 
 const courseurl =
   "https://api.studio.thegraph.com/query/107628/coursesubgraph/version/latest";
 
-const eventurl =
-  "https://api.studio.thegraph.com/query/107628/eventsubgraph/version/latest";
-
 const Notification = (props: any) => {
   const { wallet } = props;
   const [notifications, setNotifications] = useState<any[]>([]);
-
-  const { data } = useQuery({
-    queryKey: ["data"],
-    async queryFn() {
-      return await request(orgurl, orgquery, {}, headers);
-    },
-    refetchInterval: 10000,
-  });
 
   const { data: coursedata } = useQuery({
     queryKey: ["coursedata"],
@@ -161,21 +56,11 @@ const Notification = (props: any) => {
     refetchInterval: 10000,
   });
 
-  const { data: eventdata } = useQuery({
-    queryKey: ["eventdata"],
-    async queryFn() {
-      return await request(eventurl, eventquery, {}, headers);
-    },
-    refetchInterval: 10000,
-  });
-
   const eventData: EventData = React.useMemo(
     () => ({
-      organizations: data ?? {},
       courses: coursedata ?? {},
-      events: eventdata ?? {},
     }),
-    [data, coursedata],
+    [coursedata],
   );
 
   React.useEffect(() => {
@@ -184,121 +69,6 @@ const Notification = (props: any) => {
       if (!address) return [];
 
       const notifications: any = [];
-      // Filter org-related notifications
-      if (Object.keys(eventData.organizations).length != 0) {
-        // Check bootcamp created
-        // eventData.organizations?.bootcampCreateds.forEach((event: any) => {
-        //   if (
-        //     formatAddress(event.org_address.toLowerCase()) ===
-        //     address.toLowerCase()
-        //   ) {
-        //     notifications.push({
-        //       type: "BOOTCAMP_CREATED",
-        //       bootcampId: event.bootcamp_id,
-        //       timestamp: event.block_timestamp,
-        //       blockNumber: event.block_number,
-        //     });
-        //   }
-        // });
-
-        // Check bootcamp registrations
-        eventData.organizations?.bootcampRegistrations?.forEach(
-          (event: any) => {
-            if (
-              formatAddress(event.org_address.toLowerCase()) ===
-              address.toLowerCase()
-            ) {
-              notifications.push({
-                type: "BOOTCAMP_REGISTRATION",
-                bootcampId: event.bootcamp_id,
-                timestamp: event.block_timestamp,
-                blockNumber: event.block_number,
-              });
-            }
-          },
-        );
-
-        // Check instructor additions
-        eventData.organizations?.instructorAddedToOrgs?.forEach(
-          (event: any) => {
-            for (let i = 0; i < event.instructors.length; i++) {
-              if (
-                formatAddress(event.instructors[i].toLowerCase()) ===
-                address.toLowerCase()
-              ) {
-                notifications.push({
-                  type: "INSTRUCTOR_ADDED",
-                  orgName: event.org_name,
-                  timestamp: event.block_timestamp,
-                  blockNumber: event.block_number,
-                });
-              }
-            }
-          },
-        );
-
-        // Check instructor removed
-        eventData.organizations?.instructorRemovedFromOrgs?.forEach(
-          (event: any) => {
-            if (
-              formatAddress(event.org_address.toLowerCase()) ===
-              address.toLowerCase()
-            ) {
-              notifications.push({
-                type: "INSTRUCTOR_REMOVED",
-                bootcampId: event.bootcamp_id,
-                timestamp: event.block_timestamp,
-                blockNumber: event.block_number,
-              });
-            }
-          },
-        );
-
-        // Check organization profile created
-        // eventData.organizations?.organizationProfiles.forEach((event: any) => {
-        //   if (
-        //     formatAddress(event.org_address.toLowerCase()) ===
-        //     address.toLowerCase()
-        //   ) {
-        //     notifications.push({
-        //       type: "ORGANIZATION_PROFILE_CREATED",
-        //       bootcampId: event.bootcamp_id,
-        //       timestamp: event.block_timestamp,
-        //       blockNumber: event.block_number,
-        //     });
-        //   }
-        // });
-
-        // Check organization approved
-        // eventData.organizations?.organizationApproveds.forEach((event: any) => {
-        //   if (
-        //     formatAddress(event.student_address.toLowerCase()) ===
-        //     address.toLowerCase()
-        //   ) {
-        //     notifications.push({
-        //       type: "ORGANIZATION_APPROVED",
-        //       bootcampId: event.bootcamp_id,
-        //       timestamp: event.block_timestamp,
-        //       blockNumber: event.block_number,
-        //     });
-        //   }
-        // });
-
-        // Check organization declined
-        // eventData.organizations?.organizationDeclineds.forEach((event: any) => {
-        //   if (
-        //     formatAddress(event.student_address.toLowerCase()) ===
-        //     address.toLowerCase()
-        //   ) {
-        //     notifications.push({
-        //       type: "ORGANIZATION_APPROVED",
-        //       bootcampId: event.bootcamp_id,
-        //       timestamp: event.block_timestamp,
-        //       blockNumber: event.block_number,
-        //     });
-        //   }
-        // });
-      }
 
       // Filter course-related notifications
       if (Object.keys(eventData.courses).length != 0) {
@@ -336,73 +106,12 @@ const Notification = (props: any) => {
         //TODO: check for admin transfer
       }
 
-      // Filter event-related notifications
-      if (Object.keys(eventData.events).length != 0) {
-        //TODO: check for admin ownership claimed
-        //TODO: check for admin transfer
-
-        // Check attendance marks
-        eventData.events?.attendanceMarkeds?.forEach((event: any) => {
-          if (
-            formatAddress(event.attendee.toLowerCase()) ===
-            address.toLowerCase()
-          ) {
-            notifications.push({
-              type: "ATTENDANCE_MARKED",
-              attendee: event.attendee,
-              timestamp: event.block_timestamp,
-              blockNumber: event.block_number,
-            });
-          }
-        });
-
-        // Check event created
-        eventData.events?.eventCreateds?.forEach((event: any) => {
-          if (
-            formatAddress(event.event_organizer.toLowerCase()) ===
-            address.toLowerCase()
-          ) {
-            notifications.push({
-              type: "ATTENDANCE_MARKED",
-              attendee: event.attendee,
-              timestamp: event.block_timestamp,
-              blockNumber: event.block_number,
-            });
-          }
-        });
-
-        // Check event registrations
-        eventData.events?.registeredForEvents?.forEach((event: any) => {
-          if (
-            formatAddress(event.attendee.toLowerCase()) ===
-            address.toLowerCase()
-          ) {
-            notifications.push({
-              type: "EVENT_REGISTRATION",
-              attendee: event.attendee,
-              timestamp: event.block_timestamp,
-              blockNumber: event.block_number,
-            });
-          }
-        });
-
-        //TODO: check for registration status changed
-      }
-
       // Sort notifications by timestamp (most recent first)
       return notifications.sort((a: any, b: any) => b.timestamp - a.timestamp);
-      // return notifications;
     };
 
     setNotifications(filterNotificationsByAddress(wallet?.selectedAddress));
-
-    console.log(
-      "what does it return",
-      filterNotificationsByAddress(wallet?.selectedAddress),
-    );
-  }, [data, coursedata, eventdata]);
-
-  console.log("The real notifications", notifications);
+  }, [coursedata]);
 
   // Add this helper function
   const formatAddress = (addr: string) => {
