@@ -3,7 +3,21 @@ import Image from "next/image";
 import avatar from "@/assets/profile_pic.png";
 import { RiShieldUserLine } from "react-icons/ri";
 
-const Info = () => {
+const Info = (props: any) => {
+  const { wallet } = props;
+
+  const formatHexString = (hex: string): string => {
+    if (!hex) return "";
+
+    // Check if hex starts with 0x and has sufficient length
+    if (hex.startsWith("0x") && hex.length >= 10) {
+      const firstPart = hex.slice(0, 8); // Gets "0x057782"
+      const lastPart = hex.slice(-6); // Gets "bd0488"
+      return `${firstPart}....${lastPart}`;
+    }
+
+    return hex; // Return original if it doesn't match expected format
+  };
   return (
     <div className="h-auto py-6 w-ful">
       <div className="h-[100px] w-[90%] sm:w-[80%] mx-auto flex flex-col space-x-0 space-y-4 items-start justify-start lg:flex-row lg:space-x-4 lg:space-y-0 lg:items-center lg:justify-between">
@@ -29,7 +43,9 @@ const Info = () => {
           <RiShieldUserLine />
           <h1 className="text-[12px] sm:text-[14px] text-[#2D3A4B] font-medium">
             Status : Student{" "}
-            <span className="text-[#5801A9]"> 0x5c956e61...de5232dc11</span>
+            <span className="text-[#5801A9]">
+              {formatHexString(wallet?.selectedAddress)}
+            </span>
           </h1>
         </div>
       </div>

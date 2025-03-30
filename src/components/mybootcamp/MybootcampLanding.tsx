@@ -46,8 +46,8 @@ const MybootcampLanding = () => {
   return (
     <div className="h-auto w-full bg-[#F5F7FA] pb-8">
       <div className={`bg-[url('/mybootcampbg.png')] w-full h-[222px]`}></div>
-      <Info />
-      <Notifcation />
+      <Info wallet={wallet} />
+      <Notifcation wallet={wallet} />
       <MybootcampInfo mybootcampinfo={mybootcampDataInfo} />
     </div>
   );
