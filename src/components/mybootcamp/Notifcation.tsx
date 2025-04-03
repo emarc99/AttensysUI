@@ -3,8 +3,8 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import Notifycard from "./Notifycard";
 import { gql, request } from "graphql-request";
-import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
+import { IoIosArrowDropdown } from "react-icons/io"; // Add this import at the top
 
 const orgquery = gql`
   {
@@ -71,6 +71,7 @@ const headers = { Authorization: "Bearer {api-key}" };
 const Notifcation = (props: any) => {
   const { wallet } = props;
   const [notifications, setNotifications] = useState<any[]>([]);
+  const [isExpanded, setIsExpanded] = useState(true); // Add this state
 
   const { data } = useQuery({
     queryKey: ["data"],
@@ -223,21 +224,18 @@ const Notifcation = (props: any) => {
     return "0x0" + addr;
   };
 
-  const formatTimestamp = (timestamp: number) => {
-    // Convert from seconds to milliseconds if needed
-    const date = new Date(timestamp * 1000);
-    return format(date, "MMM dd, yyyy HH:mm:ss");
-  };
-
   console.log("what is notifications", notifications);
 
   return (
     <div className="mt-4 w-[90%] sm:w-[80%] mx-auto h-auto rounded-xl bg-[#FFFFFF] border-[1px] border-[#D9D9D9] py-3">
-      <div className="h-[60px] sm:h-[80px] w-full border-b-[1px] border-b-[#D9D9D9] flex justify-between px-4 sm:px-8 items-center">
+      <div
+        className="h-[60px] sm:h-[80px] w-full border-b-[1px] border-b-[#D9D9D9] flex justify-between px-4 sm:px-8 items-center cursor-pointer"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
         <div className="flex space-x-3 items-center justify-center">
           <IoMdNotificationsOutline className="h-[20px] w-[20px] sm:h-[22px] sm:w-[22px] text-[#5801A9]" />
           <h1 className="font-medium text-sm sm:text-[20px] text-[#333333]">
-            Notifications
+            Notifications ({notifications.length})
           </h1>
         </div>
 
@@ -246,14 +244,24 @@ const Notifcation = (props: any) => {
             <span className="hidden sm:flex">See all notifications</span>
             <span className="flex sm:hidden">See all</span>
           </h1>
-          <IoCloseCircleOutline className="h-[20px] w-[20px] sm:h-[22px] sm:w-[22px] text-[#333333]" />
+          <IoIosArrowDropdown
+            className={`h-[20px] w-[20px] sm:h-[22px] sm:w-[22px] text-[#333333] transition-transform duration-300 ${
+              isExpanded ? "rotate-180" : ""
+            }`}
+          />
         </div>
       </div>
 
-      <div className="w-[90%] sm:w-[80%] h-auto mt-3 mx-auto">
-        {notifications.map((notification, index) => (
-          <Notifycard key={index} notification={notification} />
-        ))}
+      <div
+        className={`transition-all duration-300 overflow-hidden ${
+          isExpanded ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="w-[90%] sm:w-[80%] h-auto mt-3 mx-auto">
+          {notifications.map((notification, index) => (
+            <Notifycard key={index} notification={notification} />
+          ))}
+        </div>
       </div>
     </div>
   );
