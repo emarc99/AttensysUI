@@ -1570,7 +1570,7 @@ export const eventsData = [
 
 export const gridsData = [
   {
-    name: "Event",
+    name: "Events",
     subProp: [
       "Key",
       "Status",

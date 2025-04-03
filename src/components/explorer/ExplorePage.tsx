@@ -10,125 +10,16 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import { useQuery } from "@tanstack/react-query";
 import { gql, request } from "graphql-request";
 import EventFeed from "./EventFeed";
-
-const orgquery = gql`
-  {
-    organizationProfiles {
-      org_name
-      block_number
-      block_timestamp
-    }
-    bootCampCreateds {
-      bootcamp_name
-      org_name
-      block_number
-      block_timestamp
-    }
-    bootcampRegistrations {
-      bootcamp_id
-      org_address
-      block_number
-      block_timestamp
-    }
-    instructorAddedToOrgs {
-      instructors
-      org_name
-      block_number
-      block_timestamp
-    }
-    instructorRemovedFromOrgs {
-      instructor_addr
-      org_owner
-      block_number
-      block_timestamp
-    }
-    registrationApproveds {
-      bootcamp_id
-      student_address
-      block_number
-      block_timestamp
-    }
-    registrationDeclineds {
-      bootcamp_id
-      student_address
-      block_number
-      block_timestamp
-    }
-  }
-`;
-
-const coursequery = gql`
-  {
-    adminTransferreds {
-      new_admin
-      block_number
-      block_timestamp
-    }
-    courseCertClaimeds {
-      candidate
-      block_number
-      block_timestamp
-    }
-    courseCreateds {
-      owner_
-      course_ipfs_uri
-      block_number
-      block_timestamp
-    }
-    courseReplaceds {
-      owner_
-      new_course_uri
-      block_number
-      block_timestamp
-    }
-  }
-`;
-
-const eventquery = gql`
-  {
-    eventCreateds {
-      event_name
-      event_organizer
-      block_number
-      block_timestamp
-    }
-    adminOwnershipClaimeds {
-      new_admin
-      block_number
-      block_timestamp
-    }
-    adminTransferreds {
-      new_admin
-      block_number
-      block_timestamp
-    }
-    attendanceMarkeds {
-      attendee
-      block_number
-      block_timestamp
-    }
-    registeredForEvents {
-      attendee
-      block_number
-      block_timestamp
-    }
-    registrationStatusChangeds {
-      registration_open
-      block_number
-      block_timestamp
-    }
-  }
-`;
-
-const orgurl =
-  "https://api.studio.thegraph.com/query/107628/orgsubgraph/version/latest";
-const headers = { Authorization: "Bearer {api-key}" };
-
-const courseurl =
-  "https://api.studio.thegraph.com/query/107628/coursesubgraph/version/latest";
-
-const eventurl =
-  "https://api.studio.thegraph.com/query/107628/eventsubgraph/version/latest";
+import {
+  getRecentEvents,
+  orgquery,
+  eventurl,
+  orgurl,
+  coursequery,
+  courseurl,
+  headers,
+  eventquery,
+} from "@/utils/helpers";
 
 const ExplorePage = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -160,7 +51,6 @@ const ExplorePage = () => {
     },
     refetchInterval: 10000,
   });
-  // console.log(JSON.stringify(eventdata, null, 2));
 
   const eventData = React.useMemo(
     () => ({
@@ -186,6 +76,11 @@ const ExplorePage = () => {
   const currentItems = explorerData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
+  );
+
+  const recentEvents = React.useMemo(
+    () => getRecentEvents(eventData),
+    [eventData],
   );
 
   const handleChange = (event: { target: { value: any } }) => {
@@ -242,7 +137,7 @@ const ExplorePage = () => {
         {/* Moving Text */}
         <div className="w-full md:w-[30%] h-[40px] relative overflow-hidden whitespace-nowrap">
           <div className="moving-div flex">
-            {mockkdata.map((item, index) => (
+            {recentEvents.map((item, index) => (
               <p key={index} className="text-sm mx-4 w-auto">
                 {item.data}
               </p>
