@@ -11,119 +11,18 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { gql, request } from "graphql-request";
 import { format } from "date-fns";
-
+import {
+  orgquery,
+  coursequery,
+  eventquery,
+  orgurl,
+  courseurl,
+  eventurl,
+  headers,
+} from "@/utils/helpers";
 type Params = {
   address?: string;
 };
-
-const orgquery = gql`
-  {
-    organizationProfiles {
-      org_name
-      block_number
-      block_timestamp
-    }
-    bootCampCreateds {
-      bootcamp_name
-      org_name
-      block_number
-      block_timestamp
-    }
-    bootcampRegistrations {
-      bootcamp_id
-      org_address
-      block_number
-      block_timestamp
-    }
-    instructorAddedToOrgs {
-      instructors
-      org_name
-      block_number
-      block_timestamp
-    }
-    instructorRemovedFromOrgs {
-      instructor_addr
-      org_owner
-      block_number
-      block_timestamp
-    }
-    registrationApproveds {
-      bootcamp_id
-      student_address
-      block_number
-      block_timestamp
-    }
-    registrationDeclineds {
-      bootcamp_id
-      student_address
-      block_number
-      block_timestamp
-    }
-  }
-`;
-
-const coursequery = gql`
-  {
-    adminTransferreds {
-      new_admin
-      block_number
-      block_timestamp
-    }
-    courseCertClaimeds {
-      candidate
-      block_number
-      block_timestamp
-    }
-    courseCreateds {
-      owner_
-      course_ipfs_uri
-      block_number
-      block_timestamp
-    }
-    courseReplaceds {
-      owner_
-      new_course_uri
-      block_number
-      block_timestamp
-    }
-  }
-`;
-
-const eventquery = gql`
-  {
-    eventCreateds {
-      event_name
-      event_organizer
-      block_number
-      block_timestamp
-    }
-    adminOwnershipClaimeds {
-      new_admin
-      block_number
-      block_timestamp
-    }
-    adminTransferreds {
-      new_admin
-      block_number
-      block_timestamp
-    }
-    attendanceMarkeds {
-      attendee
-      block_number
-      block_timestamp
-    }
-    registeredForEvents {
-      attendee
-      block_number
-      block_timestamp
-    }
-    registrationStatusChangeds {
-      registration_open
-      block_number
-      block_timestamp
-    }
-  }
-`;
 
 // Add interface for the event data structure
 interface EventData {
@@ -143,22 +42,13 @@ interface EventData {
   };
 }
 
-const orgurl =
-  "https://api.studio.thegraph.com/query/107628/orgsubgraph/version/latest";
-const headers = { Authorization: "Bearer {api-key}" };
-
-const courseurl =
-  "https://api.studio.thegraph.com/query/107628/coursesubgraph/version/latest";
-
-const eventurl =
-  "https://api.studio.thegraph.com/query/107628/eventsubgraph/version/latest";
-
 const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
   const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
   const { address } = params;
   const [resultData, setResultData] = useState<any[]>([]);
+  const [activeFilter, setActiveFilter] = useState<string>("All");
 
   const itemsPerPage = 10;
 
@@ -513,13 +403,10 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
   // Then update the gridsData transformation
   const updatedGridsData = React.useMemo(() => {
     const mappedResultData = mapResultDataToGrids(resultData);
-    console.log("mappedResultData", mappedResultData);
 
     return gridsData.map((grid) => {
-      console.log("the grid", grid);
-
       switch (grid.name) {
-        case "Event": {
+        case "Events": {
           const eventData = mappedResultData.filter((item: any) =>
             [
               "EVENT_REGISTRATION",
@@ -527,7 +414,7 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
               "EVENT_CREATED",
             ].includes(item.type),
           );
-          console.log("Filtered Event Data:", eventData);
+
           return {
             ...grid,
             eventsData: [...grid.eventsData, ...eventData],
@@ -538,7 +425,7 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
           const courseData = mappedResultData.filter((item: any) =>
             ["COURSE_CREATED"].includes(item.type),
           );
-          console.log("Filtered Course Data:", courseData);
+
           return {
             ...grid,
             eventsData: [...grid.eventsData, ...courseData],
@@ -549,7 +436,7 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
           const certData = mappedResultData.filter((item: any) =>
             ["CERT_CLAIMED"].includes(item.type),
           );
-          console.log("Filtered Cert Data:", certData);
+
           return {
             ...grid,
             eventsData: [...grid.eventsData, ...certData],
@@ -561,6 +448,11 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
       }
     });
   }, [resultData, gridsData]);
+
+  const filteredGridsData = React.useMemo(() => {
+    if (activeFilter === "All") return updatedGridsData;
+    return updatedGridsData.filter((item) => item.name === activeFilter);
+  }, [updatedGridsData, activeFilter]);
 
   // Add this helper function
   const formatAddress = (addr: string) => {
@@ -630,11 +522,16 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
 
         {/* Categories */}
         <div className="flex flex-wrap lg:flex-nowrap gap-3 my-5">
-          {["Filter", "Events", "Organization", "Certification", "Courses"].map(
+          {["All", "Events", "Organizations", "Certifications", "Courses"].map(
             (category, index) => (
               <Button
                 key={index}
-                className="hidden lg:flex rounded-lg bg-[#4A90E21F] py-2 px-4 h-[42px] items-center w-[90px] text-sm text-[#2d3a4b]"
+                onClick={() => setActiveFilter(category)}
+                className={`hidden lg:flex rounded-lg py-2 px-4 h-[42px] items-center w-[90px] text-sm ${
+                  activeFilter === category
+                    ? "bg-[#4A90E2] text-white"
+                    : "bg-[#4A90E21F] text-[#2d3a4b]"
+                }`}
               >
                 {category === "Filter" && (
                   <Image src={filter} alt="filter" className="mr-2" />
@@ -648,16 +545,43 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
 
       {/* Grid Results */}
       <div className="mx-4 lg:mx-36">
-        {updatedGridsData.map((item: any, i: any) => (
-          <ResultGrid
-            key={i}
-            item={item}
-            eventsData={item.eventsData}
-            generatePageNumbers={generatePageNumbers}
-            goToPage={goToPage}
-            currentPage={currentPage}
-          />
-        ))}
+        {activeFilter === "All" ? (
+          // Show all grids when "All" is selected
+          updatedGridsData.map((item: any, i: any) => (
+            <ResultGrid
+              key={i}
+              address={address || ""}
+              item={item}
+              eventsData={item.eventsData}
+              generatePageNumbers={generatePageNumbers}
+              goToPage={goToPage}
+              currentPage={currentPage}
+            />
+          ))
+        ) : // Show filtered grid when a specific category is selected
+        filteredGridsData.length > 0 ? (
+          // Show filtered grid when there are matches
+          filteredGridsData.map((item: any, i: any) => (
+            <ResultGrid
+              key={i}
+              address={address || ""}
+              item={item}
+              eventsData={item.eventsData}
+              generatePageNumbers={generatePageNumbers}
+              goToPage={goToPage}
+              currentPage={currentPage}
+            />
+          ))
+        ) : (
+          // Show empty state when no matches
+          <div className="w-full h-[308px] flex items-center justify-center bg-white rounded-lg border border-[#b9b9ba]">
+            <div className="text-center">
+              <h1 className="text-[15px] text-[#817676] font-medium leading-[18px]">
+                No {activeFilter.toLowerCase()} data found
+              </h1>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
