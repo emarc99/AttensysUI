@@ -20,6 +20,7 @@ import { Contract } from "starknet";
 import StarRating from "../bootcamp/StarRating";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import { CardWithLink } from "./Cards";
+import { useAccount, useExplorer } from "@starknet-react/core";
 
 interface CourseType {
   data: any;
@@ -83,6 +84,9 @@ const LecturePage = (props: any) => {
     getError,
     isLoading: isCIDFetchLoading,
   } = useFetchCID();
+  const { account, address } = useAccount();
+  const explorer = useExplorer();
+  const [txnHash, setTxnHash] = useState<string>();
 
   // console.log("uploading:", isUploading);
   // console.log("taken:", taken);
@@ -147,31 +151,34 @@ const LecturePage = (props: any) => {
     const courseContract = new Contract(
       attensysCourseAbi,
       attensysCourseAddress,
-      props?.wallet?.account,
+      account,
     );
     const take_course_calldata = await courseContract.populate(
       "acquire_a_course",
       [Number(courseId)],
     );
 
-    const callCourseContract = await props.wallet?.account.execute([
+    const callCourseContract = await account?.execute([
       {
         contractAddress: attensysCourseAddress,
         entrypoint: "acquire_a_course",
         calldata: take_course_calldata.calldata,
       },
     ]);
+    setTxnHash(callCourseContract?.transaction_hash);
+    setTaken(true);
+    setIsUploading(false);
 
-    await props.wallet?.account?.provider
-      .waitForTransaction(callCourseContract.transaction_hash)
-      .then(() => {})
-      .catch((e: any) => {
-        console.error("Error: ", e);
-      })
-      .finally(() => {
-        setTaken(true);
-        setIsUploading(false);
-      });
+    // await account?.provider
+    //   .waitForTransaction(callCourseContract?.transaction_hash)
+    //   .then(() => {})
+    //   .catch((e: any) => {
+    //     console.error("Error: ", e);
+    //   })
+    //   .finally(() => {
+    //     setTaken(true);
+    //     setIsUploading(false);
+    //   });
   };
 
   const handleFinishCourseClaimCertfificate = async () => {
@@ -180,31 +187,34 @@ const LecturePage = (props: any) => {
     const courseContract = new Contract(
       attensysCourseAbi,
       attensysCourseAddress,
-      props?.wallet?.account,
+      account,
     );
     const course_certificate_calldata = await courseContract.populate(
       "finish_course_claim_certification",
       [Number(courseId)],
     );
 
-    const callCourseContract = await props.wallet?.account.execute([
+    const callCourseContract = await account?.execute([
       {
         contractAddress: attensysCourseAddress,
         entrypoint: "finish_course_claim_certification",
         calldata: course_certificate_calldata.calldata,
       },
     ]);
+    setTxnHash(callCourseContract?.transaction_hash);
+    setIsCertified(true);
+    setIsUploading(false);
 
-    await props.wallet?.account?.provider
-      .waitForTransaction(callCourseContract.transaction_hash)
-      .then(() => {})
-      .catch((e: any) => {
-        console.error("Error: ", e);
-      })
-      .finally(() => {
-        setIsCertified(true);
-        setIsUploading(false);
-      });
+    // await props.wallet?.account?.provider
+    //   .waitForTransaction(callCourseContract.transaction_hash)
+    //   .then(() => {})
+    //   .catch((e: any) => {
+    //     console.error("Error: ", e);
+    //   })
+    //   .finally(() => {
+    //     setIsCertified(true);
+    //     setIsUploading(false);
+    //   });
   };
 
   const handleNext = () => {
@@ -233,7 +243,7 @@ const LecturePage = (props: any) => {
       );
 
       const taken_courses = await courseContract?.is_user_taking_course(
-        props.wallet?.selectedAddress,
+        address,
         Number(courseId),
       );
       console.log("taken_courses result:", taken_courses);
@@ -244,7 +254,7 @@ const LecturePage = (props: any) => {
 
       const certfified_courses =
         await courseContract?.is_user_certified_for_course(
-          props.wallet?.selectedAddress,
+          address,
           Number(courseId),
         );
 
@@ -441,6 +451,18 @@ const LecturePage = (props: any) => {
                   </button>
                 )}
               </div>
+              {txnHash && (
+                <div>
+                  <a
+                    className="text-blue-600 hover:text-blue-800 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+                    href={explorer.transaction(txnHash)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Tx Hash
+                  </a>
+                </div>
+              )}
             </div>
           </div>
           <div>

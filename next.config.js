@@ -1,9 +1,13 @@
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+const path = require("path");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
     domains: ["ipfs.io", "gateway.pinata.cloud", "cloudflare-ipfs.com"], // Add more IPFS gateways if needed
+  },
+  turbopack: {
+    root: path.join(__dirname, ".."),
   },
   webpack: (config, { isServer, webpack }) => {
     if (!isServer) {
