@@ -14,7 +14,7 @@ html {
 
 .moving-div {
   display: flex;
-  animation: scrollLeft 15s linear infinite;
+  animation: scrollLeft 20s linear infinite;
 }
 
 @keyframes scrollLeft {

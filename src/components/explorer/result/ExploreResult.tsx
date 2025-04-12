@@ -8,16 +8,48 @@ import { eventsData, gridsData } from "@/constants/data";
 import ResultGrid from "./ResultGrid";
 import { handleSubmit } from "@/utils/helpers";
 import { useRouter } from "next/navigation";
-
+import { useQuery } from "@tanstack/react-query";
+import { gql, request } from "graphql-request";
+import { format } from "date-fns";
+import {
+  orgquery,
+  coursequery,
+  eventquery,
+  orgurl,
+  courseurl,
+  eventurl,
+  headers,
+} from "@/utils/helpers";
 type Params = {
   address?: string;
 };
+
+// Add interface for the event data structure
+interface EventData {
+  organizations: {
+    bootcampRegistrations?: any[];
+    instructorAddedToOrgs?: any[];
+    instructorRemovedFromOrgs?: any[];
+  };
+  courses: {
+    courseCreateds?: any[];
+    courseCertClaimeds?: any[];
+  };
+  events: {
+    attendanceMarkeds?: any[];
+    eventCreateds?: any[];
+    registeredForEvents?: any[];
+  };
+}
 
 const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
   const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
   const { address } = params;
+  const [resultData, setResultData] = useState<any[]>([]);
+  const [activeFilter, setActiveFilter] = useState<string>("All");
+
   const itemsPerPage = 10;
 
   const totalPages = Math.ceil(eventsData.length / itemsPerPage);
@@ -48,6 +80,386 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
 
   const shortenAddress = (address: any) => {
     return address.slice(0, 10) + "..." + address.slice(-10);
+  };
+
+  const { data } = useQuery({
+    queryKey: ["data"],
+    async queryFn() {
+      return await request(orgurl, orgquery, {}, headers);
+    },
+    refetchInterval: 10000,
+  });
+
+  const { data: coursedata } = useQuery({
+    queryKey: ["coursedata"],
+    async queryFn() {
+      return await request(courseurl, coursequery, {}, headers);
+    },
+    refetchInterval: 10000,
+  });
+
+  const { data: eventdata } = useQuery({
+    queryKey: ["eventdata"],
+    async queryFn() {
+      return await request(eventurl, eventquery, {}, headers);
+    },
+    refetchInterval: 10000,
+  });
+
+  const eventData: EventData = React.useMemo(
+    () => ({
+      organizations: data ?? {},
+      courses: coursedata ?? {},
+      events: eventdata ?? {},
+    }),
+    [data, coursedata],
+  );
+
+  React.useEffect(() => {
+    if (!address) return;
+    // Add this function after the queries and before the return statement
+    const filterNotificationsByAddress = (address: string) => {
+      if (!address) return [];
+
+      const notifications: any = [];
+      // Filter org-related notifications
+      if (Object.keys(eventData.organizations).length != 0) {
+        // Check bootcamp created
+        // eventData.organizations?.bootcampCreateds.forEach((event: any) => {
+        //   if (
+        //     formatAddress(event.org_address.toLowerCase()) ===
+        //     address.toLowerCase()
+        //   ) {
+        //     notifications.push({
+        //       type: "BOOTCAMP_CREATED",
+        //       bootcampId: event.bootcamp_id,
+        //       timestamp: event.block_timestamp,
+        //       blockNumber: event.block_number,
+        //     });
+        //   }
+        // });
+
+        // Check bootcamp registrations
+        eventData.organizations?.bootcampRegistrations?.forEach(
+          (event: any) => {
+            if (
+              formatAddress(event.org_address.toLowerCase()) ===
+              address.toLowerCase()
+            ) {
+              notifications.push({
+                type: "BOOTCAMP_REGISTRATION",
+                bootcampId: event.bootcamp_id,
+                timestamp: event.block_timestamp,
+                blockNumber: event.block_number,
+              });
+            }
+          },
+        );
+
+        // Check instructor additions
+        eventData.organizations?.instructorAddedToOrgs?.forEach(
+          (event: any) => {
+            for (let i = 0; i < event.instructors.length; i++) {
+              if (
+                formatAddress(event.instructors[i].toLowerCase()) ===
+                address.toLowerCase()
+              ) {
+                notifications.push({
+                  type: "INSTRUCTOR_ADDED",
+                  orgName: event.org_name,
+                  timestamp: event.block_timestamp,
+                  blockNumber: event.block_number,
+                });
+              }
+            }
+          },
+        );
+
+        // Check instructor removed
+        eventData.organizations?.instructorRemovedFromOrgs?.forEach(
+          (event: any) => {
+            if (
+              formatAddress(event.org_address.toLowerCase()) ===
+              address.toLowerCase()
+            ) {
+              notifications.push({
+                type: "INSTRUCTOR_REMOVED",
+                bootcampId: event.bootcamp_id,
+                timestamp: event.block_timestamp,
+                blockNumber: event.block_number,
+              });
+            }
+          },
+        );
+
+        // Check organization profile created
+        // eventData.organizations?.organizationProfiles.forEach((event: any) => {
+        //   if (
+        //     formatAddress(event.org_address.toLowerCase()) ===
+        //     address.toLowerCase()
+        //   ) {
+        //     notifications.push({
+        //       type: "ORGANIZATION_PROFILE_CREATED",
+        //       bootcampId: event.bootcamp_id,
+        //       timestamp: event.block_timestamp,
+        //       blockNumber: event.block_number,
+        //     });
+        //   }
+        // });
+
+        // Check organization approved
+        // eventData.organizations?.organizationApproveds.forEach((event: any) => {
+        //   if (
+        //     formatAddress(event.student_address.toLowerCase()) ===
+        //     address.toLowerCase()
+        //   ) {
+        //     notifications.push({
+        //       type: "ORGANIZATION_APPROVED",
+        //       bootcampId: event.bootcamp_id,
+        //       timestamp: event.block_timestamp,
+        //       blockNumber: event.block_number,
+        //     });
+        //   }
+        // });
+
+        // Check organization declined
+        // eventData.organizations?.organizationDeclineds.forEach((event: any) => {
+        //   if (
+        //     formatAddress(event.student_address.toLowerCase()) ===
+        //     address.toLowerCase()
+        //   ) {
+        //     notifications.push({
+        //       type: "ORGANIZATION_APPROVED",
+        //       bootcampId: event.bootcamp_id,
+        //       timestamp: event.block_timestamp,
+        //       blockNumber: event.block_number,
+        //     });
+        //   }
+        // });
+      }
+
+      // Filter course-related notifications
+      if (Object.keys(eventData.courses).length != 0) {
+        // Check course creations
+        eventData.courses?.courseCreateds?.forEach((event: any) => {
+          if (
+            formatAddress(event.owner_.toLowerCase()) === address.toLowerCase()
+          ) {
+            notifications.push({
+              type: "COURSE_CREATED",
+              owner: event.owner_,
+              uri: event.course_ipfs_uri,
+              timestamp: event.block_timestamp,
+              blockNumber: event.block_number,
+            });
+          }
+        });
+
+        // Check certificate claims
+        eventData.courses?.courseCertClaimeds?.forEach((event: any) => {
+          if (
+            formatAddress(event.candidate.toLowerCase()) ===
+            address.toLowerCase()
+          ) {
+            notifications.push({
+              type: "CERT_CLAIMED",
+              candidate: event.candidate,
+              timestamp: event.block_timestamp,
+              blockNumber: event.block_number,
+            });
+          }
+        });
+
+        //TODO: check for course replaced
+        //TODO: check for admin transfer
+      }
+
+      // Filter event-related notifications
+      if (Object.keys(eventData.events).length != 0) {
+        //TODO: check for admin ownership claimed
+        //TODO: check for admin transfer
+
+        // Check attendance marks
+        eventData.events?.attendanceMarkeds?.forEach((event: any) => {
+          if (
+            formatAddress(event.attendee.toLowerCase()) ===
+            address.toLowerCase()
+          ) {
+            notifications.push({
+              type: "ATTENDANCE_MARKED",
+              attendee: event.attendee,
+              timestamp: event.block_timestamp,
+              blockNumber: event.block_number,
+            });
+          }
+        });
+
+        // Check event created
+        eventData.events?.eventCreateds?.forEach((event: any) => {
+          if (
+            formatAddress(event.event_organizer.toLowerCase()) ===
+            address.toLowerCase()
+          ) {
+            notifications.push({
+              type: "EVENT_CREATED",
+              attendee: event.event_organizer,
+              eventName: event.event_name,
+              timestamp: event.block_timestamp,
+              blockNumber: event.block_number,
+            });
+          }
+        });
+
+        // Check event registrations
+        eventData.events?.registeredForEvents?.forEach((event: any) => {
+          if (
+            formatAddress(event.attendee.toLowerCase()) ===
+            address.toLowerCase()
+          ) {
+            notifications.push({
+              type: "EVENT_REGISTRATION",
+              attendee: event.attendee,
+              timestamp: event.block_timestamp,
+              blockNumber: event.block_number,
+            });
+          }
+        });
+
+        //TODO: check for registration status changed
+      }
+
+      // Sort notifications by timestamp (most recent first)
+      return notifications.sort((a: any, b: any) => b.timestamp - a.timestamp);
+      // return notifications;
+    };
+    const filteredNotifications = filterNotificationsByAddress(address);
+    setResultData(filteredNotifications);
+    // console.log("what does it return", filterNotificationsByAddress(address));
+  }, [data, coursedata, eventdata]);
+
+  const formatTimestamp = (timestamp: number) => {
+    // Convert from seconds to milliseconds if needed
+    const date = new Date(timestamp * 1000);
+
+    if (isNaN(date.getTime())) return "Invalid date"; // Handle invalid Date objects
+
+    return format(date, "MMM dd, yyyy HH:mm:ss");
+  };
+
+  // First fix the mapping function
+  const mapResultDataToGrids = (resultData: any[]) => {
+    return resultData
+      .map((notification) => {
+        // Keep the original type in the mapped data
+        const baseData = {
+          type: notification.type,
+          certification: "View certifications",
+          nftImg: "",
+        };
+
+        switch (notification.type) {
+          case "EVENT_REGISTRATION":
+            return {
+              ...baseData,
+              eventName: "Event Registration",
+              status: "Registered",
+              date: formatTimestamp(notification.timestamp),
+            };
+          case "ATTENDANCE_MARKED":
+            return {
+              ...baseData,
+              eventName: "Event Attendance",
+              status: "Attendance Verified",
+              date: formatTimestamp(notification.timestamp),
+            };
+          case "EVENT_CREATED":
+            return {
+              ...baseData,
+              eventName: notification.eventName || "New Event",
+              status: "Event Created",
+              date: formatTimestamp(notification.timestamp),
+            };
+          case "COURSE_CREATED":
+            return {
+              ...baseData,
+              eventName: notification.uri || "New Course",
+              status: "Course Created",
+              date: "BCK Web3 Pro",
+            };
+          case "CERT_CLAIMED":
+            return {
+              ...baseData,
+              eventName: "Certificate Claimed",
+              status: "Certificate Claimed",
+              date: formatTimestamp(notification.timestamp),
+            };
+          default:
+            return null;
+        }
+      })
+      .filter(Boolean);
+  };
+
+  // Then update the gridsData transformation
+  const updatedGridsData = React.useMemo(() => {
+    const mappedResultData = mapResultDataToGrids(resultData);
+
+    return gridsData.map((grid) => {
+      switch (grid.name) {
+        case "Events": {
+          const eventData = mappedResultData.filter((item: any) =>
+            [
+              "EVENT_REGISTRATION",
+              "ATTENDANCE_MARKED",
+              "EVENT_CREATED",
+            ].includes(item.type),
+          );
+
+          return {
+            ...grid,
+            eventsData: [...grid.eventsData, ...eventData],
+          };
+        }
+
+        case "Courses": {
+          const courseData = mappedResultData.filter((item: any) =>
+            ["COURSE_CREATED"].includes(item.type),
+          );
+
+          return {
+            ...grid,
+            eventsData: [...grid.eventsData, ...courseData],
+          };
+        }
+
+        case "Certifications": {
+          const certData = mappedResultData.filter((item: any) =>
+            ["CERT_CLAIMED"].includes(item.type),
+          );
+
+          return {
+            ...grid,
+            eventsData: [...grid.eventsData, ...certData],
+          };
+        }
+
+        default:
+          return grid;
+      }
+    });
+  }, [resultData, gridsData]);
+
+  const filteredGridsData = React.useMemo(() => {
+    if (activeFilter === "All") return updatedGridsData;
+    return updatedGridsData.filter((item) => item.name === activeFilter);
+  }, [updatedGridsData, activeFilter]);
+
+  // Add this helper function
+  const formatAddress = (addr: string) => {
+    if (addr.startsWith("0x")) {
+      return addr.startsWith("0x0") ? addr : "0x0" + addr.slice(2);
+    }
+    return "0x0" + addr;
   };
 
   return (
@@ -110,11 +522,16 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
 
         {/* Categories */}
         <div className="flex flex-wrap lg:flex-nowrap gap-3 my-5">
-          {["Filter", "Events", "Organization", "Certification", "Courses"].map(
+          {["All", "Events", "Organizations", "Certifications", "Courses"].map(
             (category, index) => (
               <Button
                 key={index}
-                className="hidden lg:flex rounded-lg bg-[#4A90E21F] py-2 px-4 h-[42px] items-center w-[90px] text-sm text-[#2d3a4b]"
+                onClick={() => setActiveFilter(category)}
+                className={`hidden lg:flex rounded-lg py-2 px-4 h-[42px] items-center w-[90px] text-sm ${
+                  activeFilter === category
+                    ? "bg-[#4A90E2] text-white"
+                    : "bg-[#4A90E21F] text-[#2d3a4b]"
+                }`}
               >
                 {category === "Filter" && (
                   <Image src={filter} alt="filter" className="mr-2" />
@@ -128,16 +545,43 @@ const ExploreResult: React.FC<{ params: Params }> = ({ params }) => {
 
       {/* Grid Results */}
       <div className="mx-4 lg:mx-36">
-        {gridsData.map((item, i) => (
-          <ResultGrid
-            key={i}
-            item={item}
-            eventsData={item.eventsData}
-            generatePageNumbers={generatePageNumbers}
-            goToPage={goToPage}
-            currentPage={currentPage}
-          />
-        ))}
+        {activeFilter === "All" ? (
+          // Show all grids when "All" is selected
+          updatedGridsData.map((item: any, i: any) => (
+            <ResultGrid
+              key={i}
+              address={address || ""}
+              item={item}
+              eventsData={item.eventsData}
+              generatePageNumbers={generatePageNumbers}
+              goToPage={goToPage}
+              currentPage={currentPage}
+            />
+          ))
+        ) : // Show filtered grid when a specific category is selected
+        filteredGridsData.length > 0 ? (
+          // Show filtered grid when there are matches
+          filteredGridsData.map((item: any, i: any) => (
+            <ResultGrid
+              key={i}
+              address={address || ""}
+              item={item}
+              eventsData={item.eventsData}
+              generatePageNumbers={generatePageNumbers}
+              goToPage={goToPage}
+              currentPage={currentPage}
+            />
+          ))
+        ) : (
+          // Show empty state when no matches
+          <div className="w-full h-[308px] flex items-center justify-center bg-white rounded-lg border border-[#b9b9ba]">
+            <div className="text-center">
+              <h1 className="text-[15px] text-[#817676] font-medium leading-[18px]">
+                No {activeFilter.toLowerCase()} data found
+              </h1>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
