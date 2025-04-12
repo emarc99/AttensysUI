@@ -48,6 +48,8 @@ import { useWallet } from "@/hooks/useWallet";
 import { NetworkSwitchButton } from "./connect/NetworkSwitchButton";
 import { connectWallet } from "@/utils/connectWallet";
 import { CatridgeConnect } from "./connect/CatridgeConnect";
+import { useAccount, useConnect } from "@starknet-react/core";
+import ControllerConnector from "@cartridge/connector/controller";
 
 const navigation = [
   { name: "Courses", href: "#", current: false },
@@ -75,6 +77,10 @@ const Header = () => {
     wallet: hookWallet,
     isConnecting,
   } = useWallet();
+  const { account, address } = useAccount();
+  const { connect, connectors } = useConnect();
+  const controller = connectors[0] as ControllerConnector;
+  const [username, setUsername] = useState<string>();
   // const [networkCorrect, setNetworkCorrect] = useState(isCorrectNetwork)
   const [isBootcampsOpen, setIsBootcampsOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -129,6 +135,11 @@ const Header = () => {
     setIsCoursesOpen(false);
     setIsBootcampsOpen(false);
   };
+
+  useEffect(() => {
+    if (!address) return;
+    controller.username()?.then((n) => setUsername(n));
+  }, [address, controller]);
 
   return (
     <>
@@ -288,7 +299,7 @@ const Header = () => {
                 {/* 🟢 Wallet data */}
 
                 <div className="flex items-center px-4 py-3 space-x-3 border-b">
-                  {wallet && wallet.account ? (
+                  {account ? (
                     <>
                       {/* Profile picture */}
 
@@ -304,11 +315,11 @@ const Header = () => {
 
                       <div>
                         <p className="font-semibold text-gray-900">
-                          {wallet.account.name || "Connected User"}
+                          {username || "Connected User"}
                         </p>
                         <p className="text-[#9B51E0] text-sm">
-                          {wallet.account.address
-                            ? `${wallet.account.address.slice(0, 6)}...${wallet.account.address.slice(-4)}`
+                          {address
+                            ? `${address.slice(0, 6)}...${address.slice(-4)}`
                             : "Unknown"}
                         </p>
                       </div>
@@ -370,7 +381,7 @@ const Header = () => {
                         </Link>
 
                         <Link
-                          href={`/mycoursepage/${wallet?.selectedAddress}`}
+                          href={`/mycoursepage/${address}`}
                           className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200"
                           onClick={() => close()}
                         >
@@ -385,7 +396,7 @@ const Header = () => {
                         </Link>
 
                         <Link
-                          href={`/Certifications/${wallet?.selectedAddress}`}
+                          href={`/Certifications/${address}`}
                           className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200"
                           onClick={() => close()}
                         >

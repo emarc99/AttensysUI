@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "dev:https": "NODE_EXTRA_CA_CERTS=$(mkcert -CAROOT)/rootCA.pem next dev --experimental-https  --turbopack",
+    "dev:https": "NODE_EXTRA_CA_CERTS=$(mkcert -CAROOT)/rootCA.pem next dev --experimental-https",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -91,6 +91,7 @@
     "rsuite": "^5.76.3",
     "screenfull": "^6.0.2",
     "sharp": "^0.33.5",
+    "sonner": "^2.0.3",
     "starknet": "^6.15.0",
     "starknetkit": "^1.1.9",
     "starknetkit-next": "npm:starknetkit@^2.3.3",
