@@ -13,6 +13,7 @@ import { connect } from "starknetkit";
 import { toast } from "react-toastify";
 import WalletisConnected from "@/components/createorganization/WalletisConnected";
 import TrueFocus from "@/components/createorganization/TrueFocus";
+import { useAccount } from "@starknet-react/core";
 
 interface ChildComponentProps {
   courseData: any;
@@ -47,6 +48,7 @@ const MainFormView: React.FC<ChildComponentProps> = ({
   const [skillError, setSkillError] = useState("");
   const [levelError, setLevelError] = useState("");
   const [wallet, setWallet] = useAtom(walletStarknetkit);
+  const { account, address } = useAccount();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -90,40 +92,12 @@ const MainFormView: React.FC<ChildComponentProps> = ({
     handleCreateCourse(e, "courseSetup2", router);
   };
 
-  useEffect(() => {
-    const autoConnect = async () => {
-      if (!wallet) {
-        try {
-          const { wallet: connectedWallet } = await connect({
-            //@ts-ignore
-            provider,
-            modalMode: "neverAsk",
-            webWalletUrl: ARGENT_WEBWALLET_URL,
-            argentMobileOptions: {
-              dappName: "Attensys",
-              url: window.location.hostname,
-              chainId: CHAIN_ID,
-              icons: [],
-            },
-          });
-          setWallet(connectedWallet);
-        } catch (e) {
-          console.error(e);
-        } finally {
-          console.log("show");
-        }
-      }
-    };
-
-    autoConnect();
-  }, [wallet]);
-
-  if (wallet == undefined) {
+  if (account == undefined) {
     return (
       <div className="w-screen h-screen z-50 flex justify-center items-center">
         {/* <WalletisConnected /> */}
         <TrueFocus
-          sentence="Connect Wallet"
+          sentence="Login To-Continue"
           manualMode={false}
           blurAmount={9}
           borderColor="#9B51E0"

@@ -78,6 +78,11 @@ const policies: SessionPolicies = {
           entrypoint: "finish_course_claim_certification",
           description: "get certified",
         },
+        {
+          name: "create_a_course",
+          entrypoint: "create_course",
+          description: "create_a_course",
+        },
       ],
     },
   },

@@ -13,6 +13,7 @@ import CreateACourse from "./CreateACourse";
 import LearningJourney from "./LearningJourney";
 import Notification from "./Notification";
 import UserSideBar from "./UserSideBar";
+import { useAccount } from "@starknet-react/core";
 
 interface CourseType {
   data: any;
@@ -42,22 +43,24 @@ const MyCourses = (props: any) => {
     getError,
     isLoading: isCIDFetchLoading,
   } = useFetchCID();
+  const { account, address } = useAccount();
 
   const courseContract = new Contract(
     attensysCourseAbi,
     attensysCourseAddress,
-    wallet?.account,
+    provider,
   );
 
   const getAllUserCreatedCourses = async () => {
-    if (wallet == undefined) return;
-    const res: CourseType[] = await courseContract?.get_all_creator_courses(
-      wallet?.selectedAddress,
-    );
+    if (account == undefined) return;
+    const res: CourseType[] =
+      await courseContract?.get_all_creator_courses(address);
 
-    const secondRes: CourseType[] = await courseContract?.get_all_taken_courses(
-      wallet?.selectedAddress,
-    );
+    const secondRes: CourseType[] =
+      await courseContract?.get_all_taken_courses(address);
+
+    // console.log("all courses", res);
+    // console.log("all taken courses", secondRes);
 
     setCourses(res);
     setTakenCourses(secondRes);
@@ -137,40 +140,17 @@ const MyCourses = (props: any) => {
   useEffect(() => {
     getAllUserCreatedCourses(); // Fetch courses when the wallet address changes
     getSingleCourse();
-  }, [wallet, courses]);
+    // console.log("data here",courseData)
+  }, [account]);
 
   useEffect(() => {
     setPage("myCourse");
-
-    const autoConnect = async () => {
-      try {
-        const { wallet: connectedWallet, connector } = await connect({
-          //@ts-ignore
-          provider,
-          modalMode: "neverAsk",
-          webWalletUrl: ARGENT_WEBWALLET_URL,
-          argentMobileOptions: {
-            dappName: "Attensys",
-            url: window.location.hostname,
-            chainId: CHAIN_ID,
-            icons: [],
-          },
-        });
-
-        setWallet(connectedWallet);
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    if (!wallet) {
-      autoConnect();
-    }
-  }, [page, wallet]);
+  }, [page, account, courseData]);
 
   return (
     <div className="block lg:flex lg:mx-10 mb-8 pb-24 max-w-screen-2xl xl:mx-auto">
       <UserSideBar
-        wallet={wallet}
+        wallet={account}
         courseData={courseData}
         takenCoursesData={takenCoursesData}
         page={page}
@@ -208,7 +188,7 @@ const MyCourses = (props: any) => {
 
         <div>
           {selected == "" || selected == "Notification" ? (
-            <Notification wallet={wallet} />
+            <Notification wallet={account} />
           ) : null}
         </div>
       </div>

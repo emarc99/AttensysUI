@@ -79,7 +79,7 @@ const LearningJourney: React.FC<LearningJourneyProps> = ({
     setCurrentPage(page);
   };
 
-  if (takenCoursesData.length === 0) {
+  if (takenCoursesData.length == 0) {
     return <div className="text-[#A01B9B] text-center mt-12">No Courses</div>;
   }
 

@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { handleCreateCourse } from "@/utils/helpers";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { toast } from "react-toastify";
+import { useAccount } from "@starknet-react/core";
 
 interface ChildComponentProps {
   courseData: any;
@@ -80,6 +81,8 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [showRetry, setShowRetry] = useState(false);
+  const { account, address } = useAccount();
+  const [txnHash, setTxnHash] = useState<string>();
 
   const router = useRouter();
   const handleSwitch = (
@@ -123,13 +126,13 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
           const courseContract = new Contract(
             attensysCourseAbi,
             attensysCourseAddress,
-            wallet?.account,
+            account,
           );
 
           const create_course_calldata = courseContract.populate(
             "create_course",
             [
-              wallet?.account?.address,
+              address,
               false,
               courseImgupload.IpfsHash,
               courseData.courseName,
@@ -138,30 +141,33 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
             ],
           );
 
-          const callCourseContract = await wallet?.account.execute([
+          const callCourseContract = await account?.execute([
             {
               contractAddress: attensysCourseAddress,
               entrypoint: "create_course",
               calldata: create_course_calldata.calldata,
             },
           ]);
+          setTxnHash(callCourseContract?.transaction_hash);
+          console.log("hash", callCourseContract?.transaction_hash);
+          handleCreateCourse(e, "course-landing-page", router);
 
-          const receipt = await wallet?.account?.provider
-            .waitForTransaction(callCourseContract.transaction_hash)
-            .then((res: any) => {
-              console.log("what is ", res);
-              setReceiptData(res);
-            })
-            .catch((e: any) => {
-              setIsUploading(false);
-              setIsSaving(false);
+          // const receipt = await account?.provider
+          //   .waitForTransaction(callCourseContract.transaction_hash)
+          //   .then((res: any) => {
+          //     console.log("what is ", res);
+          //     setReceiptData(res);
+          //   })
+          //   .catch((e: any) => {
+          //     setIsUploading(false);
+          //     setIsSaving(false);
 
-              toast.error("Transaction failed or timed out:", e.message);
-              setShowRetry(true);
-            })
-            .finally(() => {
-              handleCreateCourse(e, "course-landing-page", router);
-            });
+          //     toast.error("Transaction failed or timed out:", e.message);
+          //     setShowRetry(true);
+          //   })
+          //   .finally(() => {
+          //     handleCreateCourse(e, "course-landing-page", router);
+          //   });
         } catch (error: any) {
           toast.error(error);
         }
@@ -377,6 +383,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                     </button>
                   )}
                 </div>
+                hash : {txnHash}
               </div>
             </div>
           </div>

@@ -117,11 +117,11 @@ const Header = () => {
       setcourseStatus(!coursestatus);
       setbootcampdropstat(false);
     } else if (arg == "Events") {
-      router.push("/Discoverevent");
+      // router.push("/Discoverevent");
     } else if (arg == "Bootcamps") {
       // e.stopPropagation();
-      setbootcampdropstat(!bootcampdropstat);
-      setcourseStatus(false);
+      // setbootcampdropstat(!bootcampdropstat);
+      // setcourseStatus(false);
     }
   };
   const [isCoursesOpen, setIsCoursesOpen] = useState(false);
@@ -207,27 +207,49 @@ const Header = () => {
                 <div className="flex items-center justify-center sm:items-stretch sm:justify-end">
                   <div className="hidden lg:flex">
                     <div className="flex text-sm xlg:space-x-24">
-                      {navigation.map((item, index) => (
-                        <a
-                          key={item.name}
-                          href={item.href}
-                          aria-current={item.current ? "page" : undefined}
-                          className={classNames(
-                            item.current
-                              ? "bg-white text-[#333333]"
-                              : "text-[#333333] hover:bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] hover:text-white",
-                            "rounded-md px-3 py-2 font-medium cursor-pointer",
-                          )}
-                          onClick={() => handleTabClick(item.name)}
-                        >
-                          {item.name}{" "}
-                          {index !== 1 && (
-                            <span className="text-[10px] mx-1">
-                              {item.current ? "▲" : "▼"}
-                            </span>
-                          )}
-                        </a>
-                      ))}
+                      {navigation.map((item, index) => {
+                        const isComingSoon =
+                          item.name === "Events" || item.name === "Bootcamps";
+
+                        return (
+                          <div key={item.name} className="relative group">
+                            <a
+                              href={isComingSoon ? "#" : item.href}
+                              aria-current={item.current ? "page" : undefined}
+                              className={classNames(
+                                item.current
+                                  ? "bg-white text-[#333333]"
+                                  : isComingSoon
+                                    ? "text-gray-400 cursor-not-allowed" // Greyed out style
+                                    : "text-[#333333] hover:bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] hover:text-white",
+                                "rounded-md px-3 py-2 font-medium cursor-pointer",
+                              )}
+                              onClick={(e) => {
+                                if (isComingSoon) {
+                                  e.preventDefault(); // Prevent navigation for coming soon items
+                                } else {
+                                  handleTabClick(item.name);
+                                }
+                              }}
+                            >
+                              {item.name}{" "}
+                              {index !== 1 && (
+                                <span className="text-[10px] mx-1">
+                                  {item.current ? "▲" : "▼"}
+                                </span>
+                              )}
+                            </a>
+
+                            {/* Tooltip for coming soon features */}
+                            {isComingSoon && (
+                              <div className="absolute z-10 hidden group-hover:block px-2 py-1 text-xs text-white bg-gray-700 rounded whitespace-nowrap -top-8 left-1/2 transform -translate-x-1/2">
+                                Feature is coming soon
+                                <div className="absolute w-2 h-2 bg-gray-700 rotate-45 bottom-[-4px] left-1/2 -translate-x-1/2"></div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
