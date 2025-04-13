@@ -61,7 +61,7 @@ function getQueryClient() {
 }
 
 const COURSE_ADDRESS =
-  "0x27da6130567c2cc618a7a6d3e2dc463ecdac1ee6f77a1a07310510e76459093";
+  "0x2d876f20d2ed89f91ca59e559e954dc78a4e81abd6bf7831ef238a2adfbef24";
 
 // Define session policies
 const policies: SessionPolicies = {
