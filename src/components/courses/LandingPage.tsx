@@ -399,6 +399,8 @@ const LandingPage: React.FC<ChildComponentProps> = ({
           lectures={lectures}
           courseData={dataRef.current}
           learningObj={dataRef.current.learningObjectives}
+          isActivated={false}
+          handleSwitch={() => {}}
         />
       </div>
 
