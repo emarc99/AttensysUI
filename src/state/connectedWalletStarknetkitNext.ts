@@ -4,7 +4,7 @@ import {
   NetworkChangeEventHandler,
 } from "@starknet-io/types-js";
 import { useAtomValue, useSetAtom, atom } from "jotai";
-import { atomWithReset } from "jotai/utils";
+import { atomWithReset, atomWithStorage } from "jotai/utils";
 import { useEffect } from "react";
 import { ConnectorData, StarknetWindowObject } from "starknetkit-next";
 import { Connector } from "starknetkit";
@@ -96,7 +96,15 @@ export const organzationInitState = atom(InitOrganizationRegstrationData);
 export const createBootcampInitState = atom(InitBootcampNftData);
 
 // course data state
-export const courseInitState = atom(InitCourseRegistrationData);
+export const courseInitState = atomWithStorage(
+  "courseDraft",
+  InitCourseRegistrationData,
+);
+
+// Function to clear the course draft
+export const clearCourseDraft = () => {
+  localStorage.removeItem("courseDraft");
+};
 
 export const walletStarknetkitNextAtom = atomWithReset<
   StarknetWindowObject | null | undefined

@@ -23,7 +23,7 @@ const MainFormView4: React.FC<ChildComponentProps> = ({
   const router = useRouter();
   const [selectedPricing, setSelectedPricing] = useState<string | null>(null);
   const [pricingError, setPricingError] = useState("");
-
+  console.log(courseData);
   const pricing = [
     {
       sym: free,

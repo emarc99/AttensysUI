@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Previous from "./previous";
 import { useRouter } from "next/navigation";
+import { useAtom } from "jotai";
+import { courseInitState } from "@/state/connectedWalletStarknetkitNext";
 
 interface ChildComponentProps {
   section: any;
@@ -19,12 +21,23 @@ const CourseForm2 = ({
   handleCourseTargetAudienceChange,
 }: ChildComponentProps) => {
   const router = useRouter();
-  const [selectedOption, setSelectedOption] = useState<string>("");
+  const [courseData, setCourseData] = useAtom(courseInitState);
+  const [selectedOption, setSelectedOption] = useState<string>(
+    courseData.targetAudience || "",
+  );
   const [error, setError] = useState<string>("");
 
+  useEffect(() => {
+    if (courseData.targetAudience) {
+      setSelectedOption(courseData.targetAudience);
+    }
+  }, [courseData.targetAudience]);
+
   const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedOption(event.target.value);
+    const value = event.target.value;
+    setSelectedOption(value);
     setError("");
+    setCourseData((prev) => ({ ...prev, targetAudience: value }));
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

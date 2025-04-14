@@ -13,7 +13,10 @@ import { MdOutlineDiamond } from "react-icons/md";
 import { IoSearchOutline, IoMenuOutline } from "react-icons/io5";
 import { pinata } from "../../../../utils/config";
 import { FileObject } from "pinata";
-import { courseInitState } from "@/state/connectedWalletStarknetkitNext";
+import {
+  courseInitState,
+  clearCourseDraft,
+} from "@/state/connectedWalletStarknetkitNext";
 import { lectures } from "@/constants/data";
 import { attensysCourseAddress } from "@/deployments/contracts";
 import { attensysCourseAbi } from "@/deployments/abi";
@@ -94,18 +97,37 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
 
   const [receiptData, setReceiptData] = useState<any>(null);
 
+  function dataURLtoBlob(dataURL: any) {
+    const arr = dataURL.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new Blob([u8arr], { type: mime });
+  }
+
   const handleCourseUpload = async (e: any) => {
     setIsUploading(true);
     setIsSaving(true);
 
     try {
-      const courseImgupload = await pinata.upload.file(courseData.courseImage);
+      const blob = dataURLtoBlob(courseData.courseImage.url);
+
+      const realFile = new File([blob], courseData.courseImage.name, {
+        type: courseData.courseImage.type,
+      });
+      const courseImgupload = await pinata.upload.file(realFile);
 
       const dataUpload = await pinata.upload.json({
         primaryGoal: courseData.primaryGoal,
         targetAudience: courseData.targetAudience,
         courseArea: courseData.courseArea,
-        courseIdentifier: "",
+        courseIdentifier: "1",
         courseCreator: courseData.courseCreator,
         courseName: courseData.courseName,
         courseDescription: courseData.courseDescription,
@@ -150,30 +172,24 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
           ]);
           setTxnHash(callCourseContract?.transaction_hash);
           console.log("hash", callCourseContract?.transaction_hash);
+
+          // Create a deep copy of the course data
+          const courseDataCopy = JSON.parse(JSON.stringify(courseData));
+
+          // Store the copy in localStorage
+          localStorage.setItem("courseData", JSON.stringify(courseDataCopy));
+
+          // Route to landing page first
           handleCreateCourse(e, "course-landing-page", router);
-
-          // const receipt = await account?.provider
-          //   .waitForTransaction(callCourseContract.transaction_hash)
-          //   .then((res: any) => {
-          //     console.log("what is ", res);
-          //     setReceiptData(res);
-          //   })
-          //   .catch((e: any) => {
-          //     setIsUploading(false);
-          //     setIsSaving(false);
-
-          //     toast.error("Transaction failed or timed out:", e.message);
-          //     setShowRetry(true);
-          //   })
-          //   .finally(() => {
-          //     handleCreateCourse(e, "course-landing-page", router);
-          //   });
         } catch (error: any) {
           toast.error(error);
         }
       }
     } catch (error) {
-      console.log(error);
+      console.log("from here", error);
+    } finally {
+      setIsUploading(false);
+      setIsSaving(false);
     }
   };
 
@@ -182,16 +198,9 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
   };
 
   useEffect(() => {
-    // Check if file is a valid File object
-    if (courseData.courseImage instanceof File) {
-      // Create a temporary URL for the fetched image
-      const imageUrl = URL.createObjectURL(courseData.courseImage);
-      setImageSrc(imageUrl);
-
-      // Clean up the URL object to free up memory
-      return () => {
-        URL.revokeObjectURL(imageUrl);
-      };
+    // Check if courseImage has a url property
+    if (courseData.courseImage?.url) {
+      setImageSrc(courseData.courseImage.url);
     }
   }, [courseData.courseImage]);
 
@@ -246,14 +255,15 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
             </div>
             <div className="block lg:grid lg:grid-cols-2 gap-4">
               {/* Course Image */}
-              <div className="relative h-[350px] w-auto max-w-[500px]">
+              <div className="relative h-[350px] w-full max-w-[500px] overflow-hidden">
                 {imageSrc ? (
                   <Image
                     src={(imageSrc as string) || "/placeholder.svg"}
                     alt="Fetched Image"
-                    width={500} // Explicit width
-                    height={500} // Explicit height
-                    className="object-cover"
+                    width={500}
+                    height={350}
+                    className="object-cover w-full h-full"
+                    style={{ objectFit: "cover" }}
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full">
@@ -314,13 +324,6 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                 <h2 className="font-semibold text-[18px] leading-[31px] text-[#333333] mb-2">
                   Target Audience
                 </h2>
-                {/* <ul className="text-sm text-[#333333] list-disc pl-5 space-y-1">
-                  <li>Beginners interested in web development</li>
-                  <li>
-                    Aspiring web developers looking to start their journey
-                  </li>
-                  <li>Anyone wanting to create their own websites</li>
-                </ul> */}
                 {courseData.targetAudience}
               </div>
 
@@ -383,7 +386,6 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                     </button>
                   )}
                 </div>
-                hash : {txnHash}
               </div>
             </div>
           </div>

@@ -39,6 +39,29 @@ const MainFormView3: React.FC<ChildComponentProps> = ({
   const [lectureTitleError, setLectureTitleError] = useState("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        setCourseData((prev: any) => ({
+          ...prev,
+          courseImage: {
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            lastModified: file.lastModified,
+            url: e.target?.result as string,
+          },
+        }));
+      };
+
+      reader.readAsDataURL(file);
+    }
+    handleCourseImageChange(event);
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -152,7 +175,7 @@ You want to make sure your creative is very catchy.`}
                             ref={fileInputRef}
                             type="file"
                             accept="image/jpeg, image/jpg, image/png"
-                            onChange={handleCourseImageChange}
+                            onChange={handleImageChange}
                             style={{ display: "none" }} // Hide the input
                           />
                         </div>
@@ -165,7 +188,7 @@ You want to make sure your creative is very catchy.`}
                       Upload thumbnail
                     </p>
                     <div className="bg-white w-full md:w-[350px] p-8 text-center border-dotted rounded-xl border-2 border-[#D0D5DD] flex flex-col justify-center content-center">
-                      {courseData.courseImage.name == "" ? (
+                      {!courseData.courseImage?.url ? (
                         <div>
                           <div className="w-auto mx-auto">
                             <Image src={upload} alt="uplaod" width={30} />
@@ -197,7 +220,7 @@ You want to make sure your creative is very catchy.`}
                         </div>
                       ) : (
                         <Image
-                          src={imageUrl}
+                          src={courseData.courseImage.url}
                           alt="uplaod"
                           width={200}
                           height={200}

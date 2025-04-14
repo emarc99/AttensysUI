@@ -16,6 +16,7 @@ import StarRating from "../bootcamp/StarRating";
 import { HiOutlineCheckBadge } from "react-icons/hi2";
 import { LuBadgeCheck } from "react-icons/lu";
 import { FileObject } from "pinata";
+import { clearCourseDraft } from "@/state/connectedWalletStarknetkitNext";
 
 interface ChildComponentProps {
   courseData: any;
@@ -94,18 +95,28 @@ const LandingPage: React.FC<ChildComponentProps> = ({
     // dataRef.current = data;
     setCourseData(ResetCourseRegistrationData);
 
-    // Check if file is a valid File object
-    if (dataRef.current.courseImage instanceof File) {
-      // Create a temporary URL for the fetched image
-      const imageUrl = URL.createObjectURL(dataRef.current.courseImage);
-      setImageSrc(imageUrl);
-
-      // Clean up the URL object to free up memory
-      return () => {
-        URL.revokeObjectURL(imageUrl);
-      };
+    // Check if we have course data with an image
+    if (dataRef.current?.courseImage?.url) {
+      setImageSrc(dataRef.current.courseImage.url);
+    } else if (dataRef.current?.courseImage?.IpfsHash) {
+      // If we have an IPFS hash, construct the URL
+      setImageSrc(
+        `https://gateway.pinata.cloud/ipfs/${dataRef.current.courseImage.IpfsHash}`,
+      );
     }
-  }, []);
+  }, [dataRef.current?.courseImage]);
+
+  const handleGetCourse = (e: any) => {
+    // Store the current course data in localStorage before clearing
+    localStorage.setItem("courseData", JSON.stringify(dataRef.current));
+
+    // Clear the course data
+    clearCourseDraft();
+    setCourseData(ResetCourseRegistrationData);
+
+    // Handle the course navigation
+    handleCourse(e, e.currentTarget.textContent, router);
+  };
 
   return (
     <div className="pb-14 bg-[#F5F8FA]">
@@ -118,18 +129,20 @@ const LandingPage: React.FC<ChildComponentProps> = ({
             <p className="font-bold mb-2">
               {dataRef.current.courseCategory} | Web development
             </p>
-            <div className="relative h-[338px]  w-[338px]">
+            <div className="relative h-[338px] w-[338px]">
               {imageSrc ? (
                 <Image
-                  src={(imageSrc as string) || "/placeholder.svg"}
-                  alt="Fetched Image"
-                  // layout="fill"
-                  width={400} // Explicit width
-                  height={400} // Explicit height
-                  className="object-cover"
+                  src={imageSrc}
+                  alt="Course Image"
+                  width={400}
+                  height={400}
+                  className="object-cover w-full h-full"
+                  style={{ objectFit: "cover" }}
                 />
               ) : (
-                <p>Loading image...</p>
+                <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                  <p className="text-gray-500">No image available</p>
+                </div>
               )}
             </div>
           </div>
@@ -139,13 +152,7 @@ const LandingPage: React.FC<ChildComponentProps> = ({
             {/* field */}
             <div className="">
               <button
-                onClick={(e) => {
-                  localStorage.setItem(
-                    "courseData",
-                    JSON.stringify(dataRef.current),
-                  );
-                  handleCourse(e, e.currentTarget.textContent, router);
-                }}
+                onClick={handleGetCourse}
                 className="hidden sm:block bg-[#fff] px-7 py-2 rounded text-[#333333] font-bold"
               >
                 Get course
