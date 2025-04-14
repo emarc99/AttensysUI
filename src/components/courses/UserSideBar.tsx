@@ -117,6 +117,7 @@ const UserSideBar = ({
   useEffect(() => {
     if (!address) return;
     controller.username()?.then((n) => setUsername(n));
+    console.log(address, "address");
   }, [address, controller]);
 
   useEffect(() => {
