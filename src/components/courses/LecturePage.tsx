@@ -79,6 +79,8 @@ const LecturePage = (props: any) => {
   const [isCertified, setIsCertified] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showOverlay, setShowOverlay] = useState(true);
+  const [selectedLectureName, setSelectedLectureName] = useState<string>("");
   const {
     fetchCIDContent,
     getError,
@@ -89,7 +91,7 @@ const LecturePage = (props: any) => {
   const [txnHash, setTxnHash] = useState<string>();
 
   // console.log("uploading:", isUploading);
-  // console.log("taken:", taken);
+  console.log("taken:", taken);
   // console.log("Certified:", isCertified);
 
   const handleDuration = (id: number, duration: number) => {
@@ -98,6 +100,14 @@ const LecturePage = (props: any) => {
       ...prevDurations,
       [id]: duration,
     }));
+  };
+
+  const formatDuration = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+
+    return `${hours}:${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
   // Get all courses with CourseType from contract
@@ -167,18 +177,8 @@ const LecturePage = (props: any) => {
     ]);
     setTxnHash(callCourseContract?.transaction_hash);
     setTaken(true);
+    setShowOverlay(false);
     setIsUploading(false);
-
-    // await account?.provider
-    //   .waitForTransaction(callCourseContract?.transaction_hash)
-    //   .then(() => {})
-    //   .catch((e: any) => {
-    //     console.error("Error: ", e);
-    //   })
-    //   .finally(() => {
-    //     setTaken(true);
-    //     setIsUploading(false);
-    //   });
   };
 
   const handleFinishCourseClaimCertfificate = async () => {
@@ -231,6 +231,7 @@ const LecturePage = (props: any) => {
 
   const handleVideoClick = (item: any) => {
     setSelectedVideo(`https://${item.video}`);
+    setSelectedLectureName(item.name);
   };
 
   // Find and set the course taken, in order to certify
@@ -299,7 +300,13 @@ const LecturePage = (props: any) => {
   // ⛳ Set the first video on page load
   useEffect(() => {
     if (props?.data.courseCurriculum?.length > 0) {
-      setSelectedVideo(`https://${props?.data.courseCurriculum[0].video}`);
+      setSelectedVideo(
+        `https://${props?.data.courseCurriculum[props?.data.courseCurriculum.length - 1].video}`,
+      );
+      setSelectedLectureName(
+        props?.data.courseCurriculum[props?.data.courseCurriculum.length - 1]
+          .name,
+      );
     }
   }, [props.data]);
 
@@ -323,34 +330,42 @@ const LecturePage = (props: any) => {
 
       {/* ReactPlayer & lecture*/}
       <div className="w-[100%] mx-auto flex justify-between items-center px-12 mt-5">
-        <div className="w-full xl:w-[67%] xl:h-[543px] h-auto aspect-video sm:aspect-[16/9] md:aspect-[16/8] lg:aspect-[16/7] rounded-xl overflow-hidden">
+        <div className="w-full xl:w-[67%] xl:h-[543px] h-auto aspect-video sm:aspect-[16/9] md:aspect-[16/8] lg:aspect-[16/7] rounded-xl overflow-hidden relative">
           {selectedVideo && (
-            <ReactPlayer
-              url={selectedVideo}
-              width="100%"
-              height="100%"
-              className="rounded-xl"
-              controls
-              playing
-            />
+            <>
+              <ReactPlayer
+                url={selectedVideo}
+                width="100%"
+                height="100%"
+                className="rounded-xl"
+                controls
+                playing={taken}
+              />
+              {!taken && (
+                <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center rounded-xl">
+                  <div className="text-white text-center p-6">
+                    <h2 className="text-2xl font-bold mb-4">Course Locked</h2>
+                    <p className="mb-6">Take this course to start learning</p>
+                    <button
+                      className={`bg-[#9b51e0] px-7 py-2 rounded text-[#fff] font-bold`}
+                      onClick={handleTakeCourse}
+                      disabled={isUploading}
+                    >
+                      {isUploading ? (
+                        <div className="flex items-center gap-2">
+                          <LoadingSpinner size="sm" colorVariant="white" />
+                          Taking Course...
+                        </div>
+                      ) : (
+                        "Take Course"
+                      )}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
-
-        {/* Next & Previous Buttons */}
-        {/* <div className="flex justify-between mt-4">
-          <button
-            onClick={handlePrevious}
-            className="px-4 py-2 bg-purple-600 text-white rounded"
-          >
-            Previous
-          </button>
-          <button
-            onClick={handleNext}
-            className="px-4 py-2 bg-purple-600 text-white rounded"
-          >
-            Next
-          </button>
-        </div> */}
 
         <div className="hidden xl:block w-[30%] h-[543px] space-y-4">
           <div className="flex space-x-2  justify-center bg-gradient-to-r from-[#5801a9] to-[#4a90e2] text-white items-center text-sm py-3 px-7 rounded-xl">
@@ -362,41 +377,48 @@ const LecturePage = (props: any) => {
           </h1>
 
           <div className="h-[440px] w-[100%] bg-[#FFFFFF] border-[1px] border-[#D9D9D9] rounded-xl overflow-scroll scrollbar-hide">
-            {props?.data?.courseCurriculum.map((item: any, i: any) => {
-              return (
-                <div
-                  key={i}
-                  className="flex w-full space-y-1 items-center p-3 space-x-8 justify-center"
-                  onClick={() => handleVideoClick(item)}
-                >
-                  <p className="font-bold text-[#5801a9]">{i + 1}</p>
-                  <div className="w-[150px] h-[120px] rounded-xl border-4 border ">
-                    <ReactPlayer
-                      light={true}
-                      url={`https://${item.video}`}
-                      controls
-                      playing={false}
-                      width="100%"
-                      height="100px"
-                      onDuration={(duration) => handleDuration(i, duration)}
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[14px] font-semibold leading-[30px] text-[#333333]">
-                      {item.name}
-                    </p>
-                    <h1 className="text-[8px] text-[#333333] leading-[14px] font-medium">
-                      Creator address
-                    </h1>
-                    <div className="rounded-lg bg-[#9B51E052] w-[60%] flex items-center justify-center">
-                      <p className="text-xs px-7 py-1">
-                        {durations[i]?.toFixed(2)}
+            {props?.data?.courseCurriculum
+              ?.slice()
+              .reverse()
+              .map((item: any, i: any) => {
+                return (
+                  <div
+                    key={i}
+                    className="flex w-full items-center p-4 hover:bg-gray-50 transition-colors cursor-pointer"
+                    onClick={() => handleVideoClick(item)}
+                  >
+                    <div className="w-8 flex-shrink-0">
+                      <p className="font-bold text-[#5801a9]">{i + 1}</p>
+                    </div>
+                    <div className="w-[150px] h-[120px] rounded-xl border-4 border flex-shrink-0">
+                      <ReactPlayer
+                        url={`https://${item.video}`}
+                        controls={false}
+                        playing={false}
+                        width="100%"
+                        height="100%"
+                        playIcon={<></>}
+                        onDuration={(duration) => handleDuration(i, duration)}
+                      />
+                    </div>
+                    <div className="flex-grow ml-6">
+                      <p className="text-[14px] font-semibold leading-[30px] text-[#333333]">
+                        {item.name}
                       </p>
+                      <h1 className="text-[8px] text-[#333333] leading-[14px] font-medium">
+                        Creator address
+                      </h1>
+                      <div className="rounded-lg bg-[#9B51E052] w-[60%] flex items-center justify-center">
+                        <p className="text-xs px-7 py-1">
+                          {durations[i]
+                            ? formatDuration(durations[i])
+                            : "0:00:00"}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
         </div>
       </div>
@@ -407,9 +429,13 @@ const LecturePage = (props: any) => {
         xl:w-[67%] space-y-3"
         >
           <div className="flex space-x-14 justify-between">
-            <h1 className="font-bold text-[24px] text-[#2D3A4B] leading-[31px]">
-              {props?.data?.courseName}
-            </h1>
+            <div className="space-y-2">
+              {selectedLectureName && (
+                <h1 className="text-[16px]font-bold text-[24px] text-[#2D3A4B] leading-[31px]">
+                  {selectedLectureName}
+                </h1>
+              )}
+            </div>
             <div className="hidden xl:flex sm:ml-5 space-x-2 items-center">
               <GrDiamond color="#2D3A4B" className="h-[20px] w-[20px]" />
               <p className="text-[14px] text-[#2D3A4B] leading-[22px] font-medium">
@@ -428,28 +454,22 @@ const LecturePage = (props: any) => {
                       Certificate of Completion
                     </p>
                   </div>
-                ) : (
+                ) : taken ? (
                   <button
                     className={`hidden sm:block bg-[#9b51e0] px-7 py-2 rounded text-[#fff] font-bold`}
-                    onClick={
-                      taken
-                        ? handleFinishCourseClaimCertfificate
-                        : handleTakeCourse
-                    }
+                    onClick={handleFinishCourseClaimCertfificate}
                     disabled={isUploading}
                   >
                     {isUploading ? (
                       <div className="flex items-center gap-2">
                         <LoadingSpinner size="sm" colorVariant="white" />
-                        {taken ? "Claiming Certificate..." : "Taking Course..."}
+                        Claiming Certificate...
                       </div>
                     ) : (
-                      <div className="flex items-center gap-2">
-                        {taken ? "Get Certificate" : "Take Course"}
-                      </div>
+                      "Get Certificate"
                     )}
                   </button>
-                )}
+                ) : null}
               </div>
               {txnHash && (
                 <div>
