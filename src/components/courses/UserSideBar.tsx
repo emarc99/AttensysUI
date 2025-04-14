@@ -22,7 +22,7 @@ import free_books from "@/assets/free_books.svg";
 import notifications from "@/assets/notifications.svg";
 import createIcon from "@/assets/create.svg";
 import ControllerConnector from "@cartridge/connector/controller";
-import { useConnect } from "@starknet-react/core";
+import { useAccount, useConnect } from "@starknet-react/core";
 
 interface UserSideBarProps {
   wallet: any;
@@ -68,6 +68,8 @@ const UserSideBar = ({
   ]);
   const { connect, connectors } = useConnect();
   const controller = connectors[0] as ControllerConnector;
+  const { address } = useAccount();
+  const [username, setUsername] = useState<string>();
 
   const [isFilterModalOpen, setFilterModalOpen] = useState(false); // State for filter modal
 
@@ -101,16 +103,21 @@ const UserSideBar = ({
     }
   };
 
-  const dummyName = useMemo(() => {
-    if (
-      wallet?.address &&
-      typeof wallet?.address === "string" &&
-      wallet?.address.trim() !== ""
-    ) {
-      return controller.username();
-    }
-    return "No User";
-  }, [wallet?.address]);
+  // const dummyName = useMemo(() => {
+  //   if (
+  //     wallet?.address &&
+  //     typeof wallet?.address === "string" &&
+  //     wallet?.address.trim() !== ""
+  //   ) {
+  //     return controller.username();
+  //   }
+  //   return "No User";
+  // }, [wallet?.address]);
+
+  useEffect(() => {
+    if (!address) return;
+    controller.username()?.then((n) => setUsername(n));
+  }, [address, controller]);
 
   useEffect(() => {
     if (wallet?.address != undefined) {
@@ -160,13 +167,13 @@ const UserSideBar = ({
                 </div>
                 <div className="xl:w-[200px]">
                   <p className="text-[13px] text-[#2D3A4B] font-bold leading-[22px]">
-                    {dummyName}
+                    {username}
                   </p>
                   <p className="text-[#A01B9B] text-[12px] font-normal leading-[24px]">
-                    {!!wallet?.address &&
-                    typeof wallet.address === "string" &&
-                    wallet.address.trim() !== ""
-                      ? shortHex(wallet.address)
+                    {!!address &&
+                    typeof address === "string" &&
+                    address.trim() !== ""
+                      ? shortHex(address)
                       : "Login"}
                   </p>
                 </div>
