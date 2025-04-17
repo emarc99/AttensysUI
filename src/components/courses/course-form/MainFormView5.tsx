@@ -88,10 +88,15 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
 
   const router = useRouter();
   const handleSwitch = (
-    event: MouseEvent | React.SyntheticEvent<MouseEvent | KeyboardEvent, Event>,
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.MouseEvent<Element, MouseEvent>,
+    value: boolean,
   ) => {
-    setIsActivated(!isActivated);
-    handleCoursePublishWithCert(event);
+    setIsActivated(value);
+    if (event instanceof MouseEvent) {
+      handleCoursePublishWithCert(event);
+    }
   };
 
   const [receiptData, setReceiptData] = useState<any>(null);
@@ -357,18 +362,60 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                 </div>
               </div>
 
-              {/* lectures in course */}
-              <Lectures
-                lectures={lectures}
-                courseData={courseData}
-                learningObj={courseData.learningObjectives}
-                isActivated={isActivated}
-                handleSwitch={(checked: boolean) =>
-                  handleSwitch(checked as any)
-                }
-              />
-              {/* course desc & student req */}
+              <div className="px-6 lg:mx-48 sm:mt-4 xl:mt-32 mb-10">
+                {/* lectures in course */}
 
+                <Lectures
+                  lectures={lectures}
+                  courseData={courseData}
+                  learningObj={courseData.learningObjectives}
+                  isActivated={isActivated}
+                  handleSwitch={(checked: boolean) => {
+                    const mockEvent = new MouseEvent(
+                      "click",
+                    ) as unknown as React.MouseEvent<Element, MouseEvent>;
+                    handleSwitch(mockEvent, checked);
+                  }}
+                />
+
+                <div>
+                  <div className="flex flex-col lg:w-[60%] mt-5">
+                    <h4 className="font-semibold text-[18px] leading-[31px] text-[#333333] mb-4">
+                      Do you want to issue certification for this course?
+                    </h4>
+
+                    <div className="flex items-center space-x-8">
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="certification"
+                          checked={isActivated}
+                          onChange={(e) => handleSwitch(e, true)}
+                          className="w-4 h-4 text-[#9B51E0] border-2 border-[#9B51E0] focus:ring-[#9B51E0]"
+                        />
+                        <span className="text-[#333333] text-[14px] font-normal">
+                          Yes
+                        </span>
+                      </label>
+
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="certification"
+                          checked={!isActivated}
+                          onChange={(e) => handleSwitch(e, false)}
+                          className="w-4 h-4 text-[#9B51E0] border-2 border-[#9B51E0] focus:ring-[#9B51E0]"
+                        />
+                        <span className="text-[#333333] text-[14px] font-normal">
+                          No
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* course desc & student req */}
               <div className="">
                 <div className="mt-4 sm:mt-8  sm:mb-12">
                   <button
