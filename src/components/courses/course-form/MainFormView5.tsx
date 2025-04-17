@@ -88,10 +88,15 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
 
   const router = useRouter();
   const handleSwitch = (
-    event: MouseEvent | React.SyntheticEvent<MouseEvent | KeyboardEvent, Event>,
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.MouseEvent<Element, MouseEvent>,
+    value: boolean,
   ) => {
-    setIsActivated(!isActivated);
-    handleCoursePublishWithCert(event);
+    setIsActivated(value);
+    if (event instanceof MouseEvent) {
+      handleCoursePublishWithCert(event);
+    }
   };
 
   const [receiptData, setReceiptData] = useState<any>(null);
@@ -365,9 +370,12 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                   courseData={courseData}
                   learningObj={courseData.learningObjectives}
                   isActivated={isActivated}
-                  handleSwitch={(checked: boolean) =>
-                    handleSwitch(checked as any)
-                  }
+                  handleSwitch={(checked: boolean) => {
+                    const mockEvent = new MouseEvent(
+                      "click",
+                    ) as unknown as React.MouseEvent<Element, MouseEvent>;
+                    handleSwitch(mockEvent, checked);
+                  }}
                 />
 
                 <div>
@@ -382,7 +390,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                           type="radio"
                           name="certification"
                           checked={isActivated}
-                          onChange={() => handleSwitch(true)}
+                          onChange={(e) => handleSwitch(e, true)}
                           className="w-4 h-4 text-[#9B51E0] border-2 border-[#9B51E0] focus:ring-[#9B51E0]"
                         />
                         <span className="text-[#333333] text-[14px] font-normal">
@@ -395,7 +403,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                           type="radio"
                           name="certification"
                           checked={!isActivated}
-                          onChange={() => handleSwitch(false)}
+                          onChange={(e) => handleSwitch(e, false)}
                           className="w-4 h-4 text-[#9B51E0] border-2 border-[#9B51E0] focus:ring-[#9B51E0]"
                         />
                         <span className="text-[#333333] text-[14px] font-normal">
