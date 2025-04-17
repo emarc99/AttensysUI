@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
@@ -49,11 +49,41 @@ const responsive = {
 const CarouselComp: React.FC<ChildComponentProps> = ({ wallet }) => {
   const [courses, setCourses] = useState<CourseType[]>([]);
   const [courseData, setCourseData] = useState<CourseType[]>([]);
+  const [randomIndices, setRandomIndices] = useState<number[]>([]);
   const {
     fetchCIDContent,
     getError,
     isLoading: isCIDFetchLoading,
   } = useFetchCID();
+  const carouselRef = useRef<Carousel>(null);
+
+  // Function to generate random indices with no consecutive duplicates
+  const generateRandomIndices = (arrayLength: number, count: number) => {
+    if (arrayLength <= 1) return [0]; // Handle edge case
+
+    const indices: number[] = [];
+    let lastIndex = -1;
+
+    while (indices.length < Math.min(count, arrayLength)) {
+      let randomIndex;
+      do {
+        randomIndex = Math.floor(Math.random() * arrayLength);
+      } while (randomIndex === lastIndex);
+
+      indices.push(randomIndex);
+      lastIndex = randomIndex;
+    }
+
+    return indices;
+  };
+
+  // Update random indices when courseData changes
+  useEffect(() => {
+    if (courseData.length > 0) {
+      setRandomIndices(generateRandomIndices(courseData.length, 5)); // Show 5 random courses
+    }
+  }, [courseData]);
+
   const getAllCourses = async () => {
     const res: CourseType[] = await getAllCoursesInfo();
     setCourses(res);
@@ -122,9 +152,9 @@ const CarouselComp: React.FC<ChildComponentProps> = ({ wallet }) => {
         autoPlay={true}
         autoPlaySpeed={3000}
       >
-        {courseData.map((courseSent, index) => (
+        {randomIndices.map((index) => (
           <div key={index}>
-            <CardWithLink data={courseSent} wallet={wallet} />
+            <CardWithLink data={courseData[index]} wallet={wallet} />
           </div>
         ))}
       </Carousel>
@@ -140,7 +170,7 @@ const CarouselComp: React.FC<ChildComponentProps> = ({ wallet }) => {
         customTransition="all .5"
         transitionDuration={500}
         containerClass="carousel-container"
-        removeArrowOnDeviceType={["tablet", "mobile"]}
+        removeArrowOnDeviceType={[]}
         dotListClass="custom-dot-list-style"
         itemClass="carousel-item-padding-40-px"
         arrows={true}
@@ -148,9 +178,9 @@ const CarouselComp: React.FC<ChildComponentProps> = ({ wallet }) => {
         focusOnSelect={false}
         minimumTouchDrag={80}
       >
-        {courseData.map((courseSent, index) => (
+        {randomIndices.map((index) => (
           <div key={index}>
-            <CardWithLink data={courseSent} wallet={wallet} />
+            <CardWithLink data={courseData[index]} wallet={wallet} />
           </div>
         ))}
       </Carousel>

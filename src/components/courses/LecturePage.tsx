@@ -13,7 +13,7 @@ import { GrDiamond } from "@react-icons/all-files/gr/GrDiamond";
 import { HiBadgeCheck } from "@react-icons/all-files/hi/HiBadgeCheck";
 import { IoIosStar } from "@react-icons/all-files/io/IoIosStar";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { LuBadgeCheck } from "react-icons/lu";
 import ReactPlayer from "react-player/lazy";
 import { Contract } from "starknet";
@@ -83,7 +83,7 @@ const LecturePage = (props: any) => {
   const [courseData, setCourseData] = useState<CourseType[]>([]);
   const [durations, setDurations] = useState<{ [key: number]: number }>({});
   const [courseId, setCourseId] = useState<number>();
-  const [taken, setTaken] = useState(false);
+  const [isTakingCourse, setIsTakingCourse] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isCertified, setIsCertified] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
@@ -98,9 +98,14 @@ const LecturePage = (props: any) => {
   const { account, address } = useAccount();
   const explorer = useExplorer();
   const [txnHash, setTxnHash] = useState<string>();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [showSeeMore, setShowSeeMore] = useState(false);
+  const [isTargetExpanded, setIsTargetExpanded] = useState(false);
+  const [showTargetSeeMore, setShowTargetSeeMore] = useState(false);
+  const contentRef = useRef<HTMLParagraphElement>(null);
 
   // console.log("uploading:", isUploading);
-  console.log("taken:", taken);
+  console.log("taken:", isTakingCourse);
   // console.log("Certified:", isCertified);
 
   const handleDuration = (id: number, duration: number) => {
@@ -155,8 +160,82 @@ const LecturePage = (props: any) => {
     });
   };
 
+  // Find and set the course taken, in order to certify
+  const find = async () => {
+    try {
+      if (!address) {
+        console.log("No address available");
+        // Check localStorage as fallback
+        const storedStatus = localStorage.getItem(`course_${courseId}_taken`);
+        if (storedStatus === "true") {
+          setShowOverlay(false);
+          setIsTakingCourse(true);
+        } else {
+          setShowOverlay(true);
+          setIsTakingCourse(false);
+        }
+        return;
+      }
+
+      const courseContract = new Contract(
+        attensysCourseAbi,
+        attensysCourseAddress,
+        provider,
+      );
+
+      const taken_courses = await courseContract?.is_user_taking_course(
+        address,
+        Number(courseId),
+      );
+      console.log("taken_courses result:", taken_courses);
+
+      if (taken_courses) {
+        localStorage.setItem(`course_${courseId}_taken`, "true");
+        setIsTakingCourse(true);
+        setShowOverlay(false);
+      } else {
+        // Only update state if we're sure the user hasn't taken the course
+        const storedStatus = localStorage.getItem(`course_${courseId}_taken`);
+        if (storedStatus !== "true") {
+          setIsTakingCourse(false);
+          setShowOverlay(true);
+        }
+      }
+
+      const certfified_courses =
+        await courseContract?.is_user_certified_for_course(
+          address,
+          Number(courseId),
+        );
+
+      console.log("certfified_courses result:", certfified_courses);
+
+      if (certfified_courses) {
+        setIsCertified(true);
+      } else {
+        setIsCertified(false);
+      }
+    } catch (err) {
+      console.error("Error in find:", err);
+      // Check localStorage as fallback
+      const storedStatus = localStorage.getItem(`course_${courseId}_taken`);
+      if (storedStatus === "true") {
+        setShowOverlay(false);
+        setIsTakingCourse(true);
+      } else {
+        setShowOverlay(true);
+        setIsTakingCourse(false);
+      }
+    }
+  };
+
   // handle take a course after the course identifier is known
   const handleTakeCourse = async () => {
+    if (!address) {
+      console.log("No address available");
+      return;
+    }
+
     setIsUploading(true);
 
     const courseContract = new Contract(
@@ -177,12 +256,18 @@ const LecturePage = (props: any) => {
       },
     ]);
     setTxnHash(callCourseContract?.transaction_hash);
-    setTaken(true);
+    localStorage.setItem(`course_${courseId}_taken`, "true");
+    setIsTakingCourse(true);
     setShowOverlay(false);
     setIsUploading(false);
   };
 
   const handleFinishCourseClaimCertfificate = async () => {
+    if (!address) {
+      console.log("No address available");
+      return;
+    }
+
     setIsUploading(true);
 
     const courseContract = new Contract(
@@ -205,17 +290,6 @@ const LecturePage = (props: any) => {
     setTxnHash(callCourseContract?.transaction_hash);
     setIsCertified(true);
     setIsUploading(false);
-
-    // await props.wallet?.account?.provider
-    //   .waitForTransaction(callCourseContract.transaction_hash)
-    //   .then(() => {})
-    //   .catch((e: any) => {
-    //     console.error("Error: ", e);
-    //   })
-    //   .finally(() => {
-    //     setIsCertified(true);
-    //     setIsUploading(false);
-    //   });
   };
 
   const handleNext = () => {
@@ -233,41 +307,6 @@ const LecturePage = (props: any) => {
   const handleVideoClick = (item: any) => {
     setSelectedVideo(`https://${item.video}`);
     setSelectedLectureName(item.name);
-  };
-
-  // Find and set the course taken, in order to certify
-  const find = async () => {
-    try {
-      const courseContract = new Contract(
-        attensysCourseAbi,
-        attensysCourseAddress,
-        provider,
-      );
-
-      const taken_courses = await courseContract?.is_user_taking_course(
-        address,
-        Number(courseId),
-      );
-      console.log("taken_courses result:", taken_courses);
-
-      if (taken_courses) {
-        setTaken(true);
-      }
-
-      const certfified_courses =
-        await courseContract?.is_user_certified_for_course(
-          address,
-          Number(courseId),
-        );
-
-      console.log("certfified_courses result:", certfified_courses);
-
-      if (certfified_courses) {
-        setIsCertified(true);
-      }
-    } catch (err) {
-      console.error("Error in find:", err);
-    }
   };
 
   useEffect(() => {
@@ -294,9 +333,29 @@ const LecturePage = (props: any) => {
   }, [courses, courseData, props?.data?.courseImage, courseId]);
   useEffect(() => {
     if (!Number.isNaN(courseId) && courseId !== undefined) {
+      // Check localStorage first
+      const storedStatus = localStorage.getItem(`course_${courseId}_taken`);
+      if (storedStatus === "true") {
+        setShowOverlay(false);
+        setIsTakingCourse(true);
+      } else {
+        setShowOverlay(true);
+        setIsTakingCourse(false);
+      }
+
+      // Then check blockchain if we have an address
+      if (address) {
+        find();
+      }
+    }
+  }, [courseId, address]);
+
+  // Check blockchain state on component mount
+  useEffect(() => {
+    if (!Number.isNaN(courseId) && courseId !== undefined) {
       find();
     }
-  }, [courseId]);
+  }, []);
 
   // ⛳ Set the first video on page load
   useEffect(() => {
@@ -311,10 +370,33 @@ const LecturePage = (props: any) => {
     }
   }, [props.data]);
 
+  useEffect(() => {
+    const checkContentHeight = () => {
+      if (props?.data?.courseDescription?.length > 200) {
+        setShowSeeMore(true);
+      } else {
+        setShowSeeMore(false);
+      }
+
+      if (props?.data?.targetAudienceDesc?.length > 200) {
+        setShowTargetSeeMore(true);
+      } else {
+        setShowTargetSeeMore(false);
+      }
+    };
+
+    checkContentHeight();
+    window.addEventListener("resize", checkContentHeight);
+
+    return () => {
+      window.removeEventListener("resize", checkContentHeight);
+    };
+  }, [props?.data?.courseDescription, props?.data?.targetAudienceDesc]);
+
   return (
     <div className="pt-6  pb-36 w-full">
       {/* Video and Title */}
-      <div className="flex flex-none w-full text-sm space-x-3 items-center px-12">
+      <div className="flex flex-none w-full text-sm space-x-3 items-center px-6 sm:px-12">
         <div className="flex flex-none space-x-2 items-center">
           <Image
             src={graduate}
@@ -330,8 +412,8 @@ const LecturePage = (props: any) => {
       </div>
 
       {/* ReactPlayer & lecture*/}
-      <div className="w-[100%] mx-auto flex justify-between items-center px-12 mt-5">
-        <div className="w-full xl:w-[67%] xl:h-[543px] h-auto aspect-video sm:aspect-[16/9] md:aspect-[16/8] lg:aspect-[16/7] rounded-xl overflow-hidden relative">
+      <div className="w-[100%]  mx-auto flex justify-between items-center px-6 sm:px-12 mt-5">
+        <div className="w-full xl:w-[67%] h-[33vh] xl:h-[543px] h-auto aspect-video sm:aspect-[16/9] md:aspect-[16/8] lg:aspect-[16/7] rounded-xl overflow-hidden relative">
           {selectedVideo && (
             <>
               <ReactPlayer
@@ -340,9 +422,9 @@ const LecturePage = (props: any) => {
                 height="100%"
                 className="rounded-xl"
                 controls
-                playing={taken}
+                playing={!showOverlay}
               />
-              {!taken && (
+              {showOverlay && !isTakingCourse && (
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center rounded-xl">
                   <div className="text-white text-center p-6">
                     <h2 className="text-2xl font-bold mb-4">Course Locked</h2>
@@ -424,7 +506,7 @@ const LecturePage = (props: any) => {
         </div>
       </div>
 
-      <div className="w-[100%] mx-auto flex justify-between items-center px-12 mt-5">
+      <div className="w-[100%] mx-auto flex justify-between items-center sm:px-12 px-6 mt-5">
         <div
           className="w-full 
         xl:w-[67%] space-y-3"
@@ -455,7 +537,7 @@ const LecturePage = (props: any) => {
                       Certificate of Completion
                     </p>
                   </div>
-                ) : taken ? (
+                ) : isTakingCourse ? (
                   <button
                     className={`hidden sm:block bg-[#9b51e0] px-7 py-2 rounded text-[#fff] font-bold`}
                     onClick={handleFinishCourseClaimCertfificate}
@@ -494,6 +576,34 @@ const LecturePage = (props: any) => {
               </span>
             </p>
           </div>
+          {/* Mobile Get Certificate Button */}
+          <div className="xl:hidden flex space-x-2 items-center">
+            {isCertified ? (
+              <div className="flex space-x-2 items-center">
+                <div>
+                  <LuBadgeCheck className="h-[20px] w-[20px] text-[#5801A9]" />
+                </div>
+                <p className="text-[14px] text-[#2D3A4B] leading-[22px] font-medium">
+                  Certificate of Completion
+                </p>
+              </div>
+            ) : isTakingCourse ? (
+              <button
+                className={`bg-[#9b51e0] px-7 py-2 rounded text-[#fff] font-bold`}
+                onClick={handleFinishCourseClaimCertfificate}
+                disabled={isUploading}
+              >
+                {isUploading ? (
+                  <div className="flex items-center gap-2">
+                    <LoadingSpinner size="sm" colorVariant="white" />
+                    Claiming Certificate...
+                  </div>
+                ) : (
+                  "Get Certificate"
+                )}
+              </button>
+            ) : null}
+          </div>
         </div>
 
         <div className="bg-[url('/hero_asset.png')] text-white p-10 rounded-xl w-[30%] hidden xl:flex items-center justify-center h-[85px]">
@@ -508,9 +618,30 @@ const LecturePage = (props: any) => {
               <p className="font-bold py-2 text-[14px] text-[#333333] leading-[22px]">
                 About this course
               </p>
-              <p className="text-[14px] text-[#333333] leading-[22px] font-light">
-                {props?.data?.courseDescription}
-              </p>
+              <div className="relative">
+                <p className="text-[14px] text-[#333333] leading-[22px] font-light">
+                  {isExpanded
+                    ? props?.data?.courseDescription
+                    : props?.data?.courseDescription?.slice(0, 200) +
+                      (showSeeMore ? "..." : "")}
+                  {showSeeMore && !isExpanded && (
+                    <span
+                      className="text-blue-600 cursor-pointer hover:underline ml-1"
+                      onClick={() => setIsExpanded(true)}
+                    >
+                      see more
+                    </span>
+                  )}
+                  {showSeeMore && isExpanded && (
+                    <span
+                      className="text-blue-600 cursor-pointer hover:underline ml-1"
+                      onClick={() => setIsExpanded(false)}
+                    >
+                      see less
+                    </span>
+                  )}
+                </p>
+              </div>
             </div>
             <div className="py-4">
               <p className="font-bold py-2 text-[14px] text-[#333333] leading-[22px]">
@@ -518,56 +649,84 @@ const LecturePage = (props: any) => {
                 Student Requirements
               </p>
               <ul className="text-[14px] text-[#333333] leading-[22px] font-light list-disc">
-                {/* <li>A computer with internet access</li>
-                <li>Basic computer skills</li>
-                <li>Willingness to learn and experiment</li> */}
                 {props?.data?.studentRequirements}
               </ul>
             </div>
             <div className="py-6">
               <p className="font-bold py-2 text-[14px] text-[#333333] leading-[22px]">
-                {" "}
                 Target Audience
               </p>
-
               <div className="text-[#333333] text-[14px] font-light leading-[22px]">
-                <p>{props?.data?.targetAudience}</p>
-
-                <p>{props?.data?.targetAudienceDesc}</p>
+                <p>
+                  {isTargetExpanded
+                    ? props?.data?.targetAudienceDesc
+                    : props?.data?.targetAudienceDesc?.slice(0, 200) +
+                      (showTargetSeeMore ? "..." : "")}
+                  {showTargetSeeMore && !isTargetExpanded && (
+                    <span
+                      className="text-blue-600 cursor-pointer hover:underline ml-1"
+                      onClick={() => setIsTargetExpanded(true)}
+                    >
+                      see more
+                    </span>
+                  )}
+                  {showTargetSeeMore && isTargetExpanded && (
+                    <span
+                      className="text-blue-600 cursor-pointer hover:underline ml-1"
+                      onClick={() => setIsTargetExpanded(false)}
+                    >
+                      see less
+                    </span>
+                  )}
+                </p>
               </div>
             </div>
           </div>
 
           {/* Lectures */}
           <div className="flex xl:hidden flex-col">
-            <p className="mt-8 font-semibold">Lectures(4)</p>
+            <p className="mt-8 font-semibold">
+              Lectures({props?.data?.courseCurriculum.length})
+            </p>
             <div className=" w-[100%] bg-[#FFFFFF] border-[1px] border-[#D9D9D9] rounded-xl overflow-scroll scrollbar-hide">
-              {lectures.map((item, i) => (
-                <div
-                  key={i}
-                  className="flex w-full space-y-1 items-center p-3 space-x-6 justify-center"
-                >
-                  <p className="font-bold text-[#5801a9]">{i + 1}</p>
-                  <div className="w-[131px] h-[84px] rounded-xl">
-                    <Image
-                      src={item.img}
-                      alt={item.title}
-                      className="w-full h-full object-cover rounded-xl"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[14px] font-semibold leading-[30px] text-[#333333]">
-                      {item.title}
-                    </p>
-                    <h1 className="text-[8px] text-[#333333] leading-[14px] font-medium">
-                      Creator address
-                    </h1>
-                    <div className="rounded-lg bg-[#9B51E052] w-[40%] flex items-center justify-center">
-                      <p className="text-xs px-4 py-1">{item.timing}: 01</p>
+              {props?.data?.courseCurriculum
+                ?.slice()
+                .reverse()
+                .map((item: any, i: any) => (
+                  <div
+                    key={i}
+                    className="flex w-full items-center p-4 hover:bg-gray-50 transition-colors cursor-pointer"
+                    onClick={() => handleVideoClick(item)}
+                  >
+                    <div className="w-8 flex-shrink-0">
+                      <p className="font-bold text-[#5801a9]">{i + 1}</p>
+                    </div>
+                    <div className="w-[150px] h-[120px] rounded-xl border-4 border flex-shrink-0">
+                      <ReactPlayer
+                        url={`https://${item.video}`}
+                        controls={false}
+                        playing={false}
+                        width="100%"
+                        height="100%"
+                        playIcon={<></>}
+                        onDuration={(duration) => handleDuration(i, duration)}
+                      />
+                    </div>
+                    <div className="flex-grow ml-6">
+                      <p className="text-[14px] font-semibold leading-[30px] text-[#333333]">
+                        {item.name}
+                      </p>
+
+                      <div className="rounded-lg bg-[#9B51E052] w-[60%] flex items-center justify-center">
+                        <p className="text-xs px-7 py-1">
+                          {durations[i]
+                            ? formatDuration(durations[i])
+                            : "0:00:00"}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
 
@@ -595,7 +754,7 @@ const LecturePage = (props: any) => {
                   <h1 className="text-[14px] text-[#333333] leading-[16px] font-medium">
                     Tap to rate:
                   </h1>
-                  <StarRating totalStars={5} starnumber={0} />
+                  <StarRating totalStars={5} starnumber={4} />
                 </div>
                 <div className="h-full w-[30%] flex items-center space-x-3">
                   <StarRating totalStars={5} starnumber={4} />
@@ -678,6 +837,23 @@ const LecturePage = (props: any) => {
             </div>
           </div>
 
+          {/* Courses you might like - Mobile */}
+          <div className="block xl:hidden mt-0 sm:mt-8">
+            <h1 className="text-[16px] font-semibold mb-4">
+              Courses you might like
+            </h1>
+            <div className="space-y-4 overflow-x-auto">
+              {courseData
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 2)
+                .map((item: any, id: any) => (
+                  <div key={id}>
+                    <CardWithLink wallet={props.wallet} data={item} />
+                  </div>
+                ))}
+            </div>
+          </div>
+
           <div className="block xl:hidden">
             <div className="border-b-[1px] border-b-[#949494] justify-center xl:mx-48 flex space-x-2 items-center h-[50px]">
               <IoIosStar color="#F6A61C" className="h-[20px] w-[20px]" />
@@ -687,7 +863,7 @@ const LecturePage = (props: any) => {
             </div>
 
             {/* comments */}
-            <div className="block xl:hidden py-12 mx-12 sm:mx-48 items-center content-center justify-around text-sm">
+            <div className="block xl:hidden py-12 sm:mx-48 items-center content-center justify-around text-sm">
               <div className="w-[100%] xl:w-[30%]">
                 <div className="flex items-center">
                   <p className="p-5 bg-[#9b51e01a] font-bold rounded-full">
@@ -768,6 +944,8 @@ const LecturePage = (props: any) => {
             </div>
           </div>
         </div>
+
+        {/* Courses you might like - Desktop */}
         <div className="hidden xl:block w-[30%] h-[1020px]">
           <h1>Courses you might like</h1>
           <div className="space-y-10 overflow-x-auto max-h-[1020px] overflow-y-auto">
@@ -776,9 +954,6 @@ const LecturePage = (props: any) => {
                 <CardWithLink wallet={props.wallet} data={item} />
               </div>
             ))}
-            {/* <CardWithLink /> */}
-            {/* <CardWithLink />
-            <CardWithLink /> */}
           </div>
         </div>
       </div>

@@ -24,28 +24,6 @@ interface ChildComponentProps {
 const Explore = ({ wallet, courseData }: ChildComponentProps) => {
   const router = useRouter();
 
-  const responsive = {
-    // superLargeDesktop: {
-    //   // the naming can be any, depends on you.
-    //   breakpoint: { max: 4000, min: 3000 },
-    //   items: 5,
-    // },
-    // desktop: {
-    //   breakpoint: { max: 3000, min: 1024 },
-    //   items: 3,
-    // },
-    // tablet: {
-    //   breakpoint: { max: 1024, min: 820 },
-    //   items: 2,
-    // },
-    // mobile: {
-    //   breakpoint: { max: 820, min: 0 },
-    //   items: 1,
-    // },
-  };
-
-  console.log(courseData[courseData.length - 1]?.data.courseCurriculum);
-
   return (
     <div>
       {/* Hero component */}
@@ -88,7 +66,7 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
             <p className="font-light text-base lg:text-xl text-[#2D3A4B]">
               Because you viewed{" "}
               <span className="text-[#5801A9] font-bold underline">
-                “Introduction to Web Dev Starknet”
+                "Introduction to Web Dev Starknet"
               </span>
             </p>
           </div>
@@ -98,7 +76,7 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
         </div>
 
         {/* below */}
-        <div className="sm:px-6 lg:mx-auto max-w-screen-2xl flex flex-col w-full lg:flex-row gap-6 justify-between my-6 sm:my-24 lg:h-[307px]">
+        <div className="sm:px-6 lg:mx-auto max-w-screen-2xl flex flex-col w-full lg:flex-row gap-6 justify-between my-6 sm:my-24">
           <div className="my-4 lg:hidden">
             {/* wording */}
             <h3 className="text-[25px] font-bold text-[#2D3A4B]">
@@ -107,12 +85,12 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
             <p className="font-light text-base lg:text-xl text-[#2D3A4B]">
               Because you viewed{" "}
               <span className="text-[#5801A9] font-bold underline">
-                “Introduction to Web Dev Starknet”
+                "Introduction to Web Dev Starknet"
               </span>
             </p>
           </div>
           {/* left */}
-          <div className="flex flex-col md:flex-row hidden gap-x-5 space-x-10 sm:flex sm:mx-0 justify-top xl:w-[70%] max-w-full">
+          <div className="flex flex-col md:flex-row gap-4 sm:gap-5 sm:mx-0 xl:w-[70%] max-w-full">
             <div className="h-full sm:w-full rounded-xl">
               <Image
                 src={`https://ipfs.io/ipfs/${courseData[courseData.length - 1]?.data?.courseImage}`}
@@ -151,7 +129,7 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
                     );
                     handleCourse(e, e.currentTarget.textContent, router);
                   }}
-                  className="bg-[#9B51E0] ml-3 lg:hidden hover:bg-gray-500 text-white text-[14px] rounded-md font-bold py-[15px] px-[10px] cursor-pointer"
+                  className="bg-[#5801a9] ml-3 lg:hidden hover:bg-gray-500 text-white gap-2 text-[14px] rounded-md font-bold p-2 cursor-pointer"
                 >
                   Get this course
                 </button>
@@ -177,7 +155,9 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
                   <div className="">
                     <p className="text-[11px] text-[#2D3A4B] leading-[18px] font-medium">
                       Created by:{" "}
-                      <span className="underline inline">Akinbola Kehinde</span>
+                      <span className="underline inline">
+                        {courseData[courseData.length - 1]?.data.courseCreator}
+                      </span>
                     </p>
                   </div>
                   <span className="flex gap-2 items-center !ml-0 ">
@@ -196,7 +176,8 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
                   <span className="flex gap-2 items-center">
                     <GrDiamond color="#2D3A4B" className="h-[11px] w-[11px]" />
                     <p className="text-[11px] inline text-[#2D3A4B] leading-[18px] font-medium">
-                      Difficulty level: Elementary
+                      Difficulty level:{" "}
+                      {courseData[courseData.length - 1]?.data.difficultyLevel}
                     </p>
                   </span>
                   <span className="flex items-center gap-2">
@@ -213,7 +194,14 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
           {/* right */}
           <div className="hidden xl:block w-[32%] h-[307px] overflow-y-scroll ">
             <div className="flex justify-between border-b-2 pb-3">
-              <h4>Lectures (4)</h4>
+              <h4>
+                Lectures (
+                {
+                  courseData[courseData.length - 1]?.data.courseCurriculum
+                    .length
+                }
+                )
+              </h4>
               <IoMdArrowDropdown />
             </div>
 
@@ -245,7 +233,7 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
                     <div className="w-[230px]">
                       <h6 className="font-bold">
                         {item.name}
-                        <span className="text-[#5801A9]">({item.time})</span>
+                        {/* <span className="text-[#5801A9]">({item.time})</span> */}
                       </h6>
                       <p className="font-light mt-2">{item.description}</p>
                     </div>
@@ -269,14 +257,14 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
         <div className="mx-6 lg:mx-auto max-w-screen-2xl">
           <CarouselComp wallet={wallet} />
 
-          <div className="mt-24 mx-auto max-w-screen-2xl">
+          <div className="mt-8 sm:mt-24 mx-auto max-w-screen-2xl">
             <div className="my-4 ">
               {/* wording */}
               <h3 className="text-2xl font-bold">You will love this</h3>
               <p className="font-light text-base lg:text-xl text-[#2D3A4B]">
                 Because you viewed{" "}
                 <span className="text-[#5801A9] font-bold">
-                  “Introduction to Web Dev Starknet”
+                  "Introduction to Web Dev Starknet"
                 </span>
               </p>
             </div>
