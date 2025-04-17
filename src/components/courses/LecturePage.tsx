@@ -530,7 +530,7 @@ const LecturePage = (props: any) => {
                 Target Audience
               </p>
 
-              <div>
+              <div className="text-[#333333] text-[14px] font-light leading-[22px]">
                 <p>{props?.data?.targetAudience}</p>
 
                 <p>{props?.data?.targetAudienceDesc}</p>

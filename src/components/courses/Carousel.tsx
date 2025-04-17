@@ -5,8 +5,6 @@ import "react-multi-carousel/lib/styles.css";
 import { provider } from "@/constants";
 import { useFetchCID } from "@/hooks/useFetchCID";
 import { getAllCoursesInfo } from "@/utils/helpers";
-import { useRouter } from "next/navigation";
-import "react-multi-carousel/lib/styles.css";
 import { CardWithLink } from "./Cards";
 
 interface ChildComponentProps {
@@ -39,17 +37,16 @@ const responsive = {
     items: 3,
   },
   tablet: {
-    breakpoint: { max: 1024, min: 820 },
+    breakpoint: { max: 1024, min: 464 },
     items: 2,
   },
   mobile: {
-    breakpoint: { max: 820, min: 0 },
+    breakpoint: { max: 464, min: 0 },
     items: 1,
   },
 };
 
 const CarouselComp: React.FC<ChildComponentProps> = ({ wallet }) => {
-  const router = useRouter();
   const [courses, setCourses] = useState<CourseType[]>([]);
   const [courseData, setCourseData] = useState<CourseType[]>([]);
   const {
@@ -109,7 +106,7 @@ const CarouselComp: React.FC<ChildComponentProps> = ({ wallet }) => {
   return (
     <div className="w-full h-full mx-auto lg:flex flex-col justify-center items-center">
       <Carousel
-        className="course-carousel"
+        className="course-carousel hidden sm:block"
         responsive={responsive}
         centerMode={true}
         containerClass="container"
@@ -124,6 +121,32 @@ const CarouselComp: React.FC<ChildComponentProps> = ({ wallet }) => {
         minimumTouchDrag={80}
         autoPlay={true}
         autoPlaySpeed={3000}
+      >
+        {courseData.map((courseSent, index) => (
+          <div key={index}>
+            <CardWithLink data={courseSent} wallet={wallet} />
+          </div>
+        ))}
+      </Carousel>
+
+      <Carousel
+        className="block sm:hidden"
+        responsive={responsive}
+        ssr={true}
+        infinite={true}
+        autoPlay={true}
+        autoPlaySpeed={3000}
+        keyBoardControl={true}
+        customTransition="all .5"
+        transitionDuration={500}
+        containerClass="carousel-container"
+        removeArrowOnDeviceType={["tablet", "mobile"]}
+        dotListClass="custom-dot-list-style"
+        itemClass="carousel-item-padding-40-px"
+        arrows={true}
+        draggable
+        focusOnSelect={false}
+        minimumTouchDrag={80}
       >
         {courseData.map((courseSent, index) => (
           <div key={index}>

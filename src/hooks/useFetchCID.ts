@@ -72,7 +72,7 @@ export const useFetchCID = () => {
       updateStatus(CID, { loading: true, error: null });
       const cachedResponse = cache.get(CID);
       if (cachedResponse) {
-        console.log("Serving from cache", cachedResponse);
+        // console.log("Serving from cache", cachedResponse);
         return cachedResponse;
       }
       try {
