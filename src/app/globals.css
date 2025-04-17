@@ -182,6 +182,16 @@ button.react-multiple-carousel__arrow--right::before {
   color: black;
 }
 
+.course-carousel {
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .course-carousel.hidden {
+    display: none !important;
+  }
+}
+
 .course-carousel
   button.react-multiple-carousel__arrow.react-multiple-carousel__arrow--left {
   border: 1px solid black;

@@ -103,7 +103,7 @@ const MainFormView3: React.FC<ChildComponentProps> = ({
         <div className="lg:hidden w-full flex justify-center mt-[58px] mb-[79px]">
           <Stepper currentStep={3} />
         </div>
-        <div className="w-full">
+        <div className="w-full max-w-[1600px] mx-auto">
           <div className="block sm:flex justify-between py-2 my-5 border-t border-b border-[#d1d1d1] px-5 items-center">
             <div className="flex items-center">
               <div className="px-4 border-r border-blue-100 sm:px-8">
@@ -135,8 +135,8 @@ const MainFormView3: React.FC<ChildComponentProps> = ({
                   {`This is the creative section of your course creation. Your course landing page is crucial to your success on Attensys. 
 You want to make sure your creative is very catchy.`}
                 </p>
-                <div className="flex-col items-start block my-4 sm:flex lg:flex-row">
-                  <div className="bg-[#DCDCDC] flex-1 p-4 sm:p-16 rounded-xl">
+                <div className="flex-col items-start block my-4 sm:flex lg:flex-row justify-center">
+                  <div className="bg-[#DCDCDC] flex-1 p-4 sm:p-16 rounded-xl max-w-[1000px]">
                     <div className="bg-white p-2 sm:p-14 text-center border-dotted rounded border-2 border-[#D0D5DD]  content-center text-xs ">
                       <div className="mx-auto w-[15%]">
                         <Image src={upload} alt="uplaod" />
@@ -183,51 +183,28 @@ You want to make sure your creative is very catchy.`}
                     </div>
                   </div>
 
-                  <div className="flex-1 text-sm sm:mx-6 ">
-                    <p className="font-semibold lg:hidden text-[18px] leading-[31px] text-[#333333] mt-[38px] mb-[18px]">
+                  <div className="flex-1 text-sm sm:mx-6 flex flex-col items-center">
+                    <p className="font-semibold sm:hidden lg:hidden text-[18px] leading-[31px] text-[#333333] mt-[38px] mb-[18px]">
                       Upload thumbnail
                     </p>
-                    <div className="bg-white w-full md:w-[350px] p-8 text-center border-dotted rounded-xl border-2 border-[#D0D5DD] flex flex-col justify-center content-center">
+                    <div className="bg-white w-full md:w-[450px] flex items-center justify-center p-8 text-center border-dotted rounded-xl border-2 border-[#D0D5DD] flex flex-col justify-center content-center">
                       {!courseData.courseImage?.url ? (
-                        <div>
-                          <div className="w-auto mx-auto">
-                            <Image src={upload} alt="uplaod" width={30} />
-                          </div>
-
-                          <div className="my-4">
-                            <p className="text-xs md:text-[8px]">
-                              <span className="text-[#4A90E2]">
-                                Click to upload
-                              </span>
-                              or drag and drop
-                            </p>
-                            <p className="text-[10.6px] md:text-[7.5px] text-[#98A2B3]">
-                              SVG, PNG, JPG or GIF (max. 800x400px)
-                            </p>
-                          </div>
-
-                          <div className="my-2">
-                            <div className="flex items-center w-full gap-2">
-                              <div className="h-px w-full bg-[#F0F2F5]" />
-                              <p className="text-[10.65px] md:text-[8px]">OR</p>
-                              <div className="h-px w-full bg-[#F0F2F5]" />
-                            </div>
-
-                            <Button className="rounded-[6px] bg-[#9B51E0] px-4 md:px-12 text-xs py-2 md:py-3 text-white my-3">
-                              Browse Files
-                            </Button>
-                          </div>
+                        <div className="w-[200px] h-[200px] flex items-center justify-center">
+                          <p className="text-center">Preview Thumbnail Here</p>
                         </div>
                       ) : (
-                        <Image
-                          src={courseData.courseImage.url}
-                          alt="uplaod"
-                          width={200}
-                          height={200}
-                        />
+                        <div className="w-full h-full">
+                          <Image
+                            src={courseData.courseImage.url}
+                            alt="uplaod"
+                            width={350}
+                            height={350}
+                            className="w-full h-full object-cover rounded-xl"
+                          />
+                        </div>
                       )}
                     </div>
-                    <div className="hidden lg:block py-5 w-full sm:w-1/2 lg:w-[350px]">
+                    <div className="hidden lg:block py-5 w-full sm:w-1/2 lg:w-[450px]">
                       <p className="font-semibold text-[18px] leading-[31px] text-[#333333] py-3">
                         Upload thumbnail
                       </p>
@@ -246,7 +223,7 @@ You want to make sure your creative is very catchy.`}
                 <p className="font-semibold text-[18px] leading-[31px] text-[#333333] my-3">
                   Course Curriculum
                 </p>
-                <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px]">
+                <p className="font-normal text-[14px] text-[#2D3A4B] leading-[21px] w-full max-w-[800px]">
                   AttenSys allows you to structure your course with multiple
                   videos under one course. Each section can include several
                   videos, helping you break down complex topics into easily
@@ -255,10 +232,10 @@ You want to make sure your creative is very catchy.`}
                   course.
                 </p>
                 <div className="my-12">
-                  <p className="font-semibold text-[18px] leading-[31px] text-[#333333] my-3 pl-5">
+                  <p className="font-semibold text-[18px] leading-[31px] text-[#333333] my-3">
                     Tips
                   </p>
-                  <ul className="list-disc text-[14px] text-[#2D3A4B] leading-[21px] w-full max-w-[800px] px-8">
+                  <ul className="list-disc text-[14px] text-[#2D3A4B] leading-[21px] w-full max-w-[800px] px-4">
                     <li className="py-2">
                       Aim to keep each video between 5 to 10 minutes. Shorter
                       videos are easier for students to follow and help them

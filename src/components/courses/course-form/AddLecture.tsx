@@ -323,7 +323,7 @@ const AddLecture: React.FC<LectureProps> = ({
             )}
         </div>
 
-        <div className="my-4 bg-[#9b51e01a] p-12 border rounded-xl">
+        <div className="my-4 bg-[#9b51e01a] p-4 sm:p-12 border rounded-xl">
           <div className="flex bg-white p-5 rounded-xl my-3">
             <p className="font-medium mr-3 text-[16px]">Lecture Title:</p>
             <input
