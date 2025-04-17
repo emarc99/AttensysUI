@@ -66,7 +66,7 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
             <p className="font-light text-base lg:text-xl text-[#2D3A4B]">
               Because you viewed{" "}
               <span className="text-[#5801A9] font-bold underline">
-                "Introduction to Web Dev Starknet"
+                &ldquo;Introduction to Web Dev Starknet&rdquo;
               </span>
             </p>
           </div>
@@ -85,7 +85,7 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
             <p className="font-light text-base lg:text-xl text-[#2D3A4B]">
               Because you viewed{" "}
               <span className="text-[#5801A9] font-bold underline">
-                "Introduction to Web Dev Starknet"
+                &ldquo;Introduction to Web Dev Starknet&rdquo;
               </span>
             </p>
           </div>
@@ -264,7 +264,7 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
               <p className="font-light text-base lg:text-xl text-[#2D3A4B]">
                 Because you viewed{" "}
                 <span className="text-[#5801A9] font-bold">
-                  "Introduction to Web Dev Starknet"
+                  &ldquo;Introduction to Web Dev Starknet&rdquo;
                 </span>
               </p>
             </div>
