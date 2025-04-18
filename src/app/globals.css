@@ -167,44 +167,70 @@ html {
   box-shadow: 0px 0px 5px 5px #0099e0;
 }
 
-.course-carousel
-  button.react-multiple-carousel__arrow.react-multiple-carousel__arrow--right {
-  background-color: white;
-  border: 1px solid black;
-  right: 0;
-}
-
-button.react-multiple-carousel__arrow.react-multiple-carousel__arrow--right {
-  background-color: white;
-}
-
-button.react-multiple-carousel__arrow--right::before {
-  color: black;
-}
-
+/* Base carousel styles */
 .course-carousel {
   display: block;
 }
 
+/* Default arrow styles for desktop */
+.course-carousel button.react-multiple-carousel__arrow {
+  background-color: white;
+  border: 1px solid black;
+}
+
+.course-carousel button.react-multiple-carousel__arrow--left {
+  left: 0;
+}
+
+.course-carousel button.react-multiple-carousel__arrow--right {
+  right: 0;
+}
+
+.course-carousel button.react-multiple-carousel__arrow::before {
+  color: black;
+}
+
+/* Mobile-specific styles */
 @media (max-width: 640px) {
   .course-carousel.hidden {
     display: none !important;
   }
-}
 
-.course-carousel
-  button.react-multiple-carousel__arrow.react-multiple-carousel__arrow--left {
-  border: 1px solid black;
-  background-color: white;
-  left: 0;
-}
+  /* Override all arrow styles for mobile */
+  .carousel-container button.react-multiple-carousel__arrow,
+  .carousel-container button.react-multiple-carousel__arrow--left,
+  .carousel-container button.react-multiple-carousel__arrow--right {
+    position: absolute;
+    top: 33.33%;
+    transform: translateY(-50%);
+    z-index: 30;
+    background: rgba(255, 255, 255, 0.3) !important;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.3s ease;
+  }
 
-button.react-multiple-carousel__arrow.react-multiple-carousel__arrow--left {
-  background-color: white;
-}
+  .carousel-container button.react-multiple-carousel__arrow:hover {
+    background: rgba(255, 255, 255, 0.5) !important;
+  }
 
-button.react-multiple-carousel__arrow--left::before {
-  color: black;
+  .carousel-container button.react-multiple-carousel__arrow--left {
+    left: 5px;
+  }
+
+  .carousel-container button.react-multiple-carousel__arrow--right {
+    right: 5px;
+  }
+
+  .carousel-container button.react-multiple-carousel__arrow::before {
+    color: rgba(0, 0, 0, 0.6) !important;
+    font-size: 16px;
+  }
 }
 
 li.carousel-item-custom {
