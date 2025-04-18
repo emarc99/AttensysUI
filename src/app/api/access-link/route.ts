@@ -32,14 +32,13 @@ export async function POST(req: Request) {
     }
 
     // Use the correct Pinata endpoint
-    const pinataEndpoint = `https://api.pinata.cloud/pinning/getFileByCID`;
+    const pinataEndpoint = `https://api.pinata.cloud/v3/files/download_link`;
 
     const payload = JSON.stringify({
-      //   url: `https://amethyst-rare-bobolink-414.mypinata.cloud/files/bafkreia7qm54gyrnk7yzvpkaigtdw4rynzoaxbr43vo4ekrwtlzy7xfkwq`,
+      url: `https://amethyst-rare-bobolink-414.mypinata.cloud/files/${cid}`,
       expires: 3600, // 1 hour expiration
-      //   date: 1724875300,
-      //   method: "GET"
-      cid: cid,
+      date: 1724875300,
+      method: "GET",
     });
 
     const response = await fetch(pinataEndpoint, {
@@ -59,15 +58,15 @@ export async function POST(req: Request) {
       throw new Error(`Pinata API error: ${response.statusText}`);
     }
 
-    const { downloadUrl } = await response.json();
+    const responseData = await response.json();
 
-    if (!downloadUrl) {
+    if (!responseData.downloadLink) {
       throw new Error("Missing downloadLink in response");
     }
 
     return NextResponse.json({
-      url: downloadUrl,
-      //   expiresAt: responseData.expiresAt || Date.now() + 3600000,
+      url: responseData.downloadLink,
+      expiresAt: responseData.expiresAt || Date.now() + 3600000,
     });
   } catch (error) {
     console.error("Error:", error);

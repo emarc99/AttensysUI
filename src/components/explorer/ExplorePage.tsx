@@ -29,9 +29,9 @@ const ExplorePage = () => {
   const [maxVisiblePages, setMaxVisiblePages] = useState(10);
   const itemsPerPage = 10;
   const router = useRouter();
-  const { url, loading, error, refresh } = usePinataAccess(
-    "bafkreia7qm54gyrnk7yzvpkaigtdw4rynzoaxbr43vo4ekrwtlzy7xfkwq",
-  );
+  // const { url, loading, error, refresh } = usePinataAccess(
+  //   "bafkreia7qm54gyrnk7yzvpkaigtdw4rynzoaxbr43vo4ekrwtlzy7xfkwq",
+  // );
 
   const { data } = useQuery({
     queryKey: ["data"],
@@ -117,11 +117,43 @@ const ExplorePage = () => {
     }
   };
 
-  useEffect(() => {
-    if (url) {
-      console.log("Generated URL:", url);
+  async function createAccessLink() {
+    console.log("Creating access link...");
+    try {
+      const cid = "bafkreia7qm54gyrnk7yzvpkaigtdw4rynzoaxbr43vo4ekrwtlzy7xfkwq";
+      const pinataUrl = `https://api.pinata.cloud/v3/files/private/${cid}`;
+      const date = Math.floor(Date.now() / 1000);
+
+      // const requestBody = JSON.stringify({
+      //     url: `https://amethyst-rare-bobolink-414.mypinata.cloud/files/${cid}`,  // Must use "ipfs://" for private files
+      //     expires: 180,          // Link expiry time (in seconds)
+      //     date: date,            // Current Unix timestamp
+      //     method: "GET"          // HTTP method
+      // });
+
+      const response = await fetch(pinataUrl, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.PINATA_JWT}`,
+          "Content-Type": "application/json",
+        },
+        // body: requestBody
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Pinata API Error:", errorData);
+        throw new Error(`Failed to generate link: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      console.log("Access link created:", result);
+      return result.data; // Returns the access URL
+    } catch (error) {
+      console.error("Error in createAccessLink:", error);
+      throw error; // Re-throw for handling upstream
     }
-  }, [url]);
+  }
 
   return (
     <div className="mx-4 md:mx-8 lg:mx-24 pb-10">
@@ -196,6 +228,7 @@ const ExplorePage = () => {
           </div>
         </div>
         <Button onClick={handleUpload}>TRIAL</Button>
+        <Button onClick={createAccessLink}>RETRIEVE</Button>
         <EventFeed data={eventData} />
       </div>
     </div>
