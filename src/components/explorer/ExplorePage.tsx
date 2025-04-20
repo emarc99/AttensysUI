@@ -29,9 +29,7 @@ const ExplorePage = () => {
   const [maxVisiblePages, setMaxVisiblePages] = useState(10);
   const itemsPerPage = 10;
   const router = useRouter();
-  // const { url, loading, error, refresh } = usePinataAccess(
-  //   "bafkreia7qm54gyrnk7yzvpkaigtdw4rynzoaxbr43vo4ekrwtlzy7xfkwq",
-  // );
+  // const { createAccessLink, url, loading, error } = usePinataAccess();
 
   const { data } = useQuery({
     queryKey: ["data"],
@@ -92,68 +90,36 @@ const ExplorePage = () => {
     setSearchValue(event.target.value);
   };
 
-  const handleUpload = async () => {
-    try {
-      const jsonData = { key: "value", name: "kenny" };
-      const blob = new Blob([JSON.stringify(jsonData)], {
-        type: "application/json",
-      });
-      const file = new File([blob], `private-data-${Date.now()}.json`);
+  // const handleUpload = async () => {
+  //   try {
+  //     const jsonData = { school: "web3", name: "taiwo" };
+  //     const blob = new Blob([JSON.stringify(jsonData)], {
+  //       type: "application/json",
+  //     });
+  //     const file = new File([blob], `my-private-data-${Date.now()}.json`);
 
-      const formData = new FormData();
-      formData.append("file", file);
+  //     const formData = new FormData();
+  //     formData.append("file", file);
 
-      const res = await fetch("/api/pinata/upload", {
-        method: "POST",
-        body: formData,
-      });
+  //     const res = await fetch("/api/pinata/upload", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Upload failed");
+  //     const data = await res.json();
+  //     if (!res.ok) throw new Error(data.error || "Upload failed");
 
-      console.log("Private file uploaded:", data.cid.data.cid);
-    } catch (error) {
-      console.error("Upload error:", error);
-    }
-  };
+  //     console.log("Private file uploaded:", data.cid.data.cid);
+  //   } catch (error) {
+  //     console.error("Upload error:", error);
+  //   }
+  // };
 
-  async function createAccessLink() {
-    console.log("Creating access link...");
-    try {
-      const cid = "bafkreia7qm54gyrnk7yzvpkaigtdw4rynzoaxbr43vo4ekrwtlzy7xfkwq";
-      const pinataUrl = `https://api.pinata.cloud/v3/files/private/${cid}`;
-      const date = Math.floor(Date.now() / 1000);
-
-      // const requestBody = JSON.stringify({
-      //     url: `https://amethyst-rare-bobolink-414.mypinata.cloud/files/${cid}`,  // Must use "ipfs://" for private files
-      //     expires: 180,          // Link expiry time (in seconds)
-      //     date: date,            // Current Unix timestamp
-      //     method: "GET"          // HTTP method
-      // });
-
-      const response = await fetch(pinataUrl, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.PINATA_JWT}`,
-          "Content-Type": "application/json",
-        },
-        // body: requestBody
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Pinata API Error:", errorData);
-        throw new Error(`Failed to generate link: ${response.statusText}`);
-      }
-
-      const result = await response.json();
-      console.log("Access link created:", result);
-      return result.data; // Returns the access URL
-    } catch (error) {
-      console.error("Error in createAccessLink:", error);
-      throw error; // Re-throw for handling upstream
-    }
-  }
+  // const handleRead = async () => {
+  //   const cid ="bafkreifk7x3mvjqv6zts53hptbfndranwf3rtsw5tjg25a62jqq7ulzvyq";
+  // const accessUrl = await createAccessLink(cid);
+  //   console.log("Access link:", accessUrl);
+  // }
 
   return (
     <div className="mx-4 md:mx-8 lg:mx-24 pb-10">
@@ -227,8 +193,7 @@ const ExplorePage = () => {
             </Button>
           </div>
         </div>
-        <Button onClick={handleUpload}>TRIAL</Button>
-        <Button onClick={createAccessLink}>RETRIEVE</Button>
+        {/* <Button onClick={handleUpload}>TRIAL</Button> */}
         <EventFeed data={eventData} />
       </div>
     </div>

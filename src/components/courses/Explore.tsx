@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import videoHero from "../../assets/video.svg";
 import CarouselComp from "./Carousel";
@@ -15,6 +15,7 @@ import "react-multi-carousel/lib/styles.css";
 import StarRating from "../bootcamp/StarRating";
 import { LuBadgeCheck } from "react-icons/lu";
 import ReactPlayer from "react-player";
+import { PinataSDK } from "pinata";
 
 interface ChildComponentProps {
   wallet: any;
@@ -23,6 +24,31 @@ interface ChildComponentProps {
 
 const Explore = ({ wallet, courseData }: ChildComponentProps) => {
   const router = useRouter();
+
+  const pinata = new PinataSDK({
+    pinataJwt: process.env.NEXT_PUBLIC_PINATA_JWT,
+    pinataGateway: process.env.NEXT_PUBLIC_GATEWAY_URL,
+  });
+
+  function extractCIDFromUrl(ipfsUrl: string): string {
+    // Split the URL by '/' and get the last part
+    const parts = ipfsUrl.split("/");
+    const cid = parts[parts.length - 1];
+    return cid.split("?")[0].split(".")[0];
+  }
+
+  const createAccess = async (cid: string, expires: number = 86400) => {
+    try {
+      let formattedCid = extractCIDFromUrl(cid);
+      const accessUrl = await pinata.gateways.private.createAccessLink({
+        cid: formattedCid,
+        expires,
+      });
+      return accessUrl;
+    } catch (err) {
+      console.error("Error creating access link:", err);
+    }
+  };
 
   return (
     <div>
@@ -207,38 +233,60 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
 
             <div>
               {courseData[courseData.length - 1]?.data.courseCurriculum.map(
-                (item: any, i: any) => (
-                  <div
-                    key={i}
-                    className="flex content-center text-sm my-3 cursor-pointer space-x-4"
-                    onClick={(e) => {
-                      localStorage.setItem(
-                        "courseData",
-                        JSON.stringify(courseData[courseData.length - 1]?.data),
-                      );
-                      handleCourse(e, e.currentTarget.textContent, router);
-                    }}
-                  >
-                    <div className="w-[150px] h-[120px] rounded-xl border-4 border flex-shrink-0">
-                      <ReactPlayer
-                        url={`https://${item.video}`}
-                        controls={false}
-                        playing={false}
-                        width="100%"
-                        height="100%"
-                        playIcon={<></>}
-                      />
-                    </div>
+                (item: any, i: any) => {
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
+                  const [accessUrl, setAccessUrl] = useState<
+                    string | undefined
+                  >(undefined);
 
-                    <div className="w-[230px]">
-                      <h6 className="font-bold">
-                        {item.name}
-                        {/* <span className="text-[#5801A9]">({item.time})</span> */}
-                      </h6>
-                      <p className="font-light mt-2">{item.description}</p>
-                    </div>
-                  </div>
-                ),
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
+                  useEffect(() => {
+                    let isMounted = true;
+                    createAccess(item.video).then((url) => {
+                      if (isMounted) setAccessUrl(url);
+                    });
+                    return () => {
+                      isMounted = false;
+                    };
+                  }, [item.video]);
+
+                  return (
+                    <>
+                      <div
+                        key={i}
+                        className="flex content-center text-sm my-3 cursor-pointer space-x-4"
+                        onClick={(e) => {
+                          localStorage.setItem(
+                            "courseData",
+                            JSON.stringify(
+                              courseData[courseData.length - 1]?.data,
+                            ),
+                          );
+                          handleCourse(e, e.currentTarget.textContent, router);
+                        }}
+                      >
+                        <div className="w-[150px] h-[120px] rounded-xl border-4 border flex-shrink-0">
+                          <ReactPlayer
+                            url={accessUrl}
+                            controls={false}
+                            playing={false}
+                            width="100%"
+                            height="100%"
+                            playIcon={<></>}
+                          />
+                        </div>
+
+                        <div className="w-[230px]">
+                          <h6 className="font-bold">
+                            {item.name}
+                            {/* <span className="text-[#5801A9]">({item.time})</span> */}
+                          </h6>
+                          <p className="font-light mt-2">{item.description}</p>
+                        </div>
+                      </div>
+                    </>
+                  );
+                },
               )}
             </div>
           </div>

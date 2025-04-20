@@ -1,56 +1,33 @@
 import { useState, useEffect } from "react";
+import { PinataSDK } from "pinata";
 
-interface AccessLinkState {
-  url: string | null;
-  loading: boolean;
-  error: string | null;
-  refresh: () => void;
-}
-
-export const usePinataAccess = (cid: string): AccessLinkState => {
+export const usePinataAccess = () => {
   const [url, setUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
-  const generateLink = async () => {
-    setLoading(true);
-    setError(null);
+  const pinata = new PinataSDK({
+    pinataJwt: process.env.NEXT_PUBLIC_PINATA_JWT,
+    pinataGateway: process.env.NEXT_PUBLIC_GATEWAY_URL,
+  });
 
+  const createAccessLink = async (cid: string, expires: number = 86400) => {
     try {
-      const response = await fetch("/api/access-link", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.PINATA_JWT}`,
-        },
-        body: JSON.stringify({ cid }),
+      setLoading(true);
+      setError(null);
+      const accessUrl = await pinata.gateways.private.createAccessLink({
+        cid,
+        expires,
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to generate link");
-      }
-
-      setUrl(data.url);
+      setUrl(accessUrl);
+      return accessUrl;
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error");
+      setError(err as Error);
+      throw err;
     } finally {
       setLoading(false);
     }
   };
 
-  // Auto-refresh logic (every 55 minutes to stay ahead of 1hr expiry)
-  useEffect(() => {
-    generateLink();
-    const interval = setInterval(generateLink, 55 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [cid]);
-
-  return {
-    url,
-    loading,
-    error,
-    refresh: generateLink,
-  };
+  return { createAccessLink, url, loading, error };
 };

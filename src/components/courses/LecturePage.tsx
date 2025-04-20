@@ -21,6 +21,8 @@ import StarRating from "../bootcamp/StarRating";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import { CardWithLink } from "./Cards";
 import { useAccount, useExplorer } from "@starknet-react/core";
+import { usePinataAccess } from "@/hooks/usePinataAccess";
+import { PinataSDK } from "pinata";
 
 interface CourseType {
   data: any;
@@ -102,6 +104,7 @@ const LecturePage = (props: any) => {
   const [showSeeMore, setShowSeeMore] = useState(false);
   const [isTargetExpanded, setIsTargetExpanded] = useState(false);
   const [showTargetSeeMore, setShowTargetSeeMore] = useState(false);
+  const { createAccessLink, url, loading, error } = usePinataAccess();
   const contentRef = useRef<HTMLParagraphElement>(null);
 
   // console.log("uploading:", isUploading);
@@ -304,9 +307,34 @@ const LecturePage = (props: any) => {
     );
   };
 
-  const handleVideoClick = (item: any) => {
-    setSelectedVideo(`https://${item.video}`);
-    setSelectedLectureName(item.name);
+  const handleVideoClick = (item: any, name: any) => {
+    setSelectedVideo(item);
+    setSelectedLectureName(name);
+  };
+
+  const pinata = new PinataSDK({
+    pinataJwt: process.env.NEXT_PUBLIC_PINATA_JWT,
+    pinataGateway: process.env.NEXT_PUBLIC_GATEWAY_URL,
+  });
+
+  function extractCIDFromUrl(ipfsUrl: string): string {
+    // Split the URL by '/' and get the last part
+    const parts = ipfsUrl.split("/");
+    const cid = parts[parts.length - 1];
+    return cid.split("?")[0].split(".")[0];
+  }
+
+  const createAccess = async (cid: string, expires: number = 86400) => {
+    try {
+      let formattedCid = extractCIDFromUrl(cid);
+      const accessUrl = await pinata.gateways.private.createAccessLink({
+        cid: formattedCid,
+        expires,
+      });
+      return accessUrl;
+    } catch (err) {
+      console.error("Error creating access link:", err);
+    }
   };
 
   useEffect(() => {
@@ -464,25 +492,47 @@ const LecturePage = (props: any) => {
               ?.slice()
               .reverse()
               .map((item: any, i: any) => {
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                const [accessUrl, setAccessUrl] = useState<string | undefined>(
+                  undefined,
+                );
+
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                useEffect(() => {
+                  let isMounted = true;
+                  createAccess(item.video).then((url) => {
+                    if (isMounted) setAccessUrl(url);
+                  });
+                  return () => {
+                    isMounted = false;
+                  };
+                }, [item.video]);
+
                 return (
                   <div
                     key={i}
                     className="flex w-full items-center p-4 hover:bg-gray-50 transition-colors cursor-pointer"
-                    onClick={() => handleVideoClick(item)}
+                    onClick={() => handleVideoClick(accessUrl, item.name)}
                   >
                     <div className="w-8 flex-shrink-0">
                       <p className="font-bold text-[#5801a9]">{i + 1}</p>
                     </div>
                     <div className="w-[150px] h-[120px] rounded-xl border-4 border flex-shrink-0">
-                      <ReactPlayer
-                        url={`https://${item.video}`}
-                        controls={false}
-                        playing={false}
-                        width="100%"
-                        height="100%"
-                        playIcon={<></>}
-                        onDuration={(duration) => handleDuration(i, duration)}
-                      />
+                      {accessUrl ? (
+                        <ReactPlayer
+                          url={accessUrl}
+                          controls={false}
+                          playing={false}
+                          width="100%"
+                          height="100%"
+                          playIcon={<></>}
+                          onDuration={(duration) => handleDuration(i, duration)}
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center w-full h-full">
+                          <LoadingSpinner size="sm" colorVariant="primary" />
+                        </div>
+                      )}
                     </div>
                     <div className="flex-grow ml-6">
                       <p className="text-[14px] font-semibold leading-[30px] text-[#333333]">
@@ -692,41 +742,66 @@ const LecturePage = (props: any) => {
               {props?.data?.courseCurriculum
                 ?.slice()
                 .reverse()
-                .map((item: any, i: any) => (
-                  <div
-                    key={i}
-                    className="flex w-full items-center p-4 hover:bg-gray-50 transition-colors cursor-pointer"
-                    onClick={() => handleVideoClick(item)}
-                  >
-                    <div className="w-8 flex-shrink-0">
-                      <p className="font-bold text-[#5801a9]">{i + 1}</p>
-                    </div>
-                    <div className="w-[150px] h-[120px] rounded-xl border-4 border flex-shrink-0">
-                      <ReactPlayer
-                        url={`https://${item.video}`}
-                        controls={false}
-                        playing={false}
-                        width="100%"
-                        height="100%"
-                        playIcon={<></>}
-                        onDuration={(duration) => handleDuration(i, duration)}
-                      />
-                    </div>
-                    <div className="flex-grow ml-6">
-                      <p className="text-[14px] font-semibold leading-[30px] text-[#333333]">
-                        {item.name}
-                      </p>
+                .map((item: any, i: any) => {
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
+                  const [accessUrl, setAccessUrl] = useState<
+                    string | undefined
+                  >(undefined);
 
-                      <div className="rounded-lg bg-[#9B51E052] w-[60%] flex items-center justify-center">
-                        <p className="text-xs px-7 py-1">
-                          {durations[i]
-                            ? formatDuration(durations[i])
-                            : "0:00:00"}
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
+                  useEffect(() => {
+                    let isMounted = true;
+                    createAccess(item.video).then((url) => {
+                      if (isMounted) setAccessUrl(url);
+                    });
+                    return () => {
+                      isMounted = false;
+                    };
+                  }, [item.video]);
+
+                  return (
+                    <div
+                      key={i}
+                      className="flex w-full items-center p-4 hover:bg-gray-50 transition-colors cursor-pointer"
+                      onClick={() => handleVideoClick(accessUrl, item.name)}
+                    >
+                      <div className="w-8 flex-shrink-0">
+                        <p className="font-bold text-[#5801a9]">{i + 1}</p>
+                      </div>
+                      <div className="w-[150px] h-[120px] rounded-xl border-4 border flex-shrink-0">
+                        {accessUrl ? (
+                          <ReactPlayer
+                            url={accessUrl}
+                            controls={false}
+                            playing={false}
+                            width="100%"
+                            height="100%"
+                            playIcon={<></>}
+                            onDuration={(duration) =>
+                              handleDuration(i, duration)
+                            }
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center w-full h-full">
+                            <LoadingSpinner size="sm" colorVariant="primary" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-grow ml-6">
+                        <p className="text-[14px] font-semibold leading-[30px] text-[#333333]">
+                          {item.name}
                         </p>
+                        <div className="rounded-lg bg-[#9B51E052] w-[60%] flex items-center justify-center">
+                          <p className="text-xs px-7 py-1">
+                            {durations[i]
+                              ? formatDuration(durations[i])
+                              : "0:00:00"}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
             </div>
           </div>
 
