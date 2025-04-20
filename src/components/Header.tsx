@@ -47,6 +47,9 @@ import { courseQuestions } from "@/constants/data";
 import { useWallet } from "@/hooks/useWallet";
 import { NetworkSwitchButton } from "./connect/NetworkSwitchButton";
 import { connectWallet } from "@/utils/connectWallet";
+import { CatridgeConnect } from "./connect/CatridgeConnect";
+import { useAccount, useConnect } from "@starknet-react/core";
+import ControllerConnector from "@cartridge/connector/controller";
 
 const navigation = [
   { name: "Courses", href: "#", current: false },
@@ -74,6 +77,10 @@ const Header = () => {
     wallet: hookWallet,
     isConnecting,
   } = useWallet();
+  const { account, address } = useAccount();
+  const { connect, connectors } = useConnect();
+  const controller = connectors[0] as ControllerConnector;
+  const [username, setUsername] = useState<string>();
   // const [networkCorrect, setNetworkCorrect] = useState(isCorrectNetwork)
   const [isBootcampsOpen, setIsBootcampsOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -110,11 +117,11 @@ const Header = () => {
       setcourseStatus(!coursestatus);
       setbootcampdropstat(false);
     } else if (arg == "Events") {
-      router.push("/Discoverevent");
+      // router.push("/Discoverevent");
     } else if (arg == "Bootcamps") {
       // e.stopPropagation();
-      setbootcampdropstat(!bootcampdropstat);
-      setcourseStatus(false);
+      // setbootcampdropstat(!bootcampdropstat);
+      // setcourseStatus(false);
     }
   };
   const [isCoursesOpen, setIsCoursesOpen] = useState(false);
@@ -128,6 +135,11 @@ const Header = () => {
     setIsCoursesOpen(false);
     setIsBootcampsOpen(false);
   };
+
+  useEffect(() => {
+    if (!address) return;
+    controller.username()?.then((n) => setUsername(n));
+  }, [address, controller]);
 
   return (
     <>
@@ -195,53 +207,54 @@ const Header = () => {
                 <div className="flex items-center justify-center sm:items-stretch sm:justify-end">
                   <div className="hidden lg:flex">
                     <div className="flex text-sm xlg:space-x-24">
-                      {navigation.map((item, index) => (
-                        <a
-                          key={item.name}
-                          href={item.href}
-                          aria-current={item.current ? "page" : undefined}
-                          className={classNames(
-                            item.current
-                              ? "bg-white text-[#333333]"
-                              : "text-[#333333] hover:bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] hover:text-white",
-                            "rounded-md px-3 py-2 font-medium cursor-pointer",
-                          )}
-                          onClick={() => handleTabClick(item.name)}
-                        >
-                          {item.name}{" "}
-                          {index !== 1 && (
-                            <span className="text-[10px] mx-1">
-                              {item.current ? "▲" : "▼"}
-                            </span>
-                          )}
-                        </a>
-                      ))}
+                      {navigation.map((item, index) => {
+                        const isComingSoon =
+                          item.name === "Events" || item.name === "Bootcamps";
+
+                        return (
+                          <div key={item.name} className="relative group">
+                            <a
+                              href={isComingSoon ? "#" : item.href}
+                              aria-current={item.current ? "page" : undefined}
+                              className={classNames(
+                                item.current
+                                  ? "bg-white text-[#333333]"
+                                  : isComingSoon
+                                    ? "text-gray-400 cursor-not-allowed" // Greyed out style
+                                    : "text-[#333333] hover:bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] hover:text-white",
+                                "rounded-md px-3 py-2 font-medium cursor-pointer",
+                              )}
+                              onClick={(e) => {
+                                if (isComingSoon) {
+                                  e.preventDefault(); // Prevent navigation for coming soon items
+                                } else {
+                                  handleTabClick(item.name);
+                                }
+                              }}
+                            >
+                              {item.name}{" "}
+                              {index !== 1 && (
+                                <span className="text-[10px] mx-1">
+                                  {item.current ? "▲" : "▼"}
+                                </span>
+                              )}
+                            </a>
+
+                            {/* Tooltip for coming soon features */}
+                            {isComingSoon && (
+                              <div className="absolute z-10 hidden group-hover:block px-2 py-1 text-xs text-white bg-gray-700 rounded whitespace-nowrap -top-8 left-1/2 transform -translate-x-1/2">
+                                Feature is coming soon
+                                <div className="absolute w-2 h-2 bg-gray-700 rotate-45 bottom-[-4px] left-1/2 -translate-x-1/2"></div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
                 <div className="absolute inset-y-0 right-0 items-center hidden md:hidden lg:flex sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                  {wallet ? (
-                    !isCorrectNetwork ? (
-                      <>
-                        <NetworkSwitchButton
-                          isCorrectNetwork={isCorrectNetwork}
-                          setIsCorrectNetwork={setIsCorrectNetwork}
-                          connectedWallet={wallet}
-                        />
-                      </>
-                    ) : (
-                      <>
-                        <DisconnectButton
-                          disconnectFn={disconnect}
-                          resetFn={() => {
-                            disconnectWallet();
-                          }}
-                        />
-                      </>
-                    )
-                  ) : (
-                    <ConnectButton setIsCorrectNetwork={setIsCorrectNetwork} />
-                  )}
+                  <CatridgeConnect />
                 </div>
               </div>
             </div>
@@ -308,7 +321,7 @@ const Header = () => {
                 {/* 🟢 Wallet data */}
 
                 <div className="flex items-center px-4 py-3 space-x-3 border-b">
-                  {wallet && wallet.account ? (
+                  {account ? (
                     <>
                       {/* Profile picture */}
 
@@ -324,11 +337,11 @@ const Header = () => {
 
                       <div>
                         <p className="font-semibold text-gray-900">
-                          {wallet.account.name || "Connected User"}
+                          {username || "Connected User"}
                         </p>
                         <p className="text-[#9B51E0] text-sm">
-                          {wallet.account.address
-                            ? `${wallet.account.address.slice(0, 6)}...${wallet.account.address.slice(-4)}`
+                          {address
+                            ? `${address.slice(0, 6)}...${address.slice(-4)}`
                             : "Unknown"}
                         </p>
                       </div>
@@ -390,7 +403,7 @@ const Header = () => {
                         </Link>
 
                         <Link
-                          href={`/mycoursepage/${wallet?.selectedAddress}`}
+                          href={`/mycoursepage/${address}`}
                           className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200"
                           onClick={() => close()}
                         >
@@ -405,7 +418,7 @@ const Header = () => {
                         </Link>
 
                         <Link
-                          href={`/Certifications/${wallet?.selectedAddress}`}
+                          href={`/Certifications/${address}`}
                           className="flex items-center px-3 py-2 text-gray-700 rounded-md hover:bg-gray-200"
                           onClick={() => close()}
                         >
@@ -514,43 +527,7 @@ const Header = () => {
                 {/* 🔹 Connect/Disconnect Wallet button */}
 
                 <div className="px-4 py-3">
-                  {wallet ? (
-                    !isCorrectNetwork ? (
-                      <>
-                        <NetworkSwitchButton
-                          isCorrectNetwork={isCorrectNetwork}
-                          setIsCorrectNetwork={setIsCorrectNetwork}
-                          connectedWallet={wallet}
-                        />
-                      </>
-                    ) : (
-                      <button
-                        onClick={() => {
-                          disconnectWallet();
-                          close();
-                        }}
-                        className="w-full bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] text-white py-2 rounded-md flex items-center justify-center space-x-2"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth="1.5"
-                          stroke="currentColor"
-                          className="w-5 h-5"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25V9m-4.5 0h12m-9 0v9a2.25 2.25 0 0 0 2.25 2.25h3A2.25 2.25 0 0 0 15 18V9m-6 0h6"
-                          />
-                        </svg>
-                        <span>Disconnect Wallet</span>
-                      </button>
-                    )
-                  ) : (
-                    <ConnectButton setIsCorrectNetwork={setIsCorrectNetwork} />
-                  )}
+                  <CatridgeConnect />
                 </div>
               </div>
             </DisclosurePanel>

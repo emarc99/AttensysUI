@@ -21,12 +21,15 @@ import {
   eventquery,
 } from "@/utils/helpers";
 
+import { usePinataAccess } from "@/hooks/usePinataAccess";
+
 const ExplorePage = () => {
   const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [maxVisiblePages, setMaxVisiblePages] = useState(10);
   const itemsPerPage = 10;
   const router = useRouter();
+  // const { createAccessLink, url, loading, error } = usePinataAccess();
 
   const { data } = useQuery({
     queryKey: ["data"],
@@ -86,6 +89,37 @@ const ExplorePage = () => {
   const handleChange = (event: { target: { value: any } }) => {
     setSearchValue(event.target.value);
   };
+
+  // const handleUpload = async () => {
+  //   try {
+  //     const jsonData = { school: "web3", name: "taiwo" };
+  //     const blob = new Blob([JSON.stringify(jsonData)], {
+  //       type: "application/json",
+  //     });
+  //     const file = new File([blob], `my-private-data-${Date.now()}.json`);
+
+  //     const formData = new FormData();
+  //     formData.append("file", file);
+
+  //     const res = await fetch("/api/pinata/upload", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+
+  //     const data = await res.json();
+  //     if (!res.ok) throw new Error(data.error || "Upload failed");
+
+  //     console.log("Private file uploaded:", data.cid.data.cid);
+  //   } catch (error) {
+  //     console.error("Upload error:", error);
+  //   }
+  // };
+
+  // const handleRead = async () => {
+  //   const cid ="bafkreifk7x3mvjqv6zts53hptbfndranwf3rtsw5tjg25a62jqq7ulzvyq";
+  // const accessUrl = await createAccessLink(cid);
+  //   console.log("Access link:", accessUrl);
+  // }
 
   return (
     <div className="mx-4 md:mx-8 lg:mx-24 pb-10">
@@ -159,6 +193,7 @@ const ExplorePage = () => {
             </Button>
           </div>
         </div>
+        {/* <Button onClick={handleUpload}>TRIAL</Button> */}
         <EventFeed data={eventData} />
       </div>
     </div>

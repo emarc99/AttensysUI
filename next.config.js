@@ -1,4 +1,5 @@
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+const path = require("path");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

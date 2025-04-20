@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Previous from "./previous";
 import { useRouter } from "next/navigation";
+import { useAtom } from "jotai";
+import { courseInitState } from "@/state/connectedWalletStarknetkitNext";
 
 interface CourseFormProps {
   section: string;
@@ -21,13 +23,24 @@ const CourseForm = ({
   section,
   handleCoursePrimaryGoalChange,
 }: CourseFormProps) => {
-  const [selectedOption, setSelectedOption] = useState<string>("");
+  const [courseData, setCourseData] = useAtom(courseInitState);
+  const [selectedOption, setSelectedOption] = useState<string>(
+    courseData.primaryGoal || "",
+  );
   const [error, setError] = useState<string>("");
   const router = useRouter();
 
+  useEffect(() => {
+    if (courseData.primaryGoal) {
+      setSelectedOption(courseData.primaryGoal);
+    }
+  }, [courseData.primaryGoal]);
+
   const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedOption(event.target.value);
+    const value = event.target.value;
+    setSelectedOption(value);
     setError("");
+    setCourseData((prev) => ({ ...prev, primaryGoal: value }));
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

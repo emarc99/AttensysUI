@@ -24,6 +24,7 @@ import clsx from "clsx";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { pinata } from "../../../utils/config";
 import LoadingSpinner from "../ui/LoadingSpinner";
+import { useAccount } from "@starknet-react/core";
 
 const Details = (props: any) => {
   const { connectorDataAccount } = props;
@@ -52,6 +53,7 @@ const Details = (props: any) => {
   const formatedParams = decodeURIComponent(params["details"] as string);
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
+  const { account, address: accountAddress } = useAccount();
 
   const eventContract = useMemo(
     () => new Contract(attensysEventAbi, attensysEventAddress, provider),
@@ -64,9 +66,8 @@ const Details = (props: any) => {
       attensysEventAddress,
       provider,
     );
-    const res = await eventContract.get_all_list_registered_events(
-      wallet?.selectedAddress,
-    );
+    const res =
+      await eventContract.get_all_list_registered_events(accountAddress);
     // setalluserRegisterevent(res);
     res.map((data: any, index: any) => {
       if (Number(data.event_id) == Number(id)) {
@@ -137,7 +138,7 @@ const Details = (props: any) => {
   }, [getEventData, formatedParams]);
 
   useEffect(() => {
-    setWalletAddress(wallet?.selectedAddress);
+    setWalletAddress(accountAddress);
   }, [wallet]);
 
   const handleDialog = () => {
@@ -163,7 +164,7 @@ const Details = (props: any) => {
           const eventContract = new Contract(
             attensysEventAbi,
             attensysEventAddress,
-            connectorDataAccount,
+            account,
           );
 
           const registerEventCall = eventContract.populate(
@@ -176,9 +177,7 @@ const Details = (props: any) => {
           );
 
           //@ts-ignore
-          await connectorDataAccount?.provider.waitForTransaction(
-            result.transaction_hash,
-          );
+          await account?.provider.waitForTransaction(result.transaction_hash);
 
           try {
             const response = await fetch(

@@ -134,3 +134,8 @@ dist
 .DS_Store
 **/.DS_Store.next/
 .next/
+
+certificates
+
+localhost-key.pem
+localhost.pem

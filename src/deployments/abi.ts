@@ -447,6 +447,65 @@ export const attensysCourseAbi = [
     state_mutability: "external",
   },
   {
+    type: "function",
+    name: "upgrade",
+    inputs: [
+      {
+        name: "new_class_hash",
+        type: "core::starknet::class_hash::ClassHash",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "remove_course",
+    inputs: [
+      {
+        name: "course_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "impl",
+    name: "OwnableImpl",
+    interface_name: "openzeppelin_access::ownable::interface::IOwnable",
+  },
+  {
+    type: "function",
+    name: "owner",
+    inputs: [],
+    outputs: [
+      {
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "transfer_ownership",
+    inputs: [
+      {
+        name: "new_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "renounce_ownership",
+    inputs: [],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
     type: "constructor",
     name: "constructor",
     inputs: [
@@ -579,6 +638,81 @@ export const attensysCourseAbi = [
   },
   {
     type: "event",
+    name: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferred",
+    kind: "struct",
+    members: [
+      {
+        name: "previous_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+      {
+        name: "new_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferStarted",
+    kind: "struct",
+    members: [
+      {
+        name: "previous_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+      {
+        name: "new_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "openzeppelin_access::ownable::ownable::OwnableComponent::Event",
+    kind: "enum",
+    variants: [
+      {
+        name: "OwnershipTransferred",
+        type: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferred",
+        kind: "nested",
+      },
+      {
+        name: "OwnershipTransferStarted",
+        type: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferStarted",
+        kind: "nested",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Upgraded",
+    kind: "struct",
+    members: [
+      {
+        name: "class_hash",
+        type: "core::starknet::class_hash::ClassHash",
+        kind: "data",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Event",
+    kind: "enum",
+    variants: [
+      {
+        name: "Upgraded",
+        type: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Upgraded",
+        kind: "nested",
+      },
+    ],
+  },
+  {
+    type: "event",
     name: "attendsys::contracts::AttenSysCourse::AttenSysCourse::Event",
     kind: "enum",
     variants: [
@@ -611,6 +745,16 @@ export const attensysCourseAbi = [
         name: "CourseUnsuspended",
         type: "attendsys::contracts::AttenSysCourse::AttenSysCourse::CourseUnsuspended",
         kind: "nested",
+      },
+      {
+        name: "OwnableEvent",
+        type: "openzeppelin_access::ownable::ownable::OwnableComponent::Event",
+        kind: "flat",
+      },
+      {
+        name: "UpgradeableEvent",
+        type: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Event",
+        kind: "flat",
       },
     ],
   },
@@ -1220,6 +1364,53 @@ export const attensysEventAbi = [
     state_mutability: "view",
   },
   {
+    type: "function",
+    name: "upgrade",
+    inputs: [
+      {
+        name: "new_class_hash",
+        type: "core::starknet::class_hash::ClassHash",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "impl",
+    name: "OwnableImpl",
+    interface_name: "openzeppelin_access::ownable::interface::IOwnable",
+  },
+  {
+    type: "function",
+    name: "owner",
+    inputs: [],
+    outputs: [
+      {
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "transfer_ownership",
+    inputs: [
+      {
+        name: "new_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "renounce_ownership",
+    inputs: [],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
     type: "constructor",
     name: "constructor",
     inputs: [
@@ -1418,6 +1609,81 @@ export const attensysEventAbi = [
   },
   {
     type: "event",
+    name: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferred",
+    kind: "struct",
+    members: [
+      {
+        name: "previous_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+      {
+        name: "new_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferStarted",
+    kind: "struct",
+    members: [
+      {
+        name: "previous_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+      {
+        name: "new_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "openzeppelin_access::ownable::ownable::OwnableComponent::Event",
+    kind: "enum",
+    variants: [
+      {
+        name: "OwnershipTransferred",
+        type: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferred",
+        kind: "nested",
+      },
+      {
+        name: "OwnershipTransferStarted",
+        type: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferStarted",
+        kind: "nested",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Upgraded",
+    kind: "struct",
+    members: [
+      {
+        name: "class_hash",
+        type: "core::starknet::class_hash::ClassHash",
+        kind: "data",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Event",
+    kind: "enum",
+    variants: [
+      {
+        name: "Upgraded",
+        type: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Upgraded",
+        kind: "nested",
+      },
+    ],
+  },
+  {
+    type: "event",
     name: "attendsys::contracts::AttenSysEvent::AttenSysEvent::Event",
     kind: "enum",
     variants: [
@@ -1470,6 +1736,16 @@ export const attensysEventAbi = [
         name: "BatchCertificationCompleted",
         type: "attendsys::contracts::AttenSysEvent::AttenSysEvent::BatchCertificationCompleted",
         kind: "nested",
+      },
+      {
+        name: "OwnableEvent",
+        type: "openzeppelin_access::ownable::ownable::OwnableComponent::Event",
+        kind: "flat",
+      },
+      {
+        name: "UpgradeableEvent",
+        type: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Event",
+        kind: "flat",
       },
     ],
   },
@@ -2490,6 +2766,53 @@ export const attensysOrgAbi = [
     state_mutability: "view",
   },
   {
+    type: "function",
+    name: "upgrade",
+    inputs: [
+      {
+        name: "new_class_hash",
+        type: "core::starknet::class_hash::ClassHash",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "impl",
+    name: "OwnableImpl",
+    interface_name: "openzeppelin_access::ownable::interface::IOwnable",
+  },
+  {
+    type: "function",
+    name: "owner",
+    inputs: [],
+    outputs: [
+      {
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "transfer_ownership",
+    inputs: [
+      {
+        name: "new_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "renounce_ownership",
+    inputs: [],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
     type: "constructor",
     name: "constructor",
     inputs: [
@@ -2889,6 +3212,81 @@ export const attensysOrgAbi = [
   },
   {
     type: "event",
+    name: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferred",
+    kind: "struct",
+    members: [
+      {
+        name: "previous_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+      {
+        name: "new_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferStarted",
+    kind: "struct",
+    members: [
+      {
+        name: "previous_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+      {
+        name: "new_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+        kind: "key",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "openzeppelin_access::ownable::ownable::OwnableComponent::Event",
+    kind: "enum",
+    variants: [
+      {
+        name: "OwnershipTransferred",
+        type: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferred",
+        kind: "nested",
+      },
+      {
+        name: "OwnershipTransferStarted",
+        type: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferStarted",
+        kind: "nested",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Upgraded",
+    kind: "struct",
+    members: [
+      {
+        name: "class_hash",
+        type: "core::starknet::class_hash::ClassHash",
+        kind: "data",
+      },
+    ],
+  },
+  {
+    type: "event",
+    name: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Event",
+    kind: "enum",
+    variants: [
+      {
+        name: "Upgraded",
+        type: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Upgraded",
+        kind: "nested",
+      },
+    ],
+  },
+  {
+    type: "event",
     name: "attendsys::contracts::AttenSysOrg::AttenSysOrg::Event",
     kind: "enum",
     variants: [
@@ -2981,6 +3379,16 @@ export const attensysOrgAbi = [
         name: "BootCampSuspended",
         type: "attendsys::contracts::AttenSysOrg::AttenSysOrg::BootCampSuspended",
         kind: "nested",
+      },
+      {
+        name: "OwnableEvent",
+        type: "openzeppelin_access::ownable::ownable::OwnableComponent::Event",
+        kind: "flat",
+      },
+      {
+        name: "UpgradeableEvent",
+        type: "openzeppelin_upgrades::upgradeable::UpgradeableComponent::Event",
+        kind: "flat",
       },
     ],
   },

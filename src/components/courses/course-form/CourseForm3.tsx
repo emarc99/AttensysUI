@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Previous from "./previous";
 import { useRouter } from "next/navigation";
+import { useAtom } from "jotai";
+import { courseInitState } from "@/state/connectedWalletStarknetkitNext";
 
 interface Option {
   id: keyof FormData;
@@ -34,19 +36,28 @@ const CourseForm3 = ({
   section,
   handleCoursePlanChange,
 }: ChildComponentProps) => {
-  const [selectedOption, setSelectedOption] = useState<string>("");
+  const [courseData, setCourseData] = useAtom(courseInitState);
+  const [selectedOption, setSelectedOption] = useState<string>(
+    courseData.courseArea || "",
+  );
   const router = useRouter();
   const [errors, setErrors] = useState<FormErrors>({ general: "" });
 
+  useEffect(() => {
+    if (courseData.courseArea) {
+      setSelectedOption(courseData.courseArea);
+    }
+  }, [courseData.courseArea]);
+
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedOption(event.target.value);
+    const value = event.target.value;
+    setSelectedOption(value);
     setErrors({ general: "" });
+    setCourseData((prev) => ({ ...prev, courseArea: value }));
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    handleCoursePlanChange(selectedOption);
 
     if (!selectedOption) {
       setErrors({ general: "Please select one option." });
@@ -95,7 +106,7 @@ const CourseForm3 = ({
         <div className="text-center">
           <button
             type="submit"
-            className="bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] w-[190px] md:w-[350px rounded-xl py-3 text-xs md:text-base mt-12 mb-44 text-white"
+            className="bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] w-[190px] md:w-[350px] rounded-xl py-3 text-xs md:text-base mt-12 mb-44 text-white"
           >
             Setup my course
           </button>

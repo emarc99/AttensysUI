@@ -21,6 +21,8 @@ import filled from "@/assets/filled.svg";
 import free_books from "@/assets/free_books.svg";
 import notifications from "@/assets/notifications.svg";
 import createIcon from "@/assets/create.svg";
+import ControllerConnector from "@cartridge/connector/controller";
+import { useAccount, useConnect } from "@starknet-react/core";
 
 interface UserSideBarProps {
   wallet: any;
@@ -64,6 +66,10 @@ const UserSideBar = ({
       url: notifications,
     },
   ]);
+  const { connect, connectors } = useConnect();
+  const controller = connectors[0] as ControllerConnector;
+  const { address } = useAccount();
+  const [username, setUsername] = useState<string>();
 
   const [isFilterModalOpen, setFilterModalOpen] = useState(false); // State for filter modal
 
@@ -97,51 +103,25 @@ const UserSideBar = ({
     }
   };
 
-  function generateDummyName() {
-    const firstNames = [
-      "John",
-      "Alice",
-      "Michael",
-      "Sarah",
-      "David",
-      "Emma",
-      "James",
-      "Olivia",
-      "Daniel",
-      "Sophia",
-    ];
-    const lastNames = [
-      "Smith",
-      "Johnson",
-      "Brown",
-      "Williams",
-      "Jones",
-      "Miller",
-      "Davis",
-      "Garcia",
-      "Rodriguez",
-      "Wilson",
-    ];
-
-    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-
-    return `${firstName} ${lastName}`;
-  }
-
-  const dummyName = useMemo(() => {
-    if (
-      wallet?.selectedAddress &&
-      typeof wallet.selectedAddress === "string" &&
-      wallet.selectedAddress.trim() !== ""
-    ) {
-      return generateDummyName();
-    }
-    return "No User";
-  }, [wallet?.selectedAddress]);
+  // const dummyName = useMemo(() => {
+  //   if (
+  //     wallet?.address &&
+  //     typeof wallet?.address === "string" &&
+  //     wallet?.address.trim() !== ""
+  //   ) {
+  //     return controller.username();
+  //   }
+  //   return "No User";
+  // }, [wallet?.address]);
 
   useEffect(() => {
-    if (wallet?.selectedAddress != undefined) {
+    if (!address) return;
+    controller.username()?.then((n) => setUsername(n));
+    console.log(address, "address");
+  }, [address, controller]);
+
+  useEffect(() => {
+    if (wallet?.address != undefined) {
       setSideProperties((prev) =>
         prev.map((item) => {
           if (item.title === "Notification") {
@@ -156,7 +136,7 @@ const UserSideBar = ({
         }),
       );
     }
-  }, [wallet?.selectedAddress, courseData, takenCoursesData]);
+  }, [wallet?.address, courseData, takenCoursesData]);
 
   // Function to handle filter selection
   const handleFilterSelection = (filter: string) => {
@@ -188,14 +168,14 @@ const UserSideBar = ({
                 </div>
                 <div className="xl:w-[200px]">
                   <p className="text-[13px] text-[#2D3A4B] font-bold leading-[22px]">
-                    {dummyName}
+                    {username}
                   </p>
                   <p className="text-[#A01B9B] text-[12px] font-normal leading-[24px]">
-                    {!!wallet?.selectedAddress &&
-                    typeof wallet.selectedAddress === "string" &&
-                    wallet.selectedAddress.trim() !== ""
-                      ? shortHex(wallet.selectedAddress)
-                      : "Connect Wallet"}
+                    {!!address &&
+                    typeof address === "string" &&
+                    address.trim() !== ""
+                      ? shortHex(address)
+                      : "Login"}
                   </p>
                 </div>
               </div>

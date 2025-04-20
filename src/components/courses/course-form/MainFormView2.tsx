@@ -152,24 +152,11 @@ const MainFormView2: React.FC<ChildComponentProps> = ({
                     className="w-full h-[55px] py-2 px-6 border border-gray-300 rounded md:rounded-[6px] shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
                     placeholder="e.g A laptop."
                     value={courseData.studentRequirements}
-                    // onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    //   handleStudentReqChange(e);
-                    //   setRequirementInput(e.target.value);
-                    //   setRequirementsError("");
-                    // }}
-
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       handleStudentReqChange(e);
-                      setRequirementInput(e.target.value);
                       setRequirementsError("");
                     }}
                   />
-                  <button
-                    onClick={handleAddRequirement}
-                    className="rounded md:rounded-[6px] py-2 px-4 flex-none h-[55px] w-auto font-normal text-[#2D3A4B] leading-[21px] border-2 p-1 ml-2 md:ml-5 text-[13px] sm:text-base bg-white"
-                  >
-                    <span className="text-xl leading-none">+</span> Add Item
-                  </button>
                 </div>
                 {requirementsError && (
                   <p className="text-red-500 text-xs mt-1">

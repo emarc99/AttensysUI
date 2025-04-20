@@ -6,14 +6,16 @@ import youtube from "@/assets/youtube.svg";
 import podcast from "@/assets/Podcast.svg";
 import rich from "@/assets/Richin2024.svg";
 import Image from "next/image";
-import Switch from "react-switch";
 import Lectures from "../Lectures";
 import CourseSideBar from "./SideBar";
 import { MdOutlineDiamond } from "react-icons/md";
 import { IoSearchOutline, IoMenuOutline } from "react-icons/io5";
 import { pinata } from "../../../../utils/config";
 import { FileObject } from "pinata";
-import { courseInitState } from "@/state/connectedWalletStarknetkitNext";
+import {
+  courseInitState,
+  clearCourseDraft,
+} from "@/state/connectedWalletStarknetkitNext";
 import { lectures } from "@/constants/data";
 import { attensysCourseAddress } from "@/deployments/contracts";
 import { attensysCourseAbi } from "@/deployments/abi";
@@ -22,6 +24,7 @@ import { useRouter } from "next/navigation";
 import { handleCreateCourse } from "@/utils/helpers";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { toast } from "react-toastify";
+import { useAccount } from "@starknet-react/core";
 
 interface ChildComponentProps {
   courseData: any;
@@ -80,29 +83,55 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [showRetry, setShowRetry] = useState(false);
+  const { account, address } = useAccount();
+  const [txnHash, setTxnHash] = useState<string>();
 
   const router = useRouter();
   const handleSwitch = (
-    event: MouseEvent | React.SyntheticEvent<MouseEvent | KeyboardEvent, Event>,
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.MouseEvent<Element, MouseEvent>,
+    value: boolean,
   ) => {
-    setIsActivated(!isActivated);
-    handleCoursePublishWithCert(event);
+    setIsActivated(value);
+    if (event instanceof MouseEvent) {
+      handleCoursePublishWithCert(event);
+    }
   };
 
   const [receiptData, setReceiptData] = useState<any>(null);
+
+  function dataURLtoBlob(dataURL: any) {
+    const arr = dataURL.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new Blob([u8arr], { type: mime });
+  }
 
   const handleCourseUpload = async (e: any) => {
     setIsUploading(true);
     setIsSaving(true);
 
     try {
-      const courseImgupload = await pinata.upload.file(courseData.courseImage);
+      const blob = dataURLtoBlob(courseData.courseImage.url);
+
+      const realFile = new File([blob], courseData.courseImage.name, {
+        type: courseData.courseImage.type,
+      });
+      const courseImgupload = await pinata.upload.file(realFile);
 
       const dataUpload = await pinata.upload.json({
         primaryGoal: courseData.primaryGoal,
         targetAudience: courseData.targetAudience,
         courseArea: courseData.courseArea,
-        courseIdentifier: "",
+        courseIdentifier: "1",
         courseCreator: courseData.courseCreator,
         courseName: courseData.courseName,
         courseDescription: courseData.courseDescription,
@@ -123,13 +152,13 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
           const courseContract = new Contract(
             attensysCourseAbi,
             attensysCourseAddress,
-            wallet?.account,
+            account,
           );
 
           const create_course_calldata = courseContract.populate(
             "create_course",
             [
-              wallet?.account?.address,
+              address,
               false,
               courseImgupload.IpfsHash,
               courseData.courseName,
@@ -138,36 +167,33 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
             ],
           );
 
-          const callCourseContract = await wallet?.account.execute([
+          const callCourseContract = await account?.execute([
             {
               contractAddress: attensysCourseAddress,
               entrypoint: "create_course",
               calldata: create_course_calldata.calldata,
             },
           ]);
+          setTxnHash(callCourseContract?.transaction_hash);
+          console.log("hash", callCourseContract?.transaction_hash);
 
-          const receipt = await wallet?.account?.provider
-            .waitForTransaction(callCourseContract.transaction_hash)
-            .then((res: any) => {
-              console.log("what is ", res);
-              setReceiptData(res);
-            })
-            .catch((e: any) => {
-              setIsUploading(false);
-              setIsSaving(false);
+          // Create a deep copy of the course data
+          const courseDataCopy = JSON.parse(JSON.stringify(courseData));
 
-              toast.error("Transaction failed or timed out:", e.message);
-              setShowRetry(true);
-            })
-            .finally(() => {
-              handleCreateCourse(e, "course-landing-page", router);
-            });
+          // Store the copy in localStorage
+          localStorage.setItem("courseData", JSON.stringify(courseDataCopy));
+
+          // Route to landing page first
+          handleCreateCourse(e, "course-landing-page", router);
         } catch (error: any) {
           toast.error(error);
         }
       }
     } catch (error) {
-      console.log(error);
+      console.log("from here", error);
+    } finally {
+      setIsUploading(false);
+      setIsSaving(false);
     }
   };
 
@@ -176,16 +202,9 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
   };
 
   useEffect(() => {
-    // Check if file is a valid File object
-    if (courseData.courseImage instanceof File) {
-      // Create a temporary URL for the fetched image
-      const imageUrl = URL.createObjectURL(courseData.courseImage);
-      setImageSrc(imageUrl);
-
-      // Clean up the URL object to free up memory
-      return () => {
-        URL.revokeObjectURL(imageUrl);
-      };
+    // Check if courseImage has a url property
+    if (courseData.courseImage?.url) {
+      setImageSrc(courseData.courseImage.url);
     }
   }, [courseData.courseImage]);
 
@@ -231,75 +250,105 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
             </button>
           </div>
 
-          <div className="lg:mx-4 xl:mx-24 mt-12">
+          <div className="lg:mx-4 xl:mx-24 sm:mt-12">
             {/* field */}
             <div className="mb-3 order-first block lg:hidden">
               <p className="text-[#5801A9] text-[16px] font-medium leading-[22px]">
                 {courseData.courseCategory} | Web Development
               </p>
             </div>
-            <div className="block lg:grid lg:grid-cols-2 gap-4">
+            <div className="block lg:grid lg:grid-cols-2 gap-8">
               {/* Course Image */}
-              <div className="relative h-[350px] w-auto max-w-[500px]">
-                {imageSrc ? (
-                  <Image
-                    src={(imageSrc as string) || "/placeholder.svg"}
-                    alt="Fetched Image"
-                    width={500} // Explicit width
-                    height={500} // Explicit height
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="flex items-center justify-center h-full">
-                    <LoadingSpinner size="md" colorVariant="primary" />
+              <div>
+                <div className="h-[350px] w-full lg:w-[500px] overflow-hidden block sm:hidden">
+                  <div className="relative h-full w-full">
+                    {imageSrc ? (
+                      <Image
+                        src={(imageSrc as string) || "/placeholder.svg"}
+                        alt="Fetched Image"
+                        width={500}
+                        height={350}
+                        className="object-cover w-full h-full"
+                        style={{ objectFit: "cover" }}
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full">
+                        <LoadingSpinner size="md" colorVariant="primary" />
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
+
+                <div className="h-[350px] w-full pr-10 hidden sm:block overflow-hidden">
+                  <div className="relative h-full w-full">
+                    {imageSrc ? (
+                      <Image
+                        src={(imageSrc as string) || "/placeholder.svg"}
+                        alt="Fetched Image"
+                        width={500}
+                        height={350}
+                        className="object-cover w-full h-full"
+                        style={{ objectFit: "cover" }}
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full">
+                        <LoadingSpinner size="md" colorVariant="primary" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="  text-[#333333] text-[14px] font-light leading-[22px] my-3 text-justify sm:w-[95%]">
+                  <p>{courseData.targetAudienceDesc}</p>
+                </div>
               </div>
 
               {/* Course information */}
-              <div>
-                {/* field */}
-                <div className="mb-3 order-first hidden lg:block">
-                  <p className="text-[#5801A9] text-[16px] font-medium leading-[22px]">
-                    {courseData.courseCategory} | Web Development
-                  </p>
+              <div className="flex flex-col justify-between text-justify">
+                <div>
+                  {/* field */}
+                  <div className="mb-3 order-first hidden lg:block">
+                    <p className="text-[#5801A9] text-[16px] font-medium leading-[22px]">
+                      {courseData.courseCategory} | Web Development
+                    </p>
+                  </div>
+
+                  <h4 className="text-[19px] text-[#333333] leading-[34px] font-bold my-2">
+                    {courseData.courseName}
+                  </h4>
+                  <div className="my-3">
+                    <p className="text-[#333333] text-[14px] font-light leading-[22px]">
+                      {courseData.courseDescription}
+                    </p>
+                  </div>
                 </div>
 
-                <h4 className="text-[19px] text-[#333333] leading-[34px] font-bold my-2 ">
-                  {courseData.courseName}
-                </h4>
-                <div className="my-3">
-                  <p className="  text-[#333333] text-[14px] font-light leading-[22px]">
-                    {courseData.courseDescription}
-                  </p>
-                </div>
+                <div>
+                  <div className="bg-[#5801A9] py-2 text-white text-center mt-6 mb-3 sm:w-[95%] lg:w-[50%] rounded-lg">
+                    <p className="text-[14px] font-extrabold leading-[22px]">
+                      {courseData.courseCreator}
+                    </p>
+                  </div>
 
-                <div className="bg-[#5801A9] py-2 text-white w-fit p-2 text-center mt-6 mb-3 lg:w-[50%] rounded-lg">
-                  <p className="text-[14px] font-extrabold leading-[22px]">
-                    {courseData.courseCreator}
-                  </p>
-                </div>
-
-                <div className="flex space-x-3 items-center">
-                  <MdOutlineDiamond color="#333333" />
-                  <p className="text-[#333333] text-[14px] font-medium leading-[22px]">
-                    Difficulty level : {courseData.difficultyLevel}
-                  </p>
+                  <div className="flex space-x-3 items-center">
+                    <MdOutlineDiamond color="#333333" />
+                    <p className="text-[#333333] text-[14px] leading-[22px]">
+                      <span className="font-medium">Difficulty level :</span>
+                      {courseData.difficultyLevel}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="  text-[#333333] text-[14px] font-light leading-[22px]">
-              <p>{courseData.targetAudienceDesc}</p>
             </div>
 
             <div className="mt-8">
               {/* Student Requirements */}
+
               <div className="mb-6 block lg:hidden">
-                <h2 className="font-semibold text-[18px] leading-[31px] text-[#333333] mb-2">
+                <h4 className="font-semibold text-[18px] leading-[31px] text-[#333333] mb-2">
                   Student Requirements
-                </h2>
-                <div>
-                  <p>{courseData.studentRequirements}</p>
+                </h4>
+                <div className="text-[#333333] text-[14px] font-light leading-[22px]">
+                  <p>{courseData?.studentRequirements}</p>
                 </div>
               </div>
 
@@ -308,49 +357,67 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                 <h2 className="font-semibold text-[18px] leading-[31px] text-[#333333] mb-2">
                   Target Audience
                 </h2>
-                {/* <ul className="text-sm text-[#333333] list-disc pl-5 space-y-1">
-                  <li>Beginners interested in web development</li>
-                  <li>
-                    Aspiring web developers looking to start their journey
-                  </li>
-                  <li>Anyone wanting to create their own websites</li>
-                </ul> */}
-                {courseData.targetAudience}
+                <div className="text-[#333333] text-[14px] font-light leading-[22px]">
+                  <p> {courseData.targetAudience}</p>
+                </div>
               </div>
 
-              {/* lectures in course */}
-              <Lectures
-                lectures={lectures}
-                courseData={courseData}
-                learningObj={courseData.learningObjectives}
-              />
-              {/* course desc & student req */}
+              <div className="px-6 lg:mx-48 sm:mt-4 xl:mt-32 mb-10">
+                {/* lectures in course */}
 
-              <div className="">
+                <Lectures
+                  lectures={lectures}
+                  courseData={courseData}
+                  learningObj={courseData.learningObjectives}
+                  isActivated={isActivated}
+                  handleSwitch={(checked: boolean) => {
+                    const mockEvent = new MouseEvent(
+                      "click",
+                    ) as unknown as React.MouseEvent<Element, MouseEvent>;
+                    handleSwitch(mockEvent, checked);
+                  }}
+                />
+
                 <div>
-                  <div className="flex justify-between lg:w-[30%] mt-5">
-                    <h4 className="font-semibold text-[18px] leading-[31px] text-[#333333]">
-                      Certification for this course
+                  <div className="flex flex-col lg:w-[60%] mt-5">
+                    <h4 className="font-semibold text-[18px] leading-[31px] text-[#333333] mb-4">
+                      Do you want to issue certification for this course?
                     </h4>
 
-                    <Switch
-                      //@ts-ignore
-                      onChange={handleSwitch}
-                      checked={isActivated}
-                      onColor="#9B51E0"
-                      offColor="#4A90E2"
-                      uncheckedHandleIcon={<div />}
-                      checkedHandleIcon={<div />}
-                      checkedIcon={<div />}
-                      uncheckedIcon={<div />}
-                      className="mx-2"
-                    />
+                    <div className="flex items-center space-x-8">
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="certification"
+                          checked={isActivated}
+                          onChange={(e) => handleSwitch(e, true)}
+                          className="w-4 h-4 text-[#9B51E0] border-2 border-[#9B51E0] focus:ring-[#9B51E0]"
+                        />
+                        <span className="text-[#333333] text-[14px] font-normal">
+                          Yes
+                        </span>
+                      </label>
+
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="certification"
+                          checked={!isActivated}
+                          onChange={(e) => handleSwitch(e, false)}
+                          className="w-4 h-4 text-[#9B51E0] border-2 border-[#9B51E0] focus:ring-[#9B51E0]"
+                        />
+                        <span className="text-[#333333] text-[14px] font-normal">
+                          No
+                        </span>
+                      </label>
+                    </div>
                   </div>
-                  <p className="text-[#333333] text-[14px] font-normal leading-[22px]">
-                    After completion students will be issued certification
-                  </p>
                 </div>
-                <div className="mt-12 mb-24 p-10">
+              </div>
+
+              {/* course desc & student req */}
+              <div className="">
+                <div className="mt-4 sm:mt-8  sm:mb-12">
                   <button
                     className={`w-full lg:w-auto rounded-xl px-8 lg:px-24 py-3 text-white ${
                       isSaving

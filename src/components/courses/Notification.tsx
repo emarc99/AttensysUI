@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { gql, request } from "graphql-request";
 import { format } from "date-fns";
+import { useAccount } from "@starknet-react/core";
 
 const coursequery = gql`
   {
@@ -47,6 +48,7 @@ const courseurl =
 const Notification = (props: any) => {
   const { wallet } = props;
   const [notifications, setNotifications] = useState<any[]>([]);
+  const { address } = useAccount();
 
   const { data: coursedata } = useQuery({
     queryKey: ["coursedata"],
@@ -65,8 +67,8 @@ const Notification = (props: any) => {
 
   React.useEffect(() => {
     // Add this function after the queries and before the return statement
-    const filterNotificationsByAddress = (address: string) => {
-      if (!address) return [];
+    const filterNotificationsByAddress = (address: string | undefined) => {
+      // if (!address) return [];
 
       const notifications: any = [];
 
@@ -75,7 +77,8 @@ const Notification = (props: any) => {
         // Check course creations
         eventData.courses?.courseCreateds?.forEach((event: any) => {
           if (
-            formatAddress(event.owner_.toLowerCase()) === address.toLowerCase()
+            formatAddress(event.owner_.toLowerCase()) ==
+            formatAddress(address?.toLowerCase())
           ) {
             notifications.push({
               type: "COURSE_CREATED",
@@ -90,8 +93,8 @@ const Notification = (props: any) => {
         // Check certificate claims
         eventData.courses?.courseCertClaimeds?.forEach((event: any) => {
           if (
-            formatAddress(event.candidate.toLowerCase()) ===
-            address.toLowerCase()
+            formatAddress(event.candidate.toLowerCase()) ==
+            formatAddress(address?.toLowerCase())
           ) {
             notifications.push({
               type: "CERT_CLAIMED",
@@ -105,17 +108,15 @@ const Notification = (props: any) => {
         //TODO: check for course replaced
         //TODO: check for admin transfer
       }
-
       // Sort notifications by timestamp (most recent first)
       return notifications.sort((a: any, b: any) => b.timestamp - a.timestamp);
     };
-
-    setNotifications(filterNotificationsByAddress(wallet?.selectedAddress));
-  }, [coursedata]);
+    setNotifications(filterNotificationsByAddress(address));
+  }, [coursedata, address]);
 
   // Add this helper function
-  const formatAddress = (addr: string) => {
-    if (addr.startsWith("0x")) {
+  const formatAddress = (addr: string | undefined) => {
+    if (addr?.startsWith("0x")) {
       return addr.startsWith("0x0") ? addr : "0x0" + addr.slice(2);
     }
     return "0x0" + addr;

@@ -13,6 +13,7 @@ import { connect } from "starknetkit";
 import { toast } from "react-toastify";
 import WalletisConnected from "@/components/createorganization/WalletisConnected";
 import TrueFocus from "@/components/createorganization/TrueFocus";
+import { useAccount } from "@starknet-react/core";
 
 interface ChildComponentProps {
   courseData: any;
@@ -47,6 +48,7 @@ const MainFormView: React.FC<ChildComponentProps> = ({
   const [skillError, setSkillError] = useState("");
   const [levelError, setLevelError] = useState("");
   const [wallet, setWallet] = useAtom(walletStarknetkit);
+  const { account, address } = useAccount();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -90,40 +92,16 @@ const MainFormView: React.FC<ChildComponentProps> = ({
     handleCreateCourse(e, "courseSetup2", router);
   };
 
-  useEffect(() => {
-    const autoConnect = async () => {
-      if (!wallet) {
-        try {
-          const { wallet: connectedWallet } = await connect({
-            //@ts-ignore
-            provider,
-            modalMode: "neverAsk",
-            webWalletUrl: ARGENT_WEBWALLET_URL,
-            argentMobileOptions: {
-              dappName: "Attensys",
-              url: window.location.hostname,
-              chainId: CHAIN_ID,
-              icons: [],
-            },
-          });
-          setWallet(connectedWallet);
-        } catch (e) {
-          console.error(e);
-        } finally {
-          console.log("show");
-        }
-      }
-    };
+  const isImageUploaded = (imageData: any) => {
+    return imageData && imageData.name && imageData.name.length > 0;
+  };
 
-    autoConnect();
-  }, [wallet]);
-
-  if (wallet == undefined) {
+  if (account == undefined) {
     return (
       <div className="w-screen h-screen z-50 flex justify-center items-center">
         {/* <WalletisConnected /> */}
         <TrueFocus
-          sentence="Connect Wallet"
+          sentence="Login To-Continue"
           manualMode={false}
           blurAmount={9}
           borderColor="#9B51E0"
@@ -198,6 +176,8 @@ const MainFormView: React.FC<ChildComponentProps> = ({
                   <input
                     type="checkbox"
                     className="appearance-none w-[23px] h-[23px] hidden md:block rounded-full border-[1px] border-[#C5D322] checked:bg-[#C5D322] checked:border-[#C5D322] required:border-red-500 checked:before:content-['✔'] checked:before:absolute checked:before:top-[3px] checked:before:left-[6px] checked:before:text-white checked:before:text-[10px] relative"
+                    checked={courseData.courseName.trim().length > 0}
+                    readOnly
                   />
                 </div>
                 {courseNameError && (
@@ -231,6 +211,8 @@ const MainFormView: React.FC<ChildComponentProps> = ({
                   <input
                     type="checkbox"
                     className="appearance-none w-[23px] h-[23px] hidden md:block rounded-full border-[1px] border-[#C5D322] checked:bg-[#C5D322] checked:border-[#C5D322] required:border-red-500 checked:before:content-['✔'] checked:before:absolute checked:before:top-[3px] checked:before:left-[6px] checked:before:text-white checked:before:text-[10px] relative"
+                    checked={courseData.courseCreator.trim().length > 0}
+                    readOnly
                   />
                 </div>
                 {courseCreatorError && (
@@ -253,18 +235,20 @@ const MainFormView: React.FC<ChildComponentProps> = ({
                 <div className="flex items-start my-4 space-x-4">
                   <textarea
                     id="message"
-                    className="block px-2.5 pb-64 py-3 w-[100%] sm:w-[80%] text-sm text-gray-900 bg-gray-50 rounded-[6px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="block px-2.5 py-3 w-[100%] sm:w-[80%] text-sm text-gray-900 bg-gray-50 rounded-[6px] border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 min-h-[400px] resize-y overflow-y-auto"
                     placeholder="a little bit about your course......"
                     value={courseData.courseDescription}
                     onChange={(e) => {
                       handleCourseDescriptionChange(e);
                       setCourseDescriptionError("");
                     }}
-                    maxLength={500}
+                    maxLength={2000}
                   ></textarea>
                   <input
                     type="checkbox"
                     className="appearance-none w-[23px] h-[23px] hidden md:block rounded-full border-[1px] border-[#C5D322] checked:bg-[#C5D322] checked:border-[#C5D322] required:border-red-500 checked:before:content-['✔'] checked:before:absolute checked:before:top-[3px] checked:before:left-[6px] checked:before:text-white checked:before:text-[10px] relative"
+                    checked={courseData.courseDescription.trim().length > 0}
+                    readOnly
                   />
                 </div>
                 {courseDescriptionError && (
@@ -307,9 +291,11 @@ const MainFormView: React.FC<ChildComponentProps> = ({
                 <div className="my-4 flex items-start w-full max-w-[556px] h-[55px]">
                   <Dropdown
                     options={levelOptions}
-                    selectedOption={selectedLevel}
+                    selectedOption={courseData.difficultyLevel}
                     onSelect={(option: string) => {
-                      setSelectedLevel(option);
+                      handleDifficultyLevelChange({
+                        target: { value: option },
+                      } as React.ChangeEvent<HTMLSelectElement>);
                       setLevelError("");
                     }}
                     functionToChange={handleDifficultyLevelChange}
@@ -317,24 +303,24 @@ const MainFormView: React.FC<ChildComponentProps> = ({
                     errorMessage={levelError}
                   />
                 </div>
+              </div>
 
-                <div className="mt-12 mb-5 w-full mx-auto flex justify-center md:justify-start">
-                  <button
-                    className="bg-[#4A90E2] rounded-lg py-[15px] text-white w-[190px] md:w-[350px]"
-                    type="submit"
-                  >
-                    Next
-                  </button>
-                </div>
+              <div className="mt-12 mb-5 w-full mx-auto flex justify-center md:justify-start">
+                <button
+                  className="bg-[#4A90E2] rounded-lg py-[15px] text-white w-[190px] md:w-[350px]"
+                  type="submit"
+                >
+                  Next
+                </button>
+              </div>
 
-                <div className="w-full flex justify-center pb-[74px]">
-                  <button
-                    type="button"
-                    className="block sm:hidden bg-[#c5d322] text-sm px-12 py-[15px] rounded-lg text-black"
-                  >
-                    Save progress
-                  </button>
-                </div>
+              <div className="w-full flex justify-center pb-[74px]">
+                <button
+                  type="button"
+                  className="block sm:hidden bg-[#c5d322] text-sm px-12 py-[15px] rounded-lg text-black"
+                >
+                  Save progress
+                </button>
               </div>
             </form>
           </div>
