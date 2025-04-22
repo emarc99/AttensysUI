@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import podcast from "@/assets/Podcast.svg";
 import rich from "@/assets/Richin2024.svg";
 import attensys_logo from "@/assets/attensys_logo.svg";
@@ -8,7 +9,7 @@ import { provider } from "@/constants";
 import { attensysCourseAbi } from "@/deployments/abi";
 import { attensysCourseAddress } from "@/deployments/contracts";
 import { useFetchCID } from "@/hooks/useFetchCID";
-import { getAllCoursesInfo } from "@/utils/helpers";
+import { getAllCoursesInfo, shortHex } from "@/utils/helpers";
 import { GrDiamond } from "@react-icons/all-files/gr/GrDiamond";
 import { HiBadgeCheck } from "@react-icons/all-files/hi/HiBadgeCheck";
 import { IoIosStar } from "@react-icons/all-files/io/IoIosStar";
@@ -20,9 +21,22 @@ import { Contract } from "starknet";
 import StarRating from "../bootcamp/StarRating";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import { CardWithLink } from "./Cards";
-import { useAccount, useExplorer } from "@starknet-react/core";
+import { useAccount, useConnect, useExplorer } from "@starknet-react/core";
 import { usePinataAccess } from "@/hooks/usePinataAccess";
 import { PinataSDK } from "pinata";
+import { RatingDisplay } from "@/components/RatingDisplay";
+import {
+  getReviewsForVideo,
+  getAverageRatingForVideo,
+  submitReview,
+  hasUserReviewed,
+} from "@/lib/services/reviewService";
+import { useParams } from "next/navigation";
+import { ReviewsList } from "@/components/ReviewsList";
+import { ReviewForm } from "@/components/ReviewForm";
+import { auth } from "@/lib/firebase/client";
+import { getCurrentUser, signInUser } from "@/lib/services/authService";
+import ControllerConnector from "@cartridge/connector/controller";
 
 interface CourseType {
   data: any;
@@ -40,38 +54,8 @@ interface Uri {
 }
 
 const LecturePage = (props: any) => {
-  const lectures = [
-    {
-      img: rich,
-      title: "What is Web Development?",
-      desc: "An introduction to the world of web development, covering the basics of how websites...",
-      timing: 8,
-    },
-    {
-      img: youtube,
-      title: "What is Web Development?",
-      desc: "An introduction to the world of web development, covering the basics of how websites...",
-      timing: 8,
-    },
-    {
-      img: podcast,
-      title: "What is Web Development?",
-      desc: "An introduction to the world of web development, covering the basics of how websites...",
-      timing: 8,
-    },
-    {
-      img: podcast,
-      title: "What is Web Development?",
-      desc: "An introduction to the world of web development, covering the basics of how websites...",
-      timing: 8,
-    },
-    {
-      img: podcast,
-      title: "What is Web Development?",
-      desc: "An introduction to the world of web development, covering the basics of how websites...",
-      timing: 8,
-    },
-  ];
+  const params = useParams();
+  const details = params.details;
 
   const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
@@ -106,6 +90,28 @@ const LecturePage = (props: any) => {
   const [showTargetSeeMore, setShowTargetSeeMore] = useState(false);
   const { createAccessLink, url, loading, error } = usePinataAccess();
   const contentRef = useRef<HTMLParagraphElement>(null);
+  const [courseaveragerate, setcourseaveragerate] = useState<any>(null);
+  const [coursereview, setcoursereview] = useState<any>(null);
+  const [hasReviewed, setHasReviewed] = useState<boolean | null>(null);
+  const { connect, connectors } = useConnect();
+  const controller = connectors[0] as ControllerConnector;
+  const [username, setUsername] = useState<string>();
+
+  // Fetch reviews and average rating in parallel, sends empty string if undefined
+  const fetchReviewsAndRating = async () => {
+    const [reviews, averageRating] = await Promise.all([
+      getReviewsForVideo(
+        details?.toString() + props?.data.courseIdentifier || "",
+      ),
+      getAverageRatingForVideo(
+        details?.toString() + props?.data.courseIdentifier || "",
+      ),
+    ]);
+    setcourseaveragerate(averageRating);
+    setcoursereview(reviews);
+    console.log("check reviews here", reviews);
+    console.log("check average rating here", averageRating);
+  };
 
   // console.log("uploading:", isUploading);
   console.log("taken:", isTakingCourse);
@@ -387,6 +393,9 @@ const LecturePage = (props: any) => {
 
   // ⛳ Set the first video on page load
   useEffect(() => {
+    if (props?.data) {
+      fetchReviewsAndRating();
+    }
     if (props?.data.courseCurriculum?.length > 0) {
       setSelectedVideo(
         `https://${props?.data.courseCurriculum[props?.data.courseCurriculum.length - 1].video}`,
@@ -397,6 +406,22 @@ const LecturePage = (props: any) => {
       );
     }
   }, [props.data]);
+
+  useEffect(() => {
+    const checkReview = async () => {
+      if (auth.currentUser!.uid) {
+        const exists = await hasUserReviewed(
+          `${details?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
+          auth.currentUser!.uid,
+        );
+        setHasReviewed(exists);
+      }
+    };
+    checkReview();
+  }, [
+    auth?.currentUser!?.uid,
+    `${details?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
+  ]);
 
   useEffect(() => {
     const checkContentHeight = () => {
@@ -420,6 +445,12 @@ const LecturePage = (props: any) => {
       window.removeEventListener("resize", checkContentHeight);
     };
   }, [props?.data?.courseDescription, props?.data?.targetAudienceDesc]);
+
+  useEffect(() => {
+    if (!address) return;
+    controller.username()?.then((n) => setUsername(n));
+    console.log(address, "address");
+  }, [address, controller]);
 
   return (
     <div className="pt-6  pb-36 w-full">
@@ -810,36 +841,35 @@ const LecturePage = (props: any) => {
             <h1 className="text-[16px] font-bold text-[#2D3A4B] leading-[22px]">
               Leave a review
             </h1>
-            <div className="h-[610px] pb-10 w-full rounded-xl bg-[#FFFFFF] border-[1px] border-[#D9D9D9]">
+            <div className="h-auto pb-10 w-full rounded-xl bg-[#FFFFFF] border-[1px] border-[#D9D9D9]">
               <div className="flex justify-between items-center h-[100px] w-full border-b-[1px] border-b-[#EBECEE] px-10">
                 <div className="h-full w-[30%] flex items-center justify-center border-r-[1px] border-r-[#EBECEE]">
                   <div className="flex items-center w-full space-x-3">
                     <Image src={profile_pic} alt="pic" width={60} />
                     <div className="space-y-1">
                       <h4 className="text-[16px] text-[#333333] leading-[22px] font-semibold">
-                        0xRavenclaw
+                        {username}
                       </h4>
                       <p className="text-[#9b51e0] text-[12px] font-medium leading-[14px]">
-                        0x5c956e61...de5232dc11
+                        {!!address &&
+                        typeof address === "string" &&
+                        address.trim() !== ""
+                          ? shortHex(address)
+                          : "Login"}
                       </p>
                     </div>
                   </div>
                 </div>
                 <div className="h-full w-[30%] space-x-3 flex items-center border-r-[1px] border-r-[#EBECEE]">
                   <h1 className="text-[14px] text-[#333333] leading-[16px] font-medium">
-                    Tap to rate:
+                    {courseaveragerate?.count} students reviewed this course
                   </h1>
-                  <StarRating totalStars={5} starnumber={4} />
                 </div>
                 <div className="h-full w-[30%] flex items-center space-x-3">
-                  <StarRating totalStars={5} starnumber={4} />
-                  <h1 className="text-[14px] text-[#333333] leading-[16px] font-medium">
-                    <span className="text-[#A01B9B]">1,245</span> students
-                  </h1>
+                  <RatingDisplay rating={courseaveragerate} size="sm" />
                 </div>
               </div>
-              <div className="px-10 mt-8 flex items-center space-x-4">
-                {/* input and button */}
+              {/* <div className="px-10 mt-8 flex items-center space-x-4">
                 <input
                   type="text"
                   placeholder="What do you think about this course?"
@@ -849,10 +879,31 @@ const LecturePage = (props: any) => {
                 <button className="hidden sm:block bg-[#9b51e0] px-7 py-2 rounded text-[#fff] font-bold">
                   Send review
                 </button>
+              </div>   */}
+              <div>
+                {!hasReviewed && isTakingCourse && (
+                  <ReviewForm
+                    videoId={details?.toString() + props?.data.courseIdentifier}
+                    userId={address?.toString() || ""}
+                    onSubmit={async (review) => {
+                      let user = getCurrentUser();
+                      if (!user) {
+                        user = await signInUser();
+                      }
+                      await submitReview({
+                        ...review,
+                        userId: auth.currentUser!.uid,
+                        videoId: `${details?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
+                      });
+                      fetchReviewsAndRating();
+                      setHasReviewed(true);
+                    }}
+                  />
+                )}
               </div>
 
               <div className="px-10 mt-10 space-y-10 h-[380px] overflow-y-scroll pb-10 ">
-                <div className="space-y-6">
+                {/* <div className="space-y-6">
                   <div className="flex space-x-3 items-center">
                     <div className="h-[64px] w-[64px] bg-[#9B51E01A] text-[20px] text-[#101928] leading-[24px] rounded-full flex items-center justify-center">
                       OM
@@ -908,6 +959,12 @@ const LecturePage = (props: any) => {
                     to apply to any Web design journey!
                   </p>
                 </div>
+               */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                  <div className="md:col-span-2">
+                    <ReviewsList reviews={coursereview} />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -931,92 +988,63 @@ const LecturePage = (props: any) => {
 
           <div className="block xl:hidden">
             <div className="border-b-[1px] border-b-[#949494] justify-center xl:mx-48 flex space-x-2 items-center h-[50px]">
-              <IoIosStar color="#F6A61C" className="h-[20px] w-[20px]" />
-              <p className="text-[20px] text-[#333333] font-semibold leading-[22px]">
-                4.9 Rating | (281 reviews)
-              </p>
+              <div className="h-full w-[100%] flex items-center space-x-3">
+                <RatingDisplay rating={courseaveragerate} size="sm" />
+              </div>
             </div>
 
             {/* comments */}
             <div className="block xl:hidden py-12 sm:mx-48 items-center content-center justify-around text-sm">
-              <div className="w-[100%] xl:w-[30%]">
-                <div className="flex items-center">
-                  <p className="p-5 bg-[#9b51e01a] font-bold rounded-full">
-                    OM
-                  </p>
-                  <div className="ml-6 space-y-2">
-                    <p>Olivia. M</p>
-                    <StarRating totalStars={5} starnumber={4} />
-                  </div>
-                </div>
-
-                <p className="mt-6 text-[14px] font-medium text-[#333333] leading-[22px]">
-                  Halfway through the course and lots of information given in
-                  every chapter. Concise and easy to understand, very useful to
-                  apply to any Web design journey!
-                </p>
+              <div className="md:col-span-2">
+                <ReviewsList reviews={coursereview} />
               </div>
 
               <div className="border-[1px] border-[#B8B9BA] h-28 hidden xl:block"></div>
-
-              <div className="w-[100%] xl:w-[30%] mt-8 xl:mt-0">
-                <div className="flex items-center">
-                  <p className="p-5 bg-[#9b51e01a] font-bold rounded-full">
-                    OM
-                  </p>
-                  <div className="ml-6 space-y-2">
-                    <p>Olivia. M</p>
-                    <StarRating totalStars={5} starnumber={4} />
-                  </div>
-                </div>
-
-                <p className="mt-6 text-[14px] font-medium text-[#333333] leading-[22px]">
-                  Halfway through the course and lots of information given in
-                  every chapter. Concise and easy to understand, very useful to
-                  apply to any Web design journey!
-                </p>
-              </div>
             </div>
 
-            <div className="flex xl:hidden flex-col">
-              <p className="mt-8 font-semibold">Leave a review</p>
-              <div className=" w-[100%] gap-6 bg-[#FFFFFF] border-[1px] border-[#D9D9D9] rounded-xl overflow-scroll scrollbar-hide p-4 flex flex-col ">
-                <div className="flex items-center w-full space-x-3">
-                  <Image src={profile_pic} alt="pic" width={48} />
-                  <div className="space-y-1">
-                    <h4 className="text-[16px] text-[#333333] leading-[22px] font-semibold">
-                      0xRavenclaw
-                    </h4>
-                    <p className="text-[#9b51e0] text-[12px] font-medium leading-[14px]">
-                      0x5c956e61...de5232dc11
-                    </p>
+            {!hasReviewed && isTakingCourse && (
+              <div className="flex xl:hidden flex-col">
+                <p className="mt-3 font-semibold">Leave a review</p>
+                <div className=" w-[100%] gap-6 bg-[#FFFFFF] border-[1px] border-[#D9D9D9] rounded-xl overflow-scroll scrollbar-hide p-4 flex flex-col ">
+                  <div className="flex items-center w-full space-x-3">
+                    <Image src={profile_pic} alt="pic" width={48} />
+                    <div className="space-y-1">
+                      <h4 className="text-[16px] text-[#333333] leading-[22px] font-semibold">
+                        {username}
+                      </h4>
+                      <p className="text-[#9b51e0] text-[12px] font-medium leading-[14px]">
+                        {!!address &&
+                        typeof address === "string" &&
+                        address.trim() !== ""
+                          ? shortHex(address)
+                          : "Login"}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <ReviewForm
+                      videoId={
+                        details?.toString() + props?.data.courseIdentifier
+                      }
+                      userId={address?.toString() || ""}
+                      onSubmit={async (review) => {
+                        let user = getCurrentUser();
+                        if (!user) {
+                          user = await signInUser();
+                        }
+                        await submitReview({
+                          ...review,
+                          userId: auth.currentUser!.uid,
+                          videoId: `${details?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
+                        });
+                        fetchReviewsAndRating();
+                        setHasReviewed(true);
+                      }}
+                    />
                   </div>
                 </div>
-                <div className="h-full w-full space-x-3 flex items-center">
-                  <h1 className="text-[14px] text-[#333333] leading-[16px] font-medium">
-                    Tap to rate:
-                  </h1>
-                  <StarRating totalStars={5} starnumber={0} />
-                </div>
-                <div className="h-full w-full flex items-center space-x-3">
-                  <StarRating totalStars={5} starnumber={4} />
-                  <h1 className="text-[14px] text-[#333333] leading-[16px] font-medium">
-                    <span className="text-[#A01B9B]">1,245</span> students
-                  </h1>
-                </div>
-                <div className="flex flex-col gap-5">
-                  {/* input and button */}
-                  <input
-                    type="text"
-                    placeholder="What do you think about this course?"
-                    className="w-full h-[45px] border shadow-dm p-6 rounded-xl text-[14px] font-medium leading-[16px]"
-                  />
-                  <button className="hidden sm:block bg-[#9b51e0] px-7 py-2 rounded text-[#fff] font-bold">
-                    Send review
-                  </button>
-                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 

@@ -3,6 +3,9 @@ const path = require("path");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    serverActions: true,
+  },
   images: {
     domains: ["ipfs.io", "gateway.pinata.cloud", "cloudflare-ipfs.com"], // Add more IPFS gateways if needed
   },
