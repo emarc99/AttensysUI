@@ -136,7 +136,7 @@ run yarn to install dependencies and yarn dev to spin up server
 ```bash
 yarn
 #
-yarn dev
+yarn dev:https
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
