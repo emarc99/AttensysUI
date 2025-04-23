@@ -130,6 +130,19 @@ Create .env.local in root folder. Obtain the field data by creating an account a
 NEXT_PUBLIC_PINATA_JWT=
 NEXT_PUBLIC_GATEWAY_URL=
 ```
+intialize mkcert 
+```bash
+# Install mkcert if needed
+brew install mkcert  # macOS
+# OR for Windows (PowerShell as Admin):
+choco install mkcert
+
+# Set up certificate authority
+mkcert -install
+
+# Generate certificates for localhost in project directory
+mkcert -key-file localhost-key.pem -cert-file localhost.pem localhost 127.0.0.1 ::1
+```
 
 run yarn to install dependencies and yarn dev to spin up server
 
