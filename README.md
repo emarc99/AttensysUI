@@ -121,7 +121,7 @@ Clone repo and checkout to main-mirror branch
 
 ```bash
 git clone https://github.com/AttenSys-Stark/AttensysUI.git
-git checkout main-mirror
+git checkout catridge
 ```
 
 Create .env.local in root folder. Obtain the field data by creating an account and api key on pinata and fill it below.
