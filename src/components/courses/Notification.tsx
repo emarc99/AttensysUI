@@ -43,7 +43,7 @@ interface EventData {
 const headers = { Authorization: "Bearer {api-key}" };
 
 const courseurl =
-  "https://api.studio.thegraph.com/query/107628/coursesubgraph/version/v0.0.39";
+  "https://api.studio.thegraph.com/query/107628/coursesubgraph/version/latest";
 
 const Notification = (props: any) => {
   const { wallet } = props;

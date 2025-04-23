@@ -146,8 +146,10 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
         promoAndDiscount: courseData.promoAndDiscount,
         publishWithCertificate: courseData.publishWithCertificate,
       });
+      console.log("dataUpload", dataUpload);
 
       if (dataUpload) {
+        console.log("clicked");
         try {
           const courseContract = new Contract(
             attensysCourseAbi,
@@ -164,6 +166,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
               courseData.courseName,
               "XXX",
               dataUpload.IpfsHash,
+              0,
             ],
           );
 
