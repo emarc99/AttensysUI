@@ -122,14 +122,14 @@ const eventquery = gql`
   }
 `;
 const orgurl =
-  "https://api.studio.thegraph.com/query/107628/orgsubgraph/version/latest";
+  "https://api.studio.thegraph.com/query/107628/orgsubgraph/version/v0.0.39";
 const headers = { Authorization: "Bearer {api-key}" };
 
 const courseurl =
-  "https://api.studio.thegraph.com/query/107628/coursesubgraph/version/latest";
+  "https://api.studio.thegraph.com/query/107628/coursesubgraph/version/v0.0.39";
 
 const eventurl =
-  "https://api.studio.thegraph.com/query/107628/eventsubgraph/version/latest";
+  "https://api.studio.thegraph.com/query/107628/eventsubgraph/version/v0.0.39";
 
 const Index = () => {
   const [status, setStatus] = useAtom(coursestatusAtom);

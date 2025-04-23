@@ -65,7 +65,7 @@ interface EventData {
 }
 
 const orgurl =
-  "https://api.studio.thegraph.com/query/107628/orgsubgraph/version/latest";
+  "https://api.studio.thegraph.com/query/107628/orgsubgraph/version/v0.0.39";
 const headers = { Authorization: "Bearer {api-key}" };
 
 const Notifcation = (props: any) => {
