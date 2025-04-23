@@ -282,7 +282,7 @@ export const orgurl =
 export const headers = { Authorization: "Bearer {api-key}" };
 
 export const courseurl =
-  "https://api.studio.thegraph.com/query/107628/coursesubgraph/v0.0.39";
+  "https://api.studio.thegraph.com/query/107628/coursesubgraph/version/latest";
 
 export const eventurl =
   "https://api.studio.thegraph.com/query/107628/eventsubgraph/version/latest";
