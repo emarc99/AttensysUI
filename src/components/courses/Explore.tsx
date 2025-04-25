@@ -50,6 +50,72 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
     }
   };
 
+  // Function to render a course card
+  const renderCourseCard = (course: any, index: any) => {
+    return (
+      <div
+        key={index}
+        className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
+      >
+        <div className="h-48 relative">
+          <Image
+            src={`https://ipfs.io/ipfs/${course?.data?.courseImage}`}
+            alt={course?.data?.courseName || "Course image"}
+            layout="fill"
+            objectFit="cover"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="p-4 flex-grow">
+          <div className="flex items-center justify-between mb-2">
+            <p className="bg-[#5801A9] text-white text-xs px-2 py-1 rounded">
+              {course?.data?.difficultyLevel || "Beginner"}
+            </p>
+            <div className="flex items-center">
+              <StarRating totalStars={5} starnumber={4} />
+              <span className="text-xs text-gray-600 ml-1">(200+)</span>
+            </div>
+          </div>
+
+          <h3
+            className="font-bold text-lg mb-2 cursor-pointer hover:text-[#5801A9]"
+            onClick={(e) => {
+              localStorage.setItem("courseData", JSON.stringify(course?.data));
+              handleCourse(e, course?.data?.courseName, router);
+            }}
+          >
+            {course?.data?.courseName || "Course Title"}
+          </h3>
+
+          <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+            {course?.data?.courseDescription || "No description available"}
+          </p>
+
+          <div className="flex items-center text-xs text-gray-500 mb-2">
+            <FaPlay className="mr-1 text-[#5801A9]" />
+            <span>Total play time: 2 hrs 35 mins</span>
+          </div>
+
+          <div className="flex items-center text-xs text-gray-500">
+            <GrDiamond className="mr-1" />
+            <span>By {course?.data?.courseCreator || "Unknown Creator"}</span>
+          </div>
+        </div>
+        <div className="p-4 border-t">
+          <button
+            onClick={(e) => {
+              localStorage.setItem("courseData", JSON.stringify(course?.data));
+              handleCourse(e, course?.data?.courseName, router);
+            }}
+            className="w-full bg-[#5801A9] hover:bg-[#4a0189] text-white py-2 rounded text-sm font-medium"
+          >
+            View Course
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div>
       {/* Hero component */}
@@ -78,6 +144,30 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
             {item}
           </p>
         ))}
+      </div>
+
+      {/* Course Grid Display */}
+      <div className="mx-6 lg:mx-auto max-w-screen-2xl my-8">
+        {courseData.length > 0 ? (
+          <>
+            <h2 className="text-2xl font-bold text-[#2D3A4B] mb-6">
+              {courseData.length} Course{courseData.length !== 1 ? "s" : ""}{" "}
+              Available
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {courseData.map((course: any, index: any) =>
+                renderCourseCard(course, index),
+              )}
+            </div>
+          </>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-gray-500">
+              No courses found. Try different search terms.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* what to learn next */}

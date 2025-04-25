@@ -93,13 +93,43 @@ const Header = () => {
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     if (!searchValue.trim()) {
-      e.preventDefault();
-      setError("Please enter an address to search");
+      setError("Please enter a search term");
       return;
     }
 
+    // Clear any previous errors
+    setError("");
+
+    // Check if we're on or navigating to the Course page
+    const currentPath = window.location.pathname;
+    const isCoursePage = currentPath === "/Course" || currentPath === "/course";
+
+    // If we're on the Courses tab or page, search for courses
+    if (
+      isCoursePage ||
+      navigation.find((item) => item.name === "Courses" && item.current)
+    ) {
+      router.push(`/Course?search=${encodeURIComponent(searchValue)}`);
+      // Close any open dropdowns
+      setcourseStatus(false);
+      setbootcampdropstat(false);
+      setSearchValue(""); // Optional: clear search after submitting
+      return;
+    }
+
+    // Default behavior: search by address (explorer functionality)
     handleSubmit(e, searchValue, router);
+  };
+
+  const getSearchPlaceholder = () => {
+    const currentPath = window.location.pathname;
+    if (currentPath === "/Course" || currentPath === "/course") {
+      return "Search courses by name or description";
+    }
+    return "Search by address";
   };
 
   const handleDropdownClose = () => {
@@ -174,7 +204,7 @@ const Header = () => {
                       <Input
                         name="search by address"
                         type="text"
-                        placeholder="       Search by address"
+                        placeholder={getSearchPlaceholder()}
                         value={searchValue}
                         onChange={handleChange}
                         className="w-[80%] clg:w-[70%] lclg:w-[90%] p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
