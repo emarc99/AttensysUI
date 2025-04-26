@@ -447,13 +447,7 @@ const EventFeed = ({ data }: { data: EventData }) => {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-[#5801A9]">
-                    {truncateAddress(
-                      event.type === "registeredForEvent"
-                        ? (event as any).attendee || ""
-                        : event.type === "bootcampRegistration"
-                          ? (event as any).org_address || ""
-                          : "",
-                    )}
+                    #{event.blockNumber}
                   </p>
                   <p className="text-xs text-[#7F56D9]">{event.message}</p>
                 </div>
