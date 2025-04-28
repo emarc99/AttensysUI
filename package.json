@@ -13,6 +13,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@argent/invisible-sdk": "^1.0.0",
     "@cartridge/connector": "^0.7.10",
     "@cartridge/controller": "^0.7.10",
     "@cartridge/presets": "^0.5.2",
