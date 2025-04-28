@@ -59,17 +59,11 @@ const MyCourses = (props: any) => {
     const secondRes: CourseType[] =
       await courseContract?.get_all_taken_courses(address);
 
-    // console.log("all courses", res);
-    // console.log("all taken courses", secondRes);
-
     setCourses(res);
     setTakenCourses(secondRes);
   };
 
   const getSingleCourse = async () => {
-    if (!courses.length) return; // Prevent running on empty `courses`
-    if (!takenCourses.length) return; // Prevent running on empty `courses`
-
     const resolvedCourses = await Promise.all(
       courses.map(async (course: CourseType) => {
         if (!course.course_ipfs_uri) {
@@ -108,44 +102,26 @@ const MyCourses = (props: any) => {
       (course): course is any => course !== null,
     );
 
-    // Remove duplicates before updating state
-    setCourseData((prevCourses) => {
-      const uniqueCourses = [
-        ...prevCourses,
-        ...validCourses.filter(
-          (newCourse) =>
-            !prevCourses.some(
-              (prev) => prev.data.courseName === newCourse.data.courseName,
-            ),
-        ),
-      ];
-      return uniqueCourses;
-    });
-
-    // Remove duplicates before updating state
-    setTakenCoursesData((prevCourses) => {
-      const uniqueCourses = [
-        ...prevCourses,
-        ...validTakenCourses.filter(
-          (newCourse) =>
-            !prevCourses.some(
-              (prev) => prev.data.courseName === newCourse.data.courseName,
-            ),
-        ),
-      ];
-      return uniqueCourses;
-    });
+    // Update state with new data
+    setCourseData(validCourses);
+    setTakenCoursesData(validTakenCourses);
   };
+
+  console.log("courses", courses);
+  console.log("takenCourses", takenCourses);
+  console.log("courseData", courseData);
+  console.log("takenCoursesData", takenCoursesData);
 
   useEffect(() => {
     getAllUserCreatedCourses(); // Fetch courses when the wallet address changes
-    getSingleCourse();
-    // console.log("data here",courseData)
   }, [account]);
 
   useEffect(() => {
     setPage("myCourse");
-  }, [page, account, courseData]);
+    if (courses.length > 0 || takenCourses.length > 0) {
+      getSingleCourse();
+    }
+  }, [page, account, courses, takenCourses]);
 
   return (
     <div className="block lg:flex lg:mx-10 mb-8 pb-24 max-w-screen-2xl xl:mx-auto">
