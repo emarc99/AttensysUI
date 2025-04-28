@@ -141,19 +141,23 @@ const Notification = (props: any) => {
         {notifications.map((item, i) => (
           <div key={i}>
             <div
-              className={`py-3 px-5 lg:px-12 min-h-[75px] border grid grid-cols-[1fr_200px_150px] gap-4 items-center ${
+              className={`py-3 px-4 lg:px-12 min-h-[75px] border flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 ${
                 i % 2 === 0 ? "bg-gray-50" : "bg-white"
               }`}
             >
-              <p className="truncate">
+              <p className="flex-1 truncate">
                 {`You have ${item.type === "COURSE_CREATED" ? "created a course" : item.type === "CERT_CLAIMED" ? "claimed a certificate" : item.type === "INSTRUCTOR_ADDED" ? "added an instructor" : item.type === "INSTRUCTOR_REMOVED" ? "removed an instructor" : item.type === "BOOTCAMP_REGISTRATION" ? "registered for a bootcamp" : item.type === "EVENT_REGISTRATION" ? "registered for an event" : item.type === "ATTENDANCE_MARKED" ? "marked attendance" : item.type === "ORGANIZATION_PROFILE_CREATED" ? "created an organization profile" : item.type === "ORGANIZATION_APPROVED" ? "approved an organization" : item.type === "ORGANIZATION_DECLINED" ? "declined an organization" : ""}`}
               </p>
-              <p className="text-right">{formatTimestamp(item.timestamp)}</p>
-              <p className="text-right">
-                <span className="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">
-                  Block #{item.blockNumber}
-                </span>
-              </p>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                <p className="text-sm sm:text-base">
+                  {formatTimestamp(item.timestamp)}
+                </p>
+                <p>
+                  <span className="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">
+                    Block #{item.blockNumber}
+                  </span>
+                </p>
+              </div>
             </div>
           </div>
         ))}
