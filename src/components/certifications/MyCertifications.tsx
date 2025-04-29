@@ -211,7 +211,7 @@ const MyCertifications = (props: any) => {
         wallet={props.wallet}
         courseData={[]}
         takenCoursesData={[]}
-        validCertificates={certificates}
+        validCertificates={filteredCertificates}
         page={page}
         selected={selected}
         setSelected={setSelected}
