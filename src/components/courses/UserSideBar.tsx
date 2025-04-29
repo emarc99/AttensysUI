@@ -28,9 +28,10 @@ interface UserSideBarProps {
   wallet: any;
   courseData: any;
   takenCoursesData: any;
-  page: string; // or another type like `number` or a union type
-  selected: string; // Replace with appropriate type
-  setSelected: (value: string) => void; // Function that sets a value
+  validCertificates: any;
+  page: string;
+  selected: string;
+  setSelected: (value: string) => void;
 }
 interface argprop {
   no: number;
@@ -40,8 +41,9 @@ const UserSideBar = ({
   wallet,
   courseData,
   takenCoursesData,
+  validCertificates,
   page,
-  selected,
+  selected = "All NFTs",
   setSelected,
 }: UserSideBarProps) => {
   const [sideProperties, setSideProperties] = useState([
@@ -73,6 +75,24 @@ const UserSideBar = ({
 
   const [isFilterModalOpen, setFilterModalOpen] = useState(false); // State for filter modal
 
+  const [certificateEarned, setCertificateEarned] = useState([
+    {
+      title: "All NFTs",
+      no: 0,
+      type: "NFTs",
+    },
+    {
+      title: "Bootcamp",
+      no: 0,
+      type: "NFTs",
+    },
+    {
+      title: "Course",
+      no: 0,
+      type: "NFTs",
+    },
+  ]);
+
   const renderItem = (arg: argprop) => {
     if (arg.title == "Courses") {
       return (
@@ -103,17 +123,6 @@ const UserSideBar = ({
     }
   };
 
-  // const dummyName = useMemo(() => {
-  //   if (
-  //     wallet?.address &&
-  //     typeof wallet?.address === "string" &&
-  //     wallet?.address.trim() !== ""
-  //   ) {
-  //     return controller.username();
-  //   }
-  //   return "No User";
-  // }, [wallet?.address]);
-
   useEffect(() => {
     if (!address) return;
     controller.username()?.then((n) => setUsername(n));
@@ -138,11 +147,62 @@ const UserSideBar = ({
     }
   }, [wallet?.address, courseData, takenCoursesData]);
 
-  // Function to handle filter selection
-  const handleFilterSelection = (filter: string) => {
-    setSelected(filter);
-    setFilterModalOpen(false); // Close the modal after selection
-  };
+  useEffect(() => {
+    if (validCertificates) {
+      console.log("validCertificates:", validCertificates);
+
+      // Calculate total number of certificates (all valid certificates)
+      const totalCertificates = validCertificates.length;
+      console.log("Total certificates:", totalCertificates);
+
+      // Calculate number of bootcamp certificates (currently 0 as we don't have bootcamp data)
+      const bootcampCertificates = 0;
+
+      // Calculate number of course certificates (all current certificates are course certificates)
+      const courseCertificates = validCertificates.length;
+
+      const updatedCertificates = [
+        {
+          title: "All NFTs",
+          no: totalCertificates,
+          type: "NFTs",
+        },
+        {
+          title: "Bootcamp",
+          no: bootcampCertificates,
+          type: "NFTs",
+        },
+        {
+          title: "Course",
+          no: courseCertificates,
+          type: "NFTs",
+        },
+      ];
+
+      console.log("Updated certificates:", updatedCertificates);
+      setCertificateEarned(updatedCertificates);
+    } else {
+      console.log("No valid certificates available");
+      // Reset to 0 if no valid certificates
+      setCertificateEarned([
+        {
+          title: "All NFTs",
+          no: 0,
+          type: "NFTs",
+        },
+        {
+          title: "Bootcamp",
+          no: 0,
+          type: "NFTs",
+        },
+        {
+          title: "Course",
+          no: 0,
+          type: "NFTs",
+        },
+      ]);
+    }
+  }, [validCertificates]);
 
   return (
     <>
@@ -155,7 +215,7 @@ const UserSideBar = ({
       <div className="pt-12 px-4">
         {/* User info */}
 
-        <div className="bg-white py-4 px-8 rounded-xl border-[1px] border-[#BCBCBC] lg:w-[293px] xl:w-[400px]">
+        <div className="bg-white py-4 px-8 rounded-xl border-[1px] border-[#BCBCBC] lg:w-[293px] xl:w-[400px] mb-6">
           <div>
             <div className="flex justify-between items-center mt-4">
               <div className="flex space-x-4">
@@ -186,7 +246,7 @@ const UserSideBar = ({
             </div>
           </div>
 
-          <div className="my-4">
+          <div className="my-4 mb-8">
             {page == "myCourse" &&
               coursesProgress.map((item, i) => (
                 <div
@@ -228,6 +288,7 @@ const UserSideBar = ({
                 </div>
               ))}
           </div>
+          <div className="mb-5"></div>
         </div>
 
         {page == "myCourse" &&
