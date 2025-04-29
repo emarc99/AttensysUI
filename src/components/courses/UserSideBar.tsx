@@ -24,6 +24,9 @@ import createIcon from "@/assets/create.svg";
 import ControllerConnector from "@cartridge/connector/controller";
 import { useAccount, useConnect } from "@starknet-react/core";
 
+import { Check, Copy } from "lucide-react";
+import BalanceModal from "./BalanceModal";
+
 interface UserSideBarProps {
   wallet: any;
   courseData: any;
@@ -72,6 +75,8 @@ const UserSideBar = ({
   const controller = connectors[0] as ControllerConnector;
   const { address } = useAccount();
   const [username, setUsername] = useState<string>();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const [isFilterModalOpen, setFilterModalOpen] = useState(false); // State for filter modal
 
@@ -92,6 +97,25 @@ const UserSideBar = ({
       type: "NFTs",
     },
   ]);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleCopy = () => {
+    if (!address || typeof address !== "string" || address.trim() === "")
+      return;
+
+    navigator.clipboard
+      .writeText(address)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+      })
+      .catch((err) => {
+        console.error("Failed to copy address:", err);
+      });
+  };
 
   const renderItem = (arg: argprop) => {
     if (arg.title == "Courses") {
@@ -230,19 +254,50 @@ const UserSideBar = ({
                   <p className="text-[13px] text-[#2D3A4B] font-bold leading-[22px]">
                     {username}
                   </p>
-                  <p className="text-[#A01B9B] text-[12px] font-normal leading-[24px]">
-                    {!!address &&
-                    typeof address === "string" &&
-                    address.trim() !== ""
-                      ? shortHex(address)
-                      : "Login"}
-                  </p>
+                  <div className="flex space-x-2">
+                    <p
+                      onClick={handleCopy}
+                      className="text-[#A01B9B] cursor-pointer text-[12px] font-normal leading-[24px]"
+                    >
+                      {!!address &&
+                      typeof address === "string" &&
+                      address.trim() !== ""
+                        ? shortHex(address)
+                        : "Login"}
+                    </p>
+                    {!!address && typeof address === "string" && (
+                      <span onClick={handleCopy} className="cursor-pointer">
+                        {copied ? (
+                          <Check className="w-3 h-3" />
+                        ) : (
+                          <Copy className="w-3 h-3" />
+                        )}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
 
               <div>
-                {page != "myCertificate" ? <IoMdArrowDropdown /> : null}
+                {page != "myCertificate" ? (
+                  <IoMdArrowDropdown
+                    onClick={toggleDropdown}
+                    size={27}
+                    className={`cursor-pointer transition-transform duration-200 ${
+                      isDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                ) : null}
               </div>
+            </div>
+            <div
+              className={`
+        overflow-hidden
+        transition-all duration-300 ease-in-out
+        ${isDropdownOpen ? "max-h-[220px] opacity-100" : "max-h-0 opacity-0"}
+      `}
+            >
+              <BalanceModal />
             </div>
           </div>
 
