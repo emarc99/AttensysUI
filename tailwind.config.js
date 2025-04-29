@@ -12,6 +12,15 @@ module.exports = withMT({
   ],
   theme: {
     extend: {
+      animation: {
+        breathing: "breathing 3s ease-in-out infinite",
+      },
+      keyframes: {
+        breathing: {
+          "0%, 100%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.03)" },
+        },
+      },
       screens: {
         xlg: "1680px",
         clg: { min: "1440px", max: "1679px" },
