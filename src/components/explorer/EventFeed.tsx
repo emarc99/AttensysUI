@@ -466,7 +466,7 @@ const EventFeed = ({ data }: { data: EventData }) => {
       </div>
 
       {/* View all link */}
-      <div className="flex justify-center mt-4">
+      {/* <div className="flex justify-center mt-4">
         <Link
           href="#"
           className="flex items-center text-sm text-[#5801A9] hover:text-[#7F56D9] transition-colors duration-200"
@@ -474,7 +474,7 @@ const EventFeed = ({ data }: { data: EventData }) => {
           View all recent searches
           <ChevronRight className="ml-1 h-4 w-4" />
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 };
