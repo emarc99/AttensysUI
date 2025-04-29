@@ -75,7 +75,7 @@ const UserSideBar = ({
   const controller = connectors[0] as ControllerConnector;
   const { address } = useAccount();
   const [username, setUsername] = useState<string>();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(true);
   const [copied, setCopied] = useState(false);
 
   const [isFilterModalOpen, setFilterModalOpen] = useState(false); // State for filter modal
