@@ -107,11 +107,6 @@ const MyCourses = (props: any) => {
     setTakenCoursesData(validTakenCourses);
   };
 
-  console.log("courses", courses);
-  console.log("takenCourses", takenCourses);
-  console.log("courseData", courseData);
-  console.log("takenCoursesData", takenCoursesData);
-
   useEffect(() => {
     getAllUserCreatedCourses(); // Fetch courses when the wallet address changes
   }, [account]);
