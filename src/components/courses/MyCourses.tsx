@@ -124,6 +124,7 @@ const MyCourses = (props: any) => {
         wallet={account}
         courseData={courseData}
         takenCoursesData={takenCoursesData}
+        validCertificates={[]}
         page={page}
         selected={selected}
         setSelected={setSelected}
