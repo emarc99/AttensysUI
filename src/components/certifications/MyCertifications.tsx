@@ -118,7 +118,11 @@ const MyCertifications = (props: any) => {
   }, [certificates, selected]);
 
   const renderCertificates = () => {
-    if (selected === "Event NFTs" || selected === "Bootcamp NFTs") {
+    if (
+      selected === "Event NFTs" ||
+      selected === "Bootcamp NFTs" ||
+      filteredCertificates.length === 0
+    ) {
       return (
         <div className="flex flex-col items-center justify-center min-h-[400px] w-full">
           <div className="flex flex-col items-center justify-center space-y-4">

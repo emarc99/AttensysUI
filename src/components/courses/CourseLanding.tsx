@@ -13,35 +13,6 @@ const CourseLanding = (props: any) => {
   const courseData = storedData ? JSON.parse(storedData) : null;
   const [wallet, setWallet] = useAtom(walletStarknetkit);
 
-  useEffect(() => {
-    const autoConnect = async () => {
-      if (!wallet) {
-        setIsConnecting(true);
-        try {
-          const { wallet: connectedWallet } = await connect({
-            //@ts-ignore
-            provider,
-            modalMode: "neverAsk",
-            webWalletUrl: ARGENT_WEBWALLET_URL,
-            argentMobileOptions: {
-              dappName: "Attensys",
-              url: window.location.hostname,
-              chainId: CHAIN_ID,
-              icons: [],
-            },
-          });
-          setWallet(connectedWallet);
-        } catch (e) {
-          console.error(e);
-        } finally {
-          setIsConnecting(false);
-        }
-      }
-    };
-
-    autoConnect();
-  }, [wallet]);
-
   console.log("lost item:", courseData);
   return (
     <div className="h-auto w-full bg-[#F5F7FA]">

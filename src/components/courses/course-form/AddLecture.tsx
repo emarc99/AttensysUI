@@ -156,9 +156,10 @@ const AddLecture: React.FC<LectureProps> = ({
 
       const formData = new FormData();
       formData.append("file", file);
+      formData.append("network", "private");
 
       const response = await axios.post(
-        "https://api.pinata.cloud/pinning/pinFileToIPFS",
+        "https://uploads.pinata.cloud/v3/files",
         formData,
         {
           headers: {
@@ -176,7 +177,8 @@ const AddLecture: React.FC<LectureProps> = ({
         },
       );
 
-      const ipfsHash = response.data.IpfsHash;
+      const ipfsHash = response.data.data.cid;
+      // console.log("IPFS Hash:", );
       const url = `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/${ipfsHash}`;
 
       setUploadStatus((prev) => ({
