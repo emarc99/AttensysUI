@@ -141,9 +141,9 @@ const Header = () => {
   const getSearchPlaceholder = () => {
     const currentPath = window.location.pathname;
     if (currentPath === "/Course" || currentPath === "/course") {
-      return "Search courses by name or description";
+      return "       Search courses by name or description";
     }
-    return "Search by address";
+    return "       Search by address";
   };
 
   const handleDropdownClose = () => {
@@ -222,7 +222,7 @@ const Header = () => {
                         <Input
                           name="search by address"
                           type="text"
-                          placeholder="       Search by address"
+                          placeholder={getSearchPlaceholder()}
                           value={searchValue}
                           onChange={handleChange}
                           className="w-[80%]  clg:w-[70%] lclg:w-[90%] p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
