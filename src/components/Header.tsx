@@ -103,25 +103,32 @@ const Header = () => {
     // Clear any previous errors
     setError("");
 
-    // Check if we're on or navigating to the Course page
-    const currentPath = window.location.pathname;
-    const isCoursePage = currentPath === "/Course" || currentPath === "/course";
-
-    // If we're on the Courses tab or page, search for courses
+    // Use router.replace instead of push and use a setTimeout to avoid hydration issues
     if (
-      isCoursePage ||
-      navigation.find((item) => item.name === "Courses" && item.current)
+      window.location.pathname === "/Course" ||
+      window.location.pathname === "/course"
     ) {
-      router.push(`/Course?search=${encodeURIComponent(searchValue)}`);
-      // Close any open dropdowns
-      setcourseStatus(false);
-      setbootcampdropstat(false);
-      setSearchValue(""); // Optional: clear search after submitting
-      return;
+      // If already on Course page, use replace to avoid navigation history issues
+      setTimeout(() => {
+        router.replace(
+          `/Course?search=${encodeURIComponent(searchValue.trim())}`,
+        );
+      }, 0);
+    } else {
+      // If coming from another page, use push
+      setTimeout(() => {
+        router.push(`/Course?search=${encodeURIComponent(searchValue.trim())}`);
+      }, 0);
     }
 
-    // Default behavior: search by address (explorer functionality)
-    handleSubmit(e, searchValue, router);
+    // Close any open dropdowns
+    setcourseStatus(false);
+    setbootcampdropstat(false);
+  };
+
+  // Only clear search value when form is submitted successfully
+  const clearSearchValue = () => {
+    setSearchValue("");
   };
 
   const getSearchPlaceholder = () => {
