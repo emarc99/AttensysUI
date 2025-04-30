@@ -1,23 +1,11 @@
-import { useEffect, useState } from "react";
-import robotImg from "../../assets/robot.svg";
+
 import Image from "next/image";
-import { IoIosStar } from "@react-icons/all-files/io/IoIosStar";
 import {
-  getAllCoursesInfo,
-  handleCourse,
-  handleCoursehome,
+  handleCourse
 } from "@/utils/helpers";
 import { useRouter } from "next/navigation";
 import StarRating from "../bootcamp/StarRating";
-import { attensysCourseAddress } from "@/deployments/contracts";
-import { attensysCourseAbi } from "@/deployments/abi";
-import { Contract } from "starknet";
-import { provider } from "@/constants";
-import { pinata } from "../../../utils/config";
-import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import { GetCIDResponse } from "pinata";
-
 interface ChildComponentProps {
   wallet: any;
   data: any;

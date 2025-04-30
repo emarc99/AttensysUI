@@ -138,6 +138,7 @@ const MyCourses = (props: any) => {
               item={item}
               selected={selected}
               key={i}
+              refreshCourses={getAllUserCreatedCourses}
             />
           ) : null,
         )}

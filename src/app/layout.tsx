@@ -83,6 +83,11 @@ const policies: SessionPolicies = {
           entrypoint: "create_course",
           description: "create_a_course",
         },
+        {
+          name: "remove_course",
+          entrypoint: "remove_course",
+          description: "remove_course",
+        },
       ],
     },
   },
