@@ -24,13 +24,17 @@ import createIcon from "@/assets/create.svg";
 import ControllerConnector from "@cartridge/connector/controller";
 import { useAccount, useConnect } from "@starknet-react/core";
 
+import { Check, Copy } from "lucide-react";
+import BalanceModal from "./BalanceModal";
+
 interface UserSideBarProps {
   wallet: any;
   courseData: any;
   takenCoursesData: any;
-  page: string; // or another type like `number` or a union type
-  selected: string; // Replace with appropriate type
-  setSelected: (value: string) => void; // Function that sets a value
+  validCertificates: any;
+  page: string;
+  selected: string;
+  setSelected: (value: string) => void;
 }
 interface argprop {
   no: number;
@@ -40,8 +44,9 @@ const UserSideBar = ({
   wallet,
   courseData,
   takenCoursesData,
+  validCertificates,
   page,
-  selected,
+  selected = "All NFTs",
   setSelected,
 }: UserSideBarProps) => {
   const [sideProperties, setSideProperties] = useState([
@@ -70,8 +75,47 @@ const UserSideBar = ({
   const controller = connectors[0] as ControllerConnector;
   const { address } = useAccount();
   const [username, setUsername] = useState<string>();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(true);
+  const [copied, setCopied] = useState(false);
 
   const [isFilterModalOpen, setFilterModalOpen] = useState(false); // State for filter modal
+
+  const [certificateEarned, setCertificateEarned] = useState([
+    {
+      title: "All NFTs",
+      no: 0,
+      type: "NFTs",
+    },
+    {
+      title: "Bootcamp",
+      no: 0,
+      type: "NFTs",
+    },
+    {
+      title: "Course",
+      no: 0,
+      type: "NFTs",
+    },
+  ]);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleCopy = () => {
+    if (!address || typeof address !== "string" || address.trim() === "")
+      return;
+
+    navigator.clipboard
+      .writeText(address)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+      })
+      .catch((err) => {
+        console.error("Failed to copy address:", err);
+      });
+  };
 
   const renderItem = (arg: argprop) => {
     if (arg.title == "Courses") {
@@ -103,17 +147,6 @@ const UserSideBar = ({
     }
   };
 
-  // const dummyName = useMemo(() => {
-  //   if (
-  //     wallet?.address &&
-  //     typeof wallet?.address === "string" &&
-  //     wallet?.address.trim() !== ""
-  //   ) {
-  //     return controller.username();
-  //   }
-  //   return "No User";
-  // }, [wallet?.address]);
-
   useEffect(() => {
     if (!address) return;
     controller.username()?.then((n) => setUsername(n));
@@ -138,11 +171,62 @@ const UserSideBar = ({
     }
   }, [wallet?.address, courseData, takenCoursesData]);
 
-  // Function to handle filter selection
-  const handleFilterSelection = (filter: string) => {
-    setSelected(filter);
-    setFilterModalOpen(false); // Close the modal after selection
-  };
+  useEffect(() => {
+    if (validCertificates) {
+      console.log("validCertificates:", validCertificates);
+
+      // Calculate total number of certificates (all valid certificates)
+      const totalCertificates = validCertificates.length;
+      console.log("Total certificates:", totalCertificates);
+
+      // Calculate number of bootcamp certificates (currently 0 as we don't have bootcamp data)
+      const bootcampCertificates = 0;
+
+      // Calculate number of course certificates (all current certificates are course certificates)
+      const courseCertificates = validCertificates.length;
+
+      const updatedCertificates = [
+        {
+          title: "All NFTs",
+          no: totalCertificates,
+          type: "NFTs",
+        },
+        {
+          title: "Bootcamp",
+          no: bootcampCertificates,
+          type: "NFTs",
+        },
+        {
+          title: "Course",
+          no: courseCertificates,
+          type: "NFTs",
+        },
+      ];
+
+      console.log("Updated certificates:", updatedCertificates);
+      setCertificateEarned(updatedCertificates);
+    } else {
+      console.log("No valid certificates available");
+      // Reset to 0 if no valid certificates
+      setCertificateEarned([
+        {
+          title: "All NFTs",
+          no: 0,
+          type: "NFTs",
+        },
+        {
+          title: "Bootcamp",
+          no: 0,
+          type: "NFTs",
+        },
+        {
+          title: "Course",
+          no: 0,
+          type: "NFTs",
+        },
+      ]);
+    }
+  }, [validCertificates]);
 
   return (
     <>
@@ -155,7 +239,7 @@ const UserSideBar = ({
       <div className="pt-12 px-4">
         {/* User info */}
 
-        <div className="bg-white py-4 px-8 rounded-xl border-[1px] border-[#BCBCBC] lg:w-[293px] xl:w-[400px]">
+        <div className="bg-white py-4 px-8 rounded-xl border-[1px] border-[#BCBCBC] lg:w-[293px] xl:w-[400px] mb-6">
           <div>
             <div className="flex justify-between items-center mt-4">
               <div className="flex space-x-4">
@@ -170,23 +254,54 @@ const UserSideBar = ({
                   <p className="text-[13px] text-[#2D3A4B] font-bold leading-[22px]">
                     {username}
                   </p>
-                  <p className="text-[#A01B9B] text-[12px] font-normal leading-[24px]">
-                    {!!address &&
-                    typeof address === "string" &&
-                    address.trim() !== ""
-                      ? shortHex(address)
-                      : "Login"}
-                  </p>
+                  <div className="flex space-x-2">
+                    <p
+                      onClick={handleCopy}
+                      className="text-[#A01B9B] cursor-pointer text-[12px] font-normal leading-[24px]"
+                    >
+                      {!!address &&
+                      typeof address === "string" &&
+                      address.trim() !== ""
+                        ? shortHex(address)
+                        : "Login"}
+                    </p>
+                    {!!address && typeof address === "string" && (
+                      <span onClick={handleCopy} className="cursor-pointer">
+                        {copied ? (
+                          <Check className="w-3 h-3" />
+                        ) : (
+                          <Copy className="w-3 h-3" />
+                        )}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
 
               <div>
-                {page != "myCertificate" ? <IoMdArrowDropdown /> : null}
+                {page != "myCertificate" ? (
+                  <IoMdArrowDropdown
+                    onClick={toggleDropdown}
+                    size={27}
+                    className={`cursor-pointer transition-transform duration-200 ${
+                      isDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                ) : null}
               </div>
+            </div>
+            <div
+              className={`
+        overflow-hidden
+        transition-all duration-300 ease-in-out
+        ${isDropdownOpen ? "max-h-[220px] opacity-100" : "max-h-0 opacity-0"}
+      `}
+            >
+              <BalanceModal />
             </div>
           </div>
 
-          <div className="my-4">
+          <div className="my-4 mb-8">
             {page == "myCourse" &&
               coursesProgress.map((item, i) => (
                 <div
@@ -228,6 +343,7 @@ const UserSideBar = ({
                 </div>
               ))}
           </div>
+          <div className="mb-5"></div>
         </div>
 
         {page == "myCourse" &&

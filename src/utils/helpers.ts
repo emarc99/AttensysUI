@@ -24,7 +24,7 @@ export function shortHex(input?: any) {
     console.error("Invalid input to shortHex:", input);
     return "Invalid Address";
   }
-  return `${input.slice(0, 4)}...${input.slice(-2)}`;
+  return `${input.slice(0, 8)}.....${input.slice(-4)}`;
 }
 
 export const handleSubmit = (

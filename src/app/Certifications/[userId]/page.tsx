@@ -19,6 +19,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { MoonLoader } from "react-spinners";
 import { Contract } from "starknet";
 import { connect } from "starknetkit";
+import { useAccount, useConnect } from "@starknet-react/core";
 
 interface CourseType {
   data: any;
@@ -44,16 +45,11 @@ const Index = () => {
   const router = useRouter();
   const [userData, setUserData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [takenCourses, setTakenCourses] = useState<CourseType[]>([]);
-  const [takenCoursesData, setTakenCoursesData] = useState<CourseType[]>([]);
+  const [certifiedCourses, setCertifiedCourses] = useState<CourseType[]>([]);
   const { fetchCIDContent } = useFetchCID();
   const userId = null;
-  // const userId = searchParams.get('userId');
   const search = searchParams.get("userId");
-
-  const [wallet, setWallet] = useAtom(walletStarknetkit);
-  const [courses, setCourses] = useState<CourseType[]>([]);
-  const [courseData, setCourseData] = useState<CourseType[]>([]);
+  const { address } = useAccount();
 
   const handlePageClick = () => {
     setbootcampdropstat(false);
@@ -63,80 +59,54 @@ const Index = () => {
   const courseContract = new Contract(
     attensysCourseAbi,
     attensysCourseAddress,
-    wallet?.account,
+    provider,
   );
 
-  const getAllUserCreatedCourses = async () => {
-    if (wallet == undefined) return;
-    const res: CourseType[] = await courseContract?.get_all_creator_courses(
-      wallet?.selectedAddress,
-    );
+  const getCertifiedCourses = async () => {
+    if (!address) {
+      console.log("No address available");
+      return;
+    }
 
-    const secondRes: CourseType[] = await courseContract?.get_all_taken_courses(
-      wallet?.selectedAddress,
-    );
+    try {
+      console.log("Fetching certified courses for address:", address);
+      const allCourses = await courseContract?.get_all_courses_info();
+      console.log("All courses found:", allCourses?.length || 0, "courses");
 
-    setCourses(res);
-    setTakenCourses(secondRes);
-  };
+      const certifiedCoursesList = await Promise.all(
+        allCourses.map(async (course: CourseType) => {
+          console.log(
+            "Checking certification for course:",
+            course.course_identifier,
+          );
+          const isCertified =
+            await courseContract?.is_user_certified_for_course(
+              address,
+              course.course_identifier,
+            );
+          console.log(
+            "Certification status for course",
+            course.course_identifier,
+            ":",
+            isCertified,
+          );
 
-  const getSingleCourse = async () => {
-    if (!courses.length) return; // Prevent running on empty `courses`
-    if (!takenCourses.length) return; // Prevent running on empty `courses`
+          if (isCertified) {
+            return course;
+          }
+          return null;
+        }),
+      );
 
-    const resolvedCourses = await Promise.all(
-      courses.map(async (course: CourseType) => {
-        if (!course.course_ipfs_uri) {
-          return null; // Skip invalid URLs
-        }
-        return await fetchCIDContent(course.course_ipfs_uri);
-      }),
-    );
-    const resolvedTakenCourses = await Promise.all(
-      takenCourses.map(async (course: CourseType) => {
-        if (!course.course_ipfs_uri) {
-          return null; // Skip invalid URLs
-        }
-        return await fetchCIDContent(course.course_ipfs_uri);
-      }),
-    );
-
-    // Filter out null values before updating state
-    const validCourses = resolvedCourses.filter(
-      (course): course is any => course !== null,
-    );
-    // Filter out null values before updating state
-    const validTakenCourses = resolvedTakenCourses.filter(
-      (course): course is any => course !== null,
-    );
-
-    // Remove duplicates before updating state
-    setCourseData((prevCourses) => {
-      const uniqueCourses = [
-        ...prevCourses,
-        ...validCourses.filter(
-          (newCourse) =>
-            !prevCourses.some(
-              (prev) => prev.data.courseName === newCourse.data.courseName,
-            ),
-        ),
-      ];
-      return uniqueCourses;
-    });
-
-    // Remove duplicates before updating state
-    setTakenCoursesData((prevCourses) => {
-      const uniqueCourses = [
-        ...prevCourses,
-        ...validTakenCourses.filter(
-          (newCourse) =>
-            !prevCourses.some(
-              (prev) => prev.data.courseName === newCourse.data.courseName,
-            ),
-        ),
-      ];
-      return uniqueCourses;
-    });
+      const validCourses = certifiedCoursesList.filter(
+        (course): course is CourseType => course !== null,
+      );
+      console.log("Total certified courses found:", validCourses.length);
+      setCertifiedCourses(validCourses);
+    } catch (error) {
+      console.error("Error in getCertifiedCourses:", error);
+      setCertifiedCourses([]);
+    }
   };
 
   // Fetch user-specific data when userId changes
@@ -162,42 +132,15 @@ const Index = () => {
   }, [userId]);
 
   useEffect(() => {
-    const autoConnect = async () => {
-      try {
-        const { wallet: connectedWallet, connector } = await connect({
-          //@ts-ignore
-          provider,
-          modalMode: "neverAsk",
-          webWalletUrl: ARGENT_WEBWALLET_URL,
-          argentMobileOptions: {
-            dappName: "Attensys",
-            url: window.location.hostname,
-            chainId: CHAIN_ID,
-            icons: [],
-          },
-        });
-
-        setWallet(connectedWallet);
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    if (!wallet) {
-      autoConnect();
+    if (address) {
+      getCertifiedCourses();
     }
-  }, [wallet]);
+  }, [address]);
 
+  // Add console logs to track state changes
   useEffect(() => {
-    if (wallet) {
-      getAllUserCreatedCourses();
-    }
-  }, [wallet]);
-
-  useEffect(() => {
-    if (courses.length || takenCourses.length) {
-      getSingleCourse();
-    }
-  }, [courses, takenCourses]);
+    console.log("Certified Courses updated:", certifiedCourses);
+  }, [certifiedCourses]);
 
   if (isLoading) {
     return (
@@ -228,16 +171,15 @@ const Index = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            height: "100vh", // Full page height
+            height: "100vh",
           }}
         >
           <MoonLoader color="#9B51E0" size={60} />
         </div>
       ) : (
         <MyCertifications
-          wallet={wallet}
-          courseData={courseData}
-          takenCoursesData={takenCoursesData}
+          address={address}
+          certifiedCourses={certifiedCourses}
         />
       )}
     </div>

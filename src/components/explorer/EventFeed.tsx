@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { format } from "date-fns";
+import Link from "next/link";
+import { ChevronRight, Package } from "lucide-react";
 
 // Updated interfaces to include block information
 interface OrganizationProfile {
@@ -401,11 +403,33 @@ const EventFeed = ({ data }: { data: EventData }) => {
     return format(date, "MMM dd, yyyy HH:mm:ss");
   };
 
+  // function to format just the time portion
+  const formatTime = (timestamp: number) => {
+    const date = new Date(timestamp * 1000);
+    if (isNaN(date.getTime())) return "";
+
+    return format(date, "h:mm a").toUpperCase();
+  };
+
   return (
-    <div className="w-[90%] mx-auto p-4">
+    <div className="max-w-[92%] mx-auto mt-4">
+      {/* Header row */}
+      <div className="flex justify-between items-center py-3 px-4 bg-[#ECD9FF] rounded-lg mb-2">
+        <div className="flex items-center">
+          <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#9B51E052] mr-2">
+            <Package className="h-4 w-4 text-[#5801A9]" />
+          </div>
+          <span className="text-sm font-medium text-[#5801A9]">
+            Wallet address / status
+          </span>
+        </div>
+        <span className="text-sm font-medium text-[#5801A9]">Timestamp</span>
+      </div>
+
+      {/* Activity items */}
       <div
         ref={feedRef}
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-y-auto h-[800px] p-4 space-y-3"
+        className="space-y-2 max-h-[700px] overflow-y-auto pr-1"
       >
         {events.length === 0 ? (
           <p className="text-gray-500 dark:text-gray-400 text-center py-8">
@@ -415,23 +439,42 @@ const EventFeed = ({ data }: { data: EventData }) => {
           events.map((event, index) => (
             <div
               key={`${event.id}-${index}`}
-              className="p-3 bg-gray-50 dark:bg-gray-700 rounded-md border-l-4 border-blue-500 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+              className="flex justify-between items-center py-3 px-4 bg-[#F9F5FF] hover:bg-[#F0E6FF] transition-colors duration-200 rounded-lg"
             >
-              <div className="flex justify-between items-start">
-                <p className="text-gray-800 dark:text-gray-200">
-                  {event.message}
-                </p>
-                <span className="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">
-                  Block #{event.blockNumber}
-                </span>
+              <div className="flex items-center">
+                <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#D8C3F2] mr-2">
+                  <Package className="h-4 w-4 text-[#5801A9]" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-[#5801A9]">
+                    #{event.blockNumber}
+                  </p>
+                  <p className="text-xs text-[#7F56D9]">{event.message}</p>
+                </div>
               </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                {formatTimestamp(event.timestamp)}
-              </p>
+              <div className="text-right">
+                <p className="text-xs font-medium text-[#5801A9]">
+                  {formatTimestamp(event.timestamp)}
+                </p>
+                <p className="text-xs text-[#7F56D9]">
+                  {formatTime(event.timestamp)}
+                </p>
+              </div>
             </div>
           ))
         )}
       </div>
+
+      {/* View all link */}
+      {/* <div className="flex justify-center mt-4">
+        <Link
+          href="#"
+          className="flex items-center text-sm text-[#5801A9] hover:text-[#7F56D9] transition-colors duration-200"
+        >
+          View all recent searches
+          <ChevronRight className="ml-1 h-4 w-4" />
+        </Link>
+      </div> */}
     </div>
   );
 };

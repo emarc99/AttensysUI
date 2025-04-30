@@ -144,7 +144,7 @@ export const attensysCourseAbi = [
             type: "core::byte_array::ByteArray",
           },
           {
-            name: "price",
+            name: "price_",
             type: "core::integer::u128",
           },
         ],
@@ -560,6 +560,74 @@ export const attensysCourseAbi = [
         ],
         outputs: [],
         state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "creator_withdraw",
+        inputs: [
+          {
+            name: "amount",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "init_fee_percent",
+        inputs: [
+          {
+            name: "fee",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "admin_withdrawables",
+        inputs: [
+          {
+            name: "amount",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "get_creator_withdrawable_amount",
+        inputs: [
+          {
+            name: "user",
+            type: "core::starknet::contract_address::ContractAddress",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_fee_withdrawable_amount",
+        inputs: [
+          {
+            name: "user",
+            type: "core::starknet::contract_address::ContractAddress",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "view",
       },
     ],
   },
