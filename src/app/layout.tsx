@@ -62,17 +62,14 @@ function getQueryClient() {
 
 const COURSE_ADDRESS =
   "0x2d876f20d2ed89f91ca59e559e954dc78a4e81abd6bf7831ef238a2adfbef24";
+const STRK_ADDRESS =
+  "0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d";
 
 // Define session policies
 const policies: SessionPolicies = {
   contracts: {
     [COURSE_ADDRESS]: {
       methods: [
-        {
-          name: "take_course",
-          entrypoint: "acquire_a_course",
-          description: "take a course",
-        },
         {
           name: "get_certified",
           entrypoint: "finish_course_claim_certification",
@@ -82,6 +79,25 @@ const policies: SessionPolicies = {
           name: "create_a_course",
           entrypoint: "create_course",
           description: "create_a_course",
+        },
+        {
+          name: "creator_withdraw",
+          entrypoint: "creator_withdraw",
+          description: "claim Earnings",
+        },
+      ],
+    },
+    [STRK_ADDRESS]: {
+      methods: [
+        {
+          name: "approve",
+          entrypoint: "approve",
+          description: "approve STRK",
+        },
+        {
+          name: "transfer",
+          entrypoint: "transfer",
+          description: "withdraw earnings",
         },
       ],
     },

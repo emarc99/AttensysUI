@@ -6,7 +6,6 @@ interface ReviewsListProps {
 }
 
 export const ReviewsList = ({ reviews }: ReviewsListProps) => {
-  console.log("Reviews confirmation here", reviews);
   if (reviews?.length == 0 || !reviews) {
     return (
       <div className="bg-white p-6 rounded-lg text-center text-gray-500 h-[300px] flex items-center justify-center">

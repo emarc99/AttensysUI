@@ -88,6 +88,7 @@ const InitCourseRegistrationData = {
   coursePricing: "",
   promoAndDiscount: "",
   publishWithCertificate: false,
+  price: 0,
 };
 
 //organization data state

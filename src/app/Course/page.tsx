@@ -47,23 +47,30 @@ const Index = () => {
   };
 
   const getCourse = async () => {
-    // if (courses.length < 1) return; // Prevent running on empty `courses`
-    // console.log("This guy", courses);
-
     const resolvedCourses = await Promise.all(
       courses.map(async (course: CourseType) => {
         if (!course.course_ipfs_uri) {
           console.warn(`Skipping invalid IPFS URL: ${course.course_ipfs_uri}`);
-          return null; // Skip invalid URLs
+          return null;
         }
 
-        return await fetchCIDContent(course.course_ipfs_uri);
+        const content = await fetchCIDContent(course.course_ipfs_uri);
+        if (content) {
+          return {
+            ...content,
+            course_identifier: course.course_identifier,
+            owner: course.owner,
+            course_ipfs_uri: course.course_ipfs_uri,
+            is_suspended: course.is_suspended,
+          };
+        }
+        return null;
       }),
     );
 
-    // Filter out null values before updating state
+    // Filter out null values
     const validCourses = resolvedCourses.filter(
-      (course: any): course is any => course !== null,
+      (course): course is CourseType => course !== null,
     );
 
     // Remove duplicates before updating state
@@ -71,7 +78,7 @@ const Index = () => {
       const uniqueCourses = [
         ...prevCourses,
         ...validCourses.filter(
-          (newCourse: any) =>
+          (newCourse) =>
             !prevCourses.some(
               (prev) => prev.data.courseName === newCourse.data.courseName,
             ),
@@ -82,7 +89,7 @@ const Index = () => {
 
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000); // 1 seconds fake delay or until data is fetched.
+    }, 2000);
 
     return () => clearTimeout(timer);
   };

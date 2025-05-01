@@ -1,15 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, CheckCircle, Loader2, X } from "lucide-react";
 import { Button } from "@headlessui/react";
 import strk from "@/assets/strk.png";
 import Image from "next/image";
+import { provider } from "@/constants";
+import { attensysCourseAbi } from "@/deployments/abi";
+import { attensysCourseAddress } from "@/deployments/contracts";
+import { Contract } from "starknet";
+import { useAccount } from "@starknet-react/core";
+import { Erc20Abi } from "@/deployments/erc20abi";
+import { STRK_ADDRESS } from "@/deployments/erc20Contract";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 const BalanceModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [step, setStep] = useState(1); // 1: Input, 2: Confirm, 3: Processing, 4: Success
   const [recipientAddress, setRecipientAddress] = useState("");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState<number | null>(0);
   const [error, setError] = useState("");
+  const [userClaimables, setUserClaimables] = useState(0);
+  const [userClaimablesStrk, setuserClaimablesStrk] = useState(0);
+  const [userbalanceUSD, setuserbalanceUSD] = useState(0);
+  const [userbalanceSTRK, setuserbalanceSTRK] = useState(0);
+  const [claimingstatus, setclaimingstatus] = useState(false);
+  const [usdDisplay, setUsdDisplay] = useState(0);
+  const [soldCourses, setsoldCourses] = useState(0);
+  const { account, address } = useAccount();
+
+  const courseContract = new Contract(
+    attensysCourseAbi,
+    attensysCourseAddress,
+    provider,
+  );
+
+  const erc20Contract = new Contract(Erc20Abi, STRK_ADDRESS, provider);
 
   const validateAddress = (address: string) => {
     return (
@@ -18,11 +43,80 @@ const BalanceModal = () => {
     );
   };
 
+  const handleClaim = async () => {
+    if (userClaimablesStrk <= 0) return;
+    const courseContract = new Contract(
+      attensysCourseAbi,
+      attensysCourseAddress,
+      account,
+    );
+    setclaimingstatus(true);
+
+    try {
+      const claim_calldata = await courseContract.populate("creator_withdraw", [
+        userClaimablesStrk,
+      ]);
+
+      const callCourseContract = await account?.execute([
+        {
+          contractAddress: attensysCourseAddress,
+          entrypoint: "creator_withdraw",
+          calldata: claim_calldata.calldata,
+        },
+      ]);
+      console.log("call returns", callCourseContract);
+      //@ts-ignore
+      if (callCourseContract?.code == "SUCCESS") {
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        setclaimingstatus(false);
+        toast.success("Claim successful", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+        return;
+      } else {
+        setclaimingstatus(true);
+        toast.error("claim failed", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+        return;
+      }
+    } catch (err) {
+      console.log("Error populating calldata:", err);
+      toast.error("claim failed", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    }
+  };
+
   const handleWithdrawClick = () => {
     setIsModalOpen(true);
     setStep(1);
     setRecipientAddress("");
-    setAmount("");
+    setAmount(null);
     setError("");
   };
 
@@ -42,14 +136,29 @@ const BalanceModal = () => {
   const handleConfirm = async () => {
     setStep(3);
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const erc20Contract = new Contract(Erc20Abi, STRK_ADDRESS, account);
+      const transfer_calldata = await erc20Contract.populate("transfer", [
+        recipientAddress,
+        (amount ?? 0) * 10 ** 18,
+      ]);
 
-      // Replace with actual withdrawal logic
-      // await withdrawTokens(recipientAddress, amount);
-
-      setStep(4);
+      const callErc20Contract = await account?.execute([
+        {
+          contractAddress: STRK_ADDRESS,
+          entrypoint: "transfer",
+          calldata: transfer_calldata.calldata,
+        },
+      ]);
+      //@ts-ignore
+      if (callErc20Contract?.code == "SUCCESS") {
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        setStep(4);
+      } else {
+        setError("Withdrawal failed. Please try again.");
+        setStep(1);
+      }
     } catch (err) {
+      console.log("error trasnfering:", err);
       setError("Withdrawal failed. Please try again.");
       setStep(1);
     }
@@ -59,8 +168,73 @@ const BalanceModal = () => {
     setIsModalOpen(false);
   };
 
+  const handleamountChange = (e: any) => {
+    setAmount(e.target.value);
+  };
+  useEffect(() => {
+    const getEquivalentValue = async () => {
+      try {
+        const currentPrice = await courseContract?.get_price_of_strk_usd();
+        const formattedPrice = Number(currentPrice) / 100000000;
+        const equivalentValue = (Number(amount) * formattedPrice).toFixed(2);
+        setUsdDisplay(Number(equivalentValue));
+      } catch (error) {
+        console.error("Error fetching current STRK price:", error);
+      }
+    };
+    getEquivalentValue();
+  }, [amount]);
+
+  useEffect(() => {
+    const getCurrentStrkPrice = async () => {
+      try {
+        const currentPrice = await courseContract?.get_price_of_strk_usd();
+        const formattedPrice = Number(currentPrice) / 100000000;
+
+        const claimable =
+          await courseContract?.get_creator_withdrawable_amount(address);
+
+        const walletBalance = await erc20Contract?.balance_of(address);
+        const decimals = 18;
+        const convertedValue = Number(walletBalance) / 10 ** decimals;
+
+        const coursesSold =
+          await courseContract?.get_total_course_sales(address);
+        setsoldCourses(Number(coursesSold));
+
+        setuserbalanceSTRK(convertedValue);
+        setuserbalanceUSD(convertedValue * formattedPrice);
+        setUserClaimables(Number(claimable) * formattedPrice);
+        setuserClaimablesStrk(Number(claimable));
+
+        console.log("Wallet balance:", walletBalance);
+        console.log("Claimable amount:", Number(claimable));
+        console.log("Current STRK price:", formattedPrice);
+      } catch (error) {
+        console.error("Error fetching current STRK price:", error);
+      }
+    };
+
+    getCurrentStrkPrice();
+    const intervalId = setInterval(getCurrentStrkPrice, 3000);
+    return () => clearInterval(intervalId);
+  }, [courseContract]);
+
   return (
     <div className="relative">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       {/* Earnings Dashboard */}
       <div className="w-full min-h-[200px] bg-white p-5 border border-gray-200 rounded-lg mt-2 shadow-sm">
         {/* Earnings row */}
@@ -70,12 +244,23 @@ const BalanceModal = () => {
               Total Earnings
             </p>
             <div className="flex items-center">
-              <span className="text-lg font-semibold text-gray-900">$200</span>
-              <span className="ml-2 text-sm text-gray-500">(32,000 STRK)</span>
+              <span className="text-lg font-semibold text-gray-900">
+                ${userClaimables.toFixed(2)}
+              </span>
+              <span className="ml-2 text-sm text-gray-500">
+                ({userClaimablesStrk.toFixed(2)} STRK)
+              </span>
             </div>
           </div>
-          <button className="px-4 py-2 border-[1px] bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] hover:bg-emerald-700 text-white text-sm font-medium rounded-lg shadow-xs transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50">
-            Claim
+          <button
+            onClick={handleClaim}
+            className="px-4 py-2 border-[1px] bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] hover:bg-emerald-700 text-white text-sm font-medium rounded-lg shadow-xs transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50"
+          >
+            {claimingstatus ? (
+              <LoadingSpinner size="sm" colorVariant="white" />
+            ) : (
+              "Claim"
+            )}
           </button>
         </div>
 
@@ -83,7 +268,9 @@ const BalanceModal = () => {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <p className="text-xs font-medium text-gray-500">Courses Sold</p>
-            <p className="text-sm font-semibold text-gray-900 mt-1">5</p>
+            <p className="text-sm font-semibold text-gray-900 mt-1">
+              {soldCourses}
+            </p>
           </div>
 
           <div>
@@ -98,8 +285,12 @@ const BalanceModal = () => {
                   className="w-full h-full object-contain"
                 />
               </div>
-              <span className="text-sm font-semibold text-gray-900">$20</span>
-              <span className="ml-1 text-sm text-gray-500">(120 STRK)</span>
+              <span className="text-sm font-semibold text-gray-900">
+                ${userbalanceUSD.toFixed(2)}
+              </span>
+              <span className="ml-1 w-full text-[10px] text-gray-500">
+                ({userbalanceSTRK.toFixed(2)} STRK)
+              </span>
             </div>
           </div>
         </div>
@@ -156,8 +347,8 @@ const BalanceModal = () => {
                     <div className="relative">
                       <input
                         type="number"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
+                        value={amount ?? 0}
+                        onChange={(e) => handleamountChange(e)}
                         placeholder="0.00"
                         className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                       />
@@ -165,6 +356,9 @@ const BalanceModal = () => {
                         STRK
                       </span>
                     </div>
+                    <p className="text-sm text-gray-500 mt-1">
+                      ${usdDisplay.toFixed(2)}
+                    </p>
                   </div>
 
                   {error && <p className="text-red-500 text-sm">{error}</p>}

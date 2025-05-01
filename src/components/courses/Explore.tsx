@@ -24,7 +24,6 @@ interface ChildComponentProps {
 
 const Explore = ({ wallet, courseData }: ChildComponentProps) => {
   const router = useRouter();
-
   const pinata = new PinataSDK({
     pinataJwt: process.env.NEXT_PUBLIC_PINATA_JWT,
     pinataGateway: process.env.NEXT_PUBLIC_GATEWAY_URL,
@@ -134,7 +133,12 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
                       "courseData",
                       JSON.stringify(courseData[courseData.length - 1]?.data),
                     );
-                    handleCourse(e, e.currentTarget.textContent, router);
+                    handleCourse(
+                      e,
+                      e.currentTarget.textContent,
+                      router,
+                      courseData[courseData.length - 1]?.course_identifier,
+                    );
                   }}
                 >
                   <button className="bg-[#2D3A4B] hidden lg:block hover:bg-gray-500 text-white text-[11px] font-bold py-2 px-4 rounded cursor-pointer">
@@ -153,7 +157,12 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
                       "courseData",
                       JSON.stringify(courseData[courseData.length - 1]?.data),
                     );
-                    handleCourse(e, e.currentTarget.textContent, router);
+                    handleCourse(
+                      e,
+                      e.currentTarget.textContent,
+                      router,
+                      courseData[courseData.length - 1]?.course_identifier,
+                    );
                   }}
                   className="bg-[#5801a9] ml-3 lg:hidden hover:bg-gray-500 text-white gap-2 text-[14px] rounded-md font-bold p-2 cursor-pointer"
                 >
@@ -262,7 +271,13 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
                               courseData[courseData.length - 1]?.data,
                             ),
                           );
-                          handleCourse(e, e.currentTarget.textContent, router);
+                          handleCourse(
+                            e,
+                            e.currentTarget.textContent,
+                            router,
+                            courseData[courseData.length - 1]
+                              ?.course_identifier,
+                          );
                         }}
                       >
                         <div className="w-[150px] h-[120px] rounded-xl border-4 border flex-shrink-0">
