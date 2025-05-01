@@ -35,7 +35,8 @@ interface CourseType {
   is_suspended: boolean;
 }
 
-const Index = () => {
+export default function CoursePageClient() {
+  // State
   const [wallet] = useAtom(walletStarknetkit);
   const [status, setStatus] = useAtom(coursestatusAtom);
   const [bootcampDropStat, setBootcampDropStat] = useAtom(
@@ -45,40 +46,51 @@ const Index = () => {
   const [allCourses, setAllCourses] = useState<CourseType[]>([]);
   const [courseData, setCourseData] = useState<CourseType[]>([]);
   const [loading, setLoading] = useState(true);
-  const [hasMounted, setHasMounted] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const { fetchCIDContent } = useFetchCID();
+  // Hooks
   const searchParams = useSearchParams();
-  const searchQuery = searchParams.get("search")?.toLowerCase() || "";
   const router = useRouter();
+  const { fetchCIDContent } = useFetchCID();
 
-  // Set mounted
+  // Handle mounting and search params
   useEffect(() => {
-    setHasMounted(true);
     setMounted(true);
-  }, []);
+
+    // Only set search query after component is mounted
+    if (searchParams) {
+      const query = searchParams.get("search")?.toLowerCase() || "";
+      setSearchQuery(query);
+    }
+  }, [searchParams]);
 
   // Fetch all course base data
   useEffect(() => {
+    if (!mounted) return;
+
     let isMounted = true;
     const fetchCourses = async () => {
       try {
+        setLoading(true);
         const res = await getAllCoursesInfo();
         if (isMounted) setAllCourses(res);
       } catch (err) {
         console.error("Error fetching course list", err);
       }
     };
+
     fetchCourses();
+
     return () => {
       isMounted = false;
     };
-  }, [provider]);
+  }, [mounted, provider]);
 
   // Resolve IPFS data for each course
   useEffect(() => {
-    if (allCourses.length === 0) return;
+    if (!mounted || allCourses.length === 0) return;
+
     let isMounted = true;
 
     const fetchCourseDetails = async () => {
@@ -107,11 +119,12 @@ const Index = () => {
     return () => {
       isMounted = false;
     };
-  }, [allCourses]);
+  }, [mounted, allCourses]);
 
   // Filtered courses based on search
   const filteredCourseData = useMemo(() => {
     if (!searchQuery) return courseData;
+
     return courseData.filter((course) => {
       const data = course.data;
       if (!data) return false;
@@ -127,7 +140,7 @@ const Index = () => {
         name.includes(searchQuery) ||
         desc.includes(searchQuery) ||
         author.includes(searchQuery) ||
-        categories.some((cat: string | string[]) => cat.includes(searchQuery))
+        categories.some((cat: any) => cat.includes(searchQuery))
       );
     });
   }, [searchQuery, courseData]);
@@ -140,9 +153,17 @@ const Index = () => {
 
   const clearSearch = () => {
     router.push("/Course");
+    setSearchQuery("");
   };
 
-  if (!hasMounted) return null;
+  // Show loading state while not mounted to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <div className="flex items-center justify-center h-[70vh]">
+        <MoonLoader color="#9B51E0" size={60} />
+      </div>
+    );
+  }
 
   return (
     <div onClick={handlePageClick}>
@@ -161,7 +182,7 @@ const Index = () => {
         <div className="flex items-center justify-center h-[70vh]">
           <MoonLoader color="#9B51E0" size={60} />
         </div>
-      ) : mounted ? (
+      ) : (
         <>
           {searchQuery && (
             <div className="container mx-auto px-4 py-2 mb-4">
@@ -215,9 +236,7 @@ const Index = () => {
             <Explore wallet={wallet} courseData={filteredCourseData} />
           )}
         </>
-      ) : null}
+      )}
     </div>
   );
-};
-
-export default Index;
+}
