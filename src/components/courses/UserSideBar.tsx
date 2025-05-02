@@ -107,7 +107,9 @@ const UserSideBar = ({
       return;
 
     navigator.clipboard
-      .writeText(address)
+      .writeText(
+        address.startsWith("0x") ? "0x0" + address.slice(2) : "0x0" + address,
+      )
       .then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
@@ -262,7 +264,11 @@ const UserSideBar = ({
                       {!!address &&
                       typeof address === "string" &&
                       address.trim() !== ""
-                        ? shortHex(address)
+                        ? shortHex(
+                            address.startsWith("0x")
+                              ? "0x0" + address.slice(2)
+                              : "0x0" + address,
+                          )
                         : "Login"}
                     </p>
                     {!!address && typeof address === "string" && (
@@ -294,7 +300,7 @@ const UserSideBar = ({
               className={`
         overflow-hidden
         transition-all duration-300 ease-in-out
-        ${isDropdownOpen ? "max-h-[220px] opacity-100" : "max-h-0 opacity-0"}
+        ${isDropdownOpen && page != "myCertificate" ? "max-h-[220px] opacity-100" : "max-h-0 opacity-0"}
       `}
             >
               <BalanceModal />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { IoMdArrowBack } from "@react-icons/all-files/io/IoMdArrowBack";
 import Dropdown from "../Dropdown";
 import Image from "next/image";
@@ -8,6 +8,11 @@ import CourseSideBar from "./SideBar";
 import { handleCreateCourse } from "@/utils/helpers";
 import { useRouter } from "next/navigation";
 import Stepper from "@/components/Stepper";
+import PriceSelector from "./PriceSelector";
+import { attensysCourseAbi } from "@/deployments/abi";
+import { attensysCourseAddress } from "@/deployments/contracts";
+import { provider } from "@/constants";
+import { Contract } from "starknet";
 
 interface ChildComponentProps {
   courseData: any;
@@ -23,6 +28,7 @@ const MainFormView4: React.FC<ChildComponentProps> = ({
   const router = useRouter();
   const [selectedPricing, setSelectedPricing] = useState<string | null>(null);
   const [pricingError, setPricingError] = useState("");
+  const [currentStrkPrice, SetCurrentStrkPrice] = useState(0);
   console.log(courseData);
   const pricing = [
     {
@@ -36,6 +42,12 @@ const MainFormView4: React.FC<ChildComponentProps> = ({
       desc: "Set a price that reflects the value of your content",
     },
   ];
+
+  const courseContract = new Contract(
+    attensysCourseAbi,
+    attensysCourseAddress,
+    provider,
+  );
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -57,6 +69,23 @@ const MainFormView4: React.FC<ChildComponentProps> = ({
     setSelectedPricing(cost);
     setPricingError("");
   };
+
+  useEffect(() => {
+    const getCurrentStrkPrice = async () => {
+      try {
+        const currentPrice = await courseContract?.get_price_of_strk_usd();
+        const formattedPrice = Number(currentPrice) / 100000000;
+        SetCurrentStrkPrice(formattedPrice);
+        console.log("Current STRK price:", formattedPrice);
+      } catch (error) {
+        console.error("Error fetching current STRK price:", error);
+      }
+    };
+
+    getCurrentStrkPrice();
+    const intervalId = setInterval(getCurrentStrkPrice, 3000);
+    return () => clearInterval(intervalId);
+  }, [courseContract]);
 
   return (
     <div className="flex">
@@ -103,6 +132,7 @@ const MainFormView4: React.FC<ChildComponentProps> = ({
                 {pricingError && (
                   <p className="text-red-500 text-sm mt-1">{pricingError}</p>
                 )}
+
                 <div className="w-full sm:flex sm:flex-row sm:space-x-4 sm:items-stretch my-12">
                   {pricing.map((item, id: number) => (
                     <div
@@ -146,6 +176,9 @@ const MainFormView4: React.FC<ChildComponentProps> = ({
                     </div>
                   ))}
                 </div>
+                {courseData.coursePricing === "Paid" && (
+                  <PriceSelector exchangeRate={currentStrkPrice} />
+                )}
               </div>
 
               <div className="mt-[71px] w-full md:w-[80%]">

@@ -152,6 +152,12 @@ const CourseFormLanding = (prop: any) => {
       coursePricing:
         prevData.coursePricing === selectedCost ? "" : selectedCost,
     }));
+    if (selectedCost === "Free") {
+      setCourseData((prevData) => ({
+        ...prevData,
+        price: 0,
+      }));
+    }
   };
   const handleCoursePromoCode = (
     event: React.ChangeEvent<HTMLInputElement>,

@@ -43,11 +43,12 @@ export const handleCourse = (
   event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>,
   courseName: any,
   router: any,
+  courseid: any,
 ) => {
   event.preventDefault();
   if (courseName.trim()) {
     // Redirect to the dynamic page with the user's input
-    router.push(`/coursepage/${courseName}`);
+    router.push(`/coursepage/${courseName}/?id=${Number(courseid)}`);
   }
 };
 

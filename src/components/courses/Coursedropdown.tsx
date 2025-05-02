@@ -88,7 +88,7 @@ const Coursedropdown = () => {
                   </svg>
 
                   <h1 className="text-[16px] font-bold cursor-pointer">
-                    My Courses
+                    Account
                   </h1>
                 </div>
               </a>

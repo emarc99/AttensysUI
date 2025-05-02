@@ -166,7 +166,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
               courseData.courseName,
               "XXX",
               dataUpload.IpfsHash,
-              0,
+              courseData.price,
             ],
           );
 
@@ -365,7 +365,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                 </div>
               </div>
 
-              <div className="px-6 lg:mx-48 sm:mt-4 xl:mt-32 mb-10">
+              <div className="px-6 sm:mt-4 xl:mt-32 mb-10">
                 {/* lectures in course */}
 
                 <Lectures

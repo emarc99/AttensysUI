@@ -50,6 +50,8 @@ import { connectWallet } from "@/utils/connectWallet";
 import { CatridgeConnect } from "./connect/CatridgeConnect";
 import { useAccount, useConnect } from "@starknet-react/core";
 import ControllerConnector from "@cartridge/connector/controller";
+import debounce from "lodash.debounce";
+import { courseSearchTerms as wordList } from "@/utils/searchterms";
 
 const navigation = [
   { name: "Courses", href: "#", current: false },
@@ -87,6 +89,9 @@ const Header = () => {
 
   const [error, setError] = useState("");
   const [showComingSoon, setShowComingSoon] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const handleComingSoonClick = (e: any) => {
     e.preventDefault(); // Prevent default link behavior
@@ -96,17 +101,105 @@ const Header = () => {
 
   const handleChange = (event: { target: { value: any } }) => {
     setSearchValue(event.target.value);
+    debouncedFetchSuggestions(event.target.value);
     if (error) setError("");
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const fetchSuggestions = (value: string) => {
+    if (value.length > 0) {
+      const filtered = wordList
+        .filter((word) => word.toLowerCase().includes(value.toLowerCase()))
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3);
+
+      setSuggestions(filtered);
+      setShowSuggestions(true);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  const debouncedFetchSuggestions = debounce(fetchSuggestions, 300);
+
+  const hanndleSuggestionClick = (item: any) => {
+    setSearchValue(item);
+    setShowSuggestions(false);
+
     if (!searchValue.trim()) {
-      e.preventDefault();
-      setError("Please enter an address to search");
+      setError("Please enter a search term");
       return;
     }
 
-    handleSubmit(e, searchValue, router);
+    // Clear any previous errors
+    setError("");
+
+    // Use router.replace instead of push and use a setTimeout to avoid hydration issues
+    if (
+      window.location.pathname === "/Course" ||
+      window.location.pathname === "/course"
+    ) {
+      // If already on Course page, use replace to avoid navigation history issues
+      setTimeout(() => {
+        router.replace(`/Course?search=${encodeURIComponent(item.trim())}`);
+      }, 0);
+    } else {
+      // If coming from another page, use push
+      setTimeout(() => {
+        router.push(`/Course?search=${encodeURIComponent(item.trim())}`);
+      }, 0);
+    }
+
+    // Close any open dropdowns
+    setcourseStatus(false);
+    setbootcampdropstat(false);
+  };
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!searchValue.trim()) {
+      setError("Please enter a search term");
+      return;
+    }
+
+    // Clear any previous errors
+    setError("");
+
+    // Use router.replace instead of push and use a setTimeout to avoid hydration issues
+    if (
+      window.location.pathname === "/Course" ||
+      window.location.pathname === "/course"
+    ) {
+      // If already on Course page, use replace to avoid navigation history issues
+      setTimeout(() => {
+        router.replace(
+          `/Course?search=${encodeURIComponent(searchValue.trim())}`,
+        );
+      }, 0);
+    } else {
+      // If coming from another page, use push
+      setTimeout(() => {
+        router.push(`/Course?search=${encodeURIComponent(searchValue.trim())}`);
+      }, 0);
+    }
+
+    // Close any open dropdowns
+    setcourseStatus(false);
+    setbootcampdropstat(false);
+  };
+
+  // Only clear search value when form is submitted successfully
+  const clearSearchValue = () => {
+    setSearchValue("");
+  };
+
+  const getSearchPlaceholder = () => {
+    const currentPath = window.location.pathname;
+    if (currentPath === "/Course" || currentPath === "/course") {
+      return "       Search courses by name or description";
+    }
+    return "       Search courses by name or description";
   };
 
   const handleDropdownClose = () => {
@@ -153,7 +246,7 @@ const Header = () => {
       <Disclosure
         as="nav"
         className={`${status ? "bg-white opacity-80 backdrop-blur-sm" : "bg-white"} 
-    pt-1 relative z-20 overflow-hidden 
+    pt-1 relative z-20
     w-[98%] mx-auto 
      lclg:w-[100%] clg:w-[98%] xlg:w-[100%]`}
         onClick={() => handleDropdownClose()}
@@ -182,35 +275,53 @@ const Header = () => {
                     </a>
                     <div className="relative w-[550px] lclg:w-[380px]">
                       <form onSubmit={onSubmit}>
-                        <Input
-                          name="search by address"
-                          type="text"
-                          placeholder="       Search by address"
-                          value={searchValue}
-                          onChange={handleChange}
-                          className="w-[80%]  clg:w-[70%] lclg:w-[90%] p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
-                        />
-                        {!searchValue && (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth="1.5"
-                            stroke="currentColor"
-                            className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                            />
-                          </svg>
-                        )}
-                        {error && (
-                          <p className="absolute left-0 text-sm text-red-500 -bottom-6">
-                            {error}
-                          </p>
-                        )}
+                        <div className="relative">
+                          <Input
+                            name="search by address"
+                            type="text"
+                            placeholder={getSearchPlaceholder()}
+                            value={searchValue}
+                            onChange={handleChange}
+                            className="w-[80%]  clg:w-[70%] lclg:w-[90%] p-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
+                          />
+
+                          {!searchValue && (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth="1.5"
+                              stroke="currentColor"
+                              className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                              />
+                            </svg>
+                          )}
+                          {error && (
+                            <p className="absolute left-0 text-sm text-red-500 -bottom-6">
+                              {error}
+                            </p>
+                          )}
+                          {showSuggestions && suggestions.length > 0 && (
+                            <div className="absolute z-[9999] mt-1 w-[80%] clg:w-[70%] lclg:w-[90%] bg-white border border-gray-300 rounded-md shadow-xl max-h-[400px] overflow-auto">
+                              {suggestions.map((suggestion, index) => (
+                                <div
+                                  key={index}
+                                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                                  onClick={() => {
+                                    hanndleSuggestionClick(suggestion);
+                                  }}
+                                >
+                                  {suggestion}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </form>
                     </div>
                   </div>
@@ -271,16 +382,16 @@ const Header = () => {
               </div>
 
               {/* 🔹 HEADER FOR MOBILE */}
-              <div className="flex items-center justify-between px-4 py-2 lg:hidden sm1275:flex">
+              <div className="flex items-center justify-between px-4 py-2 lg:hidden sm1275:flex relative">
                 {/* Hamburger menu */}
-                <DisclosureButton className="text-gray-500 focus:outline-none ">
+                <DisclosureButton className="text-gray-500 focus:outline-none z-10">
                   <Bars3Icon className="w-6 h-6" />
                 </DisclosureButton>
 
                 {/* Logo */}
                 <Link
                   href="/"
-                  className="flex justify-center flex-1"
+                  className="flex justify-center flex-1 z-10"
                   onClick={() => close()}
                 >
                   <Image
@@ -290,23 +401,107 @@ const Header = () => {
                   />
                 </Link>
 
-                {/* Search icon on the right */}
-                <button className="text-gray-500 focus:outline-none">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="w-6 h-6"
+                {/* Search icon and dropdown */}
+                <div className="relative z-10">
+                  <button
+                    onClick={() => setIsSearchOpen(!isSearchOpen)}
+                    className="text-gray-500 focus:outline-none transition-colors hover:text-gray-700"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                    />
-                  </svg>
-                </button>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                      />
+                    </svg>
+                  </button>
+
+                  {/* Search dropdown */}
+                  <div
+                    className={`
+                absolute right-0 top-full mt-2 w-screen max-w-xs sm:max-w-md
+                origin-top-right transition-all duration-200 ease-out
+                ${
+                  isSearchOpen
+                    ? "opacity-100 scale-100 translate-y-0"
+                    : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
+                }
+              `}
+                  >
+                    <div className="bg-white p-2 rounded-lg shadow-xl border border-gray-200 w-[100%]">
+                      <form onSubmit={onSubmit}></form>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          placeholder="Search courses..."
+                          value={searchValue}
+                          onChange={handleChange}
+                          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg 
+                              focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                              transition-all duration-200"
+                        />
+                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2"
+                            stroke="currentColor"
+                            className="w-5 h-5"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                            />
+                          </svg>
+                        </div>
+                        <button
+                          onClick={() => setIsSearchOpen(false)}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2"
+                            stroke="currentColor"
+                            className="w-5 h-5"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M6 18 18 6M6 6l12 12"
+                            />
+                          </svg>
+                        </button>
+
+                        {showSuggestions && suggestions.length > 0 && (
+                          <div className="absolute z-[9999] mt-1 w-[80%] clg:w-[70%] lclg:w-[90%] bg-white border border-gray-300 rounded-md shadow-xl max-h-[400px] overflow-auto">
+                            {suggestions.map((suggestion, index) => (
+                              <div
+                                key={index}
+                                className="p-2 hover:bg-gray-100 cursor-pointer"
+                                onClick={() => {
+                                  hanndleSuggestionClick(suggestion);
+                                }}
+                              >
+                                {suggestion}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* 🔹 MOBILE MENU DROP-DOWN PANEL */}
