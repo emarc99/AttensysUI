@@ -1,13 +1,10 @@
 import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
-import { coursesDetails, learningDetails } from "@/constants/data";
+import { learningDetails } from "@/constants/data";
 import { attensysCourseAbi } from "@/deployments/abi";
 import { attensysCourseAddress } from "@/deployments/contracts";
 import { useFetchCID } from "@/hooks/useFetchCID";
-import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
-import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { Contract } from "starknet";
-import { connect } from "starknetkit";
 import CoursesCreated from "./CoursesCreated";
 import CreateACourse from "./CreateACourse";
 import LearningJourney from "./LearningJourney";
@@ -29,7 +26,6 @@ interface CourseType {
 const MyCourses = (props: any) => {
   const [selected, setSelected] = useState("");
   const [page, setPage] = useState("");
-  const [wallet, setWallet] = useAtom(walletStarknetkit);
   const [courses, setCourses] = useState<CourseType[]>([]);
   const [courseData, setCourseData] = useState<CourseType[]>([]);
   const [takenCourses, setTakenCourses] = useState<CourseType[]>([]);
@@ -127,12 +123,12 @@ const MyCourses = (props: any) => {
       />
 
       <div className="flex-auto ml-0 lg:ml-5 px-4 my-12 lg:my-0 lg:px-0 hidden sm:block">
-        {"Courses created" == selected && courseData.length > 0 && (
+        {"Courses created" == selected && (
           <CoursesCreated
             courseData={courseData}
             item={{ courses }}
             selected={selected}
-            key={courses[0].course_identifier}
+            key={courses[0]?.course_identifier || "no-courses"}
             refreshCourses={getAllUserCreatedCourses}
           />
         )}

@@ -20,6 +20,7 @@ import { attensysCourseAddress } from "@/deployments/contracts";
 import { provider } from "@/constants";
 import { useAccount } from "@starknet-react/core";
 import { FaSpinner } from "react-icons/fa";
+import card from "@/assets/card.svg";
 
 interface ItemProps {
   courses: Course[];
@@ -60,8 +61,8 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
   const [deleteSuccess, setDeleteSuccess] = useState(false);
   const { account } = useAccount();
 
-  console.log(item.courses);
-  console.log(courseData);
+  console.log("courseData:", courseData);
+  console.log("item.courses:", item.courses);
 
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -174,8 +175,13 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
     }
   };
 
-  if (courseData.length === 0) {
-    return <div className="text-[#A01B9B] text-center mt-12">No Courses</div>;
+  if (courseData?.length === 0 || !item?.courses?.length) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12">
+        <Image src={card} alt="No courses" width={200} height={200} />
+        <p className="mt-4 text-lg text-[#2D3A4B]">No courses created yet</p>
+      </div>
+    );
   }
   return (
     <>
