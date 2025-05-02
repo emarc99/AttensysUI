@@ -224,7 +224,7 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
                             "courseData",
                             JSON.stringify(item?.data),
                           );
-                          handleCourse(e, e.currentTarget.textContent, router);
+                          handleCourse(e, e.currentTarget.textContent, router, item.data.courseIdentifier);
                         }}
                         className="cursor-pointer"
                       >
