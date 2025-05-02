@@ -173,11 +173,11 @@ const UserSideBar = ({
 
   useEffect(() => {
     if (validCertificates) {
-      console.log("validCertificates:", validCertificates);
+    
 
       // Calculate total number of certificates (all valid certificates)
       const totalCertificates = validCertificates.length;
-      console.log("Total certificates:", totalCertificates);
+    
 
       // Calculate number of bootcamp certificates (currently 0 as we don't have bootcamp data)
       const bootcampCertificates = 0;
@@ -203,7 +203,7 @@ const UserSideBar = ({
         },
       ];
 
-      console.log("Updated certificates:", updatedCertificates);
+     
       setCertificateEarned(updatedCertificates);
     } else {
       console.log("No valid certificates available");

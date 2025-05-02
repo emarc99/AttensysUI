@@ -16,18 +16,14 @@ import UserSideBar from "./UserSideBar";
 import { useAccount } from "@starknet-react/core";
 
 interface CourseType {
-  data: any;
-  owner: string;
-  course_identifier: number;
   accessment: boolean;
-  uri: Uri;
+  course_identifier: number;
   course_ipfs_uri: string;
+  is_approved: boolean;
   is_suspended: boolean;
-}
-
-interface Uri {
-  first: string;
-  second: string;
+  owner: string;
+  price: number;
+  uri: string;
 }
 
 const MyCourses = (props: any) => {
@@ -131,16 +127,14 @@ const MyCourses = (props: any) => {
       />
 
       <div className="flex-auto ml-0 lg:ml-5 px-4 my-12 lg:my-0 lg:px-0 hidden sm:block">
-        {coursesDetails.map((item, i) =>
-          item && item.tag == selected ? (
-            <CoursesCreated
-              courseData={courseData}
-              item={item}
-              selected={selected}
-              key={i}
-              refreshCourses={getAllUserCreatedCourses}
-            />
-          ) : null,
+        {"Courses created" == selected && courseData.length > 0 && (
+          <CoursesCreated
+            courseData={courseData}
+            item={{ courses }}
+            selected={selected}
+            key={courses[0].course_identifier}
+            refreshCourses={getAllUserCreatedCourses}
+          />
         )}
 
         <div className={`${selected ? "0" : "mt-12"}`}>

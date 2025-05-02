@@ -19,18 +19,22 @@ import { attensysCourseAbi } from "@/deployments/abi";
 import { attensysCourseAddress } from "@/deployments/contracts";
 import { provider } from "@/constants";
 import { useAccount } from "@starknet-react/core";
+import { FaSpinner } from "react-icons/fa";
 
 interface ItemProps {
-  no: number;
-  title: string;
-  tag: string;
-  playTime: string;
-  level: string;
-  stars: number;
-  url: string;
-  certificate: number;
+  courses: Course[];
 }
 
+interface Course {
+  accessment: boolean;
+  course_identifier: number;
+  course_ipfs_uri: string;
+  is_approved: boolean;
+  is_suspended: boolean;
+  owner: string;
+  price: number;
+  uri: string;
+}
 interface CoursesCreatedProps {
   item: ItemProps;
   selected: string;
@@ -52,7 +56,12 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
   const router = useRouter();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [courseToDelete, setCourseToDelete] = useState<any>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
   const { account } = useAccount();
+
+  console.log(item.courses);
+  console.log(courseData);
 
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -116,6 +125,16 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
     if (!courseToDelete) return;
 
     try {
+      setIsDeleting(true);
+      // Find the matching course from item.courses based on IPFS URI
+      const matchingCourse = item.courses.find(
+        (c: any) => c.uri === courseToDelete.data.courseImage,
+      );
+
+      if (!matchingCourse) {
+        throw new Error("Course not found");
+      }
+
       const courseContract = new Contract(
         attensysCourseAbi,
         attensysCourseAddress,
@@ -128,22 +147,30 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
 
       courseContract.connect(account);
 
-      console.log(courseToDelete);
+      const courseIdentifier = {
+        low: BigInt(matchingCourse.course_identifier),
+        high: BigInt(0),
+      };
 
-      // const myCall = courseContract.populate("remove_course", [
-      //   BigInt(courseToDelete.course_identifier),
-      // ]);
+      const myCall = courseContract.populate("remove_course", [
+        courseIdentifier,
+      ]);
+      const res = await courseContract.remove_course(myCall.calldata);
+      await provider.waitForTransaction(res.transaction_hash);
 
-      // const res = await courseContract.remove_course(myCall.calldata);
-      // await provider.waitForTransaction(res.transaction_hash);
+      setDeleteSuccess(true);
+      await refreshCourses();
 
-      // // Close modal and refresh courses list
-      // setIsDeleteModalOpen(false);
-      // setCourseToDelete(null);
-      await refreshCourses(); // Refresh the courses list after successful deletion
+      // Close modal after 2 seconds
+      setTimeout(() => {
+        setIsDeleteModalOpen(false);
+        setCourseToDelete(null);
+        setDeleteSuccess(false);
+        setIsDeleting(false);
+      }, 2000);
     } catch (error) {
       console.error("Error deleting course:", error);
-      // You might want to show an error message to the user
+      setIsDeleting(false);
     }
   };
 
@@ -164,136 +191,125 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
           </div>
 
           <div>
-            <div className="block justify-top ">
-              {currentItems?.map((item: any, index: number) => {
-                return (
-                  <div
-                    key={index}
-                    className="px-5 xl:px-12 flex border-top py-4 border-2 gap-12 xl:gap-0 flex-col w-full xl:flex-row xl:space-x-12 items-center"
-                  >
-                    <div className="xl:h-[164px] xl:w-[254px] w-full h-auto rounded-xl">
-                      <Image
-                        src={
-                          item.data.courseImage
-                            ? `https://ipfs.io/ipfs/${item?.data.courseImage}`
-                            : tdesign_video
-                        }
-                        width={200}
-                        height={200}
-                        alt={item.data.courseName}
-                        className="object-cover h-full w-full rounded-xl"
-                      />
-                    </div>
-                    <div className="flex-1 w-full lg:mx-6 sm:mx-0">
-                      <div>
-                        <div
-                          onClick={(e) => {
-                            localStorage.setItem(
-                              "courseData",
-                              JSON.stringify(courseData[index]?.data),
-                            );
-                            handleCourse(
-                              e,
-                              e.currentTarget.textContent,
-                              router,
-                            );
-                          }}
-                          className="cursor-pointer"
-                        >
-                          <h4 className="text-[20px] font-medium leading-[22px] text-[#2D3A4B]">
-                            {item.data.courseName}
-                          </h4>
+            <div className="block justify-top">
+              {currentItems.map((item, index) => (
+                <div
+                  key={index}
+                  className="px-5 xl:px-12 flex border-top py-4 border-2 gap-12 xl:gap-0 flex-col w-full xl:flex-row xl:space-x-12 items-center"
+                >
+                  <div className="xl:h-[164px] xl:w-[254px] w-full h-auto rounded-xl">
+                    <Image
+                      src={
+                        item.data.courseImage
+                          ? `https://ipfs.io/ipfs/${item.data.courseImage}`
+                          : tdesign_video
+                      }
+                      width={200}
+                      height={200}
+                      alt={item.data.courseName}
+                      className="object-cover h-full w-full rounded-xl"
+                    />
+                  </div>
+                  <div className="flex-1 w-full lg:mx-6 sm:mx-0">
+                    <div>
+                      <div
+                        onClick={(e) => {
+                          localStorage.setItem(
+                            "courseData",
+                            JSON.stringify(item?.data),
+                          );
+                          handleCourse(e, e.currentTarget.textContent, router);
+                        }}
+                        className="cursor-pointer"
+                      >
+                        <h4 className="text-[20px] font-medium leading-[22px] text-[#2D3A4B]">
+                          {item.data.courseName}
+                        </h4>
+                      </div>
+
+                      <div className="text-[#2D3A4B] flex flex-wrap items-center gap-3 my-3">
+                        <div className="flex items-center gap-x-2">
+                          <Image src={play} alt="" height={12} width={12} />
+                          <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
+                            Total play time: {item.playTime}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-x-2 ">
+                          <p className="hidden sm:block">|</p>
+                          <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px] mx-0">
+                            Created by:{" "}
+                            <span className="text-[#A01B9B]">you</span>
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-x-2">
+                          <Image src={bdot} alt="" height={12} width={12} />
+                          <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px] mx-0">
+                            <span className="text-[#A01B9B]">
+                              {item.data.courseCurriculum.length}
+                            </span>{" "}
+                            Lectures
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="text-[#2D3A4B] flex flex-wrap gap-4 items-center my-3">
+                        <div className="flex items-center gap-x-2">
+                          <Image
+                            src={replay}
+                            alt="time"
+                            width={16}
+                            height={16}
+                            className=""
+                          />
+                          <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
+                            Last updated 10|10|2024
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-x-2">
+                          <Image src={diamond} alt="" height={18} width={18} />
+                          <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
+                            Difficulty level: {item.data.difficultyLevel}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="text-[#2D3A4B] flex flex-wrap gap-5 items-center my-3">
+                        <div className="flex items-center gap-x-2">
+                          <StarRating totalStars={5} starnumber={4} />
+                          <p className="font-medium text-[13px] text-[#2D3A4B] leading-[16px]">
+                            {item.stars} students
+                          </p>
                         </div>
 
-                        <div className="text-[#2D3A4B] flex flex-wrap items-center gap-3 my-3">
-                          <div className="flex items-center gap-x-2">
-                            <Image src={play} alt="" height={12} width={12} />
-                            <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
-                              Total play time: {item.playTime}
-                            </p>
-                          </div>
-                          <div className="flex items-center gap-x-2 ">
-                            <p className="hidden sm:block">|</p>
-                            <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px] mx-0">
-                              Created by:{" "}
-                              <span className="text-[#A01B9B]">you</span>
-                            </p>
-                          </div>
-                          <div className="flex items-center gap-x-2">
-                            <Image src={bdot} alt="" height={12} width={12} />
-                            <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px] mx-0">
-                              <span className="text-[#A01B9B]">
-                                {item.data.courseCurriculum.length}
-                              </span>{" "}
-                              Lectures
-                            </p>
-                          </div>
+                        <div className="flex items-center gap-2 mx-0 sm:my-0">
+                          <Image
+                            src={certificationBadge}
+                            alt=""
+                            height={18}
+                            width={18}
+                          />
+                          <p className="font-medium text-[13px] mr-1 text-[#2D3A4B] leading-[16px]">
+                            Certificate issued:
+                          </p>
+                          <p className="font-medium text-[13px] text-[#2D3A4B] leading-[16px]">
+                            <span className="text-[#A01B9B]">
+                              {item.certificate}{" "}
+                            </span>
+                            certificates
+                          </p>
                         </div>
 
-                        <div className="text-[#2D3A4B] flex flex-wrap gap-4 items-center my-3">
-                          <div className="flex items-center gap-x-2">
-                            <Image
-                              src={replay}
-                              alt="time"
-                              width={16}
-                              height={16}
-                              className=""
-                            />
-                            <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
-                              Last updated 10|10|2024
-                            </p>
-                          </div>
-                          <div className="flex items-center gap-x-2">
-                            <Image
-                              src={diamond}
-                              alt=""
-                              height={18}
-                              width={18}
-                            />
-                            <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
-                              Difficulty level: {item.data.difficultyLevel}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="text-[#2D3A4B] flex flex-wrap gap-5 items-center my-3">
-                          <div className="flex items-center gap-x-2">
-                            <StarRating totalStars={5} starnumber={4} />
-                            <p className="font-medium text-[13px] text-[#2D3A4B] leading-[16px]">
-                              {item.stars} students
-                            </p>
-                          </div>
-
-                          <div className="flex items-center gap-2 mx-0 sm:my-0">
-                            <Image
-                              src={certificationBadge}
-                              alt=""
-                              height={18}
-                              width={18}
-                            />
-                            <p className="font-medium text-[13px] mr-1 text-[#2D3A4B] leading-[16px]">
-                              Certificate issued:
-                            </p>
-                            <p className="font-medium text-[13px] text-[#2D3A4B] leading-[16px]">
-                              <span className="text-[#A01B9B]">
-                                {item.certificate}{" "}
-                              </span>
-                              certificates
-                            </p>
-                          </div>
-
-                          <div className="flex items-center gap-2">
-                            <BsTrash
-                              className="text-red-500 cursor-pointer"
-                              onClick={() => handleDeleteClick(item)}
-                            />
-                          </div>
+                        <div className="flex items-center gap-2">
+                          <BsTrash
+                            className="text-red-500 cursor-pointer"
+                            onClick={() => handleDeleteClick(item)}
+                          />
                         </div>
                       </div>
                     </div>
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
           </div>
           {/* Pagination Controls */}
@@ -335,7 +351,13 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
       {/* Delete Confirmation Modal */}
       <Dialog
         open={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
+        onClose={() => {
+          if (!isDeleting) {
+            setIsDeleteModalOpen(false);
+            setCourseToDelete(null);
+            setDeleteSuccess(false);
+          }
+        }}
         className="relative z-50"
       >
         <DialogBackdrop
@@ -350,33 +372,50 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
                 <div className="sm:flex sm:items-start">
                   <div className="mt-3 text-center sm:mt-0 sm:text-left">
                     <h3 className="text-lg font-semibold leading-6 text-[#2D3A4B]">
-                      Delete Course
+                      {deleteSuccess ? "Success!" : "Delete Course"}
                     </h3>
                     <div className="mt-2">
-                      <p className="text-sm text-[#2D3A4B]">
-                        Are you sure you want to delete "
-                        {courseToDelete?.data?.courseName}"? This action cannot
-                        be undone.
-                      </p>
+                      {isDeleting ? (
+                        <div className="flex items-center justify-center gap-2">
+                          <FaSpinner className="animate-spin text-[#2D3A4B]" />
+                          <p className="text-sm text-[#2D3A4B]">
+                            Processing...
+                          </p>
+                        </div>
+                      ) : deleteSuccess ? (
+                        <p className="text-sm text-[#2D3A4B]">
+                          Course deleted successfully!
+                        </p>
+                      ) : (
+                        <p className="text-sm text-[#2D3A4B]">
+                          Are you sure you want to delete &quot;
+                          {courseToDelete?.data?.courseName}&quot;? This action
+                          cannot be undone.
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
               <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                <Button
-                  type="button"
-                  className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                  onClick={handleConfirmDelete}
-                >
-                  Delete
-                </Button>
-                <Button
-                  type="button"
-                  className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                  onClick={() => setIsDeleteModalOpen(false)}
-                >
-                  Cancel
-                </Button>
+                {!deleteSuccess && !isDeleting && (
+                  <>
+                    <Button
+                      type="button"
+                      className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                      onClick={handleConfirmDelete}
+                    >
+                      Delete
+                    </Button>
+                    <Button
+                      type="button"
+                      className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                      onClick={() => setIsDeleteModalOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                )}
               </div>
             </DialogPanel>
           </div>
