@@ -20,6 +20,7 @@ interface ChildComponentProps {
   wallet: any;
   courseData: any;
   querystat: any;
+  unfilteredData: any;
 }
 
 const pinata = new PinataSDK({
@@ -46,64 +47,17 @@ async function createAccess(cid: string, expires: number = 86400) {
   }
 }
 
-const LectureCard = ({ item, courseData, router }: any) => {
-  const [accessUrl, setAccessUrl] = useState<string | undefined>(undefined);
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  useEffect(() => {
-    let isMounted = true;
-    createAccess(item.video).then((url) => {
-      if (isMounted) setAccessUrl(url);
-    });
-    return () => {
-      isMounted = false;
-    };
-  }, [item.video]);
-
-  return (
-    <>
-      <div
-        className="flex content-center text-sm my-3 cursor-pointer space-x-4"
-        onClick={(e) => {
-          localStorage.setItem(
-            "courseData",
-            JSON.stringify(courseData[courseData.length - 1]?.data),
-          );
-          handleCourse(
-            e,
-            e.currentTarget.textContent,
-            router,
-            courseData[courseData.length - 1]?.course_identifier,
-          );
-        }}
-      >
-        <div className="w-[150px] h-[120px] rounded-xl border-4 border flex-shrink-0">
-          <ReactPlayer
-            url={accessUrl}
-            controls={false}
-            playing={false}
-            width="100%"
-            height="100%"
-            playIcon={<></>}
-          />
-        </div>
-
-        <div className="w-[230px]">
-          <h6 className="font-bold">
-            {item.name}
-            {/* <span className="text-[#5801A9]">({item.time})</span> */}
-          </h6>
-          <p className="font-light mt-2">{item.description}</p>
-        </div>
-      </div>
-    </>
-  );
-};
-
-const Explore = ({ wallet, courseData, querystat }: ChildComponentProps) => {
+const Explore = ({
+  wallet,
+  courseData,
+  querystat,
+  unfilteredData,
+}: ChildComponentProps) => {
   const router = useRouter();
   const featuredCourse = courseData[courseData.length - 1];
   const [currentPage, setCurrentPage] = useState(1);
+  const [videoUrls, setVideoUrls] = useState<{ [key: string]: string }>({});
+
   const itemsPerPage = 8;
   // Reset to first page when data changes
   useEffect(() => {
@@ -242,6 +196,27 @@ const Explore = ({ wallet, courseData, querystat }: ChildComponentProps) => {
       </div>
     </div>
   );
+
+  useEffect(() => {
+    // Pre-fetch all video URLs when component mounts or courseData changes
+    const fetchUrls = async () => {
+      const urls: { [key: string]: string } = {};
+      for (const item of unfilteredData[unfilteredData.length - 1]?.data
+        .courseCurriculum || []) {
+        try {
+          const url = await createAccess(item.video);
+          if (url) {
+            urls[item.video] = url;
+          }
+        } catch (error) {
+          console.error(`Error fetching URL for ${item.video}:`, error);
+        }
+      }
+      setVideoUrls(urls);
+    };
+
+    fetchUrls();
+  }, [courseData, createAccess]);
 
   return (
     <div>
@@ -413,7 +388,7 @@ const Explore = ({ wallet, courseData, querystat }: ChildComponentProps) => {
           <div className="flex flex-col md:flex-row gap-4 sm:gap-5 xl:w-[70%]">
             <div className="h-full w-full rounded-xl">
               <Image
-                src={`https://ipfs.io/ipfs/${courseData[courseData.length - 1]?.data?.courseImage}`}
+                src={`https://ipfs.io/ipfs/${unfilteredData[unfilteredData.length - 1]?.data?.courseImage}`}
                 alt="video"
                 width={700}
                 height={700}
@@ -427,13 +402,16 @@ const Explore = ({ wallet, courseData, querystat }: ChildComponentProps) => {
                   onClick={(e) => {
                     localStorage.setItem(
                       "courseData",
-                      JSON.stringify(courseData[courseData.length - 1]?.data),
+                      JSON.stringify(
+                        unfilteredData[unfilteredData.length - 1]?.data,
+                      ),
                     );
                     handleCourse(
                       e,
                       e.currentTarget.textContent,
                       router,
-                      courseData[courseData.length - 1]?.course_identifier,
+                      unfilteredData[unfilteredData.length - 1]
+                        ?.course_identifier,
                     );
                   }}
                 >
@@ -441,23 +419,29 @@ const Explore = ({ wallet, courseData, querystat }: ChildComponentProps) => {
                     Get this course
                   </button>
                   <h2 className="font-bold lg:text-[32px] text-[23px] sm:text-4xl text-[#2D3A4B] my-4 cursor-pointer">
-                    {courseData[courseData.length - 1]?.data.courseName}
+                    {unfilteredData[unfilteredData.length - 1]?.data.courseName}
                   </h2>
                 </div>
                 <p className="text-white font-semibold inline gap-2 text-sm bg-[#5801A9] rounded p-2">
-                  {courseData[courseData.length - 1]?.data.courseCreator}
+                  {
+                    unfilteredData[unfilteredData.length - 1]?.data
+                      .courseCreator
+                  }
                 </p>
                 <button
                   onClick={(e) => {
                     localStorage.setItem(
                       "courseData",
-                      JSON.stringify(courseData[courseData.length - 1]?.data),
+                      JSON.stringify(
+                        unfilteredData[unfilteredData.length - 1]?.data,
+                      ),
                     );
                     handleCourse(
                       e,
                       e.currentTarget.textContent,
                       router,
-                      courseData[courseData.length - 1]?.course_identifier,
+                      unfilteredData[unfilteredData.length - 1]
+                        ?.course_identifier,
                     );
                   }}
                   className="bg-[#5801a9] ml-3 lg:hidden hover:bg-gray-500 text-white gap-2 text-[14px] rounded-md font-bold p-2 cursor-pointer"
@@ -484,7 +468,10 @@ const Explore = ({ wallet, courseData, querystat }: ChildComponentProps) => {
                   <p className="text-[11px] text-[#2D3A4B] font-medium">
                     Created by:{" "}
                     <span className="underline inline">
-                      {courseData[courseData.length - 1]?.data.courseCreator}
+                      {
+                        unfilteredData[unfilteredData.length - 1]?.data
+                          .courseCreator
+                      }
                     </span>
                   </p>
                   <span className="flex gap-2 items-center">
@@ -503,7 +490,10 @@ const Explore = ({ wallet, courseData, querystat }: ChildComponentProps) => {
                     <GrDiamond className="text-[#2D3A4B]" />
                     <p className="text-[11px] text-[#2D3A4B] font-medium">
                       Difficulty level:{" "}
-                      {courseData[courseData.length - 1]?.data.difficultyLevel}
+                      {
+                        unfilteredData[unfilteredData.length - 1]?.data
+                          .difficultyLevel
+                      }
                     </p>
                   </span>
                   <span className="flex items-center gap-2">
@@ -523,76 +513,74 @@ const Explore = ({ wallet, courseData, querystat }: ChildComponentProps) => {
               <h4>
                 Lectures (
                 {
-                  courseData[courseData.length - 1]?.data.courseCurriculum
-                    .length
+                  unfilteredData[unfilteredData.length - 1]?.data
+                    .courseCurriculum.length
                 }
                 )
               </h4>
               <IoMdArrowDropdown />
             </div>
             <div>
-              {courseData[courseData.length - 1]?.data.courseCurriculum.map(
-                (item: any, i: any) => {
-                  // eslint-disable-next-line react-hooks/rules-of-hooks
-                  const [accessUrl, setAccessUrl] = useState<
-                    string | undefined
-                  >(undefined);
+              {unfilteredData[
+                unfilteredData.length - 1
+              ]?.data.courseCurriculum.map((item: any, i: any) => {
+                const accessUrl = createAccess(item.video).then((url) => {
+                  return url;
+                });
 
-                  // eslint-disable-next-line react-hooks/rules-of-hooks
-                  useEffect(() => {
-                    let isMounted = true;
-                    createAccess(item.video).then((url) => {
-                      if (isMounted) setAccessUrl(url);
-                    });
-                    return () => {
-                      isMounted = false;
-                    };
-                  }, [item.video]);
+                console.log("check url herr", accessUrl);
 
-                  return (
-                    <>
-                      <div
-                        key={i}
-                        className="flex content-center text-sm my-3 cursor-pointer space-x-4"
-                        onClick={(e) => {
-                          localStorage.setItem(
-                            "courseData",
-                            JSON.stringify(
-                              courseData[courseData.length - 1]?.data,
-                            ),
-                          );
-                          handleCourse(
-                            e,
-                            e.currentTarget.textContent,
-                            router,
-                            courseData[courseData.length - 1]
-                              ?.course_identifier,
-                          );
-                        }}
-                      >
-                        <div className="w-[150px] h-[120px] rounded-xl border-4 border flex-shrink-0">
-                          <ReactPlayer
-                            url={accessUrl}
-                            controls={false}
-                            playing={false}
-                            width="100%"
-                            height="100%"
-                            playIcon={<></>}
-                          />
-                        </div>
+                return (
+                  <div
+                    key={i}
+                    className="flex content-center text-sm my-3 cursor-pointer space-x-4"
+                    onClick={(e) => {
+                      localStorage.setItem(
+                        "courseData",
+                        JSON.stringify(
+                          unfilteredData[unfilteredData.length - 1]?.data,
+                        ),
+                      );
+                      handleCourse(
+                        e,
+                        e.currentTarget.textContent,
+                        router,
+                        unfilteredData[unfilteredData.length - 1]
+                          ?.course_identifier,
+                      );
+                    }}
+                  >
+                    <div className="w-[150px] h-[120px] rounded-xl border-4 border flex-shrink-0">
+                      {videoUrls[item.video] && (
+                        <ReactPlayer
+                          url={videoUrls[item.video]}
+                          controls={false}
+                          playing={false}
+                          width="100%"
+                          height="100%"
+                          playIcon={<></>}
+                        />
+                      )}
+                    </div>
 
-                        <div className="w-[230px]">
-                          <h6 className="font-bold">
-                            {item.name}
-                            {/* <span className="text-[#5801A9]">({item.time})</span> */}
-                          </h6>
-                          <p className="font-light mt-2">{item.description}</p>
-                        </div>
-                      </div>
-                    </>
-                  );
-                },
-              )}
+                    <div className="w-[230px]">
+                      <h6 className="font-bold">
+                        {item.name}
+                        {/* <span className="text-[#5801A9]">({item.time})</span> */}
+                      </h6>
+                      <p className="font-light mt-2">{item.description}</p>
+                    </div>
+                  </div>
+                );
+
+                //   <LectureCard
+                //   key={i}
+                //   item={item}
+                //   courseData={courseData}
+                //   router={router}
+                //   createAccess={createAccess}
+                // />
+              })}
             </div>
           </div>
         </div>

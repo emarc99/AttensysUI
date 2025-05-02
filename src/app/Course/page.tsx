@@ -45,7 +45,6 @@ const Index = () => {
   const [allCourses, setAllCourses] = useState<CourseType[]>([]);
   const [courseData, setCourseData] = useState<CourseType[]>([]);
   const [loading, setLoading] = useState(true);
-  const [hasMounted, setHasMounted] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   const { fetchCIDContent } = useFetchCID();
@@ -55,8 +54,8 @@ const Index = () => {
 
   // Set mounted
   useEffect(() => {
-    setHasMounted(true);
     setMounted(true);
+    return () => setMounted(false);
   }, []);
 
   // Fetch all course base data
@@ -151,7 +150,7 @@ const Index = () => {
     router.push("/Course");
   };
 
-  if (!hasMounted) return null;
+  // if (!mounted) return null;
 
   return (
     <div onClick={handlePageClick}>
@@ -192,6 +191,7 @@ const Index = () => {
             wallet={wallet}
             courseData={filteredCourseData}
             querystat={searchQuery}
+            unfilteredData={courseData}
           />
         </>
       ) : null}
