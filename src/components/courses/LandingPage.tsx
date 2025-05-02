@@ -115,7 +115,12 @@ const LandingPage: React.FC<ChildComponentProps> = ({
     setCourseData(ResetCourseRegistrationData);
 
     // Handle the course navigation
-    handleCourse(e, e.currentTarget.textContent, router);
+    handleCourse(
+      e,
+      e.currentTarget.textContent,
+      router,
+      dataRef.current?.course_identifier,
+    );
   };
 
   return (
@@ -162,7 +167,12 @@ const LandingPage: React.FC<ChildComponentProps> = ({
             <h4
               className="text-[39px] leading-[39px] h-[78px] my-5 font-bold text-black xl:text-white cursor-pointer"
               onClick={(e) =>
-                handleCourse(e, e.currentTarget.textContent, router)
+                handleCourse(
+                  e,
+                  e.currentTarget.textContent,
+                  router,
+                  dataRef.current?.course_identifier,
+                )
               }
             >
               {dataRef.current.courseName}
@@ -182,7 +192,12 @@ const LandingPage: React.FC<ChildComponentProps> = ({
                       "courseData",
                       JSON.stringify(dataRef.current),
                     );
-                    handleCourse(e, e.currentTarget.textContent, router);
+                    handleCourse(
+                      e,
+                      e.currentTarget.textContent,
+                      router,
+                      dataRef.current?.course_identifier,
+                    );
                   }}
                   className="sm:hidden block bg-[#9b51e0] px-7 py-2 rounded text-[#333333] font-bold"
                 >
@@ -191,7 +206,7 @@ const LandingPage: React.FC<ChildComponentProps> = ({
               </div>
             </div>
 
-            {/* rating and num of students */}
+            {/* rating and num of students
             <div className="flex items-center justify-center mb-3 space-x-16">
               <div className="flex items-center space-x-3">
                 <StarRating totalStars={5} starnumber={4} />
@@ -205,9 +220,10 @@ const LandingPage: React.FC<ChildComponentProps> = ({
                 />
                 <p className="font-bold">291 certification</p>
               </div>
-            </div>
+
+            </div> */}
             {/* creator and last update */}
-            <div className="flex space-x-14 sm:flex sm:text-center mt-12 mb-4">
+            {/* <div className="flex space-x-14 sm:flex sm:text-center mt-12 mb-4">
               <div className="">
                 <p className="text-[14px] text-[#2D3A4B] leading-[22px] font-medium">
                   Created by{" "}
@@ -223,10 +239,10 @@ const LandingPage: React.FC<ChildComponentProps> = ({
                   Last updated 10|10|24
                 </p>
               </div>
-            </div>
+            </div> */}
 
             {/* video prop */}
-            <div className="block sm:flex space-x-10 mb-4">
+            {/* <div className="block sm:flex space-x-10 mb-4">
               <div className="flex my-1 space-x-2 items-center">
                 <FaPlay className="h-[14px] w-[14px] text-[#5801A9]" />
                 <p className="text-[14px] text-[#2D3A4B] leading-[22px] font-medium">
@@ -239,16 +255,16 @@ const LandingPage: React.FC<ChildComponentProps> = ({
                   Difficulty level: {dataRef.current.difficultyLevel}
                 </p>
               </div>
-            </div>
+            </div> */}
 
-            <div className="flex space-x-2 items-center mb-4">
+            {/* <div className="flex space-x-2 items-center mb-4">
               <div>
                 <LuBadgeCheck className="h-[14px] w-[14px] text-[#5801A9]" />
               </div>
               <p className="text-[14px] text-[#2D3A4B] leading-[22px] font-medium">
                 Certificate of Completion
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -263,7 +279,12 @@ const LandingPage: React.FC<ChildComponentProps> = ({
                 "courseData",
                 JSON.stringify(dataRef.current),
               );
-              handleCourse(e, e.currentTarget.textContent, router);
+              handleCourse(
+                e,
+                e.currentTarget.textContent,
+                router,
+                dataRef.current?.course_identifier,
+              );
             }}
             className="hidden xl:block bg-[#fff] px-7 py-2 rounded text-[#333333] font-bold"
           >
@@ -272,8 +293,15 @@ const LandingPage: React.FC<ChildComponentProps> = ({
         </div>
 
         <h4
-          className="text-[39px] leading-[39px] w-[393px] h-[78px] my-5 font-bold text-black xl:text-white cursor-pointer"
-          onClick={(e) => handleCourse(e, e.currentTarget.textContent, router)}
+          className="text-[39px] leading-[39px] w-[393px] h-[40px] my-2 font-bold text-black xl:text-white cursor-pointer"
+          onClick={(e) =>
+            handleCourse(
+              e,
+              e.currentTarget.textContent,
+              router,
+              dataRef.current?.course_identifier,
+            )
+          }
         >
           {dataRef.current.courseName}
         </h4>
@@ -292,7 +320,12 @@ const LandingPage: React.FC<ChildComponentProps> = ({
                   "courseData",
                   JSON.stringify(dataRef.current),
                 );
-                handleCourse(e, e.currentTarget.textContent, router);
+                handleCourse(
+                  e,
+                  e.currentTarget.textContent,
+                  router,
+                  dataRef.current?.course_identifier,
+                );
               }}
               className="sm:hidden block bg-[#9b51e0] px-7 py-2 rounded text-[#fff] font-bold"
             >
@@ -302,7 +335,7 @@ const LandingPage: React.FC<ChildComponentProps> = ({
         </div>
 
         {/* rating and num of students */}
-        <div className="flex flex-col xl:flex-row  xl:items-center mb-3 space-x-16">
+        {/* <div className="flex flex-col xl:flex-row  xl:items-center mb-3 space-x-16">
           <div className="flex items-center space-x-3">
             <StarRating totalStars={5} starnumber={4} />
             <p className="font-bold text-black xl:text-white">(281)</p>
@@ -312,10 +345,10 @@ const LandingPage: React.FC<ChildComponentProps> = ({
             <HiOutlineCheckBadge color="#333" className="h-[22px] w-[20px]" />
             <p className="font-bold">291 certification</p>
           </div>
-        </div>
+        </div> */}
 
         {/* creator and last update */}
-        <div className="flex flex-col xl:flex-row items-start space-x-0 xl:space-x-14 sm:flex sm:text-center mt-12">
+        {/* <div className="flex flex-col xl:flex-row items-start space-x-0 xl:space-x-14 sm:flex sm:text-center mt-12">
           <div>
             <p className="text-[14px] text-[#2D3A4B] leading-[22px] font-medium">
               Created by{" "}
@@ -329,10 +362,10 @@ const LandingPage: React.FC<ChildComponentProps> = ({
               Last updated 10|10|24
             </p>
           </div>
-        </div>
+        </div> */}
 
         {/* video prop */}
-        <div className="flex flex-col xl:flex-row items-start xl:space-x-10 mb-4">
+        {/* <div className="flex flex-col xl:flex-row items-start xl:space-x-10 mb-4">
           <div className="flex my-1 space-x-2 items-center">
             <FaPlay className="h-[14px] w-[14px] text-[#5801A9]" />
             <p className="text-[14px] text-[#2D3A4B] leading-[22px] font-medium">
@@ -345,16 +378,16 @@ const LandingPage: React.FC<ChildComponentProps> = ({
               Difficulty level: Elementary
             </p>
           </div>
-        </div>
+        </div> */}
 
-        <div className="flex space-x-2 items-center mb-4">
+        {/* <div className="flex space-x-2 items-center mb-4">
           <div>
             <LuBadgeCheck className="h-[14px] w-[14px] text-[#5801A9]" />
           </div>
           <p className="text-[14px] text-[#2D3A4B] leading-[22px] font-medium">
             Certificate of Completion
           </p>
-        </div>
+        </div> */}
       </div>
 
       <div className="mt-12 block px-4 xl:hidden">
@@ -406,15 +439,15 @@ const LandingPage: React.FC<ChildComponentProps> = ({
 
       {/* rating */}
       <div>
-        <div className="border-b-[1px] border-b-[#949494] mx-24 sm:mx-48 flex space-x-2 items-center h-[50px]">
+        {/* <div className="border-b-[1px] border-b-[#949494] mx-24 sm:mx-48 flex space-x-2 items-center h-[50px]">
           <IoIosStar color="#F6A61C" className="h-[20px] w-[20px]" />
           <p className="text-[20px] text-[#333333] font-semibold leading-[22px]">
             4.9 Rating | (281 reviews)
           </p>
-        </div>
+        </div> */}
 
         {/* comments */}
-        <div className="block xl:flex py-12 mx-12 sm:mx-48 items-center content-center justify-around text-sm">
+        {/* <div className="block xl:flex py-12 mx-12 sm:mx-48 items-center content-center justify-around text-sm">
           <div className="w-[100%] xl:w-[30%]">
             <div className="flex items-center">
               <p className="p-5 bg-[#9b51e01a] font-bold rounded-full">OM</p>
@@ -422,16 +455,16 @@ const LandingPage: React.FC<ChildComponentProps> = ({
                 <p>Olivia. M</p>
                 <StarRating totalStars={5} starnumber={4} />
               </div>
-            </div>
+            </div> */}
 
-            <p className="mt-6 text-[14px] font-medium text-[#333333] leading-[22px]">
+        {/* <p className="mt-6 text-[14px] font-medium text-[#333333] leading-[22px]">
               Halfway through the course and lots of information given in every
               chapter. Concise and easy to understand, very useful to apply to
               any Web design journey!
             </p>
-          </div>
+          </div> */}
 
-          <div className="border-[1px] border-[#B8B9BA] h-28 hidden xl:block"></div>
+        {/* <div className="border-[1px] border-[#B8B9BA] h-28 hidden xl:block"></div>
 
           <div className="w-[100%] xl:w-[30%] mt-8 xl:mt-0">
             <div className="flex items-center">
@@ -448,7 +481,7 @@ const LandingPage: React.FC<ChildComponentProps> = ({
               any Web design journey!
             </p>
           </div>
-        </div>
+        </div>*/}
       </div>
 
       <div>

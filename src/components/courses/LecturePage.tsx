@@ -31,12 +31,15 @@ import {
   submitReview,
   hasUserReviewed,
 } from "@/lib/services/reviewService";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { ReviewsList } from "@/components/ReviewsList";
 import { ReviewForm } from "@/components/ReviewForm";
 import { auth } from "@/lib/firebase/client";
 import { getCurrentUser, signInUser } from "@/lib/services/authService";
 import ControllerConnector from "@cartridge/connector/controller";
+import { Erc20Abi } from "@/deployments/erc20abi";
+import { STRK_ADDRESS } from "@/deployments/erc20Contract";
+import { ToastContainer, toast, Bounce } from "react-toastify";
 
 interface CourseType {
   data: any;
@@ -96,21 +99,31 @@ const LecturePage = (props: any) => {
   const { connect, connectors } = useConnect();
   const controller = connectors[0] as ControllerConnector;
   const [username, setUsername] = useState<string>();
+  const [coursePrice, setCoursePrice] = useState<number>(0);
+  const [paymentValue, setPaymentValue] = useState<number>(0);
+  const searchParams = useSearchParams();
+  const ultimate_id = searchParams.get("id");
+
+  const courseContract = new Contract(
+    attensysCourseAbi,
+    attensysCourseAddress,
+    provider,
+  );
 
   // Fetch reviews and average rating in parallel, sends empty string if undefined
   const fetchReviewsAndRating = async () => {
     const [reviews, averageRating] = await Promise.all([
       getReviewsForVideo(
-        details?.toString() + props?.data.courseIdentifier || "",
+        props?.data?.courseName?.toString() + props?.data.courseIdentifier ||
+          "",
       ),
       getAverageRatingForVideo(
-        details?.toString() + props?.data.courseIdentifier || "",
+        props?.data?.courseName?.toString() + props?.data.courseIdentifier ||
+          "",
       ),
     ]);
     setcourseaveragerate(averageRating);
     setcoursereview(reviews);
-    console.log("check reviews here", reviews);
-    console.log("check average rating here", averageRating);
   };
 
   // console.log("uploading:", isUploading);
@@ -137,21 +150,26 @@ const LecturePage = (props: any) => {
       courses.map(async (course: CourseType) => {
         if (!course.course_ipfs_uri) {
           console.warn(`Skipping invalid IPFS URL: ${course.course_ipfs_uri}`);
-          return null; // Skip invalid URLs
+          return null;
         }
 
-        try {
-          return await fetchCIDContent(course.course_ipfs_uri);
-        } catch (error) {
-          console.error("Error fetching from IPFS:", error);
-          return null; // Skip on failure
+        const content = await fetchCIDContent(course.course_ipfs_uri);
+        if (content) {
+          return {
+            ...content,
+            course_identifier: course.course_identifier,
+            owner: course.owner,
+            course_ipfs_uri: course.course_ipfs_uri,
+            is_suspended: course.is_suspended,
+          };
         }
+        return null;
       }),
     );
 
-    // Filter out null values before updating state
+    // Filter out null values
     const validCourses = resolvedCourses.filter(
-      (course): course is any => course !== null,
+      (course): course is CourseType => course !== null,
     );
 
     // Remove duplicates before updating state
@@ -174,67 +192,48 @@ const LecturePage = (props: any) => {
     try {
       if (!address) {
         console.log("No address available");
-        // Check localStorage as fallback
-        const storedStatus = localStorage.getItem(`course_${courseId}_taken`);
-        if (storedStatus === "true") {
-          setShowOverlay(false);
-          setIsTakingCourse(true);
-        } else {
-          setShowOverlay(true);
-          setIsTakingCourse(false);
-        }
+        setShowOverlay(true);
+        setIsTakingCourse(false);
         return;
       }
 
-      const courseContract = new Contract(
-        attensysCourseAbi,
-        attensysCourseAddress,
-        provider,
-      );
-
       const taken_courses = await courseContract?.is_user_taking_course(
         address,
-        Number(courseId),
+        ultimate_id,
       );
       console.log("taken_courses result:", taken_courses);
-
-      if (taken_courses) {
-        localStorage.setItem(`course_${courseId}_taken`, "true");
-        setIsTakingCourse(true);
-        setShowOverlay(false);
-      } else {
-        // Only update state if we're sure the user hasn't taken the course
-        const storedStatus = localStorage.getItem(`course_${courseId}_taken`);
-        if (storedStatus !== "true") {
-          setIsTakingCourse(false);
-          setShowOverlay(true);
-        }
-      }
+      setIsTakingCourse(taken_courses);
 
       const certfified_courses =
         await courseContract?.is_user_certified_for_course(
           address,
-          Number(courseId),
+          ultimate_id,
         );
 
       console.log("certfified_courses result:", certfified_courses);
+      setIsCertified(certfified_courses);
 
-      if (certfified_courses) {
-        setIsCertified(true);
-      } else {
-        setIsCertified(false);
-      }
+      const get_course_data = await courseContract?.get_course_infos([
+        ultimate_id,
+      ]);
+
+      const decimals = 18;
+      const currentPrice = await courseContract?.get_price_of_strk_usd();
+      const formattedPrice = Number(currentPrice) / 100000000;
+      setCoursePrice(Number(get_course_data[0].price));
+      setPaymentValue(
+        Math.round(
+          (Number(get_course_data[0].price) / formattedPrice + 10) *
+            10 ** decimals,
+        ),
+      );
+      console.log("get_course_data result:", Number(get_course_data[0].price));
+      console.log(
+        "formatted strk:",
+        Math.round(Number(get_course_data[0].price) / formattedPrice + 1),
+      );
     } catch (err) {
       console.error("Error in find:", err);
-      // Check localStorage as fallback
-      const storedStatus = localStorage.getItem(`course_${courseId}_taken`);
-      if (storedStatus === "true") {
-        setShowOverlay(false);
-        setIsTakingCourse(true);
-      } else {
-        setShowOverlay(true);
-        setIsTakingCourse(false);
-      }
     }
   };
 
@@ -245,30 +244,96 @@ const LecturePage = (props: any) => {
       return;
     }
 
-    setIsUploading(true);
+    try {
+      setIsUploading(true);
 
-    const courseContract = new Contract(
-      attensysCourseAbi,
-      attensysCourseAddress,
-      account,
-    );
-    const take_course_calldata = await courseContract.populate(
-      "acquire_a_course",
-      [Number(courseId)],
-    );
+      const erc20Contract = new Contract(Erc20Abi, STRK_ADDRESS, account);
 
-    const callCourseContract = await account?.execute([
-      {
-        contractAddress: attensysCourseAddress,
-        entrypoint: "acquire_a_course",
-        calldata: take_course_calldata.calldata,
-      },
-    ]);
-    setTxnHash(callCourseContract?.transaction_hash);
-    localStorage.setItem(`course_${courseId}_taken`, "true");
-    setIsTakingCourse(true);
-    setShowOverlay(false);
-    setIsUploading(false);
+      const approve_calldata = await erc20Contract.populate("approve", [
+        attensysCourseAddress,
+        paymentValue,
+      ]);
+      const callErc20Contract = await account?.execute([
+        {
+          contractAddress: STRK_ADDRESS,
+          entrypoint: "approve",
+          calldata: approve_calldata.calldata,
+        },
+      ]);
+
+      if (callErc20Contract?.transaction_hash) {
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+
+        const courseContract = new Contract(
+          attensysCourseAbi,
+          attensysCourseAddress,
+          account,
+        );
+
+        const take_course_calldata = await courseContract.populate(
+          "acquire_a_course",
+          [Number(ultimate_id)],
+        );
+
+        const callCourseContract = await account?.execute([
+          {
+            contractAddress: attensysCourseAddress,
+            entrypoint: "acquire_a_course",
+            calldata: take_course_calldata.calldata,
+          },
+        ]);
+        console.log("call returns", callCourseContract);
+        setTxnHash(callCourseContract?.transaction_hash);
+        //@ts-ignore
+        if (callCourseContract?.code == "SUCCESS") {
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+          setIsTakingCourse(true);
+          setShowOverlay(false);
+          setIsUploading(false);
+          toast.success("Purchase successful", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          });
+          return;
+        } else {
+          setIsTakingCourse(false);
+          setShowOverlay(true);
+          setIsUploading(false);
+          toast.error("purchase failed", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          });
+        }
+      }
+    } catch (error) {
+      toast.error("purchase failed, reload & try again", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    }
+
+    // localStorage.setItem(`course_${courseId}_taken`, "true");
   };
 
   const handleFinishCourseClaimCertfificate = async () => {
@@ -350,68 +415,61 @@ const LecturePage = (props: any) => {
   }, [provider]);
   useEffect(() => {
     if (courses.length === 0) return;
-
+    console.log("props data", props?.data);
     getCourse();
   }, [courses]);
+
+  // useEffect(() => {
+  //   console.log("here as props", props?.data);
+  //   if (!props?.data?.courseImage) return;
+
+  //   const foundCourse = courses.find((course, index) => {
+  //     return props?.data?.courseImage === courseData[index]?.data?.courseImage;
+  //   });
+
+  //   if (foundCourse && foundCourse.course_identifier !== courseId) {
+  //     setCourseId(foundCourse.course_identifier);
+  //   }
+  // }, [courses, courseData, props?.data?.courseImage, courseId]);
+
   useEffect(() => {
-    console.log("here as props", props?.data);
-    if (!props?.data?.courseImage) return;
-
-    const foundCourse = courses.find((course, index) => {
-      return props?.data?.courseImage === courseData[index]?.data?.courseImage;
-    });
-
-    if (foundCourse && foundCourse.course_identifier !== courseId) {
-      setCourseId(foundCourse.course_identifier);
-    }
-  }, [courses, courseData, props?.data?.courseImage, courseId]);
-  useEffect(() => {
-    if (!Number.isNaN(courseId) && courseId !== undefined) {
-      // Check localStorage first
-      const storedStatus = localStorage.getItem(`course_${courseId}_taken`);
-      if (storedStatus === "true") {
-        setShowOverlay(false);
-        setIsTakingCourse(true);
-      } else {
-        setShowOverlay(true);
-        setIsTakingCourse(false);
-      }
-
+    if (ultimate_id && ultimate_id !== undefined) {
       // Then check blockchain if we have an address
       if (address) {
         find();
       }
     }
+    console.log("course id here", ultimate_id);
   }, [courseId, address]);
-
-  // Check blockchain state on component mount
-  useEffect(() => {
-    if (!Number.isNaN(courseId) && courseId !== undefined) {
-      find();
-    }
-  }, []);
 
   // ⛳ Set the first video on page load
   useEffect(() => {
     if (props?.data) {
       fetchReviewsAndRating();
     }
+    let isMounted = true;
+    createAccess(
+      props?.data.courseCurriculum[props?.data.courseCurriculum.length - 1]
+        .video,
+    ).then((url) => {
+      if (isMounted) setSelectedVideo(url ?? "");
+    });
     if (props?.data.courseCurriculum?.length > 0) {
-      setSelectedVideo(
-        `https://${props?.data.courseCurriculum[props?.data.courseCurriculum.length - 1].video}`,
-      );
       setSelectedLectureName(
         props?.data.courseCurriculum[props?.data.courseCurriculum.length - 1]
           .name,
       );
     }
+    return () => {
+      isMounted = false;
+    };
   }, [props.data]);
 
   useEffect(() => {
     const checkReview = async () => {
-      if (auth.currentUser!.uid) {
+      if (auth.currentUser!?.uid) {
         const exists = await hasUserReviewed(
-          `${details?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
+          `${props?.data?.courseName?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
           auth.currentUser!.uid,
         );
         setHasReviewed(exists);
@@ -420,7 +478,7 @@ const LecturePage = (props: any) => {
     checkReview();
   }, [
     auth?.currentUser!?.uid,
-    `${details?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
+    `${props?.data?.courseName?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
   ]);
 
   useEffect(() => {
@@ -454,6 +512,19 @@ const LecturePage = (props: any) => {
 
   return (
     <div className="pt-6  pb-36 w-full">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       {/* Video and Title */}
       <div className="flex flex-none w-full text-sm space-x-3 items-center px-6 sm:px-12">
         <div className="flex flex-none space-x-2 items-center">
@@ -499,7 +570,7 @@ const LecturePage = (props: any) => {
                           Taking Course...
                         </div>
                       ) : (
-                        "Take Course"
+                        `Buy Course ${coursePrice === 0 ? "(Free)" : `($${coursePrice})`}`
                       )}
                     </button>
                   </div>
@@ -883,7 +954,10 @@ const LecturePage = (props: any) => {
               <div>
                 {!hasReviewed && isTakingCourse && (
                   <ReviewForm
-                    videoId={details?.toString() + props?.data.courseIdentifier}
+                    videoId={
+                      props?.data?.courseName?.toString() +
+                      props?.data.courseIdentifier
+                    }
                     userId={address?.toString() || ""}
                     onSubmit={async (review) => {
                       let user = getCurrentUser();
@@ -893,7 +967,7 @@ const LecturePage = (props: any) => {
                       await submitReview({
                         ...review,
                         userId: auth.currentUser!.uid,
-                        videoId: `${details?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
+                        videoId: `${props?.data?.courseName?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
                       });
                       fetchReviewsAndRating();
                       setHasReviewed(true);
@@ -1024,7 +1098,8 @@ const LecturePage = (props: any) => {
                   <div>
                     <ReviewForm
                       videoId={
-                        details?.toString() + props?.data.courseIdentifier
+                        props?.data?.courseName?.toString() +
+                        props?.data.courseIdentifier
                       }
                       userId={address?.toString() || ""}
                       onSubmit={async (review) => {
@@ -1035,7 +1110,7 @@ const LecturePage = (props: any) => {
                         await submitReview({
                           ...review,
                           userId: auth.currentUser!.uid,
-                          videoId: `${details?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
+                          videoId: `${props?.data?.courseName?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
                         });
                         fetchReviewsAndRating();
                         setHasReviewed(true);

@@ -616,6 +616,17 @@ export const attensysCourseAbi = [
       {
         type: "function",
         name: "get_fee_withdrawable_amount",
+        inputs: [],
+        outputs: [
+          {
+            type: "core::integer::u256",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_total_course_sales",
         inputs: [
           {
             name: "user",

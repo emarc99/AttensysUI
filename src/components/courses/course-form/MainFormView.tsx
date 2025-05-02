@@ -13,7 +13,13 @@ import { connect } from "starknetkit";
 import { toast } from "react-toastify";
 import WalletisConnected from "@/components/createorganization/WalletisConnected";
 import TrueFocus from "@/components/createorganization/TrueFocus";
-import { useAccount } from "@starknet-react/core";
+import { useAccount, useConnect } from "@starknet-react/core";
+import ControllerConnector from "@cartridge/connector/controller";
+import { useSetAtom } from "jotai";
+import {
+  courseInitState,
+  connectorAtom,
+} from "@/state/connectedWalletStarknetkitNext";
 
 interface ChildComponentProps {
   courseData: any;
@@ -49,6 +55,37 @@ const MainFormView: React.FC<ChildComponentProps> = ({
   const [levelError, setLevelError] = useState("");
   const [wallet, setWallet] = useAtom(walletStarknetkit);
   const { account, address } = useAccount();
+  const { connect, connectors } = useConnect();
+  const controller = connectors[0] as ControllerConnector;
+  const [controllerUsername, setControllerUsername] = useState<string>("");
+  const setCourseData = useSetAtom(courseInitState);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (controller && typeof controller.username === "function") {
+      const usernamePromise = controller.username();
+      if (usernamePromise instanceof Promise) {
+        usernamePromise.then((n) => {
+          if (isMounted) setControllerUsername(n || "");
+          if (isMounted) {
+            setCourseData((prevData) => ({
+              ...prevData,
+              courseCreator: n || "",
+            }));
+          }
+        });
+      } else {
+        setControllerUsername(usernamePromise || "");
+        setCourseData((prevData) => ({
+          ...prevData,
+          courseCreator: usernamePromise || "",
+        }));
+      }
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [controller]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -201,11 +238,12 @@ const MainFormView: React.FC<ChildComponentProps> = ({
                     type="input"
                     className="w-[100%] h-[55px] sm:w-[80%] px-6 border border-gray-300 rounded-[6px] shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-gray-700 placeholder-gray-400"
                     placeholder="Course creator e.g Mike Smith, Trident Academy..."
-                    value={courseData.courseCreator}
-                    onChange={(e) => {
-                      handleCourseCreatorChange(e);
-                      setCourseCreatorError("");
-                    }}
+                    value={controllerUsername}
+                    // onChange={(e) => {
+                    //   handleCourseCreatorChange(e);
+                    //   setCourseCreatorError("");
+                    // }}
+                    readOnly
                     maxLength={100}
                   />
                   <input

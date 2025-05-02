@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import videoHero from "../../assets/video.svg";
 import CarouselComp from "./Carousel";
@@ -19,6 +19,7 @@ import { PinataSDK } from "pinata";
 interface ChildComponentProps {
   wallet: any;
   courseData: any;
+  querystat: any;
 }
 
 const pinata = new PinataSDK({
@@ -48,6 +49,7 @@ async function createAccess(cid: string, expires: number = 86400) {
 const LectureCard = ({ item, courseData, router }: any) => {
   const [accessUrl, setAccessUrl] = useState<string | undefined>(undefined);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     let isMounted = true;
     createAccess(item.video).then((url) => {
@@ -59,34 +61,119 @@ const LectureCard = ({ item, courseData, router }: any) => {
   }, [item.video]);
 
   return (
-    <div
-      className="flex content-center text-sm my-3 cursor-pointer space-x-4"
-      onClick={(e) => {
-        localStorage.setItem("courseData", JSON.stringify(courseData));
-        handleCourse(e, e.currentTarget.textContent, router);
-      }}
-    >
-      <div className="w-[150px] h-[120px] rounded-xl border-4 flex-shrink-0">
-        <ReactPlayer
-          url={accessUrl}
-          controls={false}
-          playing={false}
-          width="100%"
-          height="100%"
-          playIcon={<></>}
-        />
+    <>
+      <div
+        className="flex content-center text-sm my-3 cursor-pointer space-x-4"
+        onClick={(e) => {
+          localStorage.setItem(
+            "courseData",
+            JSON.stringify(courseData[courseData.length - 1]?.data),
+          );
+          handleCourse(
+            e,
+            e.currentTarget.textContent,
+            router,
+            courseData[courseData.length - 1]?.course_identifier,
+          );
+        }}
+      >
+        <div className="w-[150px] h-[120px] rounded-xl border-4 border flex-shrink-0">
+          <ReactPlayer
+            url={accessUrl}
+            controls={false}
+            playing={false}
+            width="100%"
+            height="100%"
+            playIcon={<></>}
+          />
+        </div>
+
+        <div className="w-[230px]">
+          <h6 className="font-bold">
+            {item.name}
+            {/* <span className="text-[#5801A9]">({item.time})</span> */}
+          </h6>
+          <p className="font-light mt-2">{item.description}</p>
+        </div>
       </div>
-      <div className="w-[230px]">
-        <h6 className="font-bold">{item.name}</h6>
-        <p className="font-light mt-2">{item.description}</p>
-      </div>
-    </div>
+    </>
   );
 };
 
-const Explore = ({ wallet, courseData }: ChildComponentProps) => {
+const Explore = ({ wallet, courseData, querystat }: ChildComponentProps) => {
   const router = useRouter();
   const featuredCourse = courseData[courseData.length - 1];
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+  // Reset to first page when data changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [courseData]);
+  const clearSearch = () => {
+    router.push("/Course");
+  };
+  // Calculate pagination values
+  const { currentItems, totalPages } = useMemo(() => {
+    const totalItems = Array.isArray(courseData) ? courseData.length : 0;
+    const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+
+    const currentItems = Array.isArray(courseData)
+      ? courseData.slice(startIndex, endIndex)
+      : [];
+
+    return { currentItems, totalPages };
+  }, [courseData, currentPage]);
+
+  const generatePageNumbers = () => {
+    const pageNumbers: (number | string)[] = [];
+
+    if (totalPages <= 1) return pageNumbers;
+
+    // Always show first page if not in initial range
+    if (currentPage > 2) pageNumbers.push(1);
+
+    // Show ellipsis if needed
+    if (currentPage > 3) pageNumbers.push("...");
+
+    // Calculate range around current page
+    const startPage = Math.max(1, currentPage - 1);
+    const endPage = Math.min(currentPage + 1, totalPages);
+
+    for (let i = startPage; i <= endPage; i++) {
+      if (!pageNumbers.includes(i)) pageNumbers.push(i);
+    }
+
+    // Show ellipsis if needed
+    if (currentPage < totalPages - 2) pageNumbers.push("...");
+
+    // Always show last page if different from first
+    if (currentPage < totalPages - 1 && !pageNumbers.includes(totalPages)) {
+      pageNumbers.push(totalPages);
+    }
+
+    return pageNumbers;
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages && page !== currentPage) {
+      setCurrentPage(page);
+    }
+  };
 
   const renderCourseCard = (course: any, index: any) => (
     <div
@@ -117,7 +204,12 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
           className="font-bold text-lg mb-2 cursor-pointer hover:text-[#5801A9]"
           onClick={(e) => {
             localStorage.setItem("courseData", JSON.stringify(course?.data));
-            handleCourse(e, course?.data?.courseName, router);
+            handleCourse(
+              e,
+              e.currentTarget.textContent,
+              router,
+              course?.course_identifier,
+            );
           }}
         >
           {course?.data?.courseName || "Course Title"}
@@ -126,11 +218,6 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
         <p className="text-gray-600 text-sm mb-3 line-clamp-2">
           {course?.data?.courseDescription || "No description available"}
         </p>
-
-        <div className="flex items-center text-xs text-gray-500 mb-2">
-          <FaPlay className="mr-1 text-[#5801A9]" />
-          <span>Total play time: 2 hrs 35 mins</span>
-        </div>
 
         <div className="flex items-center text-xs text-gray-500">
           <GrDiamond className="mr-1" />
@@ -141,7 +228,12 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
         <button
           onClick={(e) => {
             localStorage.setItem("courseData", JSON.stringify(course?.data));
-            handleCourse(e, course?.data?.courseName, router);
+            handleCourse(
+              e,
+              e.currentTarget.textContent,
+              router,
+              course?.course_identifier,
+            );
           }}
           className="w-full bg-[#5801A9] hover:bg-[#4a0189] text-white py-2 rounded text-sm font-medium"
         >
@@ -178,28 +270,113 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
         ))}
       </div>
 
-      {/* Course Cards */}
-      <div className="mx-6 lg:mx-auto max-w-screen-2xl my-8">
-        {courseData.length > 0 ? (
-          <>
-            <h2 className="text-2xl font-bold text-[#2D3A4B] mb-6">
-              {courseData.length} Course{courseData.length !== 1 ? "s" : ""}{" "}
-              Available
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {courseData.map((course: any, index: any) =>
-                renderCourseCard(course, index),
-              )}
-            </div>
-          </>
-        ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-500">
-              No courses found. Try different search terms.
+      {querystat && courseData.length === 0 ? (
+        <div className="container mx-auto px-4 py-12 text-center">
+          <div className="max-w-md mx-auto">
+            <svg
+              className="w-16 h-16 text-gray-400 mx-auto mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">
+              No courses found
+            </h3>
+            <p className="text-gray-600 mb-6">
+              We couldn&apos;t find any courses matching &quot;{querystat}
+              &quot;. Try different keywords or browse all available courses.
             </p>
+            <button
+              onClick={clearSearch}
+              className="px-6 py-2 bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] text-white rounded-lg hover:opacity-90"
+            >
+              View All Courses
+            </button>
           </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="mx-6 lg:mx-auto max-w-screen-2xl my-8">
+          {courseData.length > 0 ? (
+            <>
+              <div className="flex justify-between">
+                <h2 className="text-2xl font-bold text-[#2D3A4B] mb-6">
+                  {courseData.length} Course{courseData.length !== 1 ? "s" : ""}{" "}
+                  Available
+                </h2>
+                {querystat && (
+                  <p
+                    onClick={clearSearch}
+                    className="text-[20px] text-end text-blue-500 underline cursor-pointer"
+                  >
+                    view all courses
+                  </p>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {currentItems.map((course: any, index: any) =>
+                  renderCourseCard(course, index),
+                )}
+              </div>
+              {totalPages > 1 && (
+                <div className="flex justify-center space-x-2 pb-4 pt-10">
+                  <button
+                    onClick={goToPreviousPage}
+                    disabled={currentPage === 1}
+                    className="px-4 py-1.5 border-[#D0D5DD] border-[1px] rounded disabled:opacity-50"
+                  >
+                    {"<"}
+                  </button>
+
+                  {generatePageNumbers().map((page, index) =>
+                    page === "..." ? (
+                      <span
+                        key={`ellipsis-${index}`}
+                        className="px-2 text-base mt-2"
+                      >
+                        ...
+                      </span>
+                    ) : (
+                      <button
+                        key={`page-${page}`}
+                        onClick={() => goToPage(page as number)}
+                        className={`px-4 py-1.5 rounded text-[14px] ${
+                          currentPage === page
+                            ? "bg-none text-[#000000] border-[#9B51E0] border-[1px]"
+                            : "bg-none text-[#000000]"
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ),
+                  )}
+
+                  <button
+                    onClick={goToNextPage}
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-1.5 border-[#D0D5DD] border-[1px] text-sm rounded disabled:opacity-50"
+                  >
+                    {">"}
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-500">
+                No courses found. Try different search terms.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* What to learn next */}
       <div className="mx-6 lg:mx-auto">
@@ -252,7 +429,12 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
                       "courseData",
                       JSON.stringify(courseData[courseData.length - 1]?.data),
                     );
-                    handleCourse(e, e.currentTarget.textContent, router);
+                    handleCourse(
+                      e,
+                      e.currentTarget.textContent,
+                      router,
+                      courseData[courseData.length - 1]?.course_identifier,
+                    );
                   }}
                 >
                   <button className="bg-[#2D3A4B] hidden lg:block hover:bg-gray-500 text-white text-[11px] font-bold py-2 px-4 rounded cursor-pointer">
@@ -271,7 +453,12 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
                       "courseData",
                       JSON.stringify(courseData[courseData.length - 1]?.data),
                     );
-                    handleCourse(e, e.currentTarget.textContent, router);
+                    handleCourse(
+                      e,
+                      e.currentTarget.textContent,
+                      router,
+                      courseData[courseData.length - 1]?.course_identifier,
+                    );
                   }}
                   className="bg-[#5801a9] ml-3 lg:hidden hover:bg-gray-500 text-white gap-2 text-[14px] rounded-md font-bold p-2 cursor-pointer"
                 >
@@ -345,15 +532,66 @@ const Explore = ({ wallet, courseData }: ChildComponentProps) => {
             </div>
             <div>
               {courseData[courseData.length - 1]?.data.courseCurriculum.map(
-                (item: any, i: number) => (
-                  <LectureCard
-                    key={i}
-                    item={item}
-                    courseData={courseData}
-                    router={router}
-                    createAccess={createAccess}
-                  />
-                ),
+                (item: any, i: any) => {
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
+                  const [accessUrl, setAccessUrl] = useState<
+                    string | undefined
+                  >(undefined);
+
+                  // eslint-disable-next-line react-hooks/rules-of-hooks
+                  useEffect(() => {
+                    let isMounted = true;
+                    createAccess(item.video).then((url) => {
+                      if (isMounted) setAccessUrl(url);
+                    });
+                    return () => {
+                      isMounted = false;
+                    };
+                  }, [item.video]);
+
+                  return (
+                    <>
+                      <div
+                        key={i}
+                        className="flex content-center text-sm my-3 cursor-pointer space-x-4"
+                        onClick={(e) => {
+                          localStorage.setItem(
+                            "courseData",
+                            JSON.stringify(
+                              courseData[courseData.length - 1]?.data,
+                            ),
+                          );
+                          handleCourse(
+                            e,
+                            e.currentTarget.textContent,
+                            router,
+                            courseData[courseData.length - 1]
+                              ?.course_identifier,
+                          );
+                        }}
+                      >
+                        <div className="w-[150px] h-[120px] rounded-xl border-4 border flex-shrink-0">
+                          <ReactPlayer
+                            url={accessUrl}
+                            controls={false}
+                            playing={false}
+                            width="100%"
+                            height="100%"
+                            playIcon={<></>}
+                          />
+                        </div>
+
+                        <div className="w-[230px]">
+                          <h6 className="font-bold">
+                            {item.name}
+                            {/* <span className="text-[#5801A9]">({item.time})</span> */}
+                          </h6>
+                          <p className="font-light mt-2">{item.description}</p>
+                        </div>
+                      </div>
+                    </>
+                  );
+                },
               )}
             </div>
           </div>

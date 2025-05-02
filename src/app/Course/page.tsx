@@ -87,6 +87,15 @@ const Index = () => {
           if (!course.course_ipfs_uri) return null;
           try {
             const detailed = await fetchCIDContent(course.course_ipfs_uri);
+            if (detailed) {
+              return {
+                ...detailed,
+                course_identifier: course.course_identifier,
+                owner: course.owner,
+                course_ipfs_uri: course.course_ipfs_uri,
+                is_suspended: course.is_suspended,
+              };
+            }
             return detailed;
           } catch {
             return null;
@@ -179,41 +188,11 @@ const Index = () => {
             </div>
           )}
 
-          {searchQuery && filteredCourseData.length === 0 ? (
-            <div className="container mx-auto px-4 py-12 text-center">
-              <div className="max-w-md mx-auto">
-                <svg
-                  className="w-16 h-16 text-gray-400 mx-auto mb-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                  No courses found
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  We couldn&apos;t find any courses matching &quot;{searchQuery}
-                  &quot;. Try different keywords or browse all available
-                  courses.
-                </p>
-                <button
-                  onClick={clearSearch}
-                  className="px-6 py-2 bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] text-white rounded-lg hover:opacity-90"
-                >
-                  View All Courses
-                </button>
-              </div>
-            </div>
-          ) : (
-            <Explore wallet={wallet} courseData={filteredCourseData} />
-          )}
+          <Explore
+            wallet={wallet}
+            courseData={filteredCourseData}
+            querystat={searchQuery}
+          />
         </>
       ) : null}
     </div>

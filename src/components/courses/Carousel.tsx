@@ -80,7 +80,7 @@ const CarouselComp: React.FC<ChildComponentProps> = ({ wallet }) => {
   // Update random indices when courseData changes
   useEffect(() => {
     if (courseData.length > 0) {
-      setRandomIndices(generateRandomIndices(courseData.length, 5)); // Show 5 random courses
+      setRandomIndices(generateRandomIndices(courseData.length, 15)); // Show 5 random courses
     }
   }, [courseData]);
 
@@ -94,21 +94,26 @@ const CarouselComp: React.FC<ChildComponentProps> = ({ wallet }) => {
       courses.map(async (course: CourseType) => {
         if (!course.course_ipfs_uri) {
           console.warn(`Skipping invalid IPFS URL: ${course.course_ipfs_uri}`);
-          return null; // Skip invalid URLs
+          return null;
         }
 
-        try {
-          return await fetchCIDContent(course.course_ipfs_uri);
-        } catch (error) {
-          console.error("Error fetching from IPFS:", error);
-          return null; // Skip on failure
+        const content = await fetchCIDContent(course.course_ipfs_uri);
+        if (content) {
+          return {
+            ...content,
+            course_identifier: course.course_identifier,
+            owner: course.owner,
+            course_ipfs_uri: course.course_ipfs_uri,
+            is_suspended: course.is_suspended,
+          };
         }
+        return null;
       }),
     );
 
-    // Filter out null values before updating state
+    // Filter out null values
     const validCourses = resolvedCourses.filter(
-      (course): course is any => course !== null,
+      (course): course is CourseType => course !== null,
     );
 
     // Remove duplicates before updating state

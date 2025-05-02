@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ControllerConnector from "@cartridge/connector/controller";
 import { Button } from "@cartridge/ui-next";
 import LoadingSpinner from "../ui/LoadingSpinner";
+import { useRouter } from "next/navigation";
 
 export function CatridgeConnect() {
   const { connect, connectors } = useConnect();
@@ -12,6 +13,7 @@ export function CatridgeConnect() {
   const controller = connectors[0] as ControllerConnector;
   const [username, setUsername] = useState<string>();
   const [iswalletconnecting, setiswalletconnecting] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (!address) return;
@@ -22,6 +24,7 @@ export function CatridgeConnect() {
     console.log("clicked");
     setiswalletconnecting(true);
     if (address) {
+      router.push("/");
       disconnect();
       setiswalletconnecting(false);
     } else {
