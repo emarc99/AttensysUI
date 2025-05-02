@@ -80,7 +80,7 @@ const CarouselComp: React.FC<ChildComponentProps> = ({ wallet }) => {
   // Update random indices when courseData changes
   useEffect(() => {
     if (courseData.length > 0) {
-      setRandomIndices(generateRandomIndices(courseData.length, 5)); // Show 5 random courses
+      setRandomIndices(generateRandomIndices(courseData.length, 15)); // Show 5 random courses
     }
   }, [courseData]);
 

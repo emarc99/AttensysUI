@@ -35,7 +35,8 @@ interface CourseType {
   is_suspended: boolean;
 }
 
-const Index = () => {
+export default function CoursePageClient() {
+  // State
   const [wallet] = useAtom(walletStarknetkit);
   const [status, setStatus] = useAtom(coursestatusAtom);
   const [bootcampDropStat, setBootcampDropStat] = useAtom(
@@ -45,40 +46,51 @@ const Index = () => {
   const [allCourses, setAllCourses] = useState<CourseType[]>([]);
   const [courseData, setCourseData] = useState<CourseType[]>([]);
   const [loading, setLoading] = useState(true);
-  const [hasMounted, setHasMounted] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const { fetchCIDContent } = useFetchCID();
+  // Hooks
   const searchParams = useSearchParams();
-  const searchQuery = searchParams.get("search")?.toLowerCase() || "";
   const router = useRouter();
+  const { fetchCIDContent } = useFetchCID();
 
-  // Set mounted
+  // Handle mounting and search params
   useEffect(() => {
-    setHasMounted(true);
     setMounted(true);
-  }, []);
+
+    // Only set search query after component is mounted
+    if (searchParams) {
+      const query = searchParams.get("search")?.toLowerCase() || "";
+      setSearchQuery(query);
+    }
+  }, [searchParams]);
 
   // Fetch all course base data
   useEffect(() => {
+    if (!mounted) return;
+
     let isMounted = true;
     const fetchCourses = async () => {
       try {
+        setLoading(true);
         const res = await getAllCoursesInfo();
         if (isMounted) setAllCourses(res);
       } catch (err) {
         console.error("Error fetching course list", err);
       }
     };
+
     fetchCourses();
+
     return () => {
       isMounted = false;
     };
-  }, [provider]);
+  }, [mounted, provider]);
 
   // Resolve IPFS data for each course
   useEffect(() => {
-    if (allCourses.length === 0) return;
+    if (!mounted || allCourses.length === 0) return;
+
     let isMounted = true;
 
     const fetchCourseDetails = async () => {
@@ -87,15 +99,6 @@ const Index = () => {
           if (!course.course_ipfs_uri) return null;
           try {
             const detailed = await fetchCIDContent(course.course_ipfs_uri);
-            if (detailed) {
-              return {
-                ...detailed,
-                course_identifier: course.course_identifier,
-                owner: course.owner,
-                course_ipfs_uri: course.course_ipfs_uri,
-                is_suspended: course.is_suspended,
-              };
-            }
             return detailed;
           } catch {
             return null;
@@ -116,11 +119,12 @@ const Index = () => {
     return () => {
       isMounted = false;
     };
-  }, [allCourses]);
+  }, [mounted, allCourses]);
 
   // Filtered courses based on search
   const filteredCourseData = useMemo(() => {
     if (!searchQuery) return courseData;
+
     return courseData.filter((course) => {
       const data = course.data;
       if (!data) return false;
@@ -136,7 +140,7 @@ const Index = () => {
         name.includes(searchQuery) ||
         desc.includes(searchQuery) ||
         author.includes(searchQuery) ||
-        categories.some((cat: string | string[]) => cat.includes(searchQuery))
+        categories.some((cat: any) => cat.includes(searchQuery))
       );
     });
   }, [searchQuery, courseData]);
@@ -149,9 +153,17 @@ const Index = () => {
 
   const clearSearch = () => {
     router.push("/Course");
+    setSearchQuery("");
   };
 
-  if (!hasMounted) return null;
+  // Show loading state while not mounted to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <div className="flex items-center justify-center h-[70vh]">
+        <MoonLoader color="#9B51E0" size={60} />
+      </div>
+    );
+  }
 
   return (
     <div onClick={handlePageClick}>
@@ -170,7 +182,7 @@ const Index = () => {
         <div className="flex items-center justify-center h-[70vh]">
           <MoonLoader color="#9B51E0" size={60} />
         </div>
-      ) : mounted ? (
+      ) : (
         <>
           {searchQuery && (
             <div className="container mx-auto px-4 py-2 mb-4">
@@ -188,15 +200,43 @@ const Index = () => {
             </div>
           )}
 
-          <Explore
-            wallet={wallet}
-            courseData={filteredCourseData}
-            querystat={searchQuery}
-          />
+          {searchQuery && filteredCourseData.length === 0 ? (
+            <div className="container mx-auto px-4 py-12 text-center">
+              <div className="max-w-md mx-auto">
+                <svg
+                  className="w-16 h-16 text-gray-400 mx-auto mb-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  No courses found
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  We couldn&apos;t find any courses matching &quot;{searchQuery}
+                  &quot;. Try different keywords or browse all available
+                  courses.
+                </p>
+                <button
+                  onClick={clearSearch}
+                  className="px-6 py-2 bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] text-white rounded-lg hover:opacity-90"
+                >
+                  View All Courses
+                </button>
+              </div>
+            </div>
+          ) : (
+            <Explore wallet={wallet} courseData={filteredCourseData} />
+          )}
         </>
-      ) : null}
+      )}
     </div>
   );
-};
-
-export default Index;
+}

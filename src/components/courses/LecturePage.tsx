@@ -114,10 +114,12 @@ const LecturePage = (props: any) => {
   const fetchReviewsAndRating = async () => {
     const [reviews, averageRating] = await Promise.all([
       getReviewsForVideo(
-        details?.toString() + props?.data.courseIdentifier || "",
+        props?.data?.courseName?.toString() + props?.data.courseIdentifier ||
+          "",
       ),
       getAverageRatingForVideo(
-        details?.toString() + props?.data.courseIdentifier || "",
+        props?.data?.courseName?.toString() + props?.data.courseIdentifier ||
+          "",
       ),
     ]);
     setcourseaveragerate(averageRating);
@@ -467,7 +469,7 @@ const LecturePage = (props: any) => {
     const checkReview = async () => {
       if (auth.currentUser!?.uid) {
         const exists = await hasUserReviewed(
-          `${details?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
+          `${props?.data?.courseName?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
           auth.currentUser!.uid,
         );
         setHasReviewed(exists);
@@ -476,7 +478,7 @@ const LecturePage = (props: any) => {
     checkReview();
   }, [
     auth?.currentUser!?.uid,
-    `${details?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
+    `${props?.data?.courseName?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
   ]);
 
   useEffect(() => {
@@ -952,7 +954,10 @@ const LecturePage = (props: any) => {
               <div>
                 {!hasReviewed && isTakingCourse && (
                   <ReviewForm
-                    videoId={details?.toString() + props?.data.courseIdentifier}
+                    videoId={
+                      props?.data?.courseName?.toString() +
+                      props?.data.courseIdentifier
+                    }
                     userId={address?.toString() || ""}
                     onSubmit={async (review) => {
                       let user = getCurrentUser();
@@ -962,7 +967,7 @@ const LecturePage = (props: any) => {
                       await submitReview({
                         ...review,
                         userId: auth.currentUser!.uid,
-                        videoId: `${details?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
+                        videoId: `${props?.data?.courseName?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
                       });
                       fetchReviewsAndRating();
                       setHasReviewed(true);
@@ -1093,7 +1098,8 @@ const LecturePage = (props: any) => {
                   <div>
                     <ReviewForm
                       videoId={
-                        details?.toString() + props?.data.courseIdentifier
+                        props?.data?.courseName?.toString() +
+                        props?.data.courseIdentifier
                       }
                       userId={address?.toString() || ""}
                       onSubmit={async (review) => {
@@ -1104,7 +1110,7 @@ const LecturePage = (props: any) => {
                         await submitReview({
                           ...review,
                           userId: auth.currentUser!.uid,
-                          videoId: `${details?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
+                          videoId: `${props?.data?.courseName?.toString() ?? ""}${props?.data?.courseIdentifier ?? ""}`,
                         });
                         fetchReviewsAndRating();
                         setHasReviewed(true);
