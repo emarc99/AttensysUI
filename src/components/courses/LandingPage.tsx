@@ -199,7 +199,7 @@ const LandingPage: React.FC<ChildComponentProps> = ({
                       dataRef.current?.course_identifier,
                     );
                   }}
-                  className="sm:hidden block bg-[#9b51e0] px-7 py-2 rounded text-[#333333] font-bold"
+                  className="sm:hidden block bg-[#9b51e0] px-7 py-2 rounded-xl text-[#333333] font-bold"
                 >
                   Get course
                 </button>

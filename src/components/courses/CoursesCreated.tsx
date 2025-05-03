@@ -9,31 +9,45 @@ import bdot from "@/assets/Bdot.svg";
 import diamond from "@/assets/diamond.svg";
 import certificationBadge from "@/assets/certification_badge.svg";
 import tdesign_video from "../../assets/tdesign_video.svg";
+import { useRouter } from "next/navigation";
+import { handleCourse } from "@/utils/helpers";
+import { IoIosRemoveCircleOutline } from "react-icons/io";
+import { BsTrash } from "react-icons/bs";
+import { BsPencil } from "react-icons/bs";
+import { Dialog, DialogBackdrop, DialogPanel, Button } from "@headlessui/react";
+import { Contract } from "starknet";
+import { attensysCourseAbi } from "@/deployments/abi";
+import { attensysCourseAddress } from "@/deployments/contracts";
+import { provider } from "@/constants";
+import { useAccount } from "@starknet-react/core";
+import { FaSpinner } from "react-icons/fa";
+import card from "@/assets/card.svg";
+import EditCoursePanel from "./EditCoursePanel";
+import { pinata } from "../../../utils/config";
+import { useFetchCID } from "@/hooks/useFetchCID";
+import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
+import { useAtom } from "jotai";
 
 interface ItemProps {
-  no: number;
-  title: string;
-  tag: string;
-  playTime: string;
-  level: string;
-  stars: number;
-  url: string;
-  certificate: number;
+  courses: Course[];
+}
+
+interface Course {
+  accessment: boolean;
+  course_identifier: number;
+  course_ipfs_uri: string;
+  is_approved: boolean;
+  is_suspended: boolean;
+  owner: string;
+  price: number;
+  uri: string;
 }
 
 interface CoursesCreatedProps {
-  item: ItemProps; // or another type like `number` or a union type
+  item: ItemProps;
   selected: string;
   courseData: any;
-}
-
-interface CourseType {
-  owner: string;
-  course_identifier: number;
-  accessment: boolean;
-  uri: Uri;
-  course_ipfs_uri: string;
-  is_suspended: boolean;
+  refreshCourses: () => Promise<void>;
 }
 
 interface Uri {
@@ -45,12 +59,22 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
   item,
   selected,
   courseData,
+  refreshCourses,
 }) => {
-  const [isActivated, setIsActivated] = useState(false);
+  const router = useRouter();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [courseToDelete, setCourseToDelete] = useState<any>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
+  const [isEditPanelOpen, setIsEditPanelOpen] = useState(false);
+  const [courseToEdit, setCourseToEdit] = useState<any>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [localCourseData, setLocalCourseData] = useState(courseData);
+  const { account } = useAccount();
 
-  const handleSwitch = () => {
-    setIsActivated(!isActivated);
-  };
+  console.log("courseData:", courseData);
+  console.log("item.courses:", item.courses);
 
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -105,69 +129,174 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
     setCurrentPage(page);
   };
 
-  if (courseData.length === 0) {
-    return <div className="text-[#A01B9B] text-center mt-12">No Courses</div>;
+  const handleDeleteClick = (course: any) => {
+    setCourseToDelete(course);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      setIsDeleting(true);
+      // // Find the matching course from item.c
+
+      const courseContract = new Contract(
+        attensysCourseAbi,
+        attensysCourseAddress,
+        account,
+      );
+
+      const myCall = courseContract.populate("remove_course", [
+        Number(courseToDelete),
+      ]);
+      const res = await courseContract.remove_course(myCall.calldata);
+      await provider.waitForTransaction(res.transaction_hash);
+
+      setDeleteSuccess(true);
+      await refreshCourses();
+
+      // Close modal after 2 seconds
+      setTimeout(() => {
+        setIsDeleteModalOpen(false);
+        setCourseToDelete(null);
+        setDeleteSuccess(false);
+        setIsDeleting(false);
+      }, 2000);
+    } catch (error) {
+      console.error("Error deleting course:", error);
+      setIsDeleting(false);
+    }
+  };
+
+  const handleEditClick = (course: any) => {
+    console.log(course);
+    setCourseToEdit(course);
+    setIsEditPanelOpen(true);
+  };
+
+  const handleCloseEditPanel = () => {
+    setIsEditPanelOpen(false);
+    setCourseToEdit(null);
+  };
+
+  const handleSaveEdit = async (updatedCourse: any) => {
+    try {
+      setIsUpdating(true);
+      setUpdateSuccess(false);
+
+      // Find the matching course from item.courses based on IPFS URI
+      const matchingCourse = item.courses.find(
+        (c: any) =>
+          c.course_ipfs_uri === updatedCourse.data.courseImage &&
+          c.course_identifier !== 0n, // Exclude deleted courses
+      );
+
+      if (!matchingCourse) {
+        throw new Error("Course not found or has been deleted");
+      }
+
+      // First, update the IPFS metadata
+      const dataUpload = await pinata.upload.json({
+        courseName: updatedCourse.data.courseName,
+        courseDescription: updatedCourse.data.courseDescription,
+        courseCategory: updatedCourse.data.courseCategory,
+        difficultyLevel: updatedCourse.data.difficultyLevel,
+        studentRequirements: updatedCourse.data.studentRequirements,
+        learningObjectives: updatedCourse.data.learningObjectives,
+        courseImage: updatedCourse.data.courseImage,
+        courseCurriculum: updatedCourse.data.courseCurriculum,
+      });
+
+      const courseContract = new Contract(
+        attensysCourseAbi,
+        attensysCourseAddress,
+        provider,
+      );
+
+      if (!account) {
+        throw new Error("Wallet not connected");
+      }
+
+      courseContract.connect(account);
+
+      const courseIdentifier = {
+        low: BigInt(matchingCourse.course_identifier),
+        high: BigInt(0),
+      };
+
+      // Update course data on the blockchain using add_replace_course_content
+      const myCall = courseContract.populate("add_replace_course_content", [
+        courseIdentifier,
+        account.address,
+        dataUpload.IpfsHash, // Use the new IPFS hash
+      ]);
+      const res = await courseContract.add_replace_course_content(
+        myCall.calldata,
+      );
+      await provider.waitForTransaction(res.transaction_hash);
+
+      setUpdateSuccess(true);
+
+      // Force a refresh of the course data
+      await refreshCourses();
+
+      // Update the local course data immediately
+      const updatedCourseData = localCourseData.map((course: any) => {
+        if (course.course_identifier === matchingCourse.course_identifier) {
+          return {
+            ...course,
+            data: {
+              ...course.data,
+              courseName: updatedCourse.data.courseName,
+              courseDescription: updatedCourse.data.courseDescription,
+              courseCategory: updatedCourse.data.courseCategory,
+              difficultyLevel: updatedCourse.data.difficultyLevel,
+              studentRequirements: updatedCourse.data.studentRequirements,
+              learningObjectives: updatedCourse.data.learningObjectives,
+              courseCurriculum: updatedCourse.data.courseCurriculum,
+            },
+          };
+        }
+        return course;
+      });
+      setLocalCourseData(updatedCourseData);
+
+      // Close panel after 2 seconds
+      setTimeout(() => {
+        setIsEditPanelOpen(false);
+        setCourseToEdit(null);
+        setIsUpdating(false);
+        setUpdateSuccess(false);
+      }, 2000);
+    } catch (error) {
+      console.error("Error updating course:", error);
+      setIsUpdating(false);
+    }
+  };
+
+  if (courseData?.length === 0 || !item?.courses?.length) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12">
+        <Image src={card} alt="No courses" width={200} height={200} />
+        <p className="mt-4 text-lg text-[#2D3A4B]">No courses created yet</p>
+      </div>
+    );
   }
   return (
-    <div className="bg-white  sm:my-12 rounded-xl border-[1px] border-[#BCBCBC] h-auto pb-8">
-      {/* courses created */}
-      <div>
-        <div className="flex justify-between border-b-[1px] border-b-[#CACBCB] my-3 px-16">
-          {/* activate */}
-          <div className="flex items-center text-[#A01B9B]  my-5 space-x-3">
-            <h4 className="font-bold text-lg text-[#A01B9B]">{selected}</h4>
-            <FaUserGraduate color="#A01B9B" />
-          </div>
-          <div className="hidden sm:flex items-center  my-5">
-            <p className={`${!isActivated ? "text-[#4A90E2]" : "text-black"} `}>
-              Deactivate
-            </p>
-
-            <Switch
-              onChange={handleSwitch}
-              checked={isActivated}
-              onColor="#9B51E0"
-              offColor="#4A90E2"
-              uncheckedHandleIcon={<div />}
-              checkedHandleIcon={<div />}
-              checkedIcon={<div />}
-              uncheckedIcon={<div />}
-              className="mx-2"
-            />
-            <p className={`${isActivated ? "text-[#9B51E0]" : "text-black"} `}>
-              Activate
-            </p>
-          </div>
-        </div>
-
+    <>
+      <div className="bg-white  sm:my-12 rounded-xl border-[1px] border-[#BCBCBC] h-auto pb-8">
+        {/* courses created */}
         <div>
-          <div className="block justify-top ">
-            <div className="flex sm:hidden items-center mx-8 my-5 text-xs">
-              <p
-                className={`${!isActivated ? "text-[#4A90E2]" : "text-black"} `}
-              >
-                Deactivate
-              </p>
-              <Switch
-                onChange={handleSwitch}
-                checked={isActivated}
-                onColor="#9B51E0"
-                offColor="#4A90E2"
-                uncheckedHandleIcon={<div />}
-                checkedHandleIcon={<div />}
-                checkedIcon={<div />}
-                uncheckedIcon={<div />}
-                className="mx-2"
-              />
-              <p
-                className={`${isActivated ? "text-[#9B51E0]" : "text-black"} `}
-              >
-                Activate
-              </p>
+          <div className="flex justify-between border-b-[1px] border-b-[#CACBCB] my-3 px-16">
+            {/* activate */}
+            <div className="flex items-center text-[#A01B9B]  my-5 space-x-3">
+              <h4 className="font-bold text-lg text-[#A01B9B]">{selected}</h4>
+              <FaUserGraduate color="#A01B9B" />
             </div>
+          </div>
 
-            {currentItems?.map((item: any, index: number) => {
-              return (
+          <div>
+            <div className="block justify-top">
+              {currentItems.map((item: any, index: any) => (
                 <div
                   key={index}
                   className="px-5 xl:px-12 flex border-top py-4 border-2 gap-12 xl:gap-0 flex-col w-full xl:flex-row xl:space-x-12 items-center"
@@ -176,7 +305,7 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
                     <Image
                       src={
                         item.data.courseImage
-                          ? `https://ipfs.io/ipfs/${item?.data.courseImage}`
+                          ? `https://ipfs.io/ipfs/${item.data.courseImage}`
                           : tdesign_video
                       }
                       width={200}
@@ -187,9 +316,25 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
                   </div>
                   <div className="flex-1 w-full lg:mx-6 sm:mx-0">
                     <div>
-                      <h4 className="text-[20px] font-medium leading-[22px] text-[#2D3A4B]">
-                        {item.data.courseName}
-                      </h4>
+                      <div
+                        onClick={(e) => {
+                          localStorage.setItem(
+                            "courseData",
+                            JSON.stringify(item?.data),
+                          );
+                          handleCourse(
+                            e,
+                            e.currentTarget.textContent,
+                            router,
+                            Number(item[index].course_identifier),
+                          );
+                        }}
+                        className="cursor-pointer"
+                      >
+                        <h4 className="text-[20px] font-medium leading-[22px] text-[#2D3A4B]">
+                          {item.data.courseName}
+                        </h4>
+                      </div>
 
                       <div className="text-[#2D3A4B] flex flex-wrap items-center gap-3 my-3">
                         <div className="flex items-center gap-x-2">
@@ -262,49 +407,164 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
                             certificates
                           </p>
                         </div>
+
+                        <div className="flex items-center gap-2">
+                          <BsPencil
+                            className="text-[#4A90E2] cursor-pointer"
+                            onClick={() => handleEditClick(item)}
+                          />
+                          <BsTrash
+                            className="text-red-500 cursor-pointer"
+                            onClick={() => handleDeleteClick(item?.course_identifier)}
+                          />
+                        </div>
+                      </div>
+
+                      <div
+                        onClick={(e) => {
+                          localStorage.setItem(
+                            "courseData",
+                            JSON.stringify(item?.data),
+                          );
+                          handleCourse(
+                            e,
+                            e.currentTarget.textContent,
+                            router,
+                            item?.course_identifier,
+                          );
+                        }}
+                        className="cursor-pointer mt-4"
+                      >
+                        <p className="text-[14px] text-[#2D3A4B] font-medium leading-[21px] line-clamp-2">
+                          {item.data.courseDescription}
+                        </p>
                       </div>
                     </div>
                   </div>
                 </div>
-              );
-            })}
+              ))}
+            </div>
+          </div>
+          {/* Pagination Controls */}
+          <div className="flex justify-center space-x-2 pb-4 pt-10">
+            <button
+              onClick={goToPreviousPage}
+              disabled={currentPage === 1}
+              className="px-4 py-1.5 border-[#D0D5DD] border-[1px] rounded disabled:opacity-50"
+            >
+              {"<"}
+            </button>
+            {generatePageNumbers().map((page, index) =>
+              page == "..." ? (
+                <span key={index} className="px-2 text-base mt-2">
+                  ...
+                </span>
+              ) : (
+                <button
+                  key={index}
+                  onClick={() => goToPage(page)}
+                  className={`px-4 py-1.5 rounded text-[14px] ${currentPage == page ? "bg-none text-[#000000] border-[#9B51E0] border-[1px]" : "bg-none text-[#000000]"}`}
+                >
+                  {page}
+                </button>
+              ),
+            )}
+
+            <button
+              onClick={goToNextPage}
+              disabled={currentPage === totalPages}
+              className="px-4 py-1.5 border-[#D0D5DD] border-[1px] text-sm rounded disabled:opacity-50"
+            >
+              {">"}
+            </button>
           </div>
         </div>
-        {/* Pagination Controls */}
-        <div className="flex justify-center space-x-2 pb-4 pt-10">
-          <button
-            onClick={goToPreviousPage}
-            disabled={currentPage === 1}
-            className="px-4 py-1.5 border-[#D0D5DD] border-[1px] rounded disabled:opacity-50"
-          >
-            {"<"}
-          </button>
-          {generatePageNumbers().map((page, index) =>
-            page == "..." ? (
-              <span key={index} className="px-2 text-base mt-2">
-                ...
-              </span>
-            ) : (
-              <button
-                key={index}
-                onClick={() => goToPage(page)}
-                className={`px-4 py-1.5 rounded text-[14px] ${currentPage == page ? "bg-none text-[#000000] border-[#9B51E0] border-[1px]" : "bg-none text-[#000000]"}`}
-              >
-                {page}
-              </button>
-            ),
-          )}
-
-          <button
-            onClick={goToNextPage}
-            disabled={currentPage === totalPages}
-            className="px-4 py-1.5 border-[#D0D5DD] border-[1px] text-sm rounded disabled:opacity-50"
-          >
-            {">"}
-          </button>
-        </div>
       </div>
-    </div>
+
+      {/* Delete Confirmation Modal */}
+      <Dialog
+        open={isDeleteModalOpen}
+        onClose={() => {
+          if (!isDeleting) {
+            setIsDeleteModalOpen(false);
+            setCourseToDelete(null);
+            setDeleteSuccess(false);
+          }
+        }}
+        className="relative z-50"
+      >
+        <DialogBackdrop
+          transition
+          className="fixed inset-0 bg-[#0F0E0E82] transition-opacity"
+        />
+
+        <div className="fixed inset-0 z-10 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+            <DialogPanel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+              <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                <div className="sm:flex sm:items-start">
+                  <div className="mt-3 text-center sm:mt-0 sm:text-left">
+                    <h3 className="text-lg font-semibold leading-6 text-[#2D3A4B]">
+                      {deleteSuccess ? "Success!" : "Delete Course"}
+                    </h3>
+                    <div className="mt-2">
+                      {isDeleting ? (
+                        <div className="flex items-center justify-center gap-2">
+                          <FaSpinner className="animate-spin text-[#2D3A4B]" />
+                          <p className="text-sm text-[#2D3A4B]">
+                            Processing...
+                          </p>
+                        </div>
+                      ) : deleteSuccess ? (
+                        <p className="text-sm text-[#2D3A4B]">
+                          Course deleted successfully!
+                        </p>
+                      ) : (
+                        <p className="text-sm text-[#2D3A4B]">
+                          Are you sure you want to delete &quot;
+                          {courseToDelete?.data?.courseName}&quot;? This action
+                          cannot be undone.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                {!deleteSuccess && !isDeleting && (
+                  <>
+                    <Button
+                      type="button"
+                      className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                      onClick={handleConfirmDelete}
+                    >
+                      Delete
+                    </Button>
+                    <Button
+                      type="button"
+                      className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                      onClick={() => setIsDeleteModalOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                )}
+              </div>
+            </DialogPanel>
+          </div>
+        </div>
+      </Dialog>
+
+      {/* Edit Course Panel */}
+      <EditCoursePanel
+        isOpen={isEditPanelOpen}
+        onClose={handleCloseEditPanel}
+        course={courseToEdit}
+        onSave={handleSaveEdit}
+        isUpdating={isUpdating}
+        updateSuccess={updateSuccess}
+      />
+    </>
   );
 };
 

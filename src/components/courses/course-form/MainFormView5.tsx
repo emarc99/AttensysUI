@@ -365,7 +365,7 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
                 </div>
               </div>
 
-              <div className="px-6 sm:mt-4 xl:mt-32 mb-10">
+              <div className=" sm:mt-4 xl:mt-32 mb-10">
                 {/* lectures in course */}
 
                 <Lectures

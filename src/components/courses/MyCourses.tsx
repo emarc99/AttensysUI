@@ -1,13 +1,10 @@
 import { ARGENT_WEBWALLET_URL, CHAIN_ID, provider } from "@/constants";
-import { coursesDetails, learningDetails } from "@/constants/data";
+import { learningDetails } from "@/constants/data";
 import { attensysCourseAbi } from "@/deployments/abi";
 import { attensysCourseAddress } from "@/deployments/contracts";
 import { useFetchCID } from "@/hooks/useFetchCID";
-import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
-import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { Contract } from "starknet";
-import { connect } from "starknetkit";
 import CoursesCreated from "./CoursesCreated";
 import CreateACourse from "./CreateACourse";
 import LearningJourney from "./LearningJourney";
@@ -16,24 +13,19 @@ import UserSideBar from "./UserSideBar";
 import { useAccount } from "@starknet-react/core";
 
 interface CourseType {
-  data: any;
-  owner: string;
-  course_identifier: number;
   accessment: boolean;
-  uri: Uri;
+  course_identifier: number;
   course_ipfs_uri: string;
+  is_approved: boolean;
   is_suspended: boolean;
-}
-
-interface Uri {
-  first: string;
-  second: string;
+  owner: string;
+  price: number;
+  uri: string;
 }
 
 const MyCourses = (props: any) => {
   const [selected, setSelected] = useState("");
   const [page, setPage] = useState("");
-  const [wallet, setWallet] = useAtom(walletStarknetkit);
   const [courses, setCourses] = useState<CourseType[]>([]);
   const [courseData, setCourseData] = useState<CourseType[]>([]);
   const [takenCourses, setTakenCourses] = useState<CourseType[]>([]);
@@ -71,7 +63,16 @@ const MyCourses = (props: any) => {
         }
 
         try {
-          return await fetchCIDContent(course.course_ipfs_uri);
+          const content = await fetchCIDContent(course.course_ipfs_uri);
+          if (content) {
+            return {
+              ...content,
+              course_identifier: course.course_identifier,
+              owner: course.owner,
+              course_ipfs_uri: course.course_ipfs_uri,
+              is_suspended: course.is_suspended,
+            };
+          }
         } catch (error) {
           console.error("Error fetching from IPFS:", error);
           return null; // Skip on failure
@@ -85,7 +86,16 @@ const MyCourses = (props: any) => {
         }
 
         try {
-          return await fetchCIDContent(course.course_ipfs_uri);
+          const content = await fetchCIDContent(course.course_ipfs_uri);
+          if (content) {
+            return {
+              ...content,
+              course_identifier: course.course_identifier,
+              owner: course.owner,
+              course_ipfs_uri: course.course_ipfs_uri,
+              is_suspended: course.is_suspended,
+            };
+          }
         } catch (error) {
           console.error("Error fetching from IPFS:", error);
           return null; // Skip on failure
@@ -122,24 +132,25 @@ const MyCourses = (props: any) => {
     <div className="block lg:flex lg:mx-10 mb-8 pb-24 max-w-screen-2xl xl:mx-auto">
       <UserSideBar
         wallet={account}
+        courses={courses}
         courseData={courseData}
         takenCoursesData={takenCoursesData}
         validCertificates={[]}
         page={page}
         selected={selected}
         setSelected={setSelected}
+        refreshCourses={getAllUserCreatedCourses}
       />
 
       <div className="flex-auto ml-0 lg:ml-5 px-4 my-12 lg:my-0 lg:px-0 hidden sm:block">
-        {coursesDetails.map((item, i) =>
-          item && item.tag == selected ? (
-            <CoursesCreated
-              courseData={courseData}
-              item={item}
-              selected={selected}
-              key={i}
-            />
-          ) : null,
+        {"Courses created" == selected && (
+          <CoursesCreated
+            courseData={courseData}
+            item={{ courses }}
+            selected={selected}
+            key={courses[0]?.course_identifier || "no-courses"}
+            refreshCourses={getAllUserCreatedCourses}
+          />
         )}
 
         <div className={`${selected ? "0" : "mt-12"}`}>

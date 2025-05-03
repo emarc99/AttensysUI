@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { ArrowRight, CheckCircle, Loader2, X } from "lucide-react";
-import { Button } from "@headlessui/react";
 import strk from "@/assets/strk.png";
 import Image from "next/image";
 import { provider } from "@/constants";
@@ -190,7 +189,7 @@ const BalanceModal = () => {
       try {
         const currentPrice = await courseContract?.get_price_of_strk_usd();
         const formattedPrice = Number(currentPrice) / 100000000;
-
+        console.log(address);
         const claimable =
           await courseContract?.get_creator_withdrawable_amount(address);
 
