@@ -3,6 +3,8 @@ import ProgressBar from "@ramonak/react-progress-bar";
 import Image from "next/image";
 import play from "@/assets/play.svg";
 import tdesign_video from "@/assets/tdesign_video.svg";
+import { useRouter } from "next/navigation";
+import { handleCourse } from "@/utils/helpers";
 
 interface ItemProps {
   no: number;
@@ -28,6 +30,7 @@ const LearningJourney: React.FC<LearningJourneyProps> = ({
 }) => {
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
+  const router = useRouter();
 
   const itemsPerPage = 5;
 
@@ -136,9 +139,20 @@ const LearningJourney: React.FC<LearningJourneyProps> = ({
 
                   <div className="!ml-0 px-3 xl:px-0 mt-5 xl:!mx-8 flex-1 w-full">
                     <div>
-                      <h4 className="text-[20px] font-medium leading-[22px] text-[#2D3A4B]">
-                        {item.data.courseName}
-                      </h4>
+                    <div
+                        onClick={(e) => {
+                          localStorage.setItem(
+                            "courseData",
+                            JSON.stringify(item?.data),
+                          );
+                          handleCourse(e, e.currentTarget.textContent, router, item.data.courseIdentifier);
+                        }}
+                        className="cursor-pointer"
+                      >
+                        <h4 className="text-[20px] font-medium leading-[22px] text-[#2D3A4B]">
+                          {item.data.courseName}
+                        </h4>
+                      </div>
 
                       <div className="flex flex-wrap xl:flex-nowrap gap-y-2 gap-4 xl:gap-0 items-center my-3 ">
                         <div className="flex items-center gap-2">

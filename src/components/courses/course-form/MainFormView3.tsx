@@ -265,17 +265,17 @@ You want to make sure your creative is very catchy.`}
 
               <div className="mt-12 mb-5 w-full mx-auto flex justify-center md:justify-start">
                 <button
-                  className="bg-[#4A90E2] rounded-lg py-[15px] text-white w-[190px] md:w-[350px]"
+                  className="bg-[#4A90E2] rounded-lg py-[15px] text-white sm:w-full w-[350px]"
                   type="submit"
                 >
-                  Almost there!
+                  Next
                 </button>
               </div>
 
-              <div className="w-full flex justify-center pb-[74px]">
+              <div className="w-full mx-auto flex justify-center pb-[74px] px-4">
                 <button
                   type="button"
-                  className="block sm:hidden bg-[#c5d322] text-sm px-12 py-[15px] rounded-lg text-black"
+                  className="block sm:hidden bg-[#c5d322] text-sm px-1 py-[15px] w-full rounded-lg text-black"
                 >
                   Save progress
                 </button>

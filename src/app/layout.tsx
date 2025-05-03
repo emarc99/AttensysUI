@@ -81,9 +81,19 @@ const policies: SessionPolicies = {
           description: "create_a_course",
         },
         {
+          name: "remove_course",
+          entrypoint: "remove_course",
+          description: "remove_course",
+        },
+        {
           name: "creator_withdraw",
           entrypoint: "creator_withdraw",
           description: "claim Earnings",
+        },
+        {
+          name: "add_replace_course_content",
+          entrypoint: "add_replace_course_content",
+          description: "edit course content",
         },
       ],
     },

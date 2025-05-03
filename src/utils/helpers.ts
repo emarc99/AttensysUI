@@ -51,6 +51,7 @@ export const handleCourse = (
     router.push(`/coursepage/${courseName}/?id=${Number(courseid)}`);
   }
 };
+
 export const handleCoursehome = (
   event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>,
   courseName: any,
