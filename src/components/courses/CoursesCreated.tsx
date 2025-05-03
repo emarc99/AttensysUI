@@ -135,42 +135,34 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
   };
 
   const handleConfirmDelete = async () => {
-
     try {
       setIsDeleting(true);
-      // Find the matching course from item.courses based on IPFS URI
-      const matchingCourse = item.courses.find(
-        (c: any) => c.uri === courseToDelete.data.courseImage,
-      );
+      // // Find the matching course from item.courses based on IPFS URI
+      // const matchingCourse = item.courses.find(
+      //   (c: any) => c.uri === courseToDelete.data.courseImage,
+      // );
 
-      console.log("item.courses:", item.courses);
-      console.log(
-        "courseToDelete.data.courseImage:",
-        courseToDelete.data.courseImage,
-      );
-      if (!matchingCourse) {
-        throw new Error("Course not found");
-      }
+      // console.log("item.courses:", item.courses);
+      // console.log(
+      //   "courseToDelete.data.courseImage:",
+      //   courseToDelete.data.courseImage,
+      // );
+      // if (!matchingCourse) {
+      //   throw new Error("Course not found");
+      // }
+
+      // if (!account) {
+      //   throw new Error("Wallet not connected");
+      // }
 
       const courseContract = new Contract(
         attensysCourseAbi,
         attensysCourseAddress,
-        provider,
+        account,
       );
 
-      if (!account) {
-        throw new Error("Wallet not connected");
-      }
-
-      courseContract.connect(account);
-
-      const courseIdentifier = {
-        low: BigInt(matchingCourse.course_identifier),
-        high: BigInt(0),
-      };
-
       const myCall = courseContract.populate("remove_course", [
-        courseIdentifier,
+        Number(courseToDelete),
       ]);
       const res = await courseContract.remove_course(myCall.calldata);
       await provider.waitForTransaction(res.transaction_hash);
@@ -350,7 +342,7 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
                             e,
                             e.currentTarget.textContent,
                             router,
-                            item.data.courseIdentifier,
+                            Number(item[index].course_identifier),
                           );
                         }}
                         className="cursor-pointer"
@@ -439,7 +431,7 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
                           />
                           <BsTrash
                             className="text-red-500 cursor-pointer"
-                            onClick={() => handleDeleteClick(item)}
+                            onClick={() => handleDeleteClick(item?.course_identifier)}
                           />
                         </div>
                       </div>
@@ -454,7 +446,7 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
                             e,
                             e.currentTarget.textContent,
                             router,
-                            item.data.courseIdentifier,
+                            item?.course_identifier,
                           );
                         }}
                         className="cursor-pointer mt-4"

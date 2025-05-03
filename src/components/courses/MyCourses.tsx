@@ -63,7 +63,16 @@ const MyCourses = (props: any) => {
         }
 
         try {
-          return await fetchCIDContent(course.course_ipfs_uri);
+          const content = await fetchCIDContent(course.course_ipfs_uri);
+          if (content) {
+            return {
+              ...content,
+              course_identifier: course.course_identifier,
+              owner: course.owner,
+              course_ipfs_uri: course.course_ipfs_uri,
+              is_suspended: course.is_suspended,
+            };
+          }
         } catch (error) {
           console.error("Error fetching from IPFS:", error);
           return null; // Skip on failure
@@ -77,7 +86,16 @@ const MyCourses = (props: any) => {
         }
 
         try {
-          return await fetchCIDContent(course.course_ipfs_uri);
+          const content = await fetchCIDContent(course.course_ipfs_uri);
+          if (content) {
+            return {
+              ...content,
+              course_identifier: course.course_identifier,
+              owner: course.owner,
+              course_ipfs_uri: course.course_ipfs_uri,
+              is_suspended: course.is_suspended,
+            };
+          }
         } catch (error) {
           console.error("Error fetching from IPFS:", error);
           return null; // Skip on failure
@@ -95,7 +113,6 @@ const MyCourses = (props: any) => {
     );
 
     // Update state with new data
-    console.log("validCourses:", validCourses);
     setCourseData(validCourses);
     setTakenCoursesData(validTakenCourses);
   };
