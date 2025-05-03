@@ -92,7 +92,7 @@ const CourseForm = ({
 
         <div className="text-center">
           <button
-            className="bg-[#4A90E2] rounded-xl py-3 mt-12 mb-44 text-white w-[190px] md:w-[350px]"
+            className="bg-[#4A90E2] rounded-xl py-3 mt-12 mb-44 text-white w-full sm:w-[190px] md:w-[350px]"
             type="submit"
           >
             Next

@@ -137,23 +137,7 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
   const handleConfirmDelete = async () => {
     try {
       setIsDeleting(true);
-      // // Find the matching course from item.courses based on IPFS URI
-      // const matchingCourse = item.courses.find(
-      //   (c: any) => c.uri === courseToDelete.data.courseImage,
-      // );
-
-      // console.log("item.courses:", item.courses);
-      // console.log(
-      //   "courseToDelete.data.courseImage:",
-      //   courseToDelete.data.courseImage,
-      // );
-      // if (!matchingCourse) {
-      //   throw new Error("Course not found");
-      // }
-
-      // if (!account) {
-      //   throw new Error("Wallet not connected");
-      // }
+      // // Find the matching course from item.c
 
       const courseContract = new Contract(
         attensysCourseAbi,

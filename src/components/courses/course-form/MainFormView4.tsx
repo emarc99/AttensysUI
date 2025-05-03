@@ -209,7 +209,7 @@ const MainFormView4: React.FC<ChildComponentProps> = ({
 
               <div className="mt-12 mb-5 w-full mx-auto flex justify-center md:justify-start">
                 <button
-                  className="bg-[#4A90E2] rounded-lg py-[15px] text-white w-[190px] md:w-[350px]"
+                  className="bg-[#4A90E2] rounded-lg py-[15px] text-white w-full w-[190px] md:w-[350px]"
                   type="submit"
                 >
                   Save and Proceed
@@ -218,7 +218,7 @@ const MainFormView4: React.FC<ChildComponentProps> = ({
               <div className="w-full flex justify-center pb-[74px]">
                 <button
                   type="button"
-                  className="block sm:hidden bg-[#c5d322] text-sm px-12 py-[15px] rounded-lg text-black"
+                  className="block sm:hidden bg-[#c5d322] text-sm px-12 py-[15px] w-full rounded-lg text-black"
                 >
                   Save progress
                 </button>

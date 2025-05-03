@@ -79,7 +79,7 @@ const UserSideBar = ({
   const controller = connectors[0] as ControllerConnector;
   const { address } = useAccount();
   const [username, setUsername] = useState<string>();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(true);
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
