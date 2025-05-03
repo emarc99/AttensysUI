@@ -206,10 +206,6 @@ const BalanceModal = () => {
         setuserbalanceUSD(convertedValue * formattedPrice);
         setUserClaimables(Number(claimable) * formattedPrice);
         setuserClaimablesStrk(Number(claimable));
-
-        console.log("Wallet balance:", walletBalance);
-        console.log("Claimable amount:", Number(claimable));
-        console.log("Current STRK price:", formattedPrice);
       } catch (error) {
         console.error("Error fetching current STRK price:", error);
       }

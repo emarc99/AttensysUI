@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { handleCourse } from "@/utils/helpers";
 import { IoIosRemoveCircleOutline } from "react-icons/io";
 import { BsTrash } from "react-icons/bs";
+import { BsPencil } from "react-icons/bs";
 import { Dialog, DialogBackdrop, DialogPanel, Button } from "@headlessui/react";
 import { Contract } from "starknet";
 import { attensysCourseAbi } from "@/deployments/abi";
@@ -21,6 +22,11 @@ import { provider } from "@/constants";
 import { useAccount } from "@starknet-react/core";
 import { FaSpinner } from "react-icons/fa";
 import card from "@/assets/card.svg";
+import EditCoursePanel from "./EditCoursePanel";
+import { pinata } from "../../../utils/config";
+import { useFetchCID } from "@/hooks/useFetchCID";
+import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
+import { useAtom } from "jotai";
 
 interface ItemProps {
   courses: Course[];
@@ -36,6 +42,7 @@ interface Course {
   price: number;
   uri: string;
 }
+
 interface CoursesCreatedProps {
   item: ItemProps;
   selected: string;
@@ -59,6 +66,11 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
   const [courseToDelete, setCourseToDelete] = useState<any>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteSuccess, setDeleteSuccess] = useState(false);
+  const [isEditPanelOpen, setIsEditPanelOpen] = useState(false);
+  const [courseToEdit, setCourseToEdit] = useState<any>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [localCourseData, setLocalCourseData] = useState(courseData);
   const { account } = useAccount();
 
   console.log("courseData:", courseData);
@@ -123,7 +135,6 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
   };
 
   const handleConfirmDelete = async () => {
-    if (!courseToDelete) return;
 
     try {
       setIsDeleting(true);
@@ -132,6 +143,11 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
         (c: any) => c.uri === courseToDelete.data.courseImage,
       );
 
+      console.log("item.courses:", item.courses);
+      console.log(
+        "courseToDelete.data.courseImage:",
+        courseToDelete.data.courseImage,
+      );
       if (!matchingCourse) {
         throw new Error("Course not found");
       }
@@ -175,6 +191,112 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
     }
   };
 
+  const handleEditClick = (course: any) => {
+    console.log(course);
+    setCourseToEdit(course);
+    setIsEditPanelOpen(true);
+  };
+
+  const handleCloseEditPanel = () => {
+    setIsEditPanelOpen(false);
+    setCourseToEdit(null);
+  };
+
+  const handleSaveEdit = async (updatedCourse: any) => {
+    try {
+      setIsUpdating(true);
+      setUpdateSuccess(false);
+
+      // Find the matching course from item.courses based on IPFS URI
+      const matchingCourse = item.courses.find(
+        (c: any) =>
+          c.course_ipfs_uri === updatedCourse.data.courseImage &&
+          c.course_identifier !== 0n, // Exclude deleted courses
+      );
+
+      if (!matchingCourse) {
+        throw new Error("Course not found or has been deleted");
+      }
+
+      // First, update the IPFS metadata
+      const dataUpload = await pinata.upload.json({
+        courseName: updatedCourse.data.courseName,
+        courseDescription: updatedCourse.data.courseDescription,
+        courseCategory: updatedCourse.data.courseCategory,
+        difficultyLevel: updatedCourse.data.difficultyLevel,
+        studentRequirements: updatedCourse.data.studentRequirements,
+        learningObjectives: updatedCourse.data.learningObjectives,
+        courseImage: updatedCourse.data.courseImage,
+        courseCurriculum: updatedCourse.data.courseCurriculum,
+      });
+
+      const courseContract = new Contract(
+        attensysCourseAbi,
+        attensysCourseAddress,
+        provider,
+      );
+
+      if (!account) {
+        throw new Error("Wallet not connected");
+      }
+
+      courseContract.connect(account);
+
+      const courseIdentifier = {
+        low: BigInt(matchingCourse.course_identifier),
+        high: BigInt(0),
+      };
+
+      // Update course data on the blockchain using add_replace_course_content
+      const myCall = courseContract.populate("add_replace_course_content", [
+        courseIdentifier,
+        account.address,
+        dataUpload.IpfsHash, // Use the new IPFS hash
+      ]);
+      const res = await courseContract.add_replace_course_content(
+        myCall.calldata,
+      );
+      await provider.waitForTransaction(res.transaction_hash);
+
+      setUpdateSuccess(true);
+
+      // Force a refresh of the course data
+      await refreshCourses();
+
+      // Update the local course data immediately
+      const updatedCourseData = localCourseData.map((course: any) => {
+        if (course.course_identifier === matchingCourse.course_identifier) {
+          return {
+            ...course,
+            data: {
+              ...course.data,
+              courseName: updatedCourse.data.courseName,
+              courseDescription: updatedCourse.data.courseDescription,
+              courseCategory: updatedCourse.data.courseCategory,
+              difficultyLevel: updatedCourse.data.difficultyLevel,
+              studentRequirements: updatedCourse.data.studentRequirements,
+              learningObjectives: updatedCourse.data.learningObjectives,
+              courseCurriculum: updatedCourse.data.courseCurriculum,
+            },
+          };
+        }
+        return course;
+      });
+      setLocalCourseData(updatedCourseData);
+
+      // Close panel after 2 seconds
+      setTimeout(() => {
+        setIsEditPanelOpen(false);
+        setCourseToEdit(null);
+        setIsUpdating(false);
+        setUpdateSuccess(false);
+      }, 2000);
+    } catch (error) {
+      console.error("Error updating course:", error);
+      setIsUpdating(false);
+    }
+  };
+
   if (courseData?.length === 0 || !item?.courses?.length) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
@@ -198,7 +320,7 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
 
           <div>
             <div className="block justify-top">
-              {currentItems.map((item, index) => (
+              {currentItems.map((item: any, index: any) => (
                 <div
                   key={index}
                   className="px-5 xl:px-12 flex border-top py-4 border-2 gap-12 xl:gap-0 flex-col w-full xl:flex-row xl:space-x-12 items-center"
@@ -224,7 +346,12 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
                             "courseData",
                             JSON.stringify(item?.data),
                           );
-                          handleCourse(e, e.currentTarget.textContent, router, item.data.courseIdentifier);
+                          handleCourse(
+                            e,
+                            e.currentTarget.textContent,
+                            router,
+                            item.data.courseIdentifier,
+                          );
                         }}
                         className="cursor-pointer"
                       >
@@ -306,11 +433,35 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
                         </div>
 
                         <div className="flex items-center gap-2">
+                          <BsPencil
+                            className="text-[#4A90E2] cursor-pointer"
+                            onClick={() => handleEditClick(item)}
+                          />
                           <BsTrash
                             className="text-red-500 cursor-pointer"
                             onClick={() => handleDeleteClick(item)}
                           />
                         </div>
+                      </div>
+
+                      <div
+                        onClick={(e) => {
+                          localStorage.setItem(
+                            "courseData",
+                            JSON.stringify(item?.data),
+                          );
+                          handleCourse(
+                            e,
+                            e.currentTarget.textContent,
+                            router,
+                            item.data.courseIdentifier,
+                          );
+                        }}
+                        className="cursor-pointer mt-4"
+                      >
+                        <p className="text-[14px] text-[#2D3A4B] font-medium leading-[21px] line-clamp-2">
+                          {item.data.courseDescription}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -427,6 +578,16 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
           </div>
         </div>
       </Dialog>
+
+      {/* Edit Course Panel */}
+      <EditCoursePanel
+        isOpen={isEditPanelOpen}
+        onClose={handleCloseEditPanel}
+        course={courseToEdit}
+        onSave={handleSaveEdit}
+        isUpdating={isUpdating}
+        updateSuccess={updateSuccess}
+      />
     </>
   );
 };

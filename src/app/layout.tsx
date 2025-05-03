@@ -90,6 +90,11 @@ const policies: SessionPolicies = {
           entrypoint: "creator_withdraw",
           description: "claim Earnings",
         },
+        {
+          name: "add_replace_course_content",
+          entrypoint: "add_replace_course_content",
+          description: "edit course content",
+        },
       ],
     },
     [STRK_ADDRESS]: {

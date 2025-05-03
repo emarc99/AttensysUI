@@ -95,6 +95,7 @@ const MyCourses = (props: any) => {
     );
 
     // Update state with new data
+    console.log("validCourses:", validCourses);
     setCourseData(validCourses);
     setTakenCoursesData(validTakenCourses);
   };
@@ -114,12 +115,14 @@ const MyCourses = (props: any) => {
     <div className="block lg:flex lg:mx-10 mb-8 pb-24 max-w-screen-2xl xl:mx-auto">
       <UserSideBar
         wallet={account}
+        courses={courses}
         courseData={courseData}
         takenCoursesData={takenCoursesData}
         validCertificates={[]}
         page={page}
         selected={selected}
         setSelected={setSelected}
+        refreshCourses={getAllUserCreatedCourses}
       />
 
       <div className="flex-auto ml-0 lg:ml-5 px-4 my-12 lg:my-0 lg:px-0 hidden sm:block">
