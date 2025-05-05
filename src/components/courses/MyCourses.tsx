@@ -111,7 +111,7 @@ const MyCourses = (props: any) => {
     // Update state with new data
     setCourseData(validCourses);
     setTakenCoursesData(validTakenCourses);
-    setLoad(false);
+    setLoad(true);
   };
 
   useEffect(() => {
