@@ -28,7 +28,7 @@ const Index = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1000); // 1 seconds fake delay or until data is fetched.
+    }, 2000); // 1 seconds fake delay or until data is fetched.
 
     return () => clearTimeout(timer);
   }, []);

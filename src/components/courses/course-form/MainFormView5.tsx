@@ -187,7 +187,8 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
           localStorage.setItem("courseData", JSON.stringify(courseDataCopy));
 
           // Route to landing page first
-          handleCreateCourse(e, "course-landing-page", router);
+          // handleCreateCourse(e, "course-landing-page", router);
+          router.push(`/mycoursepage/${address}/?id=created`);
         } catch (error: any) {
           toast.error(error);
         }

@@ -524,12 +524,6 @@ const Explore = ({
               {unfilteredData[
                 unfilteredData.length - 1
               ]?.data.courseCurriculum.map((item: any, i: any) => {
-                const accessUrl = createAccess(item.video).then((url) => {
-                  return url;
-                });
-
-                console.log("check url herr", accessUrl);
-
                 return (
                   <div
                     key={i}
