@@ -215,6 +215,8 @@ const MyCertifications = (props: any) => {
         page={page}
         selected={selected}
         setSelected={setSelected}
+        refreshCourses={async () => {}}
+        courses={[]}
       />
 
       <div className="w-full sm:mx-auto px-4 my-12">

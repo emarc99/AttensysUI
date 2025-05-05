@@ -221,6 +221,7 @@ const LecturePage = (props: any) => {
       const currentPrice = await courseContract?.get_price_of_strk_usd();
       const formattedPrice = Number(currentPrice) / 100000000;
       setCoursePrice(Number(get_course_data[0].price));
+
       setPaymentValue(
         Math.round(
           (Number(get_course_data[0].price) / formattedPrice + 10) *
@@ -240,7 +241,37 @@ const LecturePage = (props: any) => {
   // handle take a course after the course identifier is known
   const handleTakeCourse = async () => {
     if (!address) {
-      console.log("No address available");
+      toast.error("Login to proceed", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+      return;
+    }
+    const erc20ContractBal = new Contract(Erc20Abi, STRK_ADDRESS, provider);
+
+    const walletBalance = await erc20ContractBal?.balance_of(address);
+    console.log("wallet balance", walletBalance);
+    let formattedPricing = coursePrice * 10 ** 18;
+    console.log("payment value", formattedPricing);
+    if (walletBalance < formattedPricing) {
+      toast.error("Insufficient balance, go to Account center to fund wallet", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
       return;
     }
 

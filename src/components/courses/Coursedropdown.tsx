@@ -88,7 +88,7 @@ const Coursedropdown = () => {
                   </svg>
 
                   <h1 className="text-[16px] font-bold cursor-pointer">
-                    Account
+                    Account Center
                   </h1>
                 </div>
               </a>
@@ -117,7 +117,7 @@ const Coursedropdown = () => {
                   </h1>
                 </div>
               </a>
-              <p className="text-[13px] ml-8 text-[#2D3A4B] ">
+              <p className="text-[13px] ml-8 text-[#2D3A4B] cursor-pointer ">
                 Access and manage all your course completion certificates in one
                 place.
               </p>
@@ -139,7 +139,7 @@ const Coursedropdown = () => {
                     Create a course
                   </h1>
                 </div>
-                <p className="text-[13px]">
+                <p className="text-[13px] cursor-pointer">
                   Start building your course by organizing your content into
                   structured sections and engaging video lessons.
                 </p>

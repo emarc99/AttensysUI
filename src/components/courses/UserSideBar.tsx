@@ -29,12 +29,14 @@ import BalanceModal from "./BalanceModal";
 
 interface UserSideBarProps {
   wallet: any;
+  courses: any;
   courseData: any;
   takenCoursesData: any;
   validCertificates: any;
   page: string;
   selected: string;
   setSelected: (value: string) => void;
+  refreshCourses: () => Promise<void>;
 }
 interface argprop {
   no: number;
@@ -42,12 +44,14 @@ interface argprop {
 }
 const UserSideBar = ({
   wallet,
+  courses,
   courseData,
   takenCoursesData,
   validCertificates,
   page,
   selected = "All NFTs",
   setSelected,
+  refreshCourses,
 }: UserSideBarProps) => {
   const [sideProperties, setSideProperties] = useState([
     {
@@ -76,6 +80,7 @@ const UserSideBar = ({
   const { address } = useAccount();
   const [username, setUsername] = useState<string>();
   const [isDropdownOpen, setIsDropdownOpen] = useState(true);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
   const [isFilterModalOpen, setFilterModalOpen] = useState(false); // State for filter modal
@@ -100,6 +105,16 @@ const UserSideBar = ({
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleSectionClick = (title: string) => {
+    if (activeSection === title) {
+      setActiveSection(null);
+    } else {
+      setActiveSection(title);
+    }
+    setSelected(title);
+    // setIsDropdownOpen(false);
   };
 
   const handleCopy = () => {
@@ -175,11 +190,8 @@ const UserSideBar = ({
 
   useEffect(() => {
     if (validCertificates) {
-      console.log("validCertificates:", validCertificates);
-
       // Calculate total number of certificates (all valid certificates)
       const totalCertificates = validCertificates.length;
-      console.log("Total certificates:", totalCertificates);
 
       // Calculate number of bootcamp certificates (currently 0 as we don't have bootcamp data)
       const bootcampCertificates = 0;
@@ -205,7 +217,6 @@ const UserSideBar = ({
         },
       ];
 
-      console.log("Updated certificates:", updatedCertificates);
       setCertificateEarned(updatedCertificates);
     } else {
       console.log("No valid certificates available");
@@ -229,6 +240,10 @@ const UserSideBar = ({
       ]);
     }
   }, [validCertificates]);
+
+  useEffect(() => {
+    refreshCourses(); // Fetch courses when the wallet address changes
+  }, []);
 
   return (
     <>
@@ -357,11 +372,11 @@ const UserSideBar = ({
             <div key={i}>
               <div
                 className={`bg-white py-4 px-8 rounded-xl border-[1px] border-[#BCBCBC] my-2 cursor-pointer hover:bg-violet-600 active:bg-violet-700 ${
-                  selected == item.title
+                  activeSection === item.title
                     ? "focus:outline-none focus:ring focus:ring-violet-300"
                     : ""
                 } `}
-                onClick={() => setSelected(item.title)}
+                onClick={() => handleSectionClick(item.title)}
               >
                 <div className="flex justify-between text-sm items-start">
                   <div className="flex items-center">
@@ -377,42 +392,44 @@ const UserSideBar = ({
                       {item.no == 0 ? null : <span>({item.no})</span>}
                     </p>
                   </div>
-                  <IoMdArrowDropdown />
+                  <IoMdArrowDropdown
+                    className={`transition-transform duration-200 ${
+                      activeSection === item.title ? "rotate-180" : ""
+                    }`}
+                  />
                 </div>
               </div>
 
               <div className="sm:hidden">
-                {selected === item.title && (
+                {activeSection === item.title && (
                   <>
-                    {coursesDetails.some((course) => course.tag === selected) &&
-                      coursesDetails
-                        .filter((course) => course.tag === selected)
-                        .map((course, index) => (
-                          <CoursesCreated
-                            courseData={courseData}
-                            key={index}
-                            item={course}
-                            selected={selected}
-                          />
-                        ))}
+                    {"Courses created" == item.title && (
+                      <CoursesCreated
+                        courseData={courseData}
+                        item={{ courses }}
+                        selected={item.title}
+                        key={courses[0]?.course_identifier || "no-courses"}
+                        refreshCourses={refreshCourses}
+                      />
+                    )}
 
                     {learningDetails.some(
-                      (journey) => journey.tag === selected,
+                      (journey) => journey.tag === item.title,
                     ) &&
                       learningDetails.map((item, i) =>
-                        item && item.tag == selected ? (
+                        item && item.tag == activeSection ? (
                           <LearningJourney
                             item={item}
                             takenCoursesData={takenCoursesData}
-                            selected={selected}
+                            selected={activeSection}
                             key={i}
                           />
                         ) : null,
                       )}
 
-                    {selected === "Create a course" && <CreateACourse />}
+                    {item.title === "Create a course" && <CreateACourse />}
 
-                    {selected === "Notification" && <Notification />}
+                    {item.title === "Notification" && <Notification />}
                   </>
                 )}
               </div>

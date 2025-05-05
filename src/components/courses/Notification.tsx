@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { gql, request } from "graphql-request";
 import { format } from "date-fns";
