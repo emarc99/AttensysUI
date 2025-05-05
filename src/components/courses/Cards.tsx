@@ -1,8 +1,5 @@
-
 import Image from "next/image";
-import {
-  handleCourse
-} from "@/utils/helpers";
+import { handleCourse } from "@/utils/helpers";
 import { useRouter } from "next/navigation";
 import StarRating from "../bootcamp/StarRating";
 import "react-multi-carousel/lib/styles.css";

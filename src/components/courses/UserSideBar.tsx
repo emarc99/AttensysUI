@@ -114,7 +114,7 @@ const UserSideBar = ({
       setActiveSection(title);
     }
     setSelected(title);
-    setIsDropdownOpen(false);
+    // setIsDropdownOpen(false);
   };
 
   const handleCopy = () => {

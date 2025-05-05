@@ -104,11 +104,6 @@ const policies: SessionPolicies = {
           entrypoint: "approve",
           description: "approve STRK",
         },
-        {
-          name: "transfer",
-          entrypoint: "transfer",
-          description: "withdraw earnings",
-        },
       ],
     },
   },

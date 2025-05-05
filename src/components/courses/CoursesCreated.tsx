@@ -296,130 +296,154 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
 
           <div>
             <div className="block justify-top">
-              {currentItems.map((item: any, index: any) => (
-                <div
-                  key={index}
-                  className="px-5 xl:px-12 flex border-top py-4 border-2 gap-12 xl:gap-0 flex-col w-full xl:flex-row xl:space-x-12 items-center"
-                >
-                  <div className="xl:h-[164px] xl:w-[254px] w-full h-auto rounded-xl">
-                    <Image
-                      src={
-                        item.data.courseImage
-                          ? `https://ipfs.io/ipfs/${item.data.courseImage}`
-                          : tdesign_video
-                      }
-                      width={200}
-                      height={200}
-                      alt={item.data.courseName}
-                      className="object-cover h-full w-full rounded-xl"
-                    />
-                  </div>
-                  <div className="flex-1 w-full lg:mx-6 sm:mx-0">
-                    <div>
-                      <div
-                        onClick={(e) => {
-                          localStorage.setItem(
-                            "courseData",
-                            JSON.stringify(item?.data),
-                          );
-                          handleCourse(
-                            e,
-                            e.currentTarget.textContent,
-                            router,
-                            Number(item[index].course_identifier),
-                          );
-                        }}
-                        className="cursor-pointer"
-                      >
-                        <h4 className="text-[20px] font-medium leading-[22px] text-[#2D3A4B]">
-                          {item.data.courseName}
-                        </h4>
-                      </div>
+              {currentItems
+                ?.slice()
+                .reverse()
+                .map((item: any, index: any) => (
+                  <div
+                    key={index}
+                    className="px-5 xl:px-12 flex border-top py-6 border-2 gap-6 xl:gap-0 flex-col w-full xl:flex-row xl:space-x-8 items-start"
+                  >
+                    {/* Course Image */}
+                    <div className="xl:h-[164px] xl:w-[254px] w-full h-auto rounded-xl">
+                      <Image
+                        src={
+                          item.data.courseImage
+                            ? `https://ipfs.io/ipfs/${item.data.courseImage}`
+                            : tdesign_video
+                        }
+                        width={200}
+                        height={200}
+                        alt={item.data.courseName}
+                        className="object-cover h-full w-full rounded-xl"
+                      />
+                    </div>
 
-                      <div className="text-[#2D3A4B] flex flex-wrap items-center gap-3 my-3">
-                        <div className="flex items-center gap-x-2">
-                          <Image src={play} alt="" height={12} width={12} />
-                          <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
-                            Total play time: {item.playTime}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-x-2 ">
-                          <p className="hidden sm:block">|</p>
-                          <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px] mx-0">
-                            Created by:{" "}
-                            <span className="text-[#A01B9B]">you</span>
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-x-2">
-                          <Image src={bdot} alt="" height={12} width={12} />
-                          <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px] mx-0">
-                            <span className="text-[#A01B9B]">
-                              {item.data.courseCurriculum.length}
-                            </span>{" "}
-                            Lectures
-                          </p>
-                        </div>
-                      </div>
+                    {/* Course Details */}
+                    <div className="flex-1 w-full lg:mx-6 sm:mx-0">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <div
+                            onClick={(e) => {
+                              localStorage.setItem(
+                                "courseData",
+                                JSON.stringify(item?.data),
+                              );
+                              handleCourse(
+                                e,
+                                e.currentTarget.textContent,
+                                router,
+                                Number(item[index].course_identifier),
+                              );
+                            }}
+                            className="cursor-pointer"
+                          >
+                            <h4 className="text-[20px] font-medium leading-[22px] text-[#2D3A4B] hover:text-[#A01B9B] transition-colors">
+                              {item.data.courseName}
+                            </h4>
+                          </div>
 
-                      <div className="text-[#2D3A4B] flex flex-wrap gap-4 items-center my-3">
-                        <div className="flex items-center gap-x-2">
-                          <Image
-                            src={replay}
-                            alt="time"
-                            width={16}
-                            height={16}
-                            className=""
-                          />
-                          <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
-                            Last updated 10|10|2024
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-x-2">
-                          <Image src={diamond} alt="" height={18} width={18} />
-                          <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
-                            Difficulty level: {item.data.difficultyLevel}
-                          </p>
-                        </div>
-                      </div>
+                          {/* First row of metadata */}
+                          <div className="flex flex-wrap items-center gap-3 my-2">
+                            <div className="flex items-center gap-x-2">
+                              <Image src={play} alt="" height={12} width={12} />
+                              <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
+                                Total play time: {item.playTime}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-x-2">
+                              <p className="hidden sm:block text-gray-300">|</p>
+                              <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
+                                Created by:{" "}
+                                <span className="text-[#A01B9B]">you</span>
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-x-2">
+                              <Image src={bdot} alt="" height={12} width={12} />
+                              <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
+                                <span className="text-[#A01B9B]">
+                                  {item.data.courseCurriculum.length}
+                                </span>{" "}
+                                Lectures
+                              </p>
+                            </div>
+                          </div>
 
-                      <div className="text-[#2D3A4B] flex flex-wrap gap-5 items-center my-3">
-                        <div className="flex items-center gap-x-2">
-                          <StarRating totalStars={5} starnumber={4} />
-                          <p className="font-medium text-[13px] text-[#2D3A4B] leading-[16px]">
-                            {item.stars} students
-                          </p>
+                          {/* Second row of metadata */}
+                          <div className="flex flex-wrap items-center gap-3 my-2">
+                            <div className="flex items-center gap-x-2">
+                              <Image
+                                src={replay}
+                                alt="time"
+                                width={16}
+                                height={16}
+                              />
+                              <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
+                                Last updated 10|10|2024
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-x-2">
+                              <p className="hidden sm:block text-gray-300">|</p>
+                              <Image
+                                src={diamond}
+                                alt=""
+                                height={18}
+                                width={18}
+                              />
+                              <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
+                                Difficulty: {item.data.difficultyLevel}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Third row of metadata */}
+                          <div className="flex flex-wrap items-center gap-3 my-2">
+                            <div className="flex items-center gap-x-2">
+                              <StarRating totalStars={5} starnumber={4} />
+                              <p className="font-medium text-[13px] text-[#2D3A4B] leading-[16px]">
+                                {item.stars} students
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-x-2">
+                              <p className="hidden sm:block text-gray-300">|</p>
+                              <Image
+                                src={certificationBadge}
+                                alt=""
+                                height={18}
+                                width={18}
+                              />
+                              <p className="font-medium text-[13px] text-[#2D3A4B] leading-[16px]">
+                                Certificate:{" "}
+                                <span className="text-[#A01B9B]">
+                                  {item.certificate}
+                                </span>
+                              </p>
+                            </div>
+                          </div>
                         </div>
 
-                        <div className="flex items-center gap-2 mx-0 sm:my-0">
-                          <Image
-                            src={certificationBadge}
-                            alt=""
-                            height={18}
-                            width={18}
-                          />
-                          <p className="font-medium text-[13px] mr-1 text-[#2D3A4B] leading-[16px]">
-                            Certificate issued:
-                          </p>
-                          <p className="font-medium text-[13px] text-[#2D3A4B] leading-[16px]">
-                            <span className="text-[#A01B9B]">
-                              {item.certificate}{" "}
-                            </span>
-                            certificates
-                          </p>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <BsPencil
-                            className="text-[#4A90E2] cursor-pointer"
+                        {/* Edit/Delete Icons - moved to top right */}
+                        <div className="flex items-center gap-3 ml-4">
+                          <button
                             onClick={() => handleEditClick(item)}
-                          />
-                          <BsTrash
-                            className="text-red-500 cursor-pointer"
-                            onClick={() => handleDeleteClick(item?.course_identifier)}
-                          />
+                            className="p-1 text-[#4A90E2] hover:bg-[#4A90E2]/10 rounded-md transition-colors"
+                            aria-label="Edit course"
+                          >
+                            <BsPencil size={18} />
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleDeleteClick(item?.course_identifier)
+                            }
+                            className="p-1 text-red-500 hover:bg-red-500/10 rounded-md transition-colors"
+                            aria-label="Delete course"
+                          >
+                            <BsTrash size={18} />
+                          </button>
                         </div>
                       </div>
 
+                      {/* Course Description */}
                       <div
                         onClick={(e) => {
                           localStorage.setItem(
@@ -433,16 +457,15 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
                             item?.course_identifier,
                           );
                         }}
-                        className="cursor-pointer mt-4"
+                        className="cursor-pointer mt-3"
                       >
-                        <p className="text-[14px] text-[#2D3A4B] font-medium leading-[21px] line-clamp-2">
+                        <p className="text-[14px] text-[#2D3A4B] font-medium leading-[21px] line-clamp-2 hover:text-[#A01B9B] transition-colors">
                           {item.data.courseDescription}
                         </p>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
           {/* Pagination Controls */}

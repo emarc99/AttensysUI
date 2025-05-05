@@ -139,13 +139,18 @@ const LearningJourney: React.FC<LearningJourneyProps> = ({
 
                   <div className="!ml-0 px-3 xl:px-0 mt-5 xl:!mx-8 flex-1 w-full">
                     <div>
-                    <div
+                      <div
                         onClick={(e) => {
                           localStorage.setItem(
                             "courseData",
                             JSON.stringify(item?.data),
                           );
-                          handleCourse(e, e.currentTarget.textContent, router, item.data.courseIdentifier);
+                          handleCourse(
+                            e,
+                            e.currentTarget.textContent,
+                            router,
+                            item.data.courseIdentifier,
+                          );
                         }}
                         className="cursor-pointer"
                       >

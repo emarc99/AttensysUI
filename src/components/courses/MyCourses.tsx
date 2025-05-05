@@ -11,6 +11,8 @@ import LearningJourney from "./LearningJourney";
 import Notification from "./Notification";
 import UserSideBar from "./UserSideBar";
 import { useAccount } from "@starknet-react/core";
+import { useSearchParams } from "next/navigation";
+import { MoonLoader } from "react-spinners";
 
 interface CourseType {
   accessment: boolean;
@@ -30,12 +32,15 @@ const MyCourses = (props: any) => {
   const [courseData, setCourseData] = useState<CourseType[]>([]);
   const [takenCourses, setTakenCourses] = useState<CourseType[]>([]);
   const [takenCoursesData, setTakenCoursesData] = useState<CourseType[]>([]);
+  const [load, setLoad] = useState(false);
   const {
     fetchCIDContent,
     getError,
     isLoading: isCIDFetchLoading,
   } = useFetchCID();
   const { account, address } = useAccount();
+  const searchParams = useSearchParams();
+  const routeid = searchParams.get("id");
 
   const courseContract = new Contract(
     attensysCourseAbi,
@@ -56,6 +61,7 @@ const MyCourses = (props: any) => {
   };
 
   const getSingleCourse = async () => {
+    setLoad(true);
     const resolvedCourses = await Promise.all(
       courses.map(async (course: CourseType) => {
         if (!course.course_ipfs_uri) {
@@ -115,6 +121,7 @@ const MyCourses = (props: any) => {
     // Update state with new data
     setCourseData(validCourses);
     setTakenCoursesData(validTakenCourses);
+    setLoad(false);
   };
 
   useEffect(() => {
@@ -127,6 +134,12 @@ const MyCourses = (props: any) => {
       getSingleCourse();
     }
   }, [page, account, courses, takenCourses]);
+
+  useEffect(() => {
+    if (routeid == "created") {
+      setSelected("Courses created");
+    }
+  }, [routeid]);
 
   return (
     <div className="block lg:flex lg:mx-10 mb-8 pb-24 max-w-screen-2xl xl:mx-auto">
@@ -143,15 +156,27 @@ const MyCourses = (props: any) => {
       />
 
       <div className="flex-auto ml-0 lg:ml-5 px-4 my-12 lg:my-0 lg:px-0 hidden sm:block">
-        {"Courses created" == selected && (
-          <CoursesCreated
-            courseData={courseData}
-            item={{ courses }}
-            selected={selected}
-            key={courses[0]?.course_identifier || "no-courses"}
-            refreshCourses={getAllUserCreatedCourses}
-          />
-        )}
+        {"Courses created" == selected &&
+          (load ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh", // Full page height
+              }}
+            >
+              <MoonLoader color="#9B51E0" size={60} />
+            </div>
+          ) : (
+            <CoursesCreated
+              courseData={courseData}
+              item={{ courses }}
+              selected={selected}
+              key={courses[0]?.course_identifier || "no-courses"}
+              refreshCourses={getAllUserCreatedCourses}
+            />
+          ))}
 
         <div className={`${selected ? "0" : "mt-12"}`}>
           {/* Learning journey */}
@@ -171,6 +196,10 @@ const MyCourses = (props: any) => {
 
         <div>
           {selected == "" || selected == "Notification" ? (
+            <Notification wallet={account} />
+          ) : null}
+
+          {selected == "" && routeid == "created" ? (
             <Notification wallet={account} />
           ) : null}
         </div>
