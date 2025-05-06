@@ -412,7 +412,7 @@ const LecturePage = (props: any) => {
     if (callCourseContract?.code == "SUCCESS") {
       toast.success(
         <div>
-          Congratulations, you're certified!
+          Congratulations, you&apos;re certified!
           <br />
           Transaction hash:{" "}
           <a
