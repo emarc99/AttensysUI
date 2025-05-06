@@ -22,7 +22,7 @@ interface favoritecourseprop {
   stars: number;
 }
 
-const FavoriteCourseCard: React.FC<favoritecourseprop> = (props) => {
+const FavoriteCourseCard = (props: any) => {
   return (
     <Card
       className="w-full rounded-xl max-w-[400px] mx-auto md:w-[95%]"
