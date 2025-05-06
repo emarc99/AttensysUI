@@ -29,6 +29,8 @@ const FavoriteCourseCard = (props: any) => {
       placeholder={undefined}
       onPointerEnterCapture={() => {}}
       onPointerLeaveCapture={() => {}}
+      onResize={undefined}
+      onResizeCapture={undefined}
     >
       <CardBody
         placeholder={undefined}
