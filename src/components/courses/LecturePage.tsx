@@ -321,17 +321,32 @@ const LecturePage = (props: any) => {
           setIsTakingCourse(true);
           setShowOverlay(false);
           setIsUploading(false);
-          toast.success("Purchase successful", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Bounce,
-          });
+          toast.success(
+            <div>
+              Purchase sucessful!
+              <br />
+              Transaction hash:{" "}
+              <a
+                href={`${explorer.transaction(callCourseContract?.transaction_hash)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "blue", textDecoration: "underline" }}
+              >
+                {callCourseContract?.transaction_hash}
+              </a>
+            </div>,
+            {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              transition: Bounce,
+            },
+          );
           return;
         } else {
           setIsTakingCourse(false);
@@ -382,7 +397,7 @@ const LecturePage = (props: any) => {
     );
     const course_certificate_calldata = await courseContract.populate(
       "finish_course_claim_certification",
-      [Number(courseId)],
+      [Number(ultimate_id)],
     );
 
     const callCourseContract = await account?.execute([
@@ -393,8 +408,38 @@ const LecturePage = (props: any) => {
       },
     ]);
     setTxnHash(callCourseContract?.transaction_hash);
-    setIsCertified(true);
-    setIsUploading(false);
+    //@ts-ignore
+    if (callCourseContract?.code == "SUCCESS") {
+      toast.success(
+        <div>
+          Congratulations, you're certified!
+          <br />
+          Transaction hash:{" "}
+          <a
+            href={`${explorer.transaction(callCourseContract?.transaction_hash)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "blue", textDecoration: "underline" }}
+          >
+            {callCourseContract?.transaction_hash}
+          </a>
+        </div>,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        },
+      );
+      setIsCertified(true);
+      setIsUploading(false);
+      return;
+    }
   };
 
   const handleNext = () => {
@@ -737,7 +782,7 @@ const LecturePage = (props: any) => {
                   </button>
                 ) : null}
               </div>
-              {txnHash && (
+              {/* {txnHash && (
                 <div>
                   <a
                     className="text-blue-600 hover:text-blue-800 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
@@ -748,7 +793,7 @@ const LecturePage = (props: any) => {
                     Tx Hash
                   </a>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
           <div>
