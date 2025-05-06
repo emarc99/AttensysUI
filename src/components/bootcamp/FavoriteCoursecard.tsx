@@ -37,6 +37,8 @@ const FavoriteCourseCard = (props: any) => {
         onPointerEnterCapture={undefined}
         onPointerLeaveCapture={undefined}
         className="m-0 p-0"
+        onResize={undefined}
+        onResizeCapture={undefined}
       >
         <Image
           className="object-cover w-full h-auto max-h-[120px] rounded-t-xl"
@@ -53,6 +55,8 @@ const FavoriteCourseCard = (props: any) => {
               placeholder={undefined}
               onPointerEnterCapture={undefined}
               onPointerLeaveCapture={undefined}
+              onResize={undefined}
+              onResizeCapture={undefined}
             >
               {props.title}
             </Typography>
@@ -61,6 +65,8 @@ const FavoriteCourseCard = (props: any) => {
               placeholder={undefined}
               onPointerEnterCapture={undefined}
               onPointerLeaveCapture={undefined}
+              onResize={undefined}
+              onResizeCapture={undefined}
             >
               {props.name}
             </Typography>
@@ -75,6 +81,8 @@ const FavoriteCourseCard = (props: any) => {
               placeholder={undefined}
               onPointerEnterCapture={undefined}
               onPointerLeaveCapture={undefined}
+              onResize={undefined}
+              onResizeCapture={undefined}
             >
               Go to course
             </Button>
@@ -86,6 +94,8 @@ const FavoriteCourseCard = (props: any) => {
         placeholder={undefined}
         onPointerEnterCapture={undefined}
         onPointerLeaveCapture={undefined}
+        onResize={undefined}
+        onResizeCapture={undefined}
       >
         <div className="flex items-center w-full justify-between space-x-4">
           {/* rating */}
@@ -103,6 +113,8 @@ const FavoriteCourseCard = (props: any) => {
             placeholder={undefined}
             onPointerEnterCapture={undefined}
             onPointerLeaveCapture={undefined}
+            onResize={undefined}
+            onResizeCapture={undefined}
           >
             Created by <span className="underline">{props.instructor}</span>
           </Typography>
