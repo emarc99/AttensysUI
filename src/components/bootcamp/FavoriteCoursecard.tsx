@@ -22,19 +22,23 @@ interface favoritecourseprop {
   stars: number;
 }
 
-const FavoriteCourseCard: React.FC<favoritecourseprop> = (props) => {
+const FavoriteCourseCard = (props: any) => {
   return (
     <Card
       className="w-full rounded-xl max-w-[400px] mx-auto md:w-[95%]"
       placeholder={undefined}
       onPointerEnterCapture={() => {}}
       onPointerLeaveCapture={() => {}}
+      onResize={undefined}
+      onResizeCapture={undefined}
     >
       <CardBody
         placeholder={undefined}
         onPointerEnterCapture={undefined}
         onPointerLeaveCapture={undefined}
         className="m-0 p-0"
+        onResize={undefined}
+        onResizeCapture={undefined}
       >
         <Image
           className="object-cover w-full h-auto max-h-[120px] rounded-t-xl"
@@ -51,6 +55,8 @@ const FavoriteCourseCard: React.FC<favoritecourseprop> = (props) => {
               placeholder={undefined}
               onPointerEnterCapture={undefined}
               onPointerLeaveCapture={undefined}
+              onResize={undefined}
+              onResizeCapture={undefined}
             >
               {props.title}
             </Typography>
@@ -59,6 +65,8 @@ const FavoriteCourseCard: React.FC<favoritecourseprop> = (props) => {
               placeholder={undefined}
               onPointerEnterCapture={undefined}
               onPointerLeaveCapture={undefined}
+              onResize={undefined}
+              onResizeCapture={undefined}
             >
               {props.name}
             </Typography>
@@ -73,6 +81,8 @@ const FavoriteCourseCard: React.FC<favoritecourseprop> = (props) => {
               placeholder={undefined}
               onPointerEnterCapture={undefined}
               onPointerLeaveCapture={undefined}
+              onResize={undefined}
+              onResizeCapture={undefined}
             >
               Go to course
             </Button>
@@ -84,6 +94,8 @@ const FavoriteCourseCard: React.FC<favoritecourseprop> = (props) => {
         placeholder={undefined}
         onPointerEnterCapture={undefined}
         onPointerLeaveCapture={undefined}
+        onResize={undefined}
+        onResizeCapture={undefined}
       >
         <div className="flex items-center w-full justify-between space-x-4">
           {/* rating */}
@@ -101,6 +113,8 @@ const FavoriteCourseCard: React.FC<favoritecourseprop> = (props) => {
             placeholder={undefined}
             onPointerEnterCapture={undefined}
             onPointerLeaveCapture={undefined}
+            onResize={undefined}
+            onResizeCapture={undefined}
           >
             Created by <span className="underline">{props.instructor}</span>
           </Typography>
