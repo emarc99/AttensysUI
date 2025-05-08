@@ -168,7 +168,9 @@ const EditCoursePanel: React.FC<EditCoursePanelProps> = ({
                 rel="noopener noreferrer"
                 style={{ color: "blue", textDecoration: "underline" }}
               >
-                {callCourseContract?.transaction_hash}
+                {callCourseContract?.transaction_hash
+                  ? `${callCourseContract.transaction_hash.slice(0, 6)}...${callCourseContract.transaction_hash.slice(-4)}`
+                  : ""}
               </a>
             </div>,
             {
@@ -184,6 +186,7 @@ const EditCoursePanel: React.FC<EditCoursePanelProps> = ({
             },
           );
           setsavingstate(false);
+          onClose();
           return;
         } else {
           toast.error("Update failed", {

@@ -35,8 +35,8 @@ export function CardWithLink({ wallet, data }: ChildComponentProps) {
             height={200}
           />
         </div>
-        <div className="flex sm:flex-col h-24 md:flex-row justify-between mt-6 px-5 ">
-          <div className="w-52">
+        <div className="flex sm:flex-col h-16 md:flex-row justify-between mt-6 px-5 ">
+          <div className="w-[70%]">
             <p className="mb-2 font-bold lg:text-[14px] leading-[22px] text-[#333333]">
               {data?.data.courseName}
             </p>
@@ -51,6 +51,9 @@ export function CardWithLink({ wallet, data }: ChildComponentProps) {
             </button>
           </div>
         </div>
+        <p className="text-gray-600 text-[11px] mb-3 px-4 line-clamp-2 ">
+          {data?.data?.courseDescription || "No description available"}
+        </p>
       </div>
 
       <div className="px-5 mt-2">

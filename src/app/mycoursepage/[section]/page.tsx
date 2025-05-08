@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import {
   coursestatusAtom,
   bootcampdropdownstatus,
+  courseInitState,
 } from "@/state/connectedWalletStarknetkitNext";
 import Bootcampdropdown from "@/components/bootcamp/Bootcampdropdown";
 import { useAtom } from "jotai";
@@ -10,12 +11,52 @@ import Coursedropdown from "@/components/courses/Coursedropdown";
 import { useParams } from "next/navigation";
 import MyCoursePage from "@/components/courses/mycourse/MyCoursePage";
 import { MoonLoader } from "react-spinners";
+import { FileObject } from "pinata";
+
+// file setup
+const emptyData: FileObject = {
+  name: "",
+  type: "",
+  size: 0,
+  lastModified: 0,
+  arrayBuffer: async () => {
+    return new ArrayBuffer(0);
+  },
+};
+interface Lecture {
+  name: string;
+  description: string;
+  video: File | null;
+}
+
+const ResetCourseRegistrationData = {
+  primaryGoal: "",
+  targetAudience: "",
+  courseArea: "",
+  courseIdentifier: "",
+  courseName: "",
+  courseCreator: "",
+  courseDescription: "",
+  courseCategory: "",
+  difficultyLevel: "",
+  studentRequirements: "",
+  learningObjectives: "",
+  targetAudienceDesc: "",
+  courseImage: emptyData,
+  courseCurriculum: [] as Lecture[],
+  coursePricing: "",
+  promoAndDiscount: "",
+  publishWithCertificate: false,
+  price: 0,
+};
 
 const Index = () => {
   const [status, setstatus] = useAtom(coursestatusAtom);
   const [bootcampdropstat, setbootcampdropstat] = useAtom(
     bootcampdropdownstatus,
   );
+  const [courseData, setCourseData] = useAtom(courseInitState);
+
   const params = useParams();
   const section = params.section;
   const [loading, setLoading] = useState(true);
@@ -26,6 +67,7 @@ const Index = () => {
   };
 
   useEffect(() => {
+    setCourseData(ResetCourseRegistrationData);
     const timer = setTimeout(() => {
       setLoading(false);
     }, 2000); // 1 seconds fake delay or until data is fetched.

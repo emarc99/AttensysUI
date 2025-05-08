@@ -56,8 +56,14 @@ const MyCourses = (props: any) => {
     const secondRes: CourseType[] =
       await courseContract?.get_all_taken_courses(address);
 
+    const courseIdentifiers = secondRes.map((data) =>
+      Number(data.course_identifier),
+    );
+    const courseInfos =
+      await courseContract?.get_course_infos(courseIdentifiers);
+
     setCourses(res);
-    setTakenCourses(secondRes);
+    setTakenCourses(courseInfos);
   };
 
   const getSingleCourse = async () => {

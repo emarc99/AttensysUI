@@ -128,7 +128,7 @@ const LecturePage = (props: any) => {
   };
 
   // console.log("uploading:", isUploading);
-  console.log("taken:", isTakingCourse);
+  // console.log("taken:", isTakingCourse);
   // console.log("Certified:", isCertified);
 
   const handleDuration = (id: number, duration: number) => {
@@ -202,7 +202,7 @@ const LecturePage = (props: any) => {
         address,
         ultimate_id,
       );
-      console.log("taken_courses result:", taken_courses);
+      // console.log("taken_courses result:", taken_courses);
       setIsTakingCourse(taken_courses);
 
       const certfified_courses =
@@ -211,7 +211,7 @@ const LecturePage = (props: any) => {
           ultimate_id,
         );
 
-      console.log("certfified_courses result:", certfified_courses);
+      // console.log("certfified_courses result:", certfified_courses);
       setIsCertified(certfified_courses);
 
       const get_course_data = await courseContract?.get_course_infos([
@@ -229,7 +229,7 @@ const LecturePage = (props: any) => {
             10 ** decimals,
         ),
       );
-      console.log("get_course_data result:", Number(get_course_data[0].price));
+      // console.log("get_course_data result:", Number(get_course_data[0].price));
       console.log(
         "formatted strk:",
         Math.round(Number(get_course_data[0].price) / formattedPrice + 1),
@@ -333,7 +333,9 @@ const LecturePage = (props: any) => {
                 rel="noopener noreferrer"
                 style={{ color: "blue", textDecoration: "underline" }}
               >
-                {callCourseContract?.transaction_hash}
+                {callCourseContract?.transaction_hash
+                  ? `${callCourseContract.transaction_hash.slice(0, 6)}...${callCourseContract.transaction_hash.slice(-4)}`
+                  : ""}
               </a>
             </div>,
             {
@@ -422,7 +424,9 @@ const LecturePage = (props: any) => {
             rel="noopener noreferrer"
             style={{ color: "blue", textDecoration: "underline" }}
           >
-            {callCourseContract?.transaction_hash}
+            {callCourseContract?.transaction_hash
+              ? `${callCourseContract.transaction_hash.slice(0, 6)}...${callCourseContract.transaction_hash.slice(-4)}`
+              : ""}
           </a>
         </div>,
         {
@@ -540,7 +544,7 @@ const LecturePage = (props: any) => {
     return () => {
       isMounted = false;
     };
-  }, [props.data]);
+  }, []);
 
   useEffect(() => {
     const checkReview = async () => {
@@ -644,7 +648,7 @@ const LecturePage = (props: any) => {
                       {isUploading ? (
                         <div className="flex items-center gap-2">
                           <LoadingSpinner size="sm" colorVariant="white" />
-                          Taking Course...
+                          Processing...
                         </div>
                       ) : (
                         `Buy Course ${coursePrice === 0 ? "(Free)" : `($${coursePrice})`}`

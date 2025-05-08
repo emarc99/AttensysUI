@@ -15,6 +15,7 @@ import StarRating from "../bootcamp/StarRating";
 import { LuBadgeCheck } from "react-icons/lu";
 import ReactPlayer from "react-player";
 import { PinataSDK } from "pinata";
+import { split } from "lodash-es";
 
 interface ChildComponentProps {
   wallet: any;
@@ -521,60 +522,61 @@ const Explore = ({
               <IoMdArrowDropdown />
             </div>
             <div>
-              {unfilteredData[
-                unfilteredData.length - 1
-              ]?.data.courseCurriculum.map((item: any, i: any) => {
-                return (
-                  <div
-                    key={i}
-                    className="flex content-center text-sm my-3 cursor-pointer space-x-4"
-                    onClick={(e) => {
-                      localStorage.setItem(
-                        "courseData",
-                        JSON.stringify(
-                          unfilteredData[unfilteredData.length - 1]?.data,
-                        ),
-                      );
-                      handleCourse(
-                        e,
-                        e.currentTarget.textContent,
-                        router,
-                        unfilteredData[unfilteredData.length - 1]
-                          ?.course_identifier,
-                      );
-                    }}
-                  >
-                    <div className="w-[150px] h-[120px] rounded-xl border-4 border flex-shrink-0">
-                      {videoUrls[item.video] && (
-                        <ReactPlayer
-                          url={videoUrls[item.video]}
-                          controls={false}
-                          playing={false}
-                          width="100%"
-                          height="100%"
-                          playIcon={<></>}
-                        />
-                      )}
-                    </div>
+              {unfilteredData[unfilteredData.length - 1]?.data.courseCurriculum
+                ?.slice()
+                .reverse()
+                ?.map((item: any, i: any) => {
+                  return (
+                    <div
+                      key={i}
+                      className="flex content-center text-sm my-3 cursor-pointer space-x-4"
+                      onClick={(e) => {
+                        localStorage.setItem(
+                          "courseData",
+                          JSON.stringify(
+                            unfilteredData[unfilteredData.length - 1]?.data,
+                          ),
+                        );
+                        handleCourse(
+                          e,
+                          e.currentTarget.textContent,
+                          router,
+                          unfilteredData[unfilteredData.length - 1]
+                            ?.course_identifier,
+                        );
+                      }}
+                    >
+                      <div className="w-[150px] h-[120px] rounded-xl border-4 border flex-shrink-0">
+                        {videoUrls[item.video] && (
+                          <ReactPlayer
+                            url={videoUrls[item.video]}
+                            controls={false}
+                            playing={false}
+                            width="100%"
+                            height="100%"
+                            playIcon={<></>}
+                          />
+                        )}
+                      </div>
 
-                    <div className="w-[230px]">
-                      <h6 className="font-bold">
-                        {item.name}
-                        {/* <span className="text-[#5801A9]">({item.time})</span> */}
-                      </h6>
-                      <p className="font-light mt-2">{item.description}</p>
+                      <div className="w-[230px]">
+                        <h6 className="font-bold">
+                          {item.name}
+                          {/* <span className="text-[#5801A9]">({item.time})</span> */}
+                        </h6>
+                        <p className="font-light mt-2">{item.description}</p>
+                      </div>
                     </div>
-                  </div>
-                );
+                  );
 
-                //   <LectureCard
-                //   key={i}
-                //   item={item}
-                //   courseData={courseData}
-                //   router={router}
-                //   createAccess={createAccess}
-                // />
-              })}
+                  //   <LectureCard
+                  //   key={i}
+                  //   item={item}
+                  //   courseData={courseData}
+                  //   router={router}
+                  //   createAccess={createAccess}
+                  // />
+                })}
             </div>
           </div>
         </div>
