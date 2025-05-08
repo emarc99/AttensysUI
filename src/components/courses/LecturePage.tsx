@@ -17,6 +17,7 @@ import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
 import { LuBadgeCheck } from "react-icons/lu";
 import ReactPlayer from "react-player/lazy";
+
 import { Contract } from "starknet";
 import StarRating from "../bootcamp/StarRating";
 import LoadingSpinner from "../ui/LoadingSpinner";

@@ -5,6 +5,12 @@ import { attensysCourseAddress } from "@/deployments/contracts";
 import { provider } from "@/constants";
 import { useAccount } from "@starknet-react/core";
 import { usePinataAccess } from "@/hooks/usePinataAccess";
+import ReactPlayer from "react-player/lazy";
+import { PinataSDK } from "pinata";
+import AddLecture from "./course-form/AddLecture";
+import { Bounce, toast } from "react-toastify";
+import { useExplorer } from "@starknet-react/core";
+import { pinata as pinataclone } from "../../../utils/config";
 
 interface EditCoursePanelProps {
   isOpen: boolean;
@@ -31,15 +37,243 @@ const EditCoursePanel: React.FC<EditCoursePanelProps> = ({
     studentRequirements: course?.data?.studentRequirements || "",
     learningObjectives: course?.data?.learningObjectives || "",
     courseCurriculum: course?.data?.courseCurriculum || [],
+    courseArea: course?.data?.courseArea || "",
+    courseCreator: course?.data?.courseCreator || "",
+    courseIdentifier: course?.data?.courseIdentifier || "",
+    courseImage: course?.data?.courseImage || "",
+    coursePricing: course?.data?.coursePricing || "",
+    primaryGoal: course?.data?.primaryGoal || "",
+    promoAndDiscount: course?.data?.promoAndDiscount || "",
+    publishWithCertificate: course?.data?.publishWithCertificate || "",
+    targetAudience: course?.data?.targetAudience || "",
+    targetAudienceDesc: course?.data?.targetAudienceDesc || "",
   });
 
   const [activeSection, setActiveSection] = useState("basic");
   const [editingLecture, setEditingLecture] = useState<any>(null);
-  const { account } = useAccount();
+  const [videoUrls, setVideoUrls] = useState<{ [key: string]: string }>({});
+  const [showAddlecture, setShowAddLecture] = useState(false);
+  const [savingstate, setsavingstate] = useState(false);
+  const { account, address } = useAccount();
   const { createAccessLink } = usePinataAccess();
+  const explorer = useExplorer();
+
+  const pinata = new PinataSDK({
+    pinataJwt: process.env.NEXT_PUBLIC_PINATA_JWT,
+    pinataGateway: process.env.NEXT_PUBLIC_GATEWAY_URL,
+  });
+
+  function extractCIDFromUrl(ipfsUrl: string): string {
+    // Split the URL by '/' and get the last part
+    const parts = ipfsUrl.split("/");
+    const cid = parts[parts.length - 1];
+    return cid.split("?")[0].split(".")[0];
+  }
+
+  const handleDeletion = (target: number) => {
+    if (
+      typeof target !== "number" ||
+      target < 0 ||
+      target >= formData.courseCurriculum.length
+    ) {
+      console.error("Invalid target index:", target);
+      return;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      courseCurriculum: [
+        ...prev.courseCurriculum.slice(0, target),
+        ...prev.courseCurriculum.slice(target + 1),
+      ],
+    }));
+  };
+
+  const handleCourseCurriculumChange = (newLecture: any) => {
+    setFormData((prevData) => ({
+      ...prevData, // Spread existing data to retain untouched fields
+      courseCurriculum: [
+        newLecture, // New lecture object
+        ...prevData.courseCurriculum, // Existing lectures
+      ], // Dynamically update the specific field
+    }));
+  };
+
+  const handleSavechanges = async (e: any) => {
+    e.preventDefault();
+    setsavingstate(true);
+    onSave({
+      ...course,
+      data: {
+        ...course.data,
+        ...formData,
+      },
+    });
+
+    console.log("this is the form data", formData);
+    const dataUpload = await pinataclone.upload.json({
+      primaryGoal: formData.primaryGoal,
+      targetAudience: formData.targetAudience,
+      courseArea: formData.courseArea,
+      courseIdentifier: "1",
+      courseCreator: formData.courseCreator,
+      courseName: formData.courseName,
+      courseDescription: formData.courseDescription,
+      courseCategory: formData.courseCategory,
+      difficultyLevel: formData.difficultyLevel,
+      studentRequirements: formData.studentRequirements,
+      learningObjectives: formData.learningObjectives,
+      targetAudienceDesc: formData.targetAudienceDesc,
+      courseImage: formData.courseImage,
+      courseCurriculum: formData.courseCurriculum,
+      coursePricing: formData.coursePricing,
+      promoAndDiscount: formData.promoAndDiscount,
+      publishWithCertificate: formData.publishWithCertificate,
+    });
+    try {
+      if (dataUpload) {
+        const courseContract = new Contract(
+          attensysCourseAbi,
+          attensysCourseAddress,
+          account,
+        );
+        const editcourse_calldata = await courseContract.populate(
+          "add_replace_course_content",
+          [
+            Number(course?.course_identifier),
+            address ?? "",
+            dataUpload.IpfsHash,
+          ],
+        );
+
+        const callCourseContract = await account?.execute([
+          {
+            contractAddress: attensysCourseAddress,
+            entrypoint: "add_replace_course_content",
+            calldata: editcourse_calldata.calldata,
+          },
+        ]);
+        console.log("result", callCourseContract);
+        //@ts-ignore
+        if (callCourseContract?.code == "SUCCESS") {
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+          toast.success(
+            <div>
+              Update successful
+              <br />
+              Transaction hash:{" "}
+              <a
+                href={`${explorer.transaction(callCourseContract?.transaction_hash)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "blue", textDecoration: "underline" }}
+              >
+                {callCourseContract?.transaction_hash}
+              </a>
+            </div>,
+            {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              transition: Bounce,
+            },
+          );
+          setsavingstate(false);
+          return;
+        } else {
+          toast.error("Update failed", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          });
+          setsavingstate(false);
+        }
+      }
+    } catch (error) {
+      console.log("upload error", error);
+      toast.error("Update failed", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+      setsavingstate(false);
+    }
+  };
+
+  const handleAddlectureToggle = (e: any) => {
+    e.preventDefault();
+    setShowAddLecture(!showAddlecture);
+  };
+  const createAccess = async (cid: string, expires: number = 86400) => {
+    try {
+      let formattedCid = extractCIDFromUrl(cid);
+      const accessUrl = await pinata.gateways.private.createAccessLink({
+        cid: formattedCid,
+        expires,
+      });
+      return accessUrl;
+    } catch (err) {
+      console.error("Error creating access link:", err);
+    }
+  };
 
   useEffect(() => {
-    if (course) {
+    const fetchUrls = async () => {
+      const urls: { [key: string]: string } = {};
+      for (const item of course?.data.courseCurriculum || []) {
+        console.log("testing item", item);
+        try {
+          const url = await createAccess(item.video);
+          if (url) {
+            urls[item.video] = url;
+          }
+        } catch (error) {
+          console.error(`Error fetching URL for ${item.video}:`, error);
+        }
+      }
+      setVideoUrls(urls);
+    };
+
+    const fetchformDataUrls = async () => {
+      const urls: { [key: string]: string } = {};
+      for (const item of formData.courseCurriculum || []) {
+        console.log("testing item", item);
+        try {
+          const url = await createAccess(item.video);
+          if (url) {
+            urls[item.video] = url;
+          }
+        } catch (error) {
+          console.error(`Error fetching URL for ${item.video}:`, error);
+        }
+      }
+      setVideoUrls(urls);
+    };
+
+    if (
+      course &&
+      course?.data?.courseCurriculum?.length >
+        formData?.courseCurriculum?.length
+    ) {
+      console.log("course data here", course);
+      fetchUrls();
       setFormData({
         courseName: course.data.courseName || "",
         difficultyLevel: course.data.difficultyLevel || "",
@@ -48,9 +282,27 @@ const EditCoursePanel: React.FC<EditCoursePanelProps> = ({
         studentRequirements: course.data.studentRequirements || "",
         learningObjectives: course.data.learningObjectives || "",
         courseCurriculum: course.data.courseCurriculum || [],
+        courseArea: course?.data?.courseArea || "",
+        courseCreator: course?.data?.courseCreator || "",
+        courseIdentifier: course?.data?.courseIdentifier || "",
+        courseImage: course?.data?.courseImage || "",
+        coursePricing: course?.data?.coursePricing || "",
+        primaryGoal: course?.data?.primaryGoal || "",
+        promoAndDiscount: course?.data?.promoAndDiscount || "",
+        publishWithCertificate: course?.data?.publishWithCertificate || "",
+        targetAudience: course?.data?.targetAudience || "",
+        targetAudienceDesc: course?.data?.targetAudienceDesc || "",
       });
     }
-  }, [course]);
+
+    if (
+      course &&
+      course?.data?.courseCurriculum?.length <
+        formData?.courseCurriculum?.length
+    ) {
+      fetchformDataUrls();
+    }
+  }, [course, formData]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -76,17 +328,6 @@ const EditCoursePanel: React.FC<EditCoursePanelProps> = ({
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave({
-      ...course,
-      data: {
-        ...course.data,
-        ...formData,
-      },
-    });
-  };
-
   return (
     <>
       {/* Backdrop */}
@@ -99,7 +340,7 @@ const EditCoursePanel: React.FC<EditCoursePanelProps> = ({
 
       {/* Panel */}
       <div
-        className={`fixed inset-y-0 right-0 w-full sm:w-1/2 bg-gradient-to-br from-[#F5F7FA] to-[#E8EAF6] shadow-lg transform transition-all duration-500 ease-in-out z-[100] ${
+        className={`fixed inset-y-0 right-0 w-full sm:w-1/2 bg-white shadow-lg transform transition-all duration-500 ease-in-out z-[100] ${
           isOpen
             ? "translate-x-0 opacity-100 scale-100"
             : "translate-x-full opacity-0 scale-95"
@@ -116,7 +357,7 @@ const EditCoursePanel: React.FC<EditCoursePanelProps> = ({
             </h2>
             <button
               onClick={onClose}
-              className="text-[#A01B9B] hover:text-[#4A90E2] transition-all duration-300 transform hover:rotate-90"
+              className="text-[#A01B9B] hover:text-[#4A90E2] cursor-pointer transition-all duration-300 transform hover:rotate-90"
             >
               <svg
                 className="w-6 h-6"
@@ -194,7 +435,7 @@ const EditCoursePanel: React.FC<EditCoursePanelProps> = ({
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form className="space-y-6">
                 {/* Basic Info Section */}
                 {activeSection === "basic" && (
                   <div className="space-y-6">
@@ -303,8 +544,10 @@ const EditCoursePanel: React.FC<EditCoursePanelProps> = ({
                 {/* Curriculum Section */}
                 {activeSection === "curriculum" && (
                   <div className="space-y-6">
-                    {formData.courseCurriculum.map(
-                      (lecture: any, index: number) => (
+                    {formData.courseCurriculum
+                      ?.slice()
+                      .reverse()
+                      .map((lecture: any, index: number) => (
                         <div
                           key={index}
                           className="transform transition-all duration-300 hover:scale-[1.02] bg-white p-4 rounded-lg shadow-sm"
@@ -313,17 +556,26 @@ const EditCoursePanel: React.FC<EditCoursePanelProps> = ({
                             <h3 className="text-lg font-medium text-[#2D3A4B]">
                               Lecture {index + 1}
                             </h3>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setEditingLecture(
-                                  editingLecture === index ? null : index,
-                                )
-                              }
-                              className="text-[#4A90E2] hover:text-[#357ABD] transition-colors duration-200"
-                            >
-                              {editingLecture === index ? "Done" : "Edit"}
-                            </button>
+                            <div className="flex space-x-8">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setEditingLecture(
+                                    editingLecture === index ? null : index,
+                                  )
+                                }
+                                className="text-[#4A90E2] hover:text-[#357ABD] transition-colors duration-200"
+                              >
+                                {editingLecture === index ? "Done" : "Edit"}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleDeletion(index)}
+                                className="text-red-900 hover:text-red-900 transition-colors duration-200"
+                              >
+                                {editingLecture === index ? null : "Delete"}
+                              </button>
+                            </div>
                           </div>
 
                           {editingLecture === index ? (
@@ -362,20 +614,62 @@ const EditCoursePanel: React.FC<EditCoursePanelProps> = ({
                                   className="w-full px-3 py-2 border-2 border-[#A01B9B]/20 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A01B9B] focus:border-transparent transition-all duration-200"
                                 />
                               </div>
+                              <h1>{lecture.fileName}</h1>
                             </div>
                           ) : (
                             <div className="space-y-4">
-                              <p className="text-[#2D3A4B] font-medium">
-                                {lecture.name}
-                              </p>
-                              <p className="text-sm text-gray-600">
-                                {lecture.description}
-                              </p>
+                              <div className="flex space-x-10 items-center">
+                                <div className="w-[150px] h-[150px] border-[1px] rounded-lg flex items-center text-center justify-center">
+                                  {videoUrls[lecture.video] ? (
+                                    <ReactPlayer
+                                      url={videoUrls[lecture.video]}
+                                      width="100%"
+                                      height="100%"
+                                      className="rounded-xl"
+                                      controls
+                                      // playing={!showOverlay}
+                                      playIcon={<></>}
+                                    />
+                                  ) : (
+                                    <h1 className="text-sm italic px-3">
+                                      Preview unavailable
+                                    </h1>
+                                  )}
+                                </div>
+                                <div className="space-y-2">
+                                  <p className="text-[#2D3A4B] font-medium">
+                                    {lecture.name}
+                                  </p>
+                                  <p className="text-sm text-gray-600">
+                                    {lecture.description == ""
+                                      ? "No Description"
+                                      : lecture.description}
+                                  </p>
+                                </div>
+                              </div>
                             </div>
                           )}
                         </div>
-                      ),
+                      ))}
+
+                    {showAddlecture && (
+                      <AddLecture
+                        courseData={formData}
+                        setCourseData={setFormData}
+                        handleCourseCurriculumChange={
+                          handleCourseCurriculumChange
+                        }
+                      />
                     )}
+
+                    <button
+                      onClick={handleAddlectureToggle}
+                      className="px-4 py-2 w-full text-white bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] rounded-md hover:from-[#4A90E2] hover:to-[#9B51E0] transition-all duration-300 transform hover:scale-105 shadow-md"
+                    >
+                      {showAddlecture
+                        ? "Cancel"
+                        : "Upload Additional lecture +"}
+                    </button>
                   </div>
                 )}
 
@@ -388,10 +682,11 @@ const EditCoursePanel: React.FC<EditCoursePanelProps> = ({
                     Cancel
                   </button>
                   <button
+                    onClick={handleSavechanges}
                     type="submit"
-                    className="px-4 py-2 text-white bg-gradient-to-r from-[#A01B9B] to-[#4A90E2] rounded-md hover:from-[#8B1686] hover:to-[#357ABD] transition-all duration-300 transform hover:scale-105 shadow-md"
+                    className="px-4 py-2 text-white bg-gradient-to-r from-[#4A90E2] to-[#9B51E0] rounded-md hover:from-[#4A90E2] hover:to-[#9B51E0] transition-all duration-300 transform hover:scale-105 shadow-md"
                   >
-                    Save Changes
+                    {savingstate ? "Saving..." : "Save Changes"}
                   </button>
                 </div>
               </form>
