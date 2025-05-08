@@ -75,24 +75,26 @@ const Index = () => {
 
       const certifiedCoursesList = await Promise.all(
         allCourses.map(async (course: CourseType) => {
-          console.log(
-            "Checking certification for course:",
-            course.course_identifier,
-          );
-          const isCertified =
-            await courseContract?.is_user_certified_for_course(
-              address,
+          if (Number(course.course_identifier) != 0) {
+            console.log(
+              "Checking certification for course:",
               course.course_identifier,
             );
-          console.log(
-            "Certification status for course",
-            course.course_identifier,
-            ":",
-            isCertified,
-          );
+            const isCertified =
+              await courseContract?.is_user_certified_for_course(
+                address,
+                course.course_identifier,
+              );
+            console.log(
+              "Certification status for course",
+              course.course_identifier,
+              ":",
+              isCertified,
+            );
 
-          if (isCertified) {
-            return course;
+            if (isCertified) {
+              return course;
+            }
           }
           return null;
         }),
