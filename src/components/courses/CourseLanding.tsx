@@ -13,7 +13,7 @@ const CourseLanding = (props: any) => {
   const courseData = storedData ? JSON.parse(storedData) : null;
   const [wallet, setWallet] = useAtom(walletStarknetkit);
 
-  console.log("lost item:", courseData);
+  // console.log("lost item:", courseData);
   return (
     <div className="h-auto w-full bg-[#F5F7FA]">
       <LecturePage course={props.course} data={courseData} wallet={wallet} />
