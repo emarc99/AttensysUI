@@ -43,20 +43,6 @@ export const attensysCourseAbi = [
   },
   {
     type: "struct",
-    name: "core::integer::u256",
-    members: [
-      {
-        name: "low",
-        type: "core::integer::u128",
-      },
-      {
-        name: "high",
-        type: "core::integer::u128",
-      },
-    ],
-  },
-  {
-    type: "struct",
     name: "attendsys::contracts::AttenSysCourse::AttenSysCourse::Course",
     members: [
       {
@@ -65,7 +51,7 @@ export const attensysCourseAbi = [
       },
       {
         name: "course_identifier",
-        type: "core::integer::u256",
+        type: "core::integer::u128",
       },
       {
         name: "accessment",
@@ -103,7 +89,7 @@ export const attensysCourseAbi = [
       },
       {
         name: "number_of_courses",
-        type: "core::integer::u256",
+        type: "core::integer::u128",
       },
       {
         name: "creator_status",
@@ -112,535 +98,529 @@ export const attensysCourseAbi = [
     ],
   },
   {
-    type: "interface",
-    name: "attendsys::contracts::AttenSysCourse::IAttenSysCourse",
-    items: [
+    type: "function",
+    name: "create_course",
+    inputs: [
       {
-        type: "function",
-        name: "create_course",
-        inputs: [
-          {
-            name: "owner_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "accessment_",
-            type: "core::bool",
-          },
-          {
-            name: "base_uri",
-            type: "core::byte_array::ByteArray",
-          },
-          {
-            name: "name_",
-            type: "core::byte_array::ByteArray",
-          },
-          {
-            name: "symbol",
-            type: "core::byte_array::ByteArray",
-          },
-          {
-            name: "course_ipfs_uri",
-            type: "core::byte_array::ByteArray",
-          },
-          {
-            name: "price_",
-            type: "core::integer::u128",
-          },
-        ],
-        outputs: [
-          {
-            type: "(core::starknet::contract_address::ContractAddress, core::integer::u256)",
-          },
-        ],
-        state_mutability: "external",
+        name: "owner_",
+        type: "core::starknet::contract_address::ContractAddress",
       },
       {
-        type: "function",
-        name: "add_replace_course_content",
-        inputs: [
-          {
-            name: "course_identifier",
-            type: "core::integer::u256",
-          },
-          {
-            name: "owner_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "new_course_uri",
-            type: "core::byte_array::ByteArray",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
+        name: "accessment_",
+        type: "core::bool",
       },
       {
-        type: "function",
-        name: "acquire_a_course",
-        inputs: [
-          {
-            name: "course_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
+        name: "base_uri",
+        type: "core::byte_array::ByteArray",
       },
       {
-        type: "function",
-        name: "finish_course_claim_certification",
-        inputs: [
-          {
-            name: "course_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
+        name: "name_",
+        type: "core::byte_array::ByteArray",
       },
       {
-        type: "function",
-        name: "check_course_completion_status_n_certification",
-        inputs: [
-          {
-            name: "course_identifier",
-            type: "core::integer::u256",
-          },
-          {
-            name: "candidate",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::bool",
-          },
-        ],
-        state_mutability: "view",
+        name: "symbol",
+        type: "core::byte_array::ByteArray",
       },
       {
-        type: "function",
-        name: "remove_course",
-        inputs: [
-          {
-            name: "course_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
+        name: "course_ipfs_uri",
+        type: "core::byte_array::ByteArray",
       },
       {
-        type: "function",
-        name: "get_course_infos",
-        inputs: [
-          {
-            name: "course_identifiers",
-            type: "core::array::Array::<core::integer::u256>",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysCourse::AttenSysCourse::Course>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "is_user_taking_course",
-        inputs: [
-          {
-            name: "user",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "course_id",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::bool",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "is_user_certified_for_course",
-        inputs: [
-          {
-            name: "user",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "course_id",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::bool",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_all_taken_courses",
-        inputs: [
-          {
-            name: "user",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysCourse::AttenSysCourse::Course>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_user_completed_courses",
-        inputs: [
-          {
-            name: "user",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<core::integer::u256>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_all_courses_info",
-        inputs: [],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysCourse::AttenSysCourse::Course>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_all_creator_courses",
-        inputs: [
-          {
-            name: "owner_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysCourse::AttenSysCourse::Course>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_creator_info",
-        inputs: [
-          {
-            name: "creator",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "attendsys::contracts::AttenSysCourse::AttenSysCourse::Creator",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_course_nft_contract",
-        inputs: [
-          {
-            name: "course_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "transfer_admin",
-        inputs: [
-          {
-            name: "new_admin",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "claim_admin_ownership",
-        inputs: [],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "get_admin",
-        inputs: [],
-        outputs: [
-          {
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_new_admin",
-        inputs: [],
-        outputs: [
-          {
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_total_course_completions",
-        inputs: [
-          {
-            name: "course_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::integer::u256",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "ensure_admin",
-        inputs: [],
-        outputs: [],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_suspension_status",
-        inputs: [
-          {
-            name: "course_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::bool",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_course_approval_status",
-        inputs: [
-          {
-            name: "course_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::bool",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "toggle_suspension",
-        inputs: [
-          {
-            name: "course_identifier",
-            type: "core::integer::u256",
-          },
-          {
-            name: "suspend",
-            type: "core::bool",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "upgrade",
-        inputs: [
-          {
-            name: "new_class_hash",
-            type: "core::starknet::class_hash::ClassHash",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "get_price_of_strk_usd",
-        inputs: [],
-        outputs: [
-          {
-            type: "core::integer::u128",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_strk_of_usd",
-        inputs: [
-          {
-            name: "usd_price",
-            type: "core::integer::u128",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::integer::u128",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "update_price",
-        inputs: [
-          {
-            name: "course_identifier",
-            type: "core::integer::u256",
-          },
-          {
-            name: "new_price",
-            type: "core::integer::u128",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "toggle_course_approval",
-        inputs: [
-          {
-            name: "course_identifier",
-            type: "core::integer::u256",
-          },
-          {
-            name: "approve",
-            type: "core::bool",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "creator_withdraw",
-        inputs: [
-          {
-            name: "amount",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "init_fee_percent",
-        inputs: [
-          {
-            name: "fee",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "admin_withdrawables",
-        inputs: [
-          {
-            name: "amount",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "get_creator_withdrawable_amount",
-        inputs: [
-          {
-            name: "user",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::integer::u256",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_fee_withdrawable_amount",
-        inputs: [],
-        outputs: [
-          {
-            type: "core::integer::u256",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_total_course_sales",
-        inputs: [
-          {
-            name: "user",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::integer::u256",
-          },
-        ],
-        state_mutability: "view",
+        name: "price_",
+        type: "core::integer::u128",
       },
     ],
+    outputs: [
+      {
+        type: "(core::starknet::contract_address::ContractAddress, core::integer::u128)",
+      },
+    ],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "add_replace_course_content",
+    inputs: [
+      {
+        name: "course_identifier",
+        type: "core::integer::u128",
+      },
+      {
+        name: "owner_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "new_course_uri",
+        type: "core::byte_array::ByteArray",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "acquire_a_course",
+    inputs: [
+      {
+        name: "course_identifier",
+        type: "core::integer::u128",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "finish_course_claim_certification",
+    inputs: [
+      {
+        name: "course_identifier",
+        type: "core::integer::u128",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "check_course_completion_status_n_certification",
+    inputs: [
+      {
+        name: "course_identifier",
+        type: "core::integer::u128",
+      },
+      {
+        name: "candidate",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "remove_course",
+    inputs: [
+      {
+        name: "course_identifier",
+        type: "core::integer::u128",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "get_course_infos",
+    inputs: [
+      {
+        name: "course_identifiers",
+        type: "core::array::Array::<core::integer::u128>",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysCourse::AttenSysCourse::Course>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "is_user_taking_course",
+    inputs: [
+      {
+        name: "user",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "course_id",
+        type: "core::integer::u128",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "is_user_certified_for_course",
+    inputs: [
+      {
+        name: "user",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "course_id",
+        type: "core::integer::u128",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_taken_courses",
+    inputs: [
+      {
+        name: "user",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysCourse::AttenSysCourse::Course>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_user_completed_courses",
+    inputs: [
+      {
+        name: "user",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<core::integer::u128>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_courses_info",
+    inputs: [],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysCourse::AttenSysCourse::Course>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_creator_courses",
+    inputs: [
+      {
+        name: "owner_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysCourse::AttenSysCourse::Course>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_creator_info",
+    inputs: [
+      {
+        name: "creator",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "attendsys::contracts::AttenSysCourse::AttenSysCourse::Creator",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_course_nft_contract",
+    inputs: [
+      {
+        name: "course_identifier",
+        type: "core::integer::u128",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "transfer_admin",
+    inputs: [
+      {
+        name: "new_admin",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "claim_admin_ownership",
+    inputs: [],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "get_admin",
+    inputs: [],
+    outputs: [
+      {
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_new_admin",
+    inputs: [],
+    outputs: [
+      {
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_total_course_completions",
+    inputs: [
+      {
+        name: "course_identifier",
+        type: "core::integer::u128",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::integer::u128",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "ensure_admin",
+    inputs: [],
+    outputs: [],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_suspension_status",
+    inputs: [
+      {
+        name: "course_identifier",
+        type: "core::integer::u128",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_course_approval_status",
+    inputs: [
+      {
+        name: "course_identifier",
+        type: "core::integer::u128",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "toggle_suspension",
+    inputs: [
+      {
+        name: "course_identifier",
+        type: "core::integer::u128",
+      },
+      {
+        name: "suspend",
+        type: "core::bool",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "upgrade",
+    inputs: [
+      {
+        name: "new_class_hash",
+        type: "core::starknet::class_hash::ClassHash",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "get_price_of_strk_usd",
+    inputs: [],
+    outputs: [
+      {
+        type: "core::integer::u128",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_strk_of_usd",
+    inputs: [
+      {
+        name: "usd_price",
+        type: "core::integer::u128",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::integer::u128",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "update_price",
+    inputs: [
+      {
+        name: "course_identifier",
+        type: "core::integer::u128",
+      },
+      {
+        name: "new_price",
+        type: "core::integer::u128",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "toggle_course_approval",
+    inputs: [
+      {
+        name: "course_identifier",
+        type: "core::integer::u128",
+      },
+      {
+        name: "approve",
+        type: "core::bool",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "creator_withdraw",
+    inputs: [
+      {
+        name: "amount",
+        type: "core::integer::u128",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "init_fee_percent",
+    inputs: [
+      {
+        name: "fee",
+        type: "core::integer::u128",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "admin_withdrawables",
+    inputs: [
+      {
+        name: "amount",
+        type: "core::integer::u128",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "get_creator_withdrawable_amount",
+    inputs: [
+      {
+        name: "user",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::integer::u128",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_fee_withdrawable_amount",
+    inputs: [],
+    outputs: [
+      {
+        type: "core::integer::u128",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_total_course_sales",
+    inputs: [
+      {
+        name: "user",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::integer::u128",
+      },
+    ],
+    state_mutability: "view",
   },
   {
     type: "impl",
@@ -648,40 +628,34 @@ export const attensysCourseAbi = [
     interface_name: "openzeppelin_access::ownable::interface::IOwnable",
   },
   {
-    type: "interface",
-    name: "openzeppelin_access::ownable::interface::IOwnable",
-    items: [
+    type: "function",
+    name: "owner",
+    inputs: [],
+    outputs: [
       {
-        type: "function",
-        name: "owner",
-        inputs: [],
-        outputs: [
-          {
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "transfer_ownership",
-        inputs: [
-          {
-            name: "new_owner",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "renounce_ownership",
-        inputs: [],
-        outputs: [],
-        state_mutability: "external",
+        type: "core::starknet::contract_address::ContractAddress",
       },
     ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "transfer_ownership",
+    inputs: [
+      {
+        name: "new_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "renounce_ownership",
+    inputs: [],
+    outputs: [],
+    state_mutability: "external",
   },
   {
     type: "constructor",
@@ -704,7 +678,7 @@ export const attensysCourseAbi = [
     members: [
       {
         name: "course_identifier",
-        type: "core::integer::u256",
+        type: "core::integer::u128",
         kind: "data",
       },
       {
@@ -751,7 +725,7 @@ export const attensysCourseAbi = [
     members: [
       {
         name: "course_identifier",
-        type: "core::integer::u256",
+        type: "core::integer::u128",
         kind: "data",
       },
       {
@@ -773,7 +747,7 @@ export const attensysCourseAbi = [
     members: [
       {
         name: "course_identifier",
-        type: "core::integer::u256",
+        type: "core::integer::u128",
         kind: "data",
       },
       {
@@ -802,7 +776,7 @@ export const attensysCourseAbi = [
     members: [
       {
         name: "course_identifier",
-        type: "core::integer::u256",
+        type: "core::integer::u128",
         kind: "data",
       },
     ],
@@ -814,7 +788,7 @@ export const attensysCourseAbi = [
     members: [
       {
         name: "course_identifier",
-        type: "core::integer::u256",
+        type: "core::integer::u128",
         kind: "data",
       },
     ],
@@ -826,7 +800,7 @@ export const attensysCourseAbi = [
     members: [
       {
         name: "course_identifier",
-        type: "core::integer::u256",
+        type: "core::integer::u128",
         kind: "data",
       },
     ],
@@ -913,7 +887,7 @@ export const attensysCourseAbi = [
     members: [
       {
         name: "course_identifier",
-        type: "core::integer::u256",
+        type: "core::integer::u128",
         kind: "data",
       },
       {
@@ -930,7 +904,7 @@ export const attensysCourseAbi = [
     members: [
       {
         name: "course_identifier",
-        type: "core::integer::u256",
+        type: "core::integer::u128",
         kind: "data",
       },
       {
@@ -952,7 +926,7 @@ export const attensysCourseAbi = [
     members: [
       {
         name: "course_identifier",
-        type: "core::integer::u256",
+        type: "core::integer::u128",
         kind: "data",
       },
     ],
@@ -964,7 +938,7 @@ export const attensysCourseAbi = [
     members: [
       {
         name: "course_identifier",
-        type: "core::integer::u256",
+        type: "core::integer::u128",
         kind: "data",
       },
     ],
@@ -1203,466 +1177,460 @@ export const attensysEventAbi = [
     ],
   },
   {
-    type: "interface",
-    name: "attendsys::contracts::AttenSysEvent::IAttenSysEvent",
-    items: [
+    type: "function",
+    name: "create_event",
+    inputs: [
       {
-        type: "function",
-        name: "create_event",
-        inputs: [
-          {
-            name: "owner_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "event_name",
-            type: "core::byte_array::ByteArray",
-          },
-          {
-            name: "base_uri",
-            type: "core::byte_array::ByteArray",
-          },
-          {
-            name: "name_",
-            type: "core::byte_array::ByteArray",
-          },
-          {
-            name: "symbol",
-            type: "core::byte_array::ByteArray",
-          },
-          {
-            name: "start_time_",
-            type: "core::integer::u256",
-          },
-          {
-            name: "end_time_",
-            type: "core::integer::u256",
-          },
-          {
-            name: "reg_status",
-            type: "core::integer::u8",
-          },
-          {
-            name: "event_uri",
-            type: "core::byte_array::ByteArray",
-          },
-          {
-            name: "event_location",
-            type: "core::integer::u8",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        state_mutability: "external",
+        name: "owner_",
+        type: "core::starknet::contract_address::ContractAddress",
       },
       {
-        type: "function",
-        name: "end_event",
-        inputs: [
-          {
-            name: "event_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
+        name: "event_name",
+        type: "core::byte_array::ByteArray",
       },
       {
-        type: "function",
-        name: "batch_certify_attendees",
-        inputs: [
-          {
-            name: "event_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
+        name: "base_uri",
+        type: "core::byte_array::ByteArray",
       },
       {
-        type: "function",
-        name: "mark_attendance",
-        inputs: [
-          {
-            name: "event_identifier",
-            type: "core::integer::u256",
-          },
-          {
-            name: "attendee_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
+        name: "name_",
+        type: "core::byte_array::ByteArray",
       },
       {
-        type: "function",
-        name: "register_for_event",
-        inputs: [
-          {
-            name: "event_identifier",
-            type: "core::integer::u256",
-          },
-          {
-            name: "user_uri",
-            type: "core::byte_array::ByteArray",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
+        name: "symbol",
+        type: "core::byte_array::ByteArray",
       },
       {
-        type: "function",
-        name: "get_registered_users",
-        inputs: [
-          {
-            name: "event_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::AttendeeInfo>",
-          },
-        ],
-        state_mutability: "view",
+        name: "start_time_",
+        type: "core::integer::u256",
       },
       {
-        type: "function",
-        name: "get_attendance_status",
-        inputs: [
-          {
-            name: "attendee",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "event_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::bool",
-          },
-        ],
-        state_mutability: "view",
+        name: "end_time_",
+        type: "core::integer::u256",
       },
       {
-        type: "function",
-        name: "get_all_attended_events",
-        inputs: [
-          {
-            name: "user",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::UserAttendedEventStruct>",
-          },
-        ],
-        state_mutability: "view",
+        name: "reg_status",
+        type: "core::integer::u8",
       },
       {
-        type: "function",
-        name: "get_all_list_registered_events",
-        inputs: [
-          {
-            name: "user",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::UserAttendedEventStruct>",
-          },
-        ],
-        state_mutability: "view",
+        name: "event_uri",
+        type: "core::byte_array::ByteArray",
       },
       {
-        type: "function",
-        name: "get_all_created_events",
-        inputs: [
-          {
-            name: "organizer",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::EventStruct>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "start_end_reg",
-        inputs: [
-          {
-            name: "reg_stat",
-            type: "core::integer::u8",
-          },
-          {
-            name: "event_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "get_event_details",
-        inputs: [
-          {
-            name: "event_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [
-          {
-            type: "attendsys::contracts::AttenSysEvent::AttenSysEvent::EventStruct",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_event_nft_contract",
-        inputs: [
-          {
-            name: "event_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_all_events",
-        inputs: [],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::EventStruct>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "transfer_admin",
-        inputs: [
-          {
-            name: "new_admin",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "claim_admin_ownership",
-        inputs: [],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "get_admin",
-        inputs: [],
-        outputs: [
-          {
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_new_admin",
-        inputs: [],
-        outputs: [
-          {
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "sponsor_event",
-        inputs: [
-          {
-            name: "event_identifier",
-            type: "core::integer::u256",
-          },
-          {
-            name: "amt",
-            type: "core::integer::u256",
-          },
-          {
-            name: "uri",
-            type: "core::byte_array::ByteArray",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "withdraw_sponsorship_funds",
-        inputs: [
-          {
-            name: "amt",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "set_sponsorship_contract",
-        inputs: [
-          {
-            name: "sponsor_contract_address",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "get_event_sponsorship_balance",
-        inputs: [
-          {
-            name: "event",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::integer::u256",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "toggle_event_suspended_status",
-        inputs: [
-          {
-            name: "event_identifier",
-            type: "core::integer::u256",
-          },
-          {
-            name: "status",
-            type: "core::bool",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "get_event_suspended_status",
-        inputs: [
-          {
-            name: "event_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::bool",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_all_attendace_marked",
-        inputs: [
-          {
-            name: "event_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "cancel_event",
-        inputs: [
-          {
-            name: "event_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "get_cancelation_status",
-        inputs: [
-          {
-            name: "event_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::bool",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_if_registration_is_open",
-        inputs: [
-          {
-            name: "event_identifier",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::integer::u8",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "upgrade",
-        inputs: [
-          {
-            name: "new_class_hash",
-            type: "core::starknet::class_hash::ClassHash",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
+        name: "event_location",
+        type: "core::integer::u8",
       },
     ],
+    outputs: [
+      {
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "end_event",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "batch_certify_attendees",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "mark_attendance",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+      {
+        name: "attendee_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "register_for_event",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+      {
+        name: "user_uri",
+        type: "core::byte_array::ByteArray",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "get_registered_users",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::AttendeeInfo>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_attendance_status",
+    inputs: [
+      {
+        name: "attendee",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_attended_events",
+    inputs: [
+      {
+        name: "user",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::UserAttendedEventStruct>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_list_registered_events",
+    inputs: [
+      {
+        name: "user",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::UserAttendedEventStruct>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_created_events",
+    inputs: [
+      {
+        name: "organizer",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::EventStruct>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "start_end_reg",
+    inputs: [
+      {
+        name: "reg_stat",
+        type: "core::integer::u8",
+      },
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "get_event_details",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [
+      {
+        type: "attendsys::contracts::AttenSysEvent::AttenSysEvent::EventStruct",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_event_nft_contract",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_events",
+    inputs: [],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysEvent::AttenSysEvent::EventStruct>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "transfer_admin",
+    inputs: [
+      {
+        name: "new_admin",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "claim_admin_ownership",
+    inputs: [],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "get_admin",
+    inputs: [],
+    outputs: [
+      {
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_new_admin",
+    inputs: [],
+    outputs: [
+      {
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "sponsor_event",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+      {
+        name: "amt",
+        type: "core::integer::u256",
+      },
+      {
+        name: "uri",
+        type: "core::byte_array::ByteArray",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "withdraw_sponsorship_funds",
+    inputs: [
+      {
+        name: "amt",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "set_sponsorship_contract",
+    inputs: [
+      {
+        name: "sponsor_contract_address",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "get_event_sponsorship_balance",
+    inputs: [
+      {
+        name: "event",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::integer::u256",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "toggle_event_suspended_status",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+      {
+        name: "status",
+        type: "core::bool",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "get_event_suspended_status",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_attendace_marked",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "cancel_event",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "get_cancelation_status",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_if_registration_is_open",
+    inputs: [
+      {
+        name: "event_identifier",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::integer::u8",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "upgrade",
+    inputs: [
+      {
+        name: "new_class_hash",
+        type: "core::starknet::class_hash::ClassHash",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
   },
   {
     type: "impl",
@@ -1670,40 +1638,34 @@ export const attensysEventAbi = [
     interface_name: "openzeppelin_access::ownable::interface::IOwnable",
   },
   {
-    type: "interface",
-    name: "openzeppelin_access::ownable::interface::IOwnable",
-    items: [
+    type: "function",
+    name: "owner",
+    inputs: [],
+    outputs: [
       {
-        type: "function",
-        name: "owner",
-        inputs: [],
-        outputs: [
-          {
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "transfer_ownership",
-        inputs: [
-          {
-            name: "new_owner",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "renounce_ownership",
-        inputs: [],
-        outputs: [],
-        state_mutability: "external",
+        type: "core::starknet::contract_address::ContractAddress",
       },
     ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "transfer_ownership",
+    inputs: [
+      {
+        name: "new_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "renounce_ownership",
+    inputs: [],
+    outputs: [],
+    state_mutability: "external",
   },
   {
     type: "constructor",
@@ -2274,809 +2236,803 @@ export const attensysOrgAbi = [
     ],
   },
   {
-    type: "interface",
-    name: "attendsys::contracts::AttenSysOrg::IAttenSysOrg",
-    items: [
+    type: "function",
+    name: "create_org_profile",
+    inputs: [
       {
-        type: "function",
-        name: "create_org_profile",
-        inputs: [
-          {
-            name: "org_name",
-            type: "core::byte_array::ByteArray",
-          },
-          {
-            name: "org_ipfs_uri",
-            type: "core::byte_array::ByteArray",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
+        name: "org_name",
+        type: "core::byte_array::ByteArray",
       },
       {
-        type: "function",
-        name: "add_instructor_to_org",
-        inputs: [
-          {
-            name: "instructor",
-            type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
-          },
-          {
-            name: "org_name",
-            type: "core::byte_array::ByteArray",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "remove_instructor_from_org",
-        inputs: [
-          {
-            name: "instructor",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "create_bootcamp",
-        inputs: [
-          {
-            name: "org_name",
-            type: "core::byte_array::ByteArray",
-          },
-          {
-            name: "bootcamp_name",
-            type: "core::byte_array::ByteArray",
-          },
-          {
-            name: "nft_name",
-            type: "core::byte_array::ByteArray",
-          },
-          {
-            name: "nft_symbol",
-            type: "core::byte_array::ByteArray",
-          },
-          {
-            name: "nft_uri",
-            type: "core::byte_array::ByteArray",
-          },
-          {
-            name: "num_of_class_to_create",
-            type: "core::integer::u256",
-          },
-          {
-            name: "bootcamp_ipfs_uri",
-            type: "core::byte_array::ByteArray",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "add_active_meet_link",
-        inputs: [
-          {
-            name: "meet_link",
-            type: "core::byte_array::ByteArray",
-          },
-          {
-            name: "bootcamp_id",
-            type: "core::integer::u64",
-          },
-          {
-            name: "is_instructor",
-            type: "core::bool",
-          },
-          {
-            name: "org_address",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "add_uploaded_video_link",
-        inputs: [
-          {
-            name: "video_link",
-            type: "core::byte_array::ByteArray",
-          },
-          {
-            name: "is_instructor",
-            type: "core::bool",
-          },
-          {
-            name: "org_address",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "bootcamp_id",
-            type: "core::integer::u64",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "register_for_bootcamp",
-        inputs: [
-          {
-            name: "org_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "bootcamp_id",
-            type: "core::integer::u64",
-          },
-          {
-            name: "student_uri",
-            type: "core::byte_array::ByteArray",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "approve_registration",
-        inputs: [
-          {
-            name: "student_address",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "bootcamp_id",
-            type: "core::integer::u64",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "decline_registration",
-        inputs: [
-          {
-            name: "student_address",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "bootcamp_id",
-            type: "core::integer::u64",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "mark_attendance_for_a_class",
-        inputs: [
-          {
-            name: "org_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "instructor_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "class_id",
-            type: "core::integer::u64",
-          },
-          {
-            name: "bootcamp_id",
-            type: "core::integer::u64",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "batch_certify_students",
-        inputs: [
-          {
-            name: "org_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "bootcamp_id",
-            type: "core::integer::u64",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "single_certify_student",
-        inputs: [
-          {
-            name: "org_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "bootcamp_id",
-            type: "core::integer::u64",
-          },
-          {
-            name: "students",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "setSponsorShipAddress",
-        inputs: [
-          {
-            name: "sponsor_contract_address",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "sponsor_organization",
-        inputs: [
-          {
-            name: "organization",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "uri",
-            type: "core::byte_array::ByteArray",
-          },
-          {
-            name: "amt",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "withdraw_sponsorship_fund",
-        inputs: [
-          {
-            name: "amt",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "suspend_organization",
-        inputs: [
-          {
-            name: "org_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "suspend",
-            type: "core::bool",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "suspend_org_bootcamp",
-        inputs: [
-          {
-            name: "org_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "bootcamp_id_",
-            type: "core::integer::u64",
-          },
-          {
-            name: "suspend",
-            type: "core::bool",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "get_bootcamp_active_meet_link",
-        inputs: [
-          {
-            name: "org_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "bootcamp_id",
-            type: "core::integer::u64",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::byte_array::ByteArray",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_bootcamp_uploaded_video_link",
-        inputs: [
-          {
-            name: "org_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "bootcamp_id",
-            type: "core::integer::u64",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<core::byte_array::ByteArray>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_all_registration_request",
-        inputs: [
-          {
-            name: "org_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Student>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_org_instructors",
-        inputs: [
-          {
-            name: "org_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Instructor>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_all_org_bootcamps",
-        inputs: [
-          {
-            name: "org_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Bootcamp>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_all_bootcamps_on_platform",
-        inputs: [],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Bootcamp>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_all_org_classes",
-        inputs: [
-          {
-            name: "org_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Class>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_instructor_org_classes",
-        inputs: [
-          {
-            name: "org_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "instructor",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Class>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_org_info",
-        inputs: [
-          {
-            name: "org_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "attendsys::contracts::AttenSysOrg::AttenSysOrg::Organization",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_all_org_info",
-        inputs: [],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Organization>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_student_info",
-        inputs: [
-          {
-            name: "student_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "attendsys::contracts::AttenSysOrg::AttenSysOrg::Student",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_student_classes",
-        inputs: [
-          {
-            name: "student",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Class>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_instructor_part_of_org",
-        inputs: [
-          {
-            name: "instructor",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::bool",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_instructor_info",
-        inputs: [
-          {
-            name: "instructor",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Instructor>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_bootcamp_info",
-        inputs: [
-          {
-            name: "org_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "bootcamp_id",
-            type: "core::integer::u64",
-          },
-        ],
-        outputs: [
-          {
-            type: "attendsys::contracts::AttenSysOrg::AttenSysOrg::Bootcamp",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "transfer_admin",
-        inputs: [
-          {
-            name: "new_admin",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "claim_admin_ownership",
-        inputs: [],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "get_admin",
-        inputs: [],
-        outputs: [
-          {
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_new_admin",
-        inputs: [],
-        outputs: [
-          {
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_org_sponsorship_balance",
-        inputs: [
-          {
-            name: "organization",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::integer::u256",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "is_bootcamp_suspended",
-        inputs: [
-          {
-            name: "org_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "bootcamp_id",
-            type: "core::integer::u64",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::bool",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "is_org_suspended",
-        inputs: [
-          {
-            name: "org_",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::bool",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_registered_bootcamp",
-        inputs: [
-          {
-            name: "student",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::RegisteredBootcamp>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_specific_organization_registered_bootcamp",
-        inputs: [
-          {
-            name: "org",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "student",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::RegisteredBootcamp>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_class_attendance_status",
-        inputs: [
-          {
-            name: "org",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "bootcamp_id",
-            type: "core::integer::u64",
-          },
-          {
-            name: "class_id",
-            type: "core::integer::u64",
-          },
-          {
-            name: "student",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::bool",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_all_bootcamp_classes",
-        inputs: [
-          {
-            name: "org",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "bootcamp_id",
-            type: "core::integer::u64",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<core::integer::u64>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_certified_student_bootcamp_address",
-        inputs: [
-          {
-            name: "org",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "bootcamp_id",
-            type: "core::integer::u64",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "get_bootcamp_certification_status",
-        inputs: [
-          {
-            name: "org",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
-            name: "bootcamp_id",
-            type: "core::integer::u64",
-          },
-          {
-            name: "student",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [
-          {
-            type: "core::bool",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "upgrade",
-        inputs: [
-          {
-            name: "new_class_hash",
-            type: "core::starknet::class_hash::ClassHash",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
+        name: "org_ipfs_uri",
+        type: "core::byte_array::ByteArray",
       },
     ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "add_instructor_to_org",
+    inputs: [
+      {
+        name: "instructor",
+        type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+      },
+      {
+        name: "org_name",
+        type: "core::byte_array::ByteArray",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "remove_instructor_from_org",
+    inputs: [
+      {
+        name: "instructor",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "create_bootcamp",
+    inputs: [
+      {
+        name: "org_name",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "bootcamp_name",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "nft_name",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "nft_symbol",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "nft_uri",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "num_of_class_to_create",
+        type: "core::integer::u256",
+      },
+      {
+        name: "bootcamp_ipfs_uri",
+        type: "core::byte_array::ByteArray",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "add_active_meet_link",
+    inputs: [
+      {
+        name: "meet_link",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+      {
+        name: "is_instructor",
+        type: "core::bool",
+      },
+      {
+        name: "org_address",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "add_uploaded_video_link",
+    inputs: [
+      {
+        name: "video_link",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "is_instructor",
+        type: "core::bool",
+      },
+      {
+        name: "org_address",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "register_for_bootcamp",
+    inputs: [
+      {
+        name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+      {
+        name: "student_uri",
+        type: "core::byte_array::ByteArray",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "approve_registration",
+    inputs: [
+      {
+        name: "student_address",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "decline_registration",
+    inputs: [
+      {
+        name: "student_address",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "mark_attendance_for_a_class",
+    inputs: [
+      {
+        name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "instructor_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "class_id",
+        type: "core::integer::u64",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "batch_certify_students",
+    inputs: [
+      {
+        name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "single_certify_student",
+    inputs: [
+      {
+        name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+      {
+        name: "students",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "setSponsorShipAddress",
+    inputs: [
+      {
+        name: "sponsor_contract_address",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "sponsor_organization",
+    inputs: [
+      {
+        name: "organization",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "uri",
+        type: "core::byte_array::ByteArray",
+      },
+      {
+        name: "amt",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "withdraw_sponsorship_fund",
+    inputs: [
+      {
+        name: "amt",
+        type: "core::integer::u256",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "suspend_organization",
+    inputs: [
+      {
+        name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "suspend",
+        type: "core::bool",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "suspend_org_bootcamp",
+    inputs: [
+      {
+        name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id_",
+        type: "core::integer::u64",
+      },
+      {
+        name: "suspend",
+        type: "core::bool",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "get_bootcamp_active_meet_link",
+    inputs: [
+      {
+        name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::byte_array::ByteArray",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_bootcamp_uploaded_video_link",
+    inputs: [
+      {
+        name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<core::byte_array::ByteArray>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_registration_request",
+    inputs: [
+      {
+        name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Student>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_org_instructors",
+    inputs: [
+      {
+        name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Instructor>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_org_bootcamps",
+    inputs: [
+      {
+        name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Bootcamp>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_bootcamps_on_platform",
+    inputs: [],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Bootcamp>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_org_classes",
+    inputs: [
+      {
+        name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Class>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_instructor_org_classes",
+    inputs: [
+      {
+        name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "instructor",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Class>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_org_info",
+    inputs: [
+      {
+        name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "attendsys::contracts::AttenSysOrg::AttenSysOrg::Organization",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_org_info",
+    inputs: [],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Organization>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_student_info",
+    inputs: [
+      {
+        name: "student_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "attendsys::contracts::AttenSysOrg::AttenSysOrg::Student",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_student_classes",
+    inputs: [
+      {
+        name: "student",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Class>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_instructor_part_of_org",
+    inputs: [
+      {
+        name: "instructor",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_instructor_info",
+    inputs: [
+      {
+        name: "instructor",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::Instructor>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_bootcamp_info",
+    inputs: [
+      {
+        name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+    ],
+    outputs: [
+      {
+        type: "attendsys::contracts::AttenSysOrg::AttenSysOrg::Bootcamp",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "transfer_admin",
+    inputs: [
+      {
+        name: "new_admin",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "claim_admin_ownership",
+    inputs: [],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "get_admin",
+    inputs: [],
+    outputs: [
+      {
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_new_admin",
+    inputs: [],
+    outputs: [
+      {
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_org_sponsorship_balance",
+    inputs: [
+      {
+        name: "organization",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::integer::u256",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "is_bootcamp_suspended",
+    inputs: [
+      {
+        name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "is_org_suspended",
+    inputs: [
+      {
+        name: "org_",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_registered_bootcamp",
+    inputs: [
+      {
+        name: "student",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::RegisteredBootcamp>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_specific_organization_registered_bootcamp",
+    inputs: [
+      {
+        name: "org",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "student",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<attendsys::contracts::AttenSysOrg::AttenSysOrg::RegisteredBootcamp>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_class_attendance_status",
+    inputs: [
+      {
+        name: "org",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+      {
+        name: "class_id",
+        type: "core::integer::u64",
+      },
+      {
+        name: "student",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_all_bootcamp_classes",
+    inputs: [
+      {
+        name: "org",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<core::integer::u64>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_certified_student_bootcamp_address",
+    inputs: [
+      {
+        name: "org",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_bootcamp_certification_status",
+    inputs: [
+      {
+        name: "org",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+      {
+        name: "bootcamp_id",
+        type: "core::integer::u64",
+      },
+      {
+        name: "student",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [
+      {
+        type: "core::bool",
+      },
+    ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "upgrade",
+    inputs: [
+      {
+        name: "new_class_hash",
+        type: "core::starknet::class_hash::ClassHash",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
   },
   {
     type: "impl",
@@ -3084,40 +3040,34 @@ export const attensysOrgAbi = [
     interface_name: "openzeppelin_access::ownable::interface::IOwnable",
   },
   {
-    type: "interface",
-    name: "openzeppelin_access::ownable::interface::IOwnable",
-    items: [
+    type: "function",
+    name: "owner",
+    inputs: [],
+    outputs: [
       {
-        type: "function",
-        name: "owner",
-        inputs: [],
-        outputs: [
-          {
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
-        name: "transfer_ownership",
-        inputs: [
-          {
-            name: "new_owner",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-        ],
-        outputs: [],
-        state_mutability: "external",
-      },
-      {
-        type: "function",
-        name: "renounce_ownership",
-        inputs: [],
-        outputs: [],
-        state_mutability: "external",
+        type: "core::starknet::contract_address::ContractAddress",
       },
     ],
+    state_mutability: "view",
+  },
+  {
+    type: "function",
+    name: "transfer_ownership",
+    inputs: [
+      {
+        name: "new_owner",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
+    ],
+    outputs: [],
+    state_mutability: "external",
+  },
+  {
+    type: "function",
+    name: "renounce_ownership",
+    inputs: [],
+    outputs: [],
+    state_mutability: "external",
   },
   {
     type: "constructor",

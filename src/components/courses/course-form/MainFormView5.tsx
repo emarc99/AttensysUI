@@ -23,7 +23,7 @@ import { Contract } from "starknet";
 import { useRouter } from "next/navigation";
 import { handleCreateCourse } from "@/utils/helpers";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
-import { toast } from "react-toastify";
+import { toast, Bounce, ToastContainer } from "react-toastify";
 import { useAccount } from "@starknet-react/core";
 
 interface ChildComponentProps {
@@ -179,18 +179,42 @@ const MainFormView5: React.FC<ChildComponentProps> = ({
           ]);
           setTxnHash(callCourseContract?.transaction_hash);
           console.log("hash", callCourseContract?.transaction_hash);
+          //@ts-ignore
+          if (callCourseContract?.code == "SUCCESS") {
+            // await new Promise((resolve) => setTimeout(resolve, 3000));
+            toast.success("Course Creation successful!", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              transition: Bounce,
+            });
+          }
+          router.push(`/mycoursepage/${address}/?id=created`);
+          // // Create a deep copy of the course data
+          // const courseDataCopy = JSON.parse(JSON.stringify(courseData));
 
-          // Create a deep copy of the course data
-          const courseDataCopy = JSON.parse(JSON.stringify(courseData));
-
-          // Store the copy in localStorage
-          localStorage.setItem("courseData", JSON.stringify(courseDataCopy));
+          // // Store the copy in localStorage
+          // localStorage.setItem("courseData", JSON.stringify(courseDataCopy));
 
           // Route to landing page first
           // handleCreateCourse(e, "course-landing-page", router);
-          router.push(`/mycoursepage/${address}/?id=created`);
         } catch (error: any) {
-          toast.error(error);
+          toast.error("Course Creation failed, Try again", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          });
         }
       }
     } catch (error) {

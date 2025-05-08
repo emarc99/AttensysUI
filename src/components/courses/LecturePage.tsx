@@ -333,7 +333,9 @@ const LecturePage = (props: any) => {
                 rel="noopener noreferrer"
                 style={{ color: "blue", textDecoration: "underline" }}
               >
-                {callCourseContract?.transaction_hash}
+                {callCourseContract?.transaction_hash
+                  ? `${callCourseContract.transaction_hash.slice(0, 6)}...${callCourseContract.transaction_hash.slice(-4)}`
+                  : ""}
               </a>
             </div>,
             {
@@ -422,7 +424,9 @@ const LecturePage = (props: any) => {
             rel="noopener noreferrer"
             style={{ color: "blue", textDecoration: "underline" }}
           >
-            {callCourseContract?.transaction_hash}
+            {callCourseContract?.transaction_hash
+              ? `${callCourseContract.transaction_hash.slice(0, 6)}...${callCourseContract.transaction_hash.slice(-4)}`
+              : ""}
           </a>
         </div>,
         {
@@ -644,7 +648,7 @@ const LecturePage = (props: any) => {
                       {isUploading ? (
                         <div className="flex items-center gap-2">
                           <LoadingSpinner size="sm" colorVariant="white" />
-                          Taking Course...
+                          Processing...
                         </div>
                       ) : (
                         `Buy Course ${coursePrice === 0 ? "(Free)" : `($${coursePrice})`}`

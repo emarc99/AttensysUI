@@ -318,7 +318,7 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
 
                     {/* Course Details */}
                     <div className="flex-1 w-full lg:mx-6 sm:mx-0">
-                      <div className="flex justify-between items-start">
+                      <div className="flex justify-between items-start cursor-pointer">
                         <div>
                           <div
                             onClick={(e) => {
@@ -330,7 +330,7 @@ const CoursesCreated: React.FC<CoursesCreatedProps> = ({
                                 e,
                                 e.currentTarget.textContent,
                                 router,
-                                Number(item[index].course_identifier),
+                                item?.course_identifier,
                               );
                             }}
                             className="cursor-pointer"

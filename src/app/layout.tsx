@@ -25,6 +25,7 @@ import {
 } from "@tanstack/react-query";
 import ControllerConnector from "@cartridge/connector/controller";
 import { SessionPolicies } from "@cartridge/presets";
+import { attensysCourseAddress } from "@/deployments/contracts";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -60,15 +61,15 @@ function getQueryClient() {
   }
 }
 
-const COURSE_ADDRESS =
-  "0x2d876f20d2ed89f91ca59e559e954dc78a4e81abd6bf7831ef238a2adfbef24";
+// const COURSE_ADDRESS =
+//   "0x2d876f20d2ed89f91ca59e559e954dc78a4e81abd6bf7831ef238a2adfbef24";
 const STRK_ADDRESS =
   "0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d";
 
 // Define session policies
 const policies: SessionPolicies = {
   contracts: {
-    [COURSE_ADDRESS]: {
+    [attensysCourseAddress]: {
       methods: [
         {
           name: "get_certified",
@@ -89,6 +90,11 @@ const policies: SessionPolicies = {
           name: "creator_withdraw",
           entrypoint: "creator_withdraw",
           description: "claim Earnings",
+        },
+        {
+          name: "add_replace_course_content",
+          entrypoint: "add_replace_course_content",
+          description: "update course",
         },
         // {
         //   name: "add_replace_course_content",

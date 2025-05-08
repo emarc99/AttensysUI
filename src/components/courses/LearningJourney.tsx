@@ -117,87 +117,90 @@ const LearningJourney: React.FC<LearningJourneyProps> = ({
           ) : null}
 
           <div>
-            {currentItems?.map((item: any, index: number) => {
-              return (
-                <div
-                  key={index}
-                  className="px-5 xl:px-12 flex border-top py-4 border-2 gap-12 xl:gap-0 flex-col w-full xl:flex-row xl:space-x-12 items-center"
-                >
-                  <div className="xl:h-[164px] xl:w-[254px] w-full h-auto rounded-xl">
-                    <Image
-                      src={
-                        item.data.courseImage
-                          ? `https://ipfs.io/ipfs/${item?.data.courseImage}`
-                          : tdesign_video
-                      }
-                      width={200}
-                      height={200}
-                      alt={item.data.courseName}
-                      className="object-cover h-full w-full rounded-xl"
-                    />
-                  </div>
-
-                  <div className="!ml-0 px-3 xl:px-0 mt-5 xl:!mx-8 flex-1 w-full">
-                    <div>
-                      <div
-                        onClick={(e) => {
-                          localStorage.setItem(
-                            "courseData",
-                            JSON.stringify(item?.data),
-                          );
-                          handleCourse(
-                            e,
-                            e.currentTarget.textContent,
-                            router,
-                            item.data.courseIdentifier,
-                          );
-                        }}
-                        className="cursor-pointer"
-                      >
-                        <h4 className="text-[20px] font-medium leading-[22px] text-[#2D3A4B]">
-                          {item.data.courseName}
-                        </h4>
-                      </div>
-
-                      <div className="flex flex-wrap xl:flex-nowrap gap-y-2 gap-4 xl:gap-0 items-center my-3 ">
-                        <div className="flex items-center gap-2">
-                          <Image src={play} alt="" height={12} width={12} />
-                          <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
-                            Total play time: 2 hrs 35 mins
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <p className="hidden sm:block">|</p>
-                          <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px] mx-0">
-                            Created by:{" "}
-                            <span className="underline">
-                              {item.data.courseCreator}
-                            </span>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="my-3">
-                      <ProgressBar
-                        completed={"58"}
-                        height="13px"
-                        bgColor="#9B51E0"
+            {currentItems
+              ?.slice()
+              .reverse()
+              .map((item: any, index: number) => {
+                return (
+                  <div
+                    key={index}
+                    className="px-5 xl:px-12 flex border-top py-4 border-2 gap-12 xl:gap-0 flex-col w-full xl:flex-row xl:space-x-12 items-center"
+                  >
+                    <div className="xl:h-[164px] xl:w-[254px] w-full h-auto rounded-xl">
+                      <Image
+                        src={
+                          item.data.courseImage
+                            ? `https://ipfs.io/ipfs/${item?.data.courseImage}`
+                            : tdesign_video
+                        }
+                        width={200}
+                        height={200}
+                        alt={item.data.courseName}
+                        className="object-cover h-full w-full rounded-xl"
                       />
                     </div>
 
-                    <div className="my-3 flex justify-between">
-                      <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
-                        3/6 Lectures completed
-                      </p>
-                      <p className="underline text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
-                        (8:03 mins)
-                      </p>
+                    <div className="!ml-0 px-3 xl:px-0 mt-5 xl:!mx-8 flex-1 w-full">
+                      <div>
+                        <div
+                          onClick={(e) => {
+                            localStorage.setItem(
+                              "courseData",
+                              JSON.stringify(item?.data),
+                            );
+                            handleCourse(
+                              e,
+                              e.currentTarget.textContent,
+                              router,
+                              item?.course_identifier,
+                            );
+                          }}
+                          className="cursor-pointer"
+                        >
+                          <h4 className="text-[20px] font-medium leading-[22px] text-[#2D3A4B]">
+                            {item.data.courseName}
+                          </h4>
+                        </div>
+
+                        <div className="flex flex-wrap xl:flex-nowrap gap-y-2 gap-4 xl:gap-0 items-center my-3 ">
+                          <div className="flex items-center gap-2">
+                            <Image src={play} alt="" height={12} width={12} />
+                            <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
+                              Total play time: 2 hrs 35 mins
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <p className="hidden sm:block">|</p>
+                            <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px] mx-0">
+                              Created by:{" "}
+                              <span className="underline">
+                                {item.data.courseCreator}
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="my-3">
+                        <ProgressBar
+                          completed={"58"}
+                          height="13px"
+                          bgColor="#9B51E0"
+                        />
+                      </div>
+
+                      <div className="my-3 flex justify-between">
+                        <p className="text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
+                          3/6 Lectures completed
+                        </p>
+                        <p className="underline text-[13px] text-[#2D3A4B] font-medium leading-[21px]">
+                          (8:03 mins)
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
         </div>
         {/* Pagination Controls */}
