@@ -633,7 +633,7 @@ const Header = () => {
                               height={20}
                               className="mr-2"
                             />
-                            Account
+                            Account Center
                           </Link>
 
                           <Link

@@ -24,9 +24,6 @@ import { FaSpinner } from "react-icons/fa";
 import card from "@/assets/card.svg";
 import EditCoursePanel from "./EditCoursePanel";
 import { pinata } from "../../../utils/config";
-import { useFetchCID } from "@/hooks/useFetchCID";
-import { walletStarknetkit } from "@/state/connectedWalletStarknetkit";
-import { useAtom } from "jotai";
 
 interface ItemProps {
   courses: Course[];
