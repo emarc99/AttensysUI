@@ -44,7 +44,7 @@ const HomePage = () => {
     setiswalletconnecting(true);
     const connectionTimeout = setTimeout(() => {
       setiswalletconnecting(false);
-    }, 15000);
+    }, 25000);
     if (!address) {
       connect({ connector: controller });
       if (address) {
