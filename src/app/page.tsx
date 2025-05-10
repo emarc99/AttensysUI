@@ -9,6 +9,8 @@ import {
   walletStarknetkitNextAtom,
   universalloadingstatus,
 } from "@/state/connectedWalletStarknetkitNext";
+import HomePage from "@/components/Home";
+import RootLayout from "@/app/layout";
 
 export default function Home() {
   const [wallet, setWallet] = useAtom(walletStarknetkitNextAtom);
@@ -34,8 +36,7 @@ export default function Home() {
 
   return (
     <div>
-      {/* <MockAboutus /> */}
-      <Landing />
+      <HomePage />
     </div>
   );
 }

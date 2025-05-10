@@ -11,6 +11,8 @@ import { useParams } from "next/navigation";
 import CourseLanding from "@/components/courses/CourseLanding";
 import CourseNews from "@/components/courses/CourseNews";
 import { MoonLoader } from "react-spinners";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   const [status, setstatus] = useAtom(coursestatusAtom);
@@ -35,35 +37,40 @@ const Index = () => {
   }, []);
 
   return (
-    <div onClick={handlePageClick}>
-      {status && (
-        <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
-      )}
-      {bootcampdropstat && (
-        <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
-      )}
-      <div onClick={(e) => e.stopPropagation()}>
-        <Coursedropdown />
-      </div>
-      <div onClick={(e) => e.stopPropagation()}>
-        <Bootcampdropdown />
-      </div>
+    <>
+      <Header />
 
-      {loading ? (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh", // Full page height
-          }}
-        >
-          <MoonLoader color="#9B51E0" size={60} />
+      <div onClick={handlePageClick}>
+        {status && (
+          <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
+        )}
+        {bootcampdropstat && (
+          <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
+        )}
+        <div onClick={(e) => e.stopPropagation()}>
+          <Coursedropdown />
         </div>
-      ) : (
-        <CourseLanding course={details} />
-      )}
-    </div>
+        <div onClick={(e) => e.stopPropagation()}>
+          <Bootcampdropdown />
+        </div>
+
+        {loading ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh", // Full page height
+            }}
+          >
+            <MoonLoader color="#9B51E0" size={60} />
+          </div>
+        ) : (
+          <CourseLanding course={details} />
+        )}
+      </div>
+      <Footer />
+    </>
   );
 };
 

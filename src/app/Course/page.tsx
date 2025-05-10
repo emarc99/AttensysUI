@@ -19,6 +19,8 @@ import {
   coursestatusAtom,
 } from "@/state/connectedWalletStarknetkitNext";
 import { getAllCoursesInfo } from "@/utils/helpers";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 interface Uri {
   first: string;
@@ -153,49 +155,53 @@ const Index = () => {
   // if (!mounted) return null;
 
   return (
-    <div onClick={handlePageClick}>
-      {(status || bootcampDropStat) && (
-        <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
-      )}
+    <>
+      <Header />
+      <div onClick={handlePageClick}>
+        {(status || bootcampDropStat) && (
+          <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
+        )}
 
-      <div onClick={(e) => e.stopPropagation()}>
-        <Coursedropdown />
-        <Bootcampdropdown />
-      </div>
-
-      <CourseNews />
-
-      {loading ? (
-        <div className="flex items-center justify-center h-[70vh]">
-          <MoonLoader color="#9B51E0" size={60} />
+        <div onClick={(e) => e.stopPropagation()}>
+          <Coursedropdown />
+          <Bootcampdropdown />
         </div>
-      ) : mounted ? (
-        <>
-          {searchQuery && (
-            <div className="container mx-auto px-4 py-2 mb-4">
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <h2 className="text-lg font-medium text-gray-800">
-                  Search Results for:{" "}
-                  <span className="text-purple-600">"{searchQuery}"</span>
-                </h2>
-                <p className="text-gray-600 mt-1">
-                  {filteredCourseData.length === 0
-                    ? "No courses found matching your search"
-                    : `Found ${filteredCourseData.length} course${filteredCourseData.length !== 1 ? "s" : ""}`}
-                </p>
-              </div>
-            </div>
-          )}
 
-          <Explore
-            wallet={wallet}
-            courseData={filteredCourseData}
-            querystat={searchQuery}
-            unfilteredData={courseData}
-          />
-        </>
-      ) : null}
-    </div>
+        <CourseNews />
+
+        {loading ? (
+          <div className="flex items-center justify-center h-[70vh]">
+            <MoonLoader color="#9B51E0" size={60} />
+          </div>
+        ) : mounted ? (
+          <>
+            {searchQuery && (
+              <div className="container mx-auto px-4 py-2 mb-4">
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <h2 className="text-lg font-medium text-gray-800">
+                    Search Results for:{" "}
+                    <span className="text-purple-600">"{searchQuery}"</span>
+                  </h2>
+                  <p className="text-gray-600 mt-1">
+                    {filteredCourseData.length === 0
+                      ? "No courses found matching your search"
+                      : `Found ${filteredCourseData.length} course${filteredCourseData.length !== 1 ? "s" : ""}`}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <Explore
+              wallet={wallet}
+              courseData={filteredCourseData}
+              querystat={searchQuery}
+              unfilteredData={courseData}
+            />
+            <Footer />
+          </>
+        ) : null}
+      </div>
+    </>
   );
 };
 

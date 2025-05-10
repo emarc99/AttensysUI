@@ -8,21 +8,21 @@ const Cardsection = () => {
   const data = [
     {
       icon: grad,
-      header: "Online Courses",
+      header: "Buy Course",
       paragraph:
-        "Join & Schedule classes, webinars, and events easily. Attensys allows you to create and track participant engagement.",
+        "Purchase top-tier courses with STRK, grow, and track progress",
     },
     {
       icon: book,
-      header: "Event Tracking",
+      header: "Sell course",
       paragraph:
-        "Automatically track attendance for courses and events with our integrated tools. Issue, and verify certificates with ease.",
+        "Monetize your expertise by listing your courses on Attensy. Set your price and earn STRK.",
     },
     {
       icon: badge,
       header: "Quality Certification",
       paragraph:
-        "Issue, and verify certificates with ease. Ensure every certificate is authenticated with our blockchain-backed technology.",
+        "Earn blockchain-verified certifications—globally recognized and tamper-proof credentials.",
     },
   ];
 

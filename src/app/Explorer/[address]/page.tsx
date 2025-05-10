@@ -9,6 +9,8 @@ import {
 import { useParams } from "next/navigation";
 import Bootcampdropdown from "@/components/bootcamp/Bootcampdropdown";
 import ExploreResult from "@/components/explorer/result/ExploreResult";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   const [status, setStatus] = useAtom(coursestatusAtom);
@@ -24,22 +26,26 @@ const Index = () => {
   };
 
   return (
-    <div onClick={handlePageClick}>
-      {status && (
-        <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
-      )}
-      {bootcampdropstat && (
-        <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
-      )}
-      <div onClick={(e) => e.stopPropagation()}>
-        <Coursedropdown />
-      </div>
-      <div onClick={(e) => e.stopPropagation()}>
-        <Bootcampdropdown />
-      </div>
+    <>
+      <Header />
+      <div onClick={handlePageClick}>
+        {status && (
+          <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
+        )}
+        {bootcampdropstat && (
+          <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
+        )}
+        <div onClick={(e) => e.stopPropagation()}>
+          <Coursedropdown />
+        </div>
+        <div onClick={(e) => e.stopPropagation()}>
+          <Bootcampdropdown />
+        </div>
 
-      <ExploreResult params={params} />
-    </div>
+        <ExploreResult params={params} />
+      </div>
+      <Footer />
+    </>
   );
 };
 

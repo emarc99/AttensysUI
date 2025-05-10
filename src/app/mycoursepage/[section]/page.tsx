@@ -12,6 +12,8 @@ import { useParams } from "next/navigation";
 import MyCoursePage from "@/components/courses/mycourse/MyCoursePage";
 import { MoonLoader } from "react-spinners";
 import { FileObject } from "pinata";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 // file setup
 const emptyData: FileObject = {
@@ -76,35 +78,39 @@ const Index = () => {
   }, []);
 
   return (
-    <div onClick={handlePageClick}>
-      {status && (
-        <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
-      )}
-      {bootcampdropstat && (
-        <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
-      )}
-      <div onClick={(e) => e.stopPropagation()}>
-        <Coursedropdown />
-      </div>
-      <div onClick={(e) => e.stopPropagation()}>
-        <Bootcampdropdown />
-      </div>
-
-      {loading ? (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh", // Full page height
-          }}
-        >
-          <MoonLoader color="#9B51E0" size={60} />
+    <>
+      <Header />
+      <div onClick={handlePageClick}>
+        {status && (
+          <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
+        )}
+        {bootcampdropstat && (
+          <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
+        )}
+        <div onClick={(e) => e.stopPropagation()}>
+          <Coursedropdown />
         </div>
-      ) : (
-        <MyCoursePage section={section} />
-      )}
-    </div>
+        <div onClick={(e) => e.stopPropagation()}>
+          <Bootcampdropdown />
+        </div>
+
+        {loading ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh", // Full page height
+            }}
+          >
+            <MoonLoader color="#9B51E0" size={60} />
+          </div>
+        ) : (
+          <MyCoursePage section={section} />
+        )}
+      </div>
+      <Footer />
+    </>
   );
 };
 

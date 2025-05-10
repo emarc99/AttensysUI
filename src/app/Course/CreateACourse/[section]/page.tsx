@@ -11,6 +11,8 @@ import Bootcampdropdown from "@/components/bootcamp/Bootcampdropdown";
 import { useAtom } from "jotai";
 import CourseFormLanding from "@/components/courses/course-form/CourseFormLanding";
 import { MoonLoader } from "react-spinners";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   const [status, setstatus] = useAtom(coursestatusAtom);
@@ -35,36 +37,40 @@ const Index = () => {
   }, []);
 
   return (
-    <div onClick={handlePageClick}>
-      {status && (
-        <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
-      )}
-      {bootcampdropstat && (
-        <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
-      )}
-      <div onClick={(e) => e.stopPropagation()}>
-        <Coursedropdown />
-      </div>
-      <div onClick={(e) => e.stopPropagation()}>
-        <Bootcampdropdown />
-
-        {loading ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100vh", // Full page height
-            }}
-          >
-            <MoonLoader color="#9B51E0" size={60} />
-          </div>
-        ) : (
-          // <Explore wallet={wallet} courseData={courseData} />
-          <CourseFormLanding section={section} />
+    <>
+      <Header />
+      <div onClick={handlePageClick}>
+        {status && (
+          <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
         )}
+        {bootcampdropstat && (
+          <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
+        )}
+        <div onClick={(e) => e.stopPropagation()}>
+          <Coursedropdown />
+        </div>
+        <div onClick={(e) => e.stopPropagation()}>
+          <Bootcampdropdown />
+
+          {loading ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh", // Full page height
+              }}
+            >
+              <MoonLoader color="#9B51E0" size={60} />
+            </div>
+          ) : (
+            // <Explore wallet={wallet} courseData={courseData} />
+            <CourseFormLanding section={section} />
+          )}
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

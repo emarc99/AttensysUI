@@ -17,22 +17,22 @@ const Testimonial = () => {
 
   const mockdata = [
     {
-      name: "Ephraim",
+      name: "Priya Kapoor",
       profile: nikolas,
       statement:
-        "We no longer worry about the authenticity of our certificates. AttenSys ensures every certificate we issue is tamper-proof.",
+        "Landing my dream job was easier when employers could instantly verify my AttenSys certificates. No more waiting weeks for background checks!",
     },
     {
       name: "Kenny",
       profile: profilepic,
       statement:
-        "We no longer worry about the authenticity of our certificates. AttenSys ensures every certificate we issue is tamper-proof.",
+        "Selling my courses became effortless with AttenSys. The STRK integration handles secure payments while I focus on teaching - revenue grew by 40% in 3 months!",
     },
     {
-      name: "Jegz",
+      name: "Aisha Bello",
       profile: item,
       statement:
-        "We no longer worry about the authenticity of our certificates. AttenSys ensures every certificate we issue is tamper-proof.",
+        "As a busy professional, AttenSys made upskilling seamless. I could verify course quality before enrolling and received my blockchain-certified completion badge in minutes!",
     },
   ];
 

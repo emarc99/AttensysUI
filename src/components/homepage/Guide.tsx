@@ -57,32 +57,32 @@ const Guide = () => {
               <div className="text-left mt-14">
                 <h1 className="text-white font-bold leading-[37px]">Sign Up</h1>
                 <p className="text-white text-[14px] font-light">
-                  Create an account and get instant access to our dashboard.
-                  Whether you&apos;re a school, organization, or event manager,
-                  we have the tools for you.
+                  Create an account using Cartridge. Log in instantly or get a
+                  wallet auto-created if none exists. Whether you&apos;re a
+                  learner, or course creator, we have the courses & tools for
+                  you.
                 </p>
               </div>
 
               {/* Second Section */}
               <div className="text-left mt-14">
                 <h1 className="text-white font-bold leading-[37px]">
-                  Manage Attendance & Certifications
+                  Manage Your Courses
                 </h1>
                 <p className="text-white text-[14px] font-light">
-                  Automatically track attendance and issue certificates upon
-                  course or event completion. Manage everything from one central
-                  platform.
+                  List courses, edit content, track sales, and withdraw earnings
+                  anytime—with zero fees and complete creator control.
                 </p>
               </div>
 
               {/* Third Section */}
               <div className="text-left mt-6">
                 <h1 className="text-white font-bold leading-[37px]">
-                  Set Up Courses & Events
+                  Purchase with STRK
                 </h1>
                 <p className="text-white text-[14px] font-light">
-                  Add your courses, events, or programs. Customize everything
-                  from scheduling to certification rules.
+                  Buy courses securely using STRK, access content instantly, and
+                  start learning—no hidden fees or complicated steps involved.
                 </p>
               </div>
 
@@ -92,8 +92,9 @@ const Guide = () => {
                   Verify Certificate
                 </h1>
                 <p className="text-white text-[14px] font-light ">
-                  You can now verify certification with as simple as a search
-                  button click. Find out all you need with the{" "}
+                  Easily verify certifications with a simple search—just enter
+                  the recipient&apos;s wallet address and hit the search button
+                  Find out all you need with the{" "}
                   <span className="text-[#4A90E2] font-semibold cursor-pointer">
                     Attensys Explorer
                   </span>
@@ -110,31 +111,31 @@ const Guide = () => {
               <div className="text-left">
                 <h1 className="text-white font-bold leading-[24px]">Sign Up</h1>
                 <p className="text-white text-[16px] font-light">
-                  Create an account and get instant access to our dashboard.
-                  Whether you&apos;re a school, organization, or event manager,
-                  we have the tools for you.
+                  Create an account using Cartridge. Log in instantly or get a
+                  wallet auto-created if none exists. Whether you&apos;re a
+                  learner, or course creator, we have the courses & tools for
+                  you.
                 </p>
               </div>
 
               <div className="text-left">
                 <h1 className="text-white font-bold leading-[24px]">
-                  Manage Attendance & Certifications
+                  Manage Your Courses
                 </h1>
                 <p className="text-white text-[16px] font-light">
-                  Automatically track attendance and issue certificates upon
-                  course or event completion. Manage everything from one central
-                  platform.
+                  List courses, edit content, track sales, and withdraw earnings
+                  anytime—with zero fees and complete creator control.
                 </p>
               </div>
 
               {/* 📌 Second Column */}
               <div className="text-left">
                 <h1 className="text-white font-bold leading-[24px]">
-                  Set Up Courses & Events
+                  Purchase with STRK
                 </h1>
                 <p className="text-white text-[16px] font-light">
-                  Add your courses, events, or programs. Customize everything
-                  from scheduling to certification rules.
+                  Buy courses securely using STRK, access content instantly, and
+                  start learning—no hidden fees or complicated steps involved.
                 </p>
               </div>
 
@@ -143,8 +144,9 @@ const Guide = () => {
                   Verify Certificate
                 </h1>
                 <p className="text-white text-[16px] font-light">
-                  You can now verify certification with as simple as a search
-                  button click. Find out all you need with the{" "}
+                  Easily verify certifications with a simple search—just enter
+                  the recipient’s wallet address and hit the search button Find
+                  out all you need with the{" "}
                   <span className="text-[#4A90E2] font-semibold cursor-pointer">
                     Attensys Explorer
                   </span>
@@ -163,31 +165,31 @@ const Guide = () => {
                   Sign Up
                 </h1>
                 <p className="text-white text-[16px] font-light max-w-[450px]">
-                  Create an account and get instant access to our dashboard.
-                  Whether you&apos;re a school, organization, or event manager,
-                  we have the tools for you.
+                  Create an account using Cartridge. Log in instantly or get a
+                  wallet auto-created if none exists. Whether you&apos;re a
+                  learner, or course creator, we have the courses & tools for
+                  you.
                 </p>
               </div>
 
               <div className="text-left">
                 <h1 className="text-white font-bold leading-[28px] text-[20px]">
-                  Set Up Courses & Events
+                  Purchase with STRK
                 </h1>
                 <p className="text-white text-[16px] font-light max-w-[450px]">
-                  Add your courses, events, or programs. Customize everything
-                  from scheduling to certification rules.
+                  Buy courses securely using STRK, access content instantly, and
+                  start learning—no hidden fees or complicated steps involved.
                 </p>
               </div>
 
               {/* 📌 Second Column */}
               <div className="text-left">
                 <h1 className="text-white font-bold leading-[28px] text-[20px]">
-                  Manage Attendance & Certifications
+                  Manage Your Courses
                 </h1>
                 <p className="text-white text-[16px] font-light max-w-[450px]">
-                  Automatically track attendance and issue certificates upon
-                  course or event completion. Manage everything from one central
-                  platform.
+                  List courses, edit content, track sales, and withdraw earnings
+                  anytime—with zero fees and complete creator control.
                 </p>
               </div>
 
@@ -196,8 +198,9 @@ const Guide = () => {
                   Verify Certificate
                 </h1>
                 <p className="text-white text-[16px] font-light max-w-[450px]">
-                  You can now verify certification with as simple as a search
-                  button click. Find out all you need with the{" "}
+                  Easily verify certifications with a simple search—just enter
+                  the recipient’s wallet address and hit the search button Find
+                  out all you need with the{" "}
                   <span className="text-[#4A90E2] font-semibold cursor-pointer">
                     Attensys Explorer
                   </span>
