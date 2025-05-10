@@ -405,12 +405,13 @@ const HomePage = () => {
           Atten<span className="text-[#9B51E0]">sys</span>
         </h1>
         <p className="text-3xl md:text-[48px] font-bold mb-2 lg:mb-4 lg:leading-[60px]">
-          Track, Stream, <br className="hidden sm:block" />
-          and Secure Your Certifications
+          {/* Track, Stream, <br className="hidden sm:block" />
+          and Secure Your Certifications */}
+          Buy Courses to Learn, Sell <br /> Courses to Earn
         </p>
         <p className="text-sm md:text-[17px] font-light mb-4 max-w-3xl opacity-90">
-          Simplifying certificate issuance, attendance tracking, and online
-          course management for schools, organizations, and event managers.
+          Simplifying certificate issuance for courses, course management,
+          STRK-powered course purchases, secure access, and learning.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-4 sm:px-0">
           <button
