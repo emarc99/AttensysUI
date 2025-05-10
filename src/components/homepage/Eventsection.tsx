@@ -37,11 +37,14 @@ const Eventsection = () => {
           </div>
 
           {/* Button always visible */}
-          <Button className="flex justify-center lg:justify-start rounded-lg bg-gradient-to-r from-[#9B51E0] to-[#4A90E2] py-2 px-4 mx-auto lg:mx-0 lg:h-[50px] items-center lg:w-[170px] text-sm text-white hover:bg-sky-500 active:bg-sky-700">
+          <Button className="flex justify-center lg:justify-start rounded-lg bg-gradient-to-r from-[#9B51E0] to-[#4A90E2] py-2 px-4 mx-auto lg:mx-0 lg:h-[50px] items-center lg:w-[170px] text-sm text-white hover:bg-sky-500 active:bg-sky-700 relative">
             <div className="flex space-x-2 items-center font-semibold text-[14px] sm:text-[16px]">
               <Image src={ticket} alt="ticket" className="mr-2" />
             </div>
-            <div onClick={handleCreateEventClick}>Create an Event</div>
+            <div>Create an Event</div>
+            <span className="absolute -top-1.5 -right-10 bg-red-800 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm whitespace-nowrap transform rotate-12">
+              Coming Soon
+            </span>
           </Button>
         </div>
       </div>

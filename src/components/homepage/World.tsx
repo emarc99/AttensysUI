@@ -4,8 +4,15 @@ import thoughts from "@/assets/thoughts.png";
 import group10 from "@/assets/Group 10.png";
 import cloud from "@/assets/3d-techny-international-transportation-and-delivery-logistics 1.png";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const World = () => {
+  const router = useRouter();
+
+  const handleGetstartedButton = () => {
+    router.push("/Course");
+  };
+
   return (
     <div className="w-[90%] mx-auto my-4 pt-10 lg:flex lg:justify-between lg:items-center sm:h-[450px]">
       {/* 📌 Text Section */}
@@ -40,7 +47,10 @@ const World = () => {
 
           {/* 📌 Button */}
           <div className="mt-6">
-            <button className="bg-[#4A90E2] text-white font-medium text-[14px] sm:text-[16px] lg:text-[18px] py-2 px-4 sm:py-3 sm:px-6 lg:py-4 lg:px-8 rounded-lg shadow-md hover:bg-[#357ABD] transition-all">
+            <button
+              onClick={handleGetstartedButton}
+              className="bg-[#4A90E2] text-white font-medium text-[14px] sm:text-[16px] lg:text-[18px] py-2 px-4 sm:py-3 sm:px-6 lg:py-4 lg:px-8 rounded-lg shadow-md hover:bg-[#357ABD] transition-all"
+            >
               Get Started Today!
             </button>
           </div>

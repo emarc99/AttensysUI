@@ -12,6 +12,9 @@ const Herosection = () => {
   const handleVerifyButton = () => {
     router.push("/Explorer");
   };
+  const handleGetstartedButton = () => {
+    router.push("/Course");
+  };
   return (
     <div className="lg:flex h-auto sm:w-[80%] mx-auto pt-6 items-center justify-between relative">
       {/* 📌 Text Container */}
@@ -28,7 +31,8 @@ const Herosection = () => {
                       font-bold text-[#2D3A4B]"
         >
           One <span className="text-[#9B51E0]">Platform</span>, Infinite
-          Possibilities—Track, Stream, and Secure Your Certifications
+          Possibilities—Buy Courses to Learn, Sell Courses to Earn, and Secure
+          Certifications
           {/* 📌 Decorative line below the title */}
           <Image
             alt="line"
@@ -43,8 +47,8 @@ const Herosection = () => {
                       leading-[22px] sm:leading-[24px] md:leading-[26px] lg:leading-[28px]
                       w-[100%] sm:w-[80%] md:w-[85%] lg:w-[90%] xl:w-[85%]"
         >
-          Simplifying certificate issuance, attendance tracking, and online
-          course management for schools, organizations, and event managers.
+          Simplifying certificate issuance for courses, course management,
+          STRK-powered course purchases, secure access, and learning.
         </p>
 
         {/* 📌 Responsive Buttons */}
@@ -53,19 +57,20 @@ const Herosection = () => {
             onClick={handleVerifyButton}
             className="flex rounded-lg bg-[#2D3A4B] py-2 px-4 h-[45px] sm:h-[50px] 
                               md:h-[52px] lg:h-[50px] items-center 
-                              w-[150px] md:w-[180px] lg:w-[160px] 
+                              w-[180px] md:w-[220px] lg:w-[210px] 
                               text-xs sm:text-sm md:text-md text-white 
-                              hover:bg-[#1B2936]"
+                              hover:bg-[#1B2936] text-center justify-center"
           >
-            Verify Certificate
+            Verify Certifications
           </Button>
 
           <Button
+            onClick={handleGetstartedButton}
             className="border border-[#2D3A4B] flex rounded-lg py-2 px-4 
                               h-[45px] sm:h-[50px] md:h-[52px] lg:h-[50px] items-center 
                               w-[180px] md:w-[220px] lg:w-[210px] 
                               text-xs sm:text-sm md:text-md 
-                              text-[#2D3A4B] hover:bg-[#F5F5F5] cursor-default"
+                              text-[#2D3A4B] hover:bg-[#F5F5F5] cursor-pointer"
           >
             Get Started on Attensys
           </Button>
@@ -77,7 +82,7 @@ const Herosection = () => {
         <Image
           alt="Combined Hero"
           src={combinedHeroBig}
-          className="mx-auto px-4"
+          className="mx-auto"
           width={400} // 🔹 Adjusting the width slightly for md
           height={360}
         />
@@ -88,7 +93,7 @@ const Herosection = () => {
         <Image
           alt="Combined Hero Big"
           src={combinedHeroBig}
-          className="max-w-[400px] xl:max-w-[500px] 2xl:max-w-[600px] mr-[10px]"
+          className="max-w-[400px] xl:max-w-[500px] 2xl:max-w-[600px]"
           width={600}
           height={500}
         />

@@ -14,6 +14,8 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { gql, request } from "graphql-request";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const orgquery = gql`
   {
@@ -177,27 +179,31 @@ const Index = () => {
   }, [queryClient, otherqueryClient, eventqueryClient]);
 
   return (
-    <div onClick={handlePageClick}>
-      {status && (
-        <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm "></div>
-      )}
-      {bootcampdropstat && (
-        <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
-      )}
-      <div onClick={(e) => e.stopPropagation()}>
-        <Coursedropdown />
-      </div>
-      <div onClick={(e) => e.stopPropagation()}>
-        <Bootcampdropdown />
-      </div>
-      <HydrationBoundary state={dehydrate(eventqueryClient)}>
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <HydrationBoundary state={dehydrate(otherqueryClient)}>
-            <ExplorePage />
+    <>
+      <Header />
+      <div onClick={handlePageClick}>
+        {status && (
+          <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm "></div>
+        )}
+        {bootcampdropstat && (
+          <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
+        )}
+        <div onClick={(e) => e.stopPropagation()}>
+          <Coursedropdown />
+        </div>
+        <div onClick={(e) => e.stopPropagation()}>
+          <Bootcampdropdown />
+        </div>
+        <HydrationBoundary state={dehydrate(eventqueryClient)}>
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <HydrationBoundary state={dehydrate(otherqueryClient)}>
+              <ExplorePage />
+            </HydrationBoundary>
           </HydrationBoundary>
         </HydrationBoundary>
-      </HydrationBoundary>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 };
 

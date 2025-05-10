@@ -258,7 +258,7 @@ const Header = () => {
               <div className="lg:flex hidden sm:hidden justify-center items-center sm:px-6 lg:px-8 lg:h-[85px] lg:my-auto clg:w-[100%] w-full sm1275:hidden">
                 <div className="relative flex h-20 items-center justify-between w-[98%]">
                   <div className="lg:flex flex-shrink-0 items-center flex justify-between clg:w-[55%] lclg:w-[46%] lclg:mx-auto clg:mx-auto space-x-6 clg:space-x-6 lclg:space-x-6 md:hidden sm:hidden">
-                    <Link href="/" className="cursor-pointer">
+                    <Link href="/Home" className="cursor-pointer">
                       <Image
                         alt="Your Company"
                         src={Logo}

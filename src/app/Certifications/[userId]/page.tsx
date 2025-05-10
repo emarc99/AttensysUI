@@ -20,6 +20,8 @@ import { MoonLoader } from "react-spinners";
 import { Contract } from "starknet";
 import { connect } from "starknetkit";
 import { useAccount, useConnect } from "@starknet-react/core";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 interface CourseType {
   data: any;
@@ -153,38 +155,42 @@ const Index = () => {
   }
 
   return (
-    <div className="bg-[#f5f7fa]" onClick={handlePageClick}>
-      {status && (
-        <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
-      )}
-      {bootcampdropstat && (
-        <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
-      )}
-      <div onClick={(e) => e.stopPropagation()}>
-        <Coursedropdown />
-      </div>
-      <div onClick={(e) => e.stopPropagation()}>
-        <Bootcampdropdown />
-      </div>
-
-      {isLoading ? (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-          }}
-        >
-          <MoonLoader color="#9B51E0" size={60} />
+    <>
+      <Header />
+      <div className="bg-[#f5f7fa]" onClick={handlePageClick}>
+        {status && (
+          <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
+        )}
+        {bootcampdropstat && (
+          <div className="fixed inset-0 bg-black opacity-5 backdrop-blur-sm"></div>
+        )}
+        <div onClick={(e) => e.stopPropagation()}>
+          <Coursedropdown />
         </div>
-      ) : (
-        <MyCertifications
-          address={address}
-          certifiedCourses={certifiedCourses}
-        />
-      )}
-    </div>
+        <div onClick={(e) => e.stopPropagation()}>
+          <Bootcampdropdown />
+        </div>
+
+        {isLoading ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+            }}
+          >
+            <MoonLoader color="#9B51E0" size={60} />
+          </div>
+        ) : (
+          <MyCertifications
+            address={address}
+            certifiedCourses={certifiedCourses}
+          />
+        )}
+      </div>
+      <Footer />
+    </>
   );
 };
 

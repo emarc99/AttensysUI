@@ -23,7 +23,7 @@ const Backgroundsection = () => {
           Register for Events with Just <br /> One Click
         </h1>
         <Button
-          onClick={handlerouting}
+          // onClick={handlerouting}
           className="flex rounded-lg flex-none bg-[#A01B9B] py-2 px-4 lg:h-[50px] items-center lg:w-[170px] text-sm text-white data-[hover]:bg-sky-500 data-[active]:bg-sky-700"
         >
           <div className="flex space-x-4 items-center font-semibold text-[16px]">

@@ -252,3 +252,218 @@ html {
 li.carousel-item-custom {
   width: 390px !important;
 }
+
+@keyframes waterFlow {
+  0%,
+  100% {
+    transform: rotate(30deg) translate(var(--tx, 0), var(--ty, 0))
+      scale(var(--scale, 1));
+    opacity: 0.8;
+  }
+  25% {
+    transform: rotate(32deg)
+      translate(calc(-10px + var(--tx, 0)), calc(-10px + var(--ty, 0)))
+      scale(calc(1.9 * var(--scale, 1)));
+    opacity: 0.85;
+  }
+  50% {
+    transform: rotate(28deg)
+      translate(calc(5px + var(--tx, 0)), calc(5px + var(--ty, 0)))
+      scale(calc(0.98 * var(--scale, 1)));
+    opacity: 0.9;
+  }
+  75% {
+    transform: rotate(31deg)
+      translate(calc(-5px + var(--tx, 0)), calc(-5px + var(--ty, 0)))
+      scale(calc(1 * var(--scale, 1)));
+    opacity: 0.85;
+  }
+}
+
+@keyframes waterFlowCircle {
+  0%,
+  100% {
+    transform: translate(var(--tx, 0), var(--ty, 0)) scale(var(--scale, 1));
+    opacity: 0.8;
+  }
+  25% {
+    transform: translate(calc(-15px + var(--tx, 0)), calc(-15px + var(--ty, 0)))
+      scale(calc(1.2 * var(--scale, 1)));
+    opacity: 0.85;
+  }
+  50% {
+    transform: translate(calc(10px + var(--tx, 0)), calc(10px + var(--ty, 0)))
+      scale(calc(0.97 * var(--scale, 1)));
+    opacity: 0.9;
+  }
+  75% {
+    transform: translate(calc(-8px + var(--tx, 0)), calc(-8px + var(--ty, 0)))
+      scale(calc(1.02 * var(--scale, 1)));
+    opacity: 0.85;
+  }
+}
+
+.background-element {
+  animation: waterFlow 8s ease-in-out infinite;
+  transition: all 0.3s ease-out;
+}
+
+.background-circle {
+  animation: waterFlowCircle 10s ease-in-out infinite;
+  transition: all 0.3s ease-out;
+}
+
+.background-element:hover,
+.background-circle:hover {
+  filter: blur(100px) brightness(5);
+  animation-duration: 0.5s;
+  --scale: 1.1 !important;
+}
+
+@keyframes float1 {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate(80px, -60px) rotate(10deg);
+  }
+  40% {
+    transform: translate(40px, 90px) rotate(-5deg);
+  }
+  60% {
+    transform: translate(-70px, 40px) rotate(5deg);
+  }
+  80% {
+    transform: translate(60px, -30px) rotate(-10deg);
+  }
+}
+
+@keyframes float2 {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate(-100px, 70px) rotate(-15deg);
+  }
+  40% {
+    transform: translate(60px, -40px) rotate(10deg);
+  }
+  60% {
+    transform: translate(80px, 60px) rotate(-5deg);
+  }
+  80% {
+    transform: translate(-50px, 80px) rotate(15deg);
+  }
+}
+
+@keyframes float3 {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate(60px, -80px) rotate(12deg);
+  }
+  40% {
+    transform: translate(-90px, 50px) rotate(-8deg);
+  }
+  60% {
+    transform: translate(70px, 90px) rotate(5deg);
+  }
+  80% {
+    transform: translate(-60px, -40px) rotate(-12deg);
+  }
+}
+
+@keyframes float4 {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate(-60px, -90px) rotate(-10deg);
+  }
+  40% {
+    transform: translate(100px, 40px) rotate(15deg);
+  }
+  60% {
+    transform: translate(-80px, 60px) rotate(-5deg);
+  }
+  80% {
+    transform: translate(50px, -70px) rotate(10deg);
+  }
+}
+
+@keyframes float5 {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate(80px, 50px) rotate(8deg);
+  }
+  40% {
+    transform: translate(-40px, -80px) rotate(-12deg);
+  }
+  60% {
+    transform: translate(60px, 70px) rotate(5deg);
+  }
+  80% {
+    transform: translate(-70px, 40px) rotate(-8deg);
+  }
+}
+
+@keyframes float6 {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate(-90px, 60px) rotate(-15deg);
+  }
+  40% {
+    transform: translate(70px, -50px) rotate(10deg);
+  }
+  60% {
+    transform: translate(-60px, 80px) rotate(-5deg);
+  }
+  80% {
+    transform: translate(50px, -60px) rotate(15deg);
+  }
+}
+
+.floating-element {
+  animation-duration: 25s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+.floating-element:nth-child(1) {
+  animation-name: float1;
+}
+.floating-element:nth-child(2) {
+  animation-name: float2;
+}
+.floating-element:nth-child(3) {
+  animation-name: float3;
+}
+.floating-element:nth-child(4) {
+  animation-name: float4;
+}
+.floating-element:nth-child(5) {
+  animation-name: float5;
+}
+.floating-element:nth-child(6) {
+  animation-name: float6;
+}
+
+.floating-element:hover {
+  transform: scale(1.2);
+  z-index: 60;
+  animation-play-state: paused;
+  filter: drop-shadow(0 0 10px rgba(155, 81, 224, 0.7));
+  transition: all 0.3s ease;
+}

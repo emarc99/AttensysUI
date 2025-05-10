@@ -158,9 +158,9 @@ export default function RootLayout({
             >
               <JotaiProvider>
                 <QueryClientProvider client={queryClient}>
-                  <Header />
+                  {/* <Header /> */}
                   {children}
-                  <Footer />
+                  {/* <Footer /> */}
                 </QueryClientProvider>
               </JotaiProvider>
             </StarknetConfig>
