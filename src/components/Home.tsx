@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import component1 from "@/assets/Component1.png";
-import component2 from "@/assets/Component2.png";
-import component3 from "@/assets/Component3.png";
-import component4 from "@/assets/Component4.png";
-import component5 from "@/assets/Component5.png";
-import component6 from "@/assets/Component6.png";
+import component1 from "./../assets/Component1.png";
+import component2 from "./../assets/Component2.png";
+import component3 from "./../assets/Component3.png";
+import component4 from "./../assets/Component4.png";
+import component5 from "./../assets/Component5.png";
+import component6 from "./../assets/Component6.png";
 import Image from "next/image";
 import ControllerConnector from "@cartridge/connector/controller";
 import { useAccount, useConnect, useDisconnect } from "@starknet-react/core";
@@ -42,6 +42,9 @@ const HomePage = () => {
   const handleConnect = async () => {
     console.log("clicked");
     setiswalletconnecting(true);
+    const connectionTimeout = setTimeout(() => {
+      setiswalletconnecting(false);
+    }, 15000);
     if (!address) {
       connect({ connector: controller });
       if (address) {
@@ -416,7 +419,7 @@ const HomePage = () => {
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-4 sm:px-0">
           <button
             onClick={handleConnect}
-            className="px-4 py-2 sm:px-6 sm:py-3 bg-white text-indigo-700 rounded-lg font-medium hover:bg-opacity-90 transition w-full sm:w-auto"
+            className={`px-4 py-2 sm:px-6 sm:py-3 ${iswalletconnecting ? "bg-[#9B51E0]" : "bg-white"}  text-indigo-700 rounded-lg font-medium hover:bg-opacity-90 transition w-full sm:w-auto`}
           >
             {iswalletconnecting ? (
               <LoadingSpinner variant="button" size="sm" colorVariant="white" />
